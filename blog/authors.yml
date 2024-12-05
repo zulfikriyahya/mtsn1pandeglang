@@ -1,0 +1,13 @@
+zulfikriyahya:
+  name: Yahya Zulfikri
+  title: Web Developer
+  url: https://zedlabs.id
+  image_url: https://github.com/zulfikriyahya.png
+  page:
+    # customize the url of the author page at /blog/authors/<permalink>
+    permalink: "/all-yahya-zulfikri-articles"
+  socials:
+    x: yahyazulfikri
+    linkedin: zulfikriyahya
+    github: zulfikriyahya
+    # newsletter: https://thisweekinreact.com
