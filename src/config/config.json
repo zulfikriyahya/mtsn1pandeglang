@@ -7,8 +7,8 @@
     "favicon": "/images/favicon.png",
     "logo": "/images/logo.png",
     "logo_darkmode": "/images/logo-darkmode.png",
-    "logo_width": "150",
-    "logo_height": "30",
+    "logo_width": "154",
+    "logo_height": "28",
     "logo_text": "MTs Negeri 1 Pandeglang"
   },
   "settings": {
@@ -27,7 +27,7 @@
   },
   "params": {
     "contact_form_action": "#",
-    "copyright": "Dibuat dengan ♥ oleh [Yahya Zulfikri.](/authors/yahya-zulfikri)"
+    "copyright": "[**&copy; 1970 - 2025 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br>Dibuat dan dikembangkan dengan 💖 oleh [**Yahya Zulfikri**](https://instagram.com/zulfikriyahya_)"
   },
   "disqus": {
     "enable": true,
