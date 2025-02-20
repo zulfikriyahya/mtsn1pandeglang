@@ -2,7 +2,7 @@
 title: "MTs Negeri 1 Pandeglang"
 meta_title: "Tentang MTs Negeri 1 Pandeglang"
 description: "Tentang MTs Negeri 1 Pandeglang"
-image: "/images/avatar.png"
+image: "/images/favicon.png"
 draft: false
 ---
 

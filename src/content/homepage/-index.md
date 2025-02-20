@@ -1,13 +1,13 @@
 ---
 # Banner
 banner:
-  title: "Sumber Belajar Terbaik yang Anda Butuhkan untuk Memulai Pendidikan di MTs Negeri 1 Pandeglang"
-  content: "Website MTs Negeri 1 Pandeglang menyediakan informasi lengkap dan terkini untuk membantu siswa, guru, dan orang tua dalam mendukung proses pendidikan."
+  title: "Selamat Datang di MTs Negeri 1 Pandeglang"
+  content: "Sumber Belajar Terbaik yang Anda Butuhkan untuk Memulai Pendidikan di MTs Negeri 1 Pandeglang. Bergabunglah dengan kami dan raih prestasi terbaik Anda di lingkungan yang mendukung dan inspiratif."
   image: "/images/banner.png"
   button:
-    enable: false
-    label: "Pelajari Lebih Lanjut"
-    link: "https://mtsn1pandeglang.sch.id"
+    enable: true
+    label: "Daftar Sekarang!"
+    link: "https://admisi.mtsn1pandeglang.sch.id"
 
 # Fitur
 features:
@@ -20,7 +20,7 @@ features:
       - "Perpustakaan dengan Koleksi Buku Lengkap"
       - "Lapangan Olahraga"
       - "Program Ekstrakurikuler yang Beragam"
-      - "**Lingkungan Sekolah yang Ramah Anak dan Aman**"
+      - "Lingkungan Sekolah yang Ramah Anak dan Aman"
     button:
       enable: true
       label: "Kunjungi Kami"
@@ -52,6 +52,35 @@ features:
       - "Fasilitas Pendidikan yang Modern"
     button:
       enable: true
-      label: "Akademik"
-      link: "/akademik"
+      label: "Kurikulum"
+      link: "/kurikulum"
+
+  - title: "Ekstrakurikuler Siswa"
+    image: "/images/service-3.png"
+    content: "MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan ekstrakurikuler untuk mendukung pengembangan diri siswa."
+    bulletpoints:
+      - "Kegiatan Olahraga"
+      - "Seni dan Budaya"
+      - "Pramuka"
+      - "Klub Sains"
+      - "Kegiatan Sosial"
+    button:
+      enable: true
+      label: "Ekstrakurikuler"
+      link: "/ekstrakurikuler"
+
+  - title: "Pelayanan Terpadu Satu Pintu"
+    image: "/images/service-3.png"
+    content: "MTs Negeri 1 Pandeglang menawarkan layanan administratif dan informasi melalui Pelayanan Terpadu Satu Pintu untuk kemudahan dan kenyamanan siswa, orang tua, dan masyarakat."
+    bulletpoints:
+      - "Layanan Akademik"
+      - "Layanan Non-Akademik"
+      - "Layanan Informasi"
+      - "Pelayanan Cepat dan Efisien"
+      - "Petugas Pelayanan yang Ramah dan Profesional"
+      - "Sistem Antrian Online"
+    button:
+      enable: true
+      label: "Pelayanan"
+      link: "/pelayanan"
 ---

@@ -10,255 +10,40 @@ tags: ["Olimpiade Tingkat Nasional"]
 draft: false
 ---
 
-# Heading 1
+# Olimpiade Sains Tingkat Nasional Tahun 2023
 
-## Heading 2
+## Tentang Olimpiade Sains Tingkat Nasional
 
-### Heading 3
+Olimpiade Sains Tingkat Nasional adalah ajang bergengsi yang diikuti oleh siswa-siswi dari seluruh Indonesia. Kegiatan ini bertujuan untuk menggali potensi dan mengembangkan kemampuan siswa dalam bidang sains, serta mempersiapkan mereka untuk bersaing di kancah internasional.
 
-#### Heading 4
+## Partisipasi MTs Negeri 1 Pandeglang
 
-##### Heading 5
+MTs Negeri 1 Pandeglang selalu berkomitmen untuk meningkatkan kualitas pendidikan dan prestasi siswa. Pada tahun 2023, MTs Negeri 1 Pandeglang mengirimkan beberapa siswa terbaiknya untuk mengikuti Olimpiade Sains Tingkat Nasional. Para siswa ini telah melalui seleksi ketat dan pelatihan intensif untuk mempersiapkan diri menghadapi kompetisi.
 
-###### Heading 6
+## Prestasi yang Diraih
 
----
+Pada Olimpiade Sains Tingkat Nasional Tahun 2023, siswa-siswi dari MTs Negeri 1 Pandeglang berhasil meraih berbagai prestasi gemilang. Mereka berhasil membawa pulang beberapa medali dan penghargaan, yang menunjukkan dedikasi dan kerja keras mereka dalam mempersiapkan diri.
 
-### Paragraph
+### Medali yang Diraih
 
-Did you come here for something in particular or just general Riker-bashing? And blowing into maximum warp speed, you appeared for an instant to be in two places at once. We have a saboteur aboard. We know you’re dealing in stolen ore. But I wanna talk about the assassination attempt on Lieutenant Worf. Could someone survive inside a transporter buffer for 75 years? Fate. It protects fools, little children, and ships.
+- Medali Emas: Siswa A dalam bidang Matematika
+- Medali Perak: Siswa B dalam bidang Fisika
+- Medali Perunggu: Siswa C dalam bidang Biologi
 
-Did you come here for something in particular or just general Riker-bashing? And blowing into maximum warp speed, you appeared for an instant to be in two places at once. We have a saboteur aboard. We know you’re dealing in stolen ore. But I wanna talk about the assassination attempt on Lieutenant Worf. Could someone survive inside a transporter buffer for 75 years? Fate. It protects fools, little children, and ships.
+## Dampak bagi Sekolah
 
----
+Keberhasilan siswa-siswi MTs Negeri 1 Pandeglang dalam Olimpiade Sains Tingkat Nasional Tahun 2023 membawa dampak positif bagi sekolah. Prestasi ini tidak hanya meningkatkan reputasi sekolah di mata masyarakat, tetapi juga memotivasi siswa lain untuk terus berprestasi.
 
-### Emphasis
+## Harapan ke Depan
 
-1. Did you come here for something in **particular** or just general
-
-2. Did you come here for something in <ins>particular</ins>
-
-3. _Did you come here_
-
-4. Did you come here for **something** in particular
-
-5. Did you come here for something in particular
-
-6. Did you come here for something in particular
-
-7. URLs and URLs in angle brackets will automatically get turned into links. [http://www.example.com](http://www.example.com) or
-
-8. [http://www.example.com](http://www.example.com) and sometimes example.com (but not on Github, for example).
+Dengan semangat dan dedikasi yang tinggi, MTs Negeri 1 Pandeglang berharap dapat terus menghasilkan siswa-siswi berprestasi yang siap bersaing di tingkat nasional dan internasional. Kami juga mengajak seluruh pihak untuk terus mendukung dan memberikan kontribusi bagi kemajuan pendidikan di MTs Negeri 1 Pandeglang.
 
 ---
 
-### Link
-
-[I'm an inline-style link](https://www.google.com)
-
-[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
-
-[I'm a reference-style link][arbitrary case-insensitive reference text]
-
-[I'm a relative reference to a repository file](../blob/master/LICENSE)
-
-[You can use numbers for reference-style link definitions][1]
-
-Or leave it empty and use the [link text itself].
-
-example.com (but not on Github, for example).
-
-Some text to show that the reference links can follow later.
-
-[arbitrary case-insensitive reference text]: https://www.themefisher.com
-[1]: https://gethugothemes.com
-[link text itself]: https://www.getjekyllthemes.com
+Kegiatan Olimpiade Sains Tingkat Nasional Tahun 2023 di MTs Negeri 1 Pandeglang adalah bukti nyata bahwa dengan kerja keras, dedikasi, dan semangat yang tinggi, prestasi gemilang dapat diraih. Mari kita terus dukung dan banggakan siswa-siswi berprestasi kita!
 
 ---
 
-### Ordered List
+### Quotes dari Kepala Sekolah
 
-1. List item
-2. List item
-3. List item
-4. List item
-5. List item
-
----
-
-### Unordered List
-
-- List item
-- List item
-- List item
-- List item
-- List item
-
----
-
-### Code and Syntax Highlighting
-
-#### HTML
-
-```html
-<ul>
-  <li class="nav-item">
-    <a class="nav-link" href="/">Home</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="about/">About</a>
-  </li>
-</ul>
-```
-
----
-
-#### CSS
-
-```css
-img {
-  vertical-align: middle;
-  border: 0;
-  max-width: 100%;
-  height: auto;
-}
-```
-
----
-
-#### JavaScript
-
-```javascript
-window.addEventListener("load", (e) => {
-  document.querySelector(".preloader").style.display = "none";
-});
-```
-
----
-
-### Button
-
-<Button label="Button" link="#" style="solid" />
-
----
-
-### Quote
-
-> Did you come here for something in particular or just general Riker-bashing? And blowing into maximum warp speed, you appeared for an instant to be in two places at once.
-
----
-
-### Notice
-
-<Notice type="note">This is a simple note.</Notice>
-
-<Notice type="tip">This is a simple note.</Notice>
-
-<Notice type="info">This is a simple note.</Notice>
-
-<Notice type="warning">This is a simple note.</Notice>
-
----
-
-### Tab
-
-<Tabs client:load>
-
-<Tab name="Tab 1">
-
-#### Did you come here for something in particular?
-
-Did you come here for something in particular or just general Riker-bashing? And blowing into maximum warp speed, you appeared for an instant to be in two places at once. We have a saboteur aboard. We know you’re dealing in stolen ore. But I wanna talk about the assassination attempt on Lieutenant Worf.
-
-</Tab>
-
-<Tab name="Tab 2">
-
-#### I wanna talk about the assassination attempt
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-</Tab>
-
-<Tab name="Tab 3">
-
-#### We know you’re dealing in stolen ore
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-
-</Tab>
-
-</Tabs>
-
----
-
-### Table
-
-|#|Nama Lengkap|Hobi|Alamat|
-|-|-|-|-|
-|1|Yahya Zulfikri|Coding|Pandeglang|
-|2|Fera Oktapia|Membaca|Mekarjaya|
-
-|#|Nama Lengkap|Hobi|Alamat|
-|-|-|-|-|
-|1|Yahya Zulfikri|Coding|Pandeglang|
-|2|Fera Oktapia|Membaca|Mekarjaya|
-
----
-
-### Accordion
-
-<Accordion client:load title="Why should you need to do this?">
-
-- This is a thing.
-- This is a thing.
-- This is a thing.
-- This is a thing.
-- This is a thing.
-
-</Accordion>
-
-<Accordion client:load title="How can I adjust Horizontal centering">
-
-- This is a thing.
-- This is a thing.
-- This is a thing.
-- This is a thing.
-- This is a thing.
-
-</Accordion>
-
-<Accordion client:load title="Should you use Negative margin?">
-
-- This is a thing.
-- This is a thing.
-- This is a thing.
-- This is a thing.
-- This is a thing.
-
-</Accordion>
-
----
-
-### Image
-
-![image](/images/image-placeholder.png)
-
----
-
-### Youtube video
-
-<Youtube client:load id="SIpCVJe75-4" title="Youtube Video Test Title" />
-
----
-
-### Custom video
-
-<Video
-  width="100%"
-  src="https://joy1.videvo.net/videvo_files/video/free/video0467/large_watermarked/_import_61516692993d77.04238324_preview.mp4"
-/>
+> "Keberhasilan siswa-siswi MTs Negeri 1 Pandeglang dalam Olimpiade Sains Tingkat Nasional adalah cerminan dari kerja keras dan dedikasi mereka. Kami sangat bangga dan berharap prestasi ini dapat terus ditingkatkan di masa mendatang." - Kepala Sekolah MTs Negeri 1 Pandeglang
