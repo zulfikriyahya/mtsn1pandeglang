@@ -1,0 +1,24 @@
+{
+  "main": [
+    {
+      "name": "github",
+      "icon": "FaGithub",
+      "link": "https://www.github.com/zulfikriyahya"
+    },
+    {
+      "name": "linkedin",
+      "icon": "FaLinkedin",
+      "link": "https://www.linkedin.com/in/zulfikriyahya"
+    },
+    {
+      "name": "instagram",
+      "icon": "FaInstagram",
+      "link": "https://www.instagram.com/zulfikriyahya_"
+    },
+    {
+      "name": "whatsapp",
+      "icon": "FaWhatsapp",
+      "link": "https://wa.me/6289612050291/?text=Hallo, Kak."
+    }
+  ]
+}
