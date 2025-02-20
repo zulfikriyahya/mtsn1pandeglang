@@ -1,10 +1,10 @@
 ---
-enable: false
-title: "Ready to build your next project with Astro?"
+enable: true
+title: "Bergabunglah dengan MTs Negeri 1 Pandeglang"
 image: "/images/call-to-action.png"
-description: "Experience the future of web development with Astroplate and Astro. Build lightning-fast static sites with ease and flexibility."
+description: "Segera daftarkan diri Anda di MTs Negeri 1 Pandeglang dan jadilah bagian dari lembaga pendidikan yang unggul dan berprestasi. Kami siap membimbing dan mendukung perkembangan akademik serta karakter Anda."
 button:
   enable: true
-  label: "Get Started Now"
-  link: "https://github.com/zeon-studio/astroplate"
+  label: "Daftar Sekarang!"
+  link: "https://admisi.mtsn1pandeglang.sch.id"
 ---

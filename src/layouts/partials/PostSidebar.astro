@@ -31,56 +31,58 @@ const { tags, categories, allCategories } = Astro.props;
           Untuk seluruh civitas akademika, mari kita bersama-sama ukir prestasi
           demi kejayaan madrasah kita. Amin.
         </li>
-        <li class="text-center"><b>H. Eman Sulaiman, S.Ag., M.Pd.</b></li>
-        <li class="text-center"><b>NIP 197006032000031002</b></li>
+        <li class="text-center">
+          <b>H. Eman Sulaiman, S.Ag., M.Pd.</b>
+          <br>NIP 197006032000031002
+        </li>
       </ul>
     </div>
-  </div>
-  <!-- Kategori -->
-  <div class="mb-8">
-    <h5 class="mb-6">Kategori</h5>
-    <div class="rounded bg-theme-light p-8 dark:bg-darkmode-theme-light">
-      <ul class="space-y-4">
-        {
-          categories.map((category: any) => {
-            const count = allCategories.filter(
-              (c: any) => c === category
-            ).length;
-            return (
-              <li>
-                <a
-                  class="flex justify-between hover:text-primary dark:hover:text-darkmode-primary"
-                  href={`/categories/${category}`}
-                >
-                  {humanize(category)} <span>({count})</span>
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
+    <!-- Kategori -->
+    <div class="mb-8 mt-8">
+      <h5 class="mb-6">Kategori</h5>
+      <div class="rounded bg-theme-light p-8 dark:bg-darkmode-theme-light">
+        <ul class="space-y-4">
+          {
+            categories.map((category: any) => {
+              const count = allCategories.filter(
+                (c: any) => c === category
+              ).length;
+              return (
+                <li>
+                  <a
+                    class="flex justify-between hover:text-primary dark:hover:text-darkmode-primary"
+                    href={`/categories/${category}`}
+                  >
+                    {humanize(category)} <span>({count})</span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
     </div>
-  </div>
-  <!-- Tagar -->
-  <div class="mb-8">
-    <h5 class="mb-6">Tagar</h5>
-    <div class="rounded bg-theme-light p-6 dark:bg-darkmode-theme-light">
-      <ul>
-        {
-          tags.map((tag: any) => {
-            return (
-              <li class="inline-block">
-                <a
-                  class="m-1 block rounded bg-white px-3 py-1 hover:bg-primary hover:text-white dark:bg-darkmode-body dark:hover:bg-darkmode-primary dark:hover:text-dark"
-                  href={`/tags/${tag}`}
-                >
-                  {humanize(tag)}
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
+    <!-- Tagar -->
+    <div class="mb-8">
+      <h5 class="mb-6">Tagar</h5>
+      <div class="rounded bg-theme-light p-6 dark:bg-darkmode-theme-light">
+        <ul>
+          {
+            tags.map((tag: any) => {
+              return (
+                <li class="inline-block">
+                  <a
+                    class="m-1 block rounded bg-white px-3 py-1 hover:bg-primary hover:text-white dark:bg-darkmode-body dark:hover:bg-darkmode-primary dark:hover:text-dark"
+                    href={`/tags/${tag}`}
+                  >
+                    {humanize(tag)}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
     </div>
   </div>
 </div>
