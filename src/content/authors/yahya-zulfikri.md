@@ -14,7 +14,7 @@ social:
 
   - name: linkedin
     icon: FaLinkedin
-    link: https://linkedin.com/in/zulfikriyahya
+    link: https://www.linkedin.com/in/zulfikriyahya?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app 
 ---
 
 **Full Stack Developer in Pandeglang, Banten - Indonesia! 😎**
