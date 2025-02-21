@@ -1,6 +1,6 @@
 ---
 title: Yahya Zulfikri
-email: zulfikriyahya@zedlabs.id
+email: yahya@mtsn1pandeglang.sch.id
 image: "/images/author.png"
 description: Penulis di MTs Negeri 1 Pandeglang
 social:
@@ -14,7 +14,7 @@ social:
 
   - name: linkedin
     icon: FaLinkedin
-    link: https://linkedin.com/in/zulfikriyahya_
+    link: https://linkedin.com/in/zulfikriyahya
 ---
 
 **Full Stack Developer in Pandeglang, Banten - Indonesia! 😎**
