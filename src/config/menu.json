@@ -53,6 +53,10 @@
           "url": "/zona-integritas"
         },
         {
+          "name": "Pelayanan Terpadu Satu Pintu",
+          "url": "/pelayanan"
+        },
+        {
           "name": "Sejarah",
           "url": "/sejarah"
         },
@@ -164,7 +168,7 @@
         },
         {
           "name": "Assesmen",
-          "url": "https://assesmen.mtsn1pandeglang.sch.id"
+          "url": "https://cbt.mtsn1pandeglang.sch.id"
         },
         {
           "name": "Jurnal Kelas",

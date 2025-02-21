@@ -2,6 +2,6 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/u5224240/public_html/
-    - git git merge --no-ff
+    - git merge --no-ff
     - git rebase
     - /bin/cp -R * $DEPLOYPATH
