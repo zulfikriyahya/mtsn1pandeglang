@@ -11,6 +11,21 @@ banner:
 
 # Fitur
 features:
+  - title: "Akreditasi"
+    image: "/images/service-3.png"
+    content: "MTs Negeri 1 Pandeglang telah diakui secara resmi oleh pemerintah dan berbagai lembaga akreditasi pendidikan. Akreditasi ini menunjukkan bahwa madrasah kami telah memenuhi standar kualitas pendidikan yang tinggi dan berkomitmen untuk terus meningkatkan mutu pendidikan yang diberikan kepada siswa-siswi."
+    bulletpoints:
+      - "Kualitas Pendidikan"
+      - "Peringkat Akreditasi A"
+      - "Standar Nasional Pendidikan"
+      - "Peningkatan Mutu Berkelanjutan"
+      - "Evaluasi dan Penilaian Berkala"
+      - "Pengakuan Resmi"
+    button:
+      enable: true
+      label: "Akreditasi"
+      link: "/akreditasi"
+
   - title: "Fasilitas Unggulan di MTs Negeri 1 Pandeglang"
     image: "/images/service-1.png"
     content: "MTs Negeri 1 Pandeglang menawarkan berbagai fasilitas unggulan untuk mendukung kegiatan belajar mengajar."
@@ -38,8 +53,8 @@ features:
       - "Bimbingan Konseling untuk Pengembangan Diri"
     button:
       enable: true
-      label: "Program Kami"
-      link: "/program"
+      label: "Kurikulum"
+      link: "/kurikulum"
 
   - title: "Kenapa Memilih MTs Negeri 1 Pandeglang"
     image: "/images/service-3.png"
@@ -52,22 +67,22 @@ features:
       - "Fasilitas Pendidikan yang Modern"
     button:
       enable: true
-      label: "Kurikulum"
-      link: "/kurikulum"
+      label: "Program Kami"
+      link: "/program"
 
-  - title: "Ekstrakurikuler Siswa"
+  - title: "Zona Integritas"
     image: "/images/service-3.png"
-    content: "MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan ekstrakurikuler untuk mendukung pengembangan diri siswa."
+    content: "Zona Integritas di MTs Negeri 1 Pandeglang bertujuan untuk menciptakan lingkungan yang bersih dari korupsi dan membangun budaya kerja yang jujur dan transparan. Melalui program ini, madrasah kami berkomitmen untuk meningkatkan kualitas pelayanan publik dan menjaga kepercayaan masyarakat."
     bulletpoints:
-      - "Kegiatan Olahraga"
-      - "Seni dan Budaya"
-      - "Pramuka"
-      - "Klub Sains"
-      - "Kegiatan Sosial"
+      - "Manajemen Perubahan"
+      - "Penguatan Akuntabilitas"
+      - "Peningkatan Kualitas Pelayanan Publik"
+      - "Pendidikan Antikorupsi"
+      - "Pengawasan dan Pengendalian"
     button:
       enable: true
-      label: "Ekstrakurikuler"
-      link: "/ekstrakurikuler"
+      label: "Zona Integritas"
+      link: "/zona-integritas"
 
   - title: "Pelayanan Terpadu Satu Pintu"
     image: "/images/service-3.png"
@@ -83,4 +98,18 @@ features:
       enable: true
       label: "Pelayanan"
       link: "/pelayanan"
+
+  - title: "Ekstrakurikuler Siswa"
+    image: "/images/service-3.png"
+    content: "MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan ekstrakurikuler untuk mendukung pengembangan diri siswa."
+    bulletpoints:
+      - "Kegiatan Olahraga"
+      - "Seni dan Budaya"
+      - "Pramuka"
+      - "Klub Sains"
+      - "Kegiatan Sosial"
+    button:
+      enable: true
+      label: "Ekstrakurikuler"
+      link: "/ekstrakurikuler"
 ---

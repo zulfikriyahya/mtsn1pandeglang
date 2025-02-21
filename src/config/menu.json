@@ -37,6 +37,14 @@
       "hasChildren": true,
       "children": [
         {
+          "name": "Akreditasi",
+          "url": "/akreditasi"
+        },
+        {
+          "name": "Kurikulum",
+          "url": "/kurikulum"
+        },
+        {
           "name": "Program",
           "url": "/program"
         },

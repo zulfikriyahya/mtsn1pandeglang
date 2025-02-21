@@ -5,9 +5,11 @@ description: "Kebijakan Privasi MTs Negeri 1 Pandeglang"
 draft: false
 ---
 
+### Kebijakan Privasi MTs Negeri 1 Pandeglang
+
 #### Tanggung Jawab Kontributor
 
-Kontributor diharapkan untuk menjaga integritas dan akurasi informasi yang disediakan di situs web MTs Negeri 1 Pandeglang. Konten yang dipublikasikan harus sesuai dengan nilai dan misi sekolah serta tidak melanggar hak cipta atau privasi individu lain. Kontributor juga bertanggung jawab untuk memperbarui informasi secara berkala untuk memastikan relevansi dan keakuratannya.
+Kontributor diharapkan untuk menjaga integritas dan akurasi informasi yang disediakan di situs web MTs Negeri 1 Pandeglang. Konten yang dipublikasikan harus sesuai dengan nilai dan misi sekolah serta tidak melanggar hak cipta atau privasi individu lain. Kontributor juga bertanggung jawab untuk memperbarui informasi secara berkala guna memastikan relevansi dan keakuratannya.
 
 #### Pengumpulan Informasi Pribadi
 
