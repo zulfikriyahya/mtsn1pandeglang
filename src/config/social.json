@@ -1,0 +1,24 @@
+{
+  "main": [
+    {
+      "name": "youtube",
+      "icon": "FaYoutube",
+      "link": "https://www.youtube.com/@mtsn1pandeglangofficial"
+    },
+    {
+      "name": "instagram",
+      "icon": "FaInstagram",
+      "link": "https://www.instagram.com/mtsn1_pandeglang"
+    },
+    {
+      "name": "email",
+      "icon": "FaEnvelope",
+      "link": "mailto:adm@mtsn1pandeglang.sch.id"
+    },
+    {
+      "name": "whatsapp",
+      "icon": "FaWhatsapp",
+      "link": "https://wa.me/6289612050291/?text=Hallo, PTSP MTs Negeri 1 Pandeglang."
+    }
+  ]
+}

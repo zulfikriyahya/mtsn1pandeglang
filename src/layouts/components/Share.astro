@@ -1,0 +1,91 @@
+---
+import config from "@/config/config.json";
+import {
+  IoLogoFacebook,
+  IoLogoInstagram,
+  IoLogoLinkedin,
+  IoLogoPinterest,
+  IoLogoTwitter,
+  IoLogoWhatsapp,
+  IoLogoXbox,
+} from "react-icons/io5";
+
+const { base_url }: { base_url: string } = config.site;
+const {
+  title,
+  description,
+  slug,
+  className,
+}: { title?: string; description?: string; slug?: string; className?: string } =
+  Astro.props;
+---
+
+<ul class={`${className}`}>
+  <!-- Facebook -->
+  <li class="inline-block">
+    <a
+      aria-label="facebook share button"
+      href={`https://facebook.com/sharer/sharer.php?u=${base_url}/${slug}`}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <IoLogoFacebook />
+    </a>
+  </li>
+
+  <!-- Instagram -->
+  <li class="inline-block">
+    <a
+      aria-label="instagram share button"
+      href={`https://www.instagram.com/share?url=${base_url}/${slug}&title=${title}&summary=${description}&source=${base_url}`}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <IoLogoInstagram />
+    </a>
+  </li>
+  <!-- LinkedIn -->
+  <li class="inline-block">
+    <a
+      aria-label="linkedin share button"
+      href={`https://www.linkedin.com/shareArticle?mini=true&url=${base_url}/${slug}&title=${title}&summary=${description}&source=${base_url}`}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <IoLogoLinkedin />
+    </a>
+  </li>
+  <!-- Whatsapp -->
+  <li class="inline-block">
+    <a
+      aria-label="whatsapp share button"
+      href={`https://api.whatsapp.com/send?text=${title}%20${base_url}/${slug}%20${description}`}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <IoLogoWhatsapp />
+    </a>
+  </li>
+  <!-- Pinterest -->
+  <!-- <li class="inline-block">
+    <a
+      aria-label="pinterest share button"
+      href={`https://pinterest.com/pin/create/button/?url=${base_url}/${slug}&media=&description=${description}`}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <IoLogoPinterest />
+    </a>
+  </li> -->
+  <!-- Twitter -->
+  <!-- <li class="inline-block">
+    <a
+      aria-label="twitter share button"
+      href={`https://twitter.com/intent/tweet/?text=${title}&amp;url=${base_url}/${slug}`}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <IoLogoTwitter />
+    </a>
+  </li> -->
+</ul>

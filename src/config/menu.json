@@ -1,0 +1,206 @@
+{
+  "main": [
+    {
+      "name": "Beranda",
+      "url": "/"
+    },
+    {
+      "name": "Postingan",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Artikel",
+          "url": "/blog"
+        },
+        {
+          "name": "Penulis",
+          "url": "/authors"
+        },
+        {
+          "name": "Kategori",
+          "url": "/categories"
+        },
+        {
+          "name": "Tagar",
+          "url": "/tags"
+        },
+        {
+          "name": "Kontak",
+          "url": "/contact"
+        }
+      ]
+    },
+    {
+      "name": "Profil",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Akreditasi",
+          "url": "/akreditasi"
+        },
+        {
+          "name": "Kurikulum",
+          "url": "/kurikulum"
+        },
+        {
+          "name": "Program",
+          "url": "/program"
+        },
+        {
+          "name": "Zona Integritas",
+          "url": "/zona-integritas"
+        },
+        {
+          "name": "Pelayanan Terpadu Satu Pintu",
+          "url": "/pelayanan"
+        },
+        {
+          "name": "Sejarah",
+          "url": "/sejarah"
+        },
+        {
+          "name": "Visi, Misi dan Tujuan",
+          "url": "/visi-misi-tujuan"
+        },
+        {
+          "name": "Guru",
+          "url": "/guru"
+        },
+        {
+          "name": "Staf",
+          "url": "/staf"
+        },
+        {
+          "name": "Siswa",
+          "url": "/siswa"
+        },
+        {
+          "name": "Alumni",
+          "url": "/alumni"
+        }
+      ]
+    },
+    {
+      "name": "Organisasi Siswa",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "OSIM",
+          "url": "/osis"
+        },
+        {
+          "name": "Pramuka",
+          "url": "/pramuka"
+        },
+        {
+          "name": "Paskibra",
+          "url": "/paskibra"
+        },
+        {
+          "name": "PMR",
+          "url": "/pmr"
+        },
+        {
+          "name": "ROHIS",
+          "url": "/rohis"
+        },
+        {
+          "name": "Pandawa",
+          "url": "/pandawa"
+        },
+        {
+          "name": "Adiwiyata",
+          "url": "/adiwiyata"
+        },
+        {
+          "name": "Pecinta Alam",
+          "url": "/pecinta-alam"
+        },
+        {
+          "name": "English Club",
+          "url": "/english-club"
+        },
+        {
+          "name": "Japanese Club",
+          "url": "/japanese-club"
+        },
+        {
+          "name": "Footsal Club",
+          "url": "/footsal-club"
+        },
+        {
+          "name": "Volleyball Club",
+          "url": "/volleyball-club"
+        }
+      ]
+    },
+    {
+      "name": "Web Apps",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Pelayanan Terpadu Satu Pintu",
+          "url": "https://ptsp.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Pendaftaran",
+          "url": "https://admisi.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Bank Data",
+          "url": "https://drive.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Rapor Digital Madrasah",
+          "url": "https://rdm.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Presensi",
+          "url": "https://presensi.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Pemutakhiran Data Mandiri",
+          "url": "https://pdm.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Assesmen",
+          "url": "https://cbt.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Jurnal Kelas",
+          "url": "https://jurnal.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Perpustakaan",
+          "url": "https://perpustakaan.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Buku Induk",
+          "url": "https://buku-induk.mtsn1pandeglang.sch.id"
+        }
+      ]
+    },
+    {
+      "name": "Tentang Kami",
+      "url": "/about"
+    }
+  ],
+  "footer": [
+    {
+      "name": "Beranda",
+      "url": "/"
+    },
+    {
+      "name": "Tentang Kami",
+      "url": "/about"
+    },
+    {
+      "name": "Kebijakan Privasi",
+      "url": "/kebijakan-privasi"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "site": {
+    "title": "MTs Negeri 1 Pandeglang",
+    "base_url": "https://mtsn1pandeglang.sch.id",
+    "base_path": "/",
+    "trailing_slash": false,
+    "favicon": "/images/favicon.png",
+    "logo": "/images/logo.png",
+    "logo_darkmode": "/images/logo-darkmode.png",
+    "logo_width": "154",
+    "logo_height": "28",
+    "logo_text": "MTs Negeri 1 Pandeglang"
+  },
+  "settings": {
+    "search": true,
+    "sticky_header": true,
+    "theme_switcher": true,
+    "default_theme": "system",
+    "pagination": 10,
+    "summary_length": 200,
+    "blog_folder": "blog"
+  },
+  "navigation_button": {
+    "enable": true,
+    "label": "Daftar Sekarang",
+    "link": "https://admisi.mtsn1pandeglang.sch.id"
+  },
+  "params": {
+    "contact_form_action": "#",
+    "copyright": "[**&copy; 1970 - 2025 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br>Dibuat dan dikembangkan dengan ❤ oleh [**Yahya Zulfikri**](https://instagram.com/zulfikriyahya_)"
+  },
+  "disqus": {
+    "enable": true,
+    "shortname": "themefisher-template",
+    "settings": {}
+  },
+  "metadata": {
+    "meta_author": "Yahya Zulfikri",
+    "meta_image": "/images/author.png",
+    "meta_description": "Author of MTs Negeri 1 Pandeglang"
+  }
+}

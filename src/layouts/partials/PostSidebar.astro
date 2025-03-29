@@ -1,0 +1,88 @@
+---
+import { humanize } from "@/lib/utils/textConverter";
+
+const { tags, categories, allCategories } = Astro.props;
+---
+
+<div class="lg:col-4">
+  <!-- Kategori -->
+  <div class="mb-8">
+    <h5 class="mb-6 text-center">Sambutan Kepala Madrasah</h5>
+    <div class="rounded bg-theme-light p-8 dark:bg-darkmode-theme-light">
+      <ul class="space-y-4">
+        <img
+          src="/images/kepala-madrasah.png"
+          width="100%"
+          class="rounded-lg"
+        />
+        <li class="text-justify">
+          Puji syukur Alhamdulillah senantiasa kita panjatkan kepada Ilahi Robbi
+          atas segala nikmat dan karunia-Nya. Dalam kehidupan, kebutuhan akan
+          informasi adalah suatu hal yang sangat esensial. MTs Negeri 1
+          Pandeglang sebagai lembaga pendidikan memiliki tugas dan tanggung
+          jawab untuk mendidik generasi muda yang berkualitas dan tanggap
+          terhadap perkembangan ilmu pengetahuan dan teknologi di era
+          globalisasi ini. Internet menjadi jendela utama untuk melihat dunia.
+          MTs Negeri 1 Pandeglang telah memiliki fasilitas ini, oleh karena itu
+          kami akan menampilkan segala hal yang ada dan terjadi di lembaga kami,
+          sehingga dunia dapat melihat kondisi, kegiatan, prestasi, dan kemajuan
+          yang ada di sini. Kami sangat mengharapkan kritik dan saran dari
+          berbagai pihak demi kebaikan dan kemajuan MTs Negeri 1 Pandeglang.
+          Untuk seluruh civitas akademika, mari kita bersama-sama ukir prestasi
+          demi kejayaan madrasah kita. Amin.
+        </li>
+        <li class="text-center">
+          <b>H. Eman Sulaiman, S.Ag., M.Pd.</b>
+          <br>NIP 197006032000031002
+        </li>
+      </ul>
+    </div>
+    <!-- Kategori -->
+    <div class="mb-8 mt-8">
+      <h5 class="mb-6">Kategori</h5>
+      <div class="rounded bg-theme-light p-8 dark:bg-darkmode-theme-light">
+        <ul class="space-y-4">
+          {
+            categories.map((category: any) => {
+              const count = allCategories.filter(
+                (c: any) => c === category
+              ).length;
+              return (
+                <li>
+                  <a
+                    class="flex justify-between hover:text-primary dark:hover:text-darkmode-primary"
+                    href={`/categories/${category}`}
+                  >
+                    {humanize(category)} <span>({count})</span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </div>
+    <!-- Tagar -->
+    <div class="mb-8">
+      <h5 class="mb-6">Tagar</h5>
+      <div class="rounded bg-theme-light p-6 dark:bg-darkmode-theme-light">
+        <ul>
+          {
+            tags.map((tag: any) => {
+              return (
+                <li class="inline-block">
+                  <a
+                    class="m-1 block rounded bg-white px-3 py-1 hover:bg-primary hover:text-white dark:bg-darkmode-body dark:hover:bg-darkmode-primary dark:hover:text-dark"
+                    href={`/tags/${tag}`}
+                  >
+                    {humanize(tag)}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
