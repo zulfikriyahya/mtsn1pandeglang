@@ -7,7 +7,7 @@ banner:
   button:
     enable: true
     label: "Daftar Sekarang!"
-    link: "https://admisi.mtsn1pandeglang.sch.id"
+    link: "https://daftar.mtsn1pandeglang.sch.id"
 
 # Fitur
 features:

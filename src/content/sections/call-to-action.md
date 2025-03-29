@@ -6,5 +6,5 @@ description: "Segera daftarkan diri Anda di MTs Negeri 1 Pandeglang dan jadilah 
 button:
   enable: true
   label: "Daftar Sekarang!"
-  link: "https://admisi.mtsn1pandeglang.sch.id"
+  link: "https://daftar.mtsn1pandeglang.sch.id"
 ---

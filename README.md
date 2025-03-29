@@ -1,7 +1,7 @@
 ## 📌 Fitur Utama
 
 - 👥 Multi-Penulis
-- 🌐 Multibahasa
+- 🌏 Multibahasa
 - 🎯 Saran Postingan Serupa
 - 🔍 Fitur Pencarian
 - 🌑 Mode Gelap
@@ -41,10 +41,10 @@
 
 ### 📦 Ketergantungan
 
-- astro v5.3+
-- node v22.14.0+
-- npm v11.1.0+
-- tailwind v3.4+
+- astro v5.5
+- node v23.9.0
+- npm v11.2.0
+- tailwind v3.4
 
 ### 👉 Instal Ketergantungan
 
