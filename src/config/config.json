@@ -5,11 +5,11 @@
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
-    "logo": "/images/logo.png",
-    "logo_darkmode": "/images/logo-darkmode.png",
-    "logo_width": "150",
-    "logo_height": "30",
-    "logo_text": "MTs Negeri 1 Pandeglang"
+    "logo": "/images/brand-lightmode.png",
+    "logo_darkmode": "/images/brand-darkmode.png",
+    "logo_width": "180",
+    "logo_height": "35",
+    "logo_text": "Logo MTs Negeri 1 Pandeglang"
   },
 
   "settings": {
@@ -30,12 +30,12 @@
   "navigation_button": {
     "enable": true,
     "label": "Daftar Sekarang",
-    "link": "https://admisi.mtsn1pandeglang.sch.id"
+    "link": "https://daftar.mtsn1pandeglang.sch.id"
   },
 
   "google_tag_manager": {
-    "enable": false,
-    "gtm_id": "GTM-XXXXXX"
+    "enable": true,
+    "gtm_id": "GTM-NSG7FJC5"
   },
 
   "disqus": {
@@ -46,7 +46,8 @@
 
   "metadata": {
     "meta_author": "Yahya Zulfikri",
-    "meta_image": "/images/author.png",
-    "meta_description": "Author of MTs Negeri 1 Pandeglang"
+    "meta_image": "/images/authors/yahya-zulfikri.png",
+    "meta_description": "Penulis di MTs Negeri 1 Pandeglang"
   }
 }
+
