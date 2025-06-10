@@ -3,7 +3,7 @@
 banner:
   title: "Selamat Datang di MTs Negeri 1 Pandeglang"
   content: "Temukan pengalaman belajar terbaik di MTs Negeri 1 Pandeglang. Bersama kami, raih prestasi gemilang dalam lingkungan yang inspiratif, suportif, dan penuh semangat untuk masa depan Anda."
-  image: "/images/banner.png"
+  image: "/images/assets/banner.png"
   button:
     enable: true
     label: "Daftar Sekarang!"
