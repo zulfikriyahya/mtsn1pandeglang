@@ -1,53 +1,115 @@
 ---
 # Banner
 banner:
-  title: "The Ultimate Starter Template You Need To Start Your Astro Project"
-  content: "Astroplate is a free starter template built with Astro and TailwindCSS, providing everything you need to jumpstart your Astro project and save valuable time."
+  title: "Selamat Datang di MTs Negeri 1 Pandeglang"
+  content: "Sumber Belajar Terbaik yang Anda Butuhkan untuk Memulai Pendidikan di MTs Negeri 1 Pandeglang. Bergabunglah dengan kami dan raih prestasi terbaik Anda di lingkungan yang mendukung dan inspiratif."
   image: "/images/banner.png"
   button:
     enable: true
-    label: "Get Started For Free"
-    link: "https://github.com/zeon-studio/astroplate"
+    label: "Daftar Sekarang!"
+    link: "https://daftar.mtsn1pandeglang.sch.id"
 
-# Features
+# Fitur
 features:
-  - title: "What's Included in Astroplate"
-    image: "/images/service-1.png"
-    content: "Astroplate is a comprehensive starter template that includes everything you need to get started with your Astro project. What's Included in Astroplate"
+  - title: "Akreditasi"
+    image: "/images/service-3.png"
+    content: "MTs Negeri 1 Pandeglang telah diakui secara resmi oleh pemerintah dan berbagai lembaga akreditasi pendidikan. Akreditasi ini menunjukkan bahwa madrasah kami telah memenuhi standar kualitas pendidikan yang tinggi dan berkomitmen untuk terus meningkatkan mutu pendidikan yang diberikan kepada siswa-siswi."
     bulletpoints:
-      - "10+ Pre-build pages"
-      - "95+ Google Pagespeed Score"
-      - "Build with Astro and TailwindCSS for easy and customizable styling"
-      - "Fully responsive on all devices"
-      - "SEO-optimized for better search engine rankings"
-      - "**Open-source and free** for personal and commercial use"
-    button:
-      enable: false
-      label: "Get Started Now"
-      link: "#"
-
-  - title: "Discover the Key Features Of Astro"
-    image: "/images/service-2.png"
-    content: "Astro is an all-in-one web framework for building fast, content-focused websites. It offers a range of exciting features for developers and website creators. Some of the key features are:"
-    bulletpoints:
-      - "Zero JS, by default: No JavaScript runtime overhead to slow you down."
-      - "Customizable: Tailwind, MDX, and 100+ other integrations to choose from."
-      - "UI-agnostic: Supports React, Preact, Svelte, Vue, Solid, Lit and more."
+      - "Kualitas Pendidikan"
+      - "Peringkat Akreditasi A"
+      - "Standar Nasional Pendidikan"
+      - "Peningkatan Mutu Berkelanjutan"
+      - "Evaluasi dan Penilaian Berkala"
+      - "Pengakuan Resmi"
     button:
       enable: true
-      label: "Get Started Now"
-      link: "https://github.com/zeon-studio/astroplate"
+      label: "Akreditasi"
+      link: "/akreditasi"
 
-  - title: "The Top Reasons to Choose Astro for Your Next Project"
-    image: "/images/service-3.png"
-    content: "With Astro, you can build modern and content-focused websites without sacrificing performance or ease of use."
+  - title: "Fasilitas Unggulan di MTs Negeri 1 Pandeglang"
+    image: "/images/service-1.png"
+    content: "MTs Negeri 1 Pandeglang menawarkan berbagai fasilitas unggulan untuk mendukung kegiatan belajar mengajar."
     bulletpoints:
-      - "Instantly load static sites for better user experience and SEO."
-      - "Intuitive syntax and support for popular frameworks make learning and using Astro a breeze."
-      - "Use any front-end library or framework, or build custom components, for any project size."
-      - "Built on cutting-edge technology to keep your projects up-to-date with the latest web standards."
+      - "Ruang Kelas Nyaman dengan Fasilitas Lengkap"
+      - "Laboratorium Sains dan Komputer"
+      - "Perpustakaan dengan Koleksi Buku Lengkap"
+      - "Lapangan Olahraga"
+      - "Program Ekstrakurikuler yang Beragam"
+      - "Lingkungan Sekolah yang Ramah Anak dan Aman"
     button:
-      enable: false
-      label: ""
-      link: ""
+      enable: true
+      label: "Kunjungi Kami"
+      link: "https://maps.app.goo.gl/o7fvJLDUnTmxEiwT6"
+
+  - title: "Kurikulum dan Program Pendidikan"
+    image: "/images/service-2.png"
+    content: "MTs Negeri 1 Pandeglang menerapkan kurikulum yang sesuai dengan standar nasional serta berbagai program pendidikan yang inovatif."
+    bulletpoints:
+      - "Kurikulum Merdeka dengan Pendekatan Saintifik"
+      - "Program Kelas Unggulan"
+      - "Program Tahfidz Al-Qur'an"
+      - "Kelas Bilingual untuk Meningkatkan Kemampuan Bahasa Asing"
+      - "Pelatihan Keterampilan Hidup"
+      - "Bimbingan Konseling untuk Pengembangan Diri"
+    button:
+      enable: true
+      label: "Kurikulum"
+      link: "/kurikulum"
+
+  - title: "Kenapa Memilih MTs Negeri 1 Pandeglang"
+    image: "/images/service-3.png"
+    content: "Dengan memilih MTs Negeri 1 Pandeglang, Anda mendapatkan pendidikan berkualitas tinggi yang berfokus pada pengembangan akademik dan karakter."
+    bulletpoints:
+      - "Pengajar Berpengalaman dan Profesional"
+      - "Pendekatan Pembelajaran yang Inovatif"
+      - "Dukungan Penuh untuk Potensi Akademik dan Non-Akademik"
+      - "Lingkungan yang Mendukung dan Bersahabat"
+      - "Fasilitas Pendidikan yang Modern"
+    button:
+      enable: true
+      label: "Program Kami"
+      link: "/program"
+
+  - title: "Zona Integritas"
+    image: "/images/service-3.png"
+    content: "Zona Integritas di MTs Negeri 1 Pandeglang bertujuan untuk menciptakan lingkungan yang bersih dari korupsi dan membangun budaya kerja yang jujur dan transparan. Melalui program ini, madrasah kami berkomitmen untuk meningkatkan kualitas pelayanan publik dan menjaga kepercayaan masyarakat."
+    bulletpoints:
+      - "Manajemen Perubahan"
+      - "Penguatan Akuntabilitas"
+      - "Peningkatan Kualitas Pelayanan Publik"
+      - "Pendidikan Antikorupsi"
+      - "Pengawasan dan Pengendalian"
+    button:
+      enable: true
+      label: "Zona Integritas"
+      link: "/zona-integritas"
+
+  - title: "Pelayanan Terpadu Satu Pintu"
+    image: "/images/service-3.png"
+    content: "MTs Negeri 1 Pandeglang menawarkan layanan administratif dan informasi melalui Pelayanan Terpadu Satu Pintu untuk kemudahan dan kenyamanan siswa, orang tua, dan masyarakat."
+    bulletpoints:
+      - "Layanan Akademik"
+      - "Layanan Non-Akademik"
+      - "Layanan Informasi"
+      - "Pelayanan Cepat dan Efisien"
+      - "Petugas Pelayanan yang Ramah dan Profesional"
+      - "Sistem Antrian Online"
+    button:
+      enable: true
+      label: "Pelayanan"
+      link: "/pelayanan"
+
+  - title: "Ekstrakurikuler Siswa"
+    image: "/images/service-3.png"
+    content: "MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan ekstrakurikuler untuk mendukung pengembangan diri siswa."
+    bulletpoints:
+      - "Kegiatan Olahraga"
+      - "Seni dan Budaya"
+      - "Pramuka"
+      - "Klub Sains"
+      - "Kegiatan Sosial"
+    button:
+      enable: true
+      label: "Ekstrakurikuler"
+      link: "/ekstrakurikuler"
 ---

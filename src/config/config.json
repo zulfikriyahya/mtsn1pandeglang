@@ -1,7 +1,7 @@
 {
   "site": {
-    "title": "Astroplate",
-    "base_url": "https://astroplate.netlify.app",
+    "title": "MTs Negeri 1 Pandeglang",
+    "base_url": "https://mtsn1pandeglang.sch.id",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
@@ -9,7 +9,7 @@
     "logo_darkmode": "/images/logo-darkmode.png",
     "logo_width": "150",
     "logo_height": "30",
-    "logo_text": "Astroplate"
+    "logo_text": "MTs Negeri 1 Pandeglang"
   },
 
   "settings": {
@@ -17,20 +17,20 @@
     "sticky_header": true,
     "theme_switcher": true,
     "default_theme": "system",
-    "pagination": 2,
+    "pagination": 10,
     "summary_length": 200,
     "blog_folder": "blog"
   },
 
   "params": {
     "contact_form_action": "#",
-    "copyright": "Designed And Developed by [Zeon Studio](https://zeon.studio)"
+    "copyright": "[**&copy; 1970 - 2025 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br>Dibuat dan dikembangkan dengan ❤ oleh [**Yahya Zulfikri**](https://instagram.com/zulfikriyahya_)"
   },
 
   "navigation_button": {
     "enable": true,
-    "label": "Get Started",
-    "link": "https://github.com/zeon-studio/astroplate"
+    "label": "Daftar Sekarang",
+    "link": "https://admisi.mtsn1pandeglang.sch.id"
   },
 
   "google_tag_manager": {
@@ -45,8 +45,8 @@
   },
 
   "metadata": {
-    "meta_author": "zeon.studio",
-    "meta_image": "/images/og-image.png",
-    "meta_description": "astro and tailwind boilerplate"
+    "meta_author": "Yahya Zulfikri",
+    "meta_image": "/images/author.png",
+    "meta_description": "Author of MTs Negeri 1 Pandeglang"
   }
 }

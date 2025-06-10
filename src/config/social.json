@@ -1,24 +1,24 @@
 {
   "main": [
     {
-      "name": "facebook",
-      "icon": "FaFacebook",
-      "link": "https://www.facebook.com/"
+      "name": "youtube",
+      "icon": "FaYoutube",
+      "link": "https://www.youtube.com/@mtsn1pandeglangofficial"
     },
     {
-      "name": "twitter",
-      "icon": "FaTwitter",
-      "link": "https://twitter.com/"
+      "name": "instagram",
+      "icon": "FaInstagram",
+      "link": "https://www.instagram.com/mtsn1_pandeglang"
     },
     {
-      "name": "github",
-      "icon": "FaGithub",
-      "link": "https://www.github.com/"
+      "name": "email",
+      "icon": "FaEnvelope",
+      "link": "mailto:dev@mtsn1pandeglang.sch.id"
     },
     {
-      "name": "linkedin",
-      "icon": "FaLinkedin",
-      "link": "https://www.linkedin.com/"
+      "name": "whatsapp",
+      "icon": "FaWhatsapp",
+      "link": "https://wa.me/62895351856267/?text=Hallo, PTSP MTs Negeri 1 Pandeglang."
     }
   ]
 }

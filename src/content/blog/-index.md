@@ -1,5 +1,5 @@
 ---
-title: "Blog Posts"
-meta_title: ""
-description: "this is meta description"
+title: "Artikel"
+meta_title: "Artikel MTs Negeri 1 Pandeglang"
+description: "Artikel MTs Negeri 1 Pandeglang"
 ---

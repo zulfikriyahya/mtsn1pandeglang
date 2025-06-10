@@ -1,9 +1,9 @@
 ---
-title: "Hey, I am John Doe!"
-meta_title: "About"
-description: "this is meta description"
-image: "/images/avatar.png"
+title: "MTs Negeri 1 Pandeglang"
+meta_title: "Tentang MTs Negeri 1 Pandeglang"
+description: "Tentang MTs Negeri 1 Pandeglang"
+image: "/images/favicon.png"
 draft: false
 ---
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis illum nesciunt commodi vel nisi ut alias excepturi ipsum, totam, labore tempora, odit ex iste tempore sed. Fugit voluptatibus perspiciatis assumenda nulla ad nihil, omnis vel, doloremque sit quam autem optio maiores, illum eius facilis et quo consectetur provident dolor similique! Enim voluptatem dicta expedita veritatis repellat dolorum impedit, provident quasi at.
+MTs Negeri 1 Pandeglang adalah Madrasah Tsanawiyah terkemuka di Kabupaten Pandeglang, Banten - Indonesia. Madrasah ini terkenal karena prestasi gemilang yang diraihnya dalam berbagai bidang, baik akademik maupun non-akademik. Para siswa di MTs Negeri 1 Pandeglang tidak hanya dibimbing untuk meraih kesuksesan akademik, tetapi juga diperkaya dengan nilai-nilai keagamaan yang mendalam, keterampilan sosial, dan berbagai kemampuan hidup lainnya. Dengan fasilitas yang lengkap dan tenaga pengajar yang berdedikasi tinggi, MTs Negeri 1 Pandeglang terus berkomitmen untuk mencetak generasi muda yang cerdas, beriman, dan berakhlak mulia. Semua ini menjadikannya sebagai Madrasah Tsanawiyah terbaik di Kabupaten Pandeglang.

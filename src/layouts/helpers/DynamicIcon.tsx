@@ -25,7 +25,7 @@ const DynamicIcon: FC<IDynamicIcon> = ({ icon, ...props }) => {
   const Icon = IconLibrary ? IconLibrary[icon] : undefined;
 
   if (!Icon) {
-    return <span className="text-sm">Icon not found</span>;
+    return <span className="text-sm">Ikon tidak ditemukan</span>;
   }
 
   return <Icon {...props} />;
