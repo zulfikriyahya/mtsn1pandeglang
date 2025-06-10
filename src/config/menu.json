@@ -1,37 +1,6 @@
 {
   "main": [
     {
-      "name": "Beranda",
-      "url": "/"
-    },
-    {
-      "name": "Postingan",
-      "url": "",
-      "hasChildren": true,
-      "children": [
-        {
-          "name": "Artikel",
-          "url": "/blog"
-        },
-        {
-          "name": "Penulis",
-          "url": "/authors"
-        },
-        {
-          "name": "Kategori",
-          "url": "/categories"
-        },
-        {
-          "name": "Tagar",
-          "url": "/tags"
-        },
-        {
-          "name": "Kontak",
-          "url": "/contact"
-        }
-      ]
-    },
-    {
       "name": "Profil",
       "url": "",
       "hasChildren": true,
@@ -83,13 +52,40 @@
       ]
     },
     {
-      "name": "Organisasi Siswa",
+      "name": "Postingan",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Artikel",
+          "url": "/blog"
+        },
+        {
+          "name": "Penulis",
+          "url": "/authors"
+        },
+        {
+          "name": "Kategori",
+          "url": "/categories"
+        },
+        {
+          "name": "Tagar",
+          "url": "/tags"
+        },
+        {
+          "name": "Kontak",
+          "url": "/contact"
+        }
+      ]
+    },
+    {
+      "name": "Kegiatan Siswa",
       "url": "",
       "hasChildren": true,
       "children": [
         {
           "name": "OSIM",
-          "url": "/osis"
+          "url": "/osim"
         },
         {
           "name": "Pramuka",
@@ -104,32 +100,12 @@
           "url": "/pmr"
         },
         {
-          "name": "ROHIS",
-          "url": "/rohis"
-        },
-        {
-          "name": "Pandawa",
-          "url": "/pandawa"
-        },
-        {
           "name": "Adiwiyata",
           "url": "/adiwiyata"
         },
         {
           "name": "Pecinta Alam",
           "url": "/pecinta-alam"
-        },
-        {
-          "name": "English Club",
-          "url": "/english-club"
-        },
-        {
-          "name": "Japanese Club",
-          "url": "/japanese-club"
-        },
-        {
-          "name": "Footsal Club",
-          "url": "/footsal-club"
         },
         {
           "name": "Volleyball Club",
@@ -177,16 +153,8 @@
         {
           "name": "Perpustakaan",
           "url": "https://perpustakaan.mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Buku Induk",
-          "url": "https://buku-induk.mtsn1pandeglang.sch.id"
         }
       ]
-    },
-    {
-      "name": "Tentang Kami",
-      "url": "/about"
     }
   ],
   "footer": [
