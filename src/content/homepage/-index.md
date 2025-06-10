@@ -2,7 +2,7 @@
 # Banner
 banner:
   title: "Selamat Datang di MTs Negeri 1 Pandeglang"
-  content: "Sumber Belajar Terbaik yang Anda Butuhkan untuk Memulai Pendidikan di MTs Negeri 1 Pandeglang. Bergabunglah dengan kami dan raih prestasi terbaik Anda di lingkungan yang mendukung dan inspiratif."
+  content: "Temukan pengalaman belajar terbaik di MTs Negeri 1 Pandeglang. Bersama kami, raih prestasi gemilang dalam lingkungan yang inspiratif, suportif, dan penuh semangat untuk masa depan Anda."
   image: "/images/banner.png"
   button:
     enable: true
@@ -12,7 +12,7 @@ banner:
 # Fitur
 features:
   - title: "Akreditasi"
-    image: "/images/service-3.png"
+    image: "/images/assets/akreditasi.png"
     content: "MTs Negeri 1 Pandeglang telah diakui secara resmi oleh pemerintah dan berbagai lembaga akreditasi pendidikan. Akreditasi ini menunjukkan bahwa madrasah kami telah memenuhi standar kualitas pendidikan yang tinggi dan berkomitmen untuk terus meningkatkan mutu pendidikan yang diberikan kepada siswa-siswi."
     bulletpoints:
       - "Kualitas Pendidikan"
@@ -27,7 +27,7 @@ features:
       link: "/akreditasi"
 
   - title: "Fasilitas Unggulan di MTs Negeri 1 Pandeglang"
-    image: "/images/service-1.png"
+    image: "/images/assets/fasilitas.png"
     content: "MTs Negeri 1 Pandeglang menawarkan berbagai fasilitas unggulan untuk mendukung kegiatan belajar mengajar."
     bulletpoints:
       - "Ruang Kelas Nyaman dengan Fasilitas Lengkap"
@@ -42,7 +42,7 @@ features:
       link: "https://maps.app.goo.gl/o7fvJLDUnTmxEiwT6"
 
   - title: "Kurikulum dan Program Pendidikan"
-    image: "/images/service-2.png"
+    image: "/images/assets/kurikulum.png"
     content: "MTs Negeri 1 Pandeglang menerapkan kurikulum yang sesuai dengan standar nasional serta berbagai program pendidikan yang inovatif."
     bulletpoints:
       - "Kurikulum Merdeka dengan Pendekatan Saintifik"
@@ -57,7 +57,7 @@ features:
       link: "/kurikulum"
 
   - title: "Kenapa Memilih MTs Negeri 1 Pandeglang"
-    image: "/images/service-3.png"
+    image: "/images/assets/program.png"
     content: "Dengan memilih MTs Negeri 1 Pandeglang, Anda mendapatkan pendidikan berkualitas tinggi yang berfokus pada pengembangan akademik dan karakter."
     bulletpoints:
       - "Pengajar Berpengalaman dan Profesional"
@@ -71,7 +71,7 @@ features:
       link: "/program"
 
   - title: "Zona Integritas"
-    image: "/images/service-3.png"
+    image: "/images/assets/zona-integritas.png"
     content: "Zona Integritas di MTs Negeri 1 Pandeglang bertujuan untuk menciptakan lingkungan yang bersih dari korupsi dan membangun budaya kerja yang jujur dan transparan. Melalui program ini, madrasah kami berkomitmen untuk meningkatkan kualitas pelayanan publik dan menjaga kepercayaan masyarakat."
     bulletpoints:
       - "Manajemen Perubahan"
@@ -85,7 +85,7 @@ features:
       link: "/zona-integritas"
 
   - title: "Pelayanan Terpadu Satu Pintu"
-    image: "/images/service-3.png"
+    image: "/images/assets/ptsp.png"
     content: "MTs Negeri 1 Pandeglang menawarkan layanan administratif dan informasi melalui Pelayanan Terpadu Satu Pintu untuk kemudahan dan kenyamanan siswa, orang tua, dan masyarakat."
     bulletpoints:
       - "Layanan Akademik"
@@ -100,7 +100,7 @@ features:
       link: "/pelayanan"
 
   - title: "Ekstrakurikuler Siswa"
-    image: "/images/service-3.png"
+    image: "/images/assets/ekstrakurikuler.png"
     content: "MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan ekstrakurikuler untuk mendukung pengembangan diri siswa."
     bulletpoints:
       - "Kegiatan Olahraga"
