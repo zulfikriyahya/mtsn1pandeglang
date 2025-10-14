@@ -11,6 +11,7 @@ const InstallPrompt = () => {
     useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     // Check if dismissed in current session
@@ -19,6 +20,21 @@ const InstallPrompt = () => {
     // Detect iOS
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(isIOSDevice);
+
+    // Detect dark mode
+    const isDark = document.documentElement.classList.contains("dark");
+    setIsDarkMode(isDark);
+
+    // Listen for theme changes
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setIsDarkMode(isDark);
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
     const handleBeforeInstallPrompt = (e: Event) => {
       console.log("beforeinstallprompt event fired");
@@ -44,6 +60,7 @@ const InstallPrompt = () => {
         "beforeinstallprompt",
         handleBeforeInstallPrompt,
       );
+      observer.disconnect();
     };
   }, []);
 
@@ -89,10 +106,10 @@ const InstallPrompt = () => {
 
             {/* Content */}
             <div className="flex-1">
-              <h3 className="mb-1 font-semibold text-dark dark:text-darkmode-dark">
+              <h3 className="mb-1 font-semibold text-dark dark:text-white">
                 Install Aplikasi
               </h3>
-              <p className="mb-3 text-sm text-text-light dark:text-darkmode-text-light">
+              <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
                 {isIOS
                   ? "Bagikan → Tambah ke Home Screen untuk akses lebih cepat!"
                   : "Install MTs Negeri 1 Pandeglang untuk akses lebih cepat dan bisa digunakan offline!"}
@@ -110,7 +127,7 @@ const InstallPrompt = () => {
                 )}
                 <button
                   onClick={handleDismiss}
-                  className="rounded-lg bg-theme-light px-4 py-2 text-sm font-semibold text-dark transition-opacity hover:opacity-90 dark:bg-darkmode-theme-light dark:text-darkmode-dark"
+                  className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-900 transition-opacity hover:opacity-90 dark:bg-gray-700 dark:text-gray-100"
                 >
                   {isIOS ? "Tutup" : "Nanti Saja"}
                 </button>
@@ -120,7 +137,7 @@ const InstallPrompt = () => {
             {/* Close Button */}
             <button
               onClick={handleDismiss}
-              className="flex-shrink-0 text-text-light transition-colors hover:text-dark dark:text-darkmode-text-light dark:hover:text-darkmode-dark"
+              className="flex-shrink-0 text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               aria-label="Close"
             >
               <svg
