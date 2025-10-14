@@ -2,16 +2,16 @@
   "colors": {
     "default": {
       "theme_color": {
-        "primary": "#003300",        
-        "body": "#d1efd7",           
-        "border": "#a4d7b4",         
-        "light": "#effaf3",          
-        "dark": "#001f00"            
+        "primary": "#003300",
+        "body": "#d1efd7",
+        "border": "#a4d7b4",
+        "light": "#effaf3",
+        "dark": "#001f00"
       },
       "text_color": {
-        "text": "#334433",           
-        "text-dark": "#002200",      
-        "text-light": "#6a8a76"      
+        "text": "#334433",
+        "text-dark": "#002200",
+        "text-light": "#6a8a76"
       }
     },
     "darkmode": {
@@ -31,7 +31,7 @@
   },
   "fonts": {
     "font_family": {
-      "primary": "Heebo:wght@400;600",
+      "primary": "Ubuntu:wght@400;600",
       "primary_type": "sans-serif",
       "secondary": "Signika:wght@500;700",
       "secondary_type": "sans-serif"
