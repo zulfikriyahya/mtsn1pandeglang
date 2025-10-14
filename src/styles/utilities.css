@@ -10,3 +10,18 @@
 @utility form-label {
   @apply mb-4 block font-secondary text-xl font-normal text-text-dark dark:text-darkmode-text-light;
 }
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
