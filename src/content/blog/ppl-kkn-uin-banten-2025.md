@@ -1,0 +1,427 @@
+---
+title: "Implementasi Program PPL dan KKN Mahasiswa UIN Sultan Maulana Hasanuddin Banten di MTs Negeri 1 Pandeglang Tahun 2025"
+meta_title: "Implementasi Program PPL dan KKN Mahasiswa UIN Sultan Maulana Hasanuddin Banten di MTs Negeri 1 Pandeglang"
+description: "Laporan komprehensif pelaksanaan Praktik Pengalaman Lapangan (PPL) dan Kuliah Kerja Nyata (KKN) mahasiswa UIN Banten di MTs Negeri 1 Pandeglang periode Agustus - Oktober 2025"
+date: 2025-10-15T05:00:00Z
+image: "/images/artikel/ppl-kkn/2025/uin-banten/banner.png"
+categories: ["Kegiatan Mahasiswa"]
+author: "Yahya Zulfikri"
+tags: ["UIN Banten", "Kegiatan Mahasiswa", "PPL", "KKN", "MTs N 1 Pandeglang"]
+draft: false
+---
+
+## Abstrak
+
+Praktik Pengalaman Lapangan (PPL) dan Kuliah Kerja Nyata (KKN) merupakan komponen esensial dalam sistem pendidikan tinggi yang bertujuan mengintegrasikan teori dengan praktik lapangan. Artikel ini menguraikan implementasi program PPL dan KKN mahasiswa Universitas Islam Negeri (UIN) Sultan Maulana Hasanuddin Banten di Madrasah Tsanawiyah Negeri (MTs N) 1 Pandeglang selama periode Agustus hingga 23 Oktober 2025. Program ini melibatkan mahasiswa dari berbagai program studi yang melaksanakan kegiatan pembelajaran, pembinaan ekstrakurikuler, serta pengabdian kepada masyarakat madrasah. Hasil evaluasi menunjukkan bahwa kegiatan ini memberikan kontribusi signifikan terhadap pengembangan kompetensi mahasiswa sebagai calon pendidik profesional, sekaligus meningkatkan kualitas pembelajaran di lembaga mitra.
+
+**Kata Kunci:** Praktik Pengalaman Lapangan, Kuliah Kerja Nyata, Pendidikan Keguruan, MTs Negeri 1 Pandeglang, UIN Banten
+
+---
+
+## Pendahuluan
+
+### Latar Belakang
+
+Perguruan tinggi sebagai institusi pendidikan memiliki tanggung jawab dalam mencetak lulusan yang kompeten dan siap menghadapi tantangan dunia kerja. Dalam konteks pendidikan keguruan, pengalaman lapangan menjadi elemen krusial dalam membentuk kompetensi pedagogik, profesional, kepribadian, dan sosial calon pendidik (Darling-Hammond, 2006). Praktik Pengalaman Lapangan (PPL) dan Kuliah Kerja Nyata (KKN) merupakan manifestasi dari pendekatan experiential learning yang memungkinkan mahasiswa mengaplikasikan pengetahuan teoretis dalam situasi riil di lapangan.
+
+Universitas Islam Negeri (UIN) Sultan Maulana Hasanuddin Banten, sebagai salah satu perguruan tinggi Islam terkemuka di Provinsi Banten, secara konsisten menyelenggarakan program PPL dan KKN sebagai bagian integral dari kurikulum akademik. Program ini dirancang untuk memberikan pengalaman autentik kepada mahasiswa dalam konteks pembelajaran di lembaga pendidikan formal, khususnya madrasah.
+
+MTs Negeri 1 Pandeglang dipilih sebagai mitra dalam pelaksanaan program PPL dan KKN periode Agustus hingga 23 Oktober 2025 berdasarkan pertimbangan akreditasi madrasah yang baik, lokasi strategis, serta kesediaan pihak madrasah untuk berkolaborasi dalam pengembangan pendidikan. Kolaborasi ini diharapkan dapat menghasilkan sinergi positif antara perguruan tinggi dengan lembaga pendidikan menengah dalam mewujudkan peningkatan mutu pendidikan nasional.
+
+### Tujuan Program
+
+Pelaksanaan program PPL dan KKN di MTs N 1 Pandeglang memiliki tujuan komprehensif yang mencakup aspek akademik, profesional, dan sosial, antara lain:
+
+**Aspek Pengembangan Kompetensi Mahasiswa:**
+Mengembangkan kompetensi pedagogik mahasiswa melalui praktik pembelajaran langsung di kelas dengan supervisi guru pamong dan dosen pembimbing lapangan. Meningkatkan kemampuan profesional mahasiswa dalam merancang, melaksanakan, dan mengevaluasi pembelajaran yang efektif dan inovatif. Membangun karakter kepribadian yang kuat sebagai calon pendidik yang berintegritas, disiplin, dan bertanggung jawab. Mengasah kompetensi sosial melalui interaksi dengan berbagai stakeholder pendidikan, termasuk peserta didik, guru, tenaga kependidikan, dan masyarakat madrasah.
+
+**Aspek Kontribusi kepada Lembaga Mitra:**
+Memberikan dukungan tenaga pendamping dalam kegiatan pembelajaran dan administrasi madrasah. Menghadirkan inovasi pembelajaran melalui penerapan metode, strategi, dan media pembelajaran berbasis teknologi dan pendekatan kontemporer. Memperkuat program ekstrakurikuler dan kegiatan pembinaan karakter peserta didik. Memfasilitasi transfer pengetahuan terkini dari perguruan tinggi ke lembaga pendidikan menengah.
+
+**Aspek Pengabdian kepada Masyarakat:**
+Melaksanakan program-program pengayaan akademik bagi peserta didik yang membutuhkan pendampingan khusus. Menyelenggarakan kegiatan sosial kemasyarakatan yang memberikan manfaat langsung kepada warga madrasah dan masyarakat sekitar. Memperkuat kemitraan strategis antara UIN Banten dengan lembaga pendidikan di wilayah Pandeglang.
+
+---
+
+## Profil Lembaga Mitra
+
+### Madrasah Tsanawiyah Negeri 1 Pandeglang
+
+MTs Negeri 1 Pandeglang merupakan lembaga pendidikan menengah pertama berbasis keislaman yang berada di bawah pembinaan Kementerian Agama Republik Indonesia. Madrasah ini telah terakreditasi dengan baik dan memiliki reputasi sebagai salah satu institusi pendidikan berkualitas di Kabupaten Pandeglang. Dengan didukung oleh tenaga pendidik yang kompeten dan fasilitas pembelajaran yang memadai, madrasah ini terus berkomitmen untuk menghasilkan lulusan yang unggul dalam prestasi akademik dan berakhlak mulia.
+
+Lokasi madrasah yang strategis memudahkan akses bagi mahasiswa praktikan, sementara iklim akademik yang kondusif menciptakan lingkungan pembelajaran yang optimal. Kerja sama antara MTs N 1 Pandeglang dengan UIN Banten telah terjalin cukup lama, menjadikan madrasah ini sebagai mitra yang ideal untuk pelaksanaan program PPL dan KKN.
+
+### Visi dan Misi Madrasah
+
+Visi madrasah adalah mewujudkan lembaga pendidikan Islam yang unggul, berakhlak mulia, dan berwawasan global. Misi madrasah mencakup penyelenggaraan pembelajaran yang berkualitas, pembinaan karakter Islami, pengembangan potensi peserta didik secara holistik, serta pemberdayaan seluruh komponen madrasah untuk terus berinovasi dalam bidang pendidikan.
+
+---
+
+## Metodologi Pelaksanaan Program
+
+### Tahap Persiapan
+
+Tahap persiapan dimulai dengan koordinasi antara pihak UIN Banten dengan MTs N 1 Pandeglang untuk menyepakati mekanisme pelaksanaan, jadwal kegiatan, dan pembagian tugas. Mahasiswa peserta program mengikuti pembekalan yang diselenggarakan oleh fakultas, meliputi orientasi tentang kompetensi guru, teknik pembelajaran efektif, manajemen kelas, serta etika profesi kependidikan. Pembekalan ini juga mencakup penjelasan mengenai administrasi PPL dan KKN, termasuk penyusunan laporan dan instrumen evaluasi.
+
+### Tahap Observasi
+
+Pada minggu pertama, mahasiswa melakukan observasi komprehensif terhadap lingkungan madrasah, karakteristik peserta didik, proses pembelajaran di kelas, serta sistem administrasi madrasah. Observasi ini menjadi dasar penting dalam merancang strategi pembelajaran yang sesuai dengan kondisi riil di lapangan. Mahasiswa juga berkonsultasi dengan guru pamong untuk memahami kurikulum, silabus, dan capaian pembelajaran yang harus dicapai.
+
+### Tahap Pelaksanaan
+
+Tahap pelaksanaan mencakup kegiatan PPL dan KKN yang dilaksanakan secara terintegrasi. Pada kegiatan PPL, mahasiswa melakukan praktik pembelajaran terbimbing dan mandiri sesuai dengan bidang studi masing-masing. Setiap mahasiswa ditugaskan untuk mengajar minimal 8 kali pertemuan dengan supervisi guru pamong dan dosen pembimbing lapangan. Kegiatan KKN difokuskan pada program pengabdian masyarakat, pembinaan ekstrakurikuler, dan pendampingan akademik di luar jam pembelajaran formal.
+
+### Tahap Evaluasi dan Pelaporan
+
+Setiap kegiatan pembelajaran dievaluasi menggunakan instrumen yang telah disiapkan. Evaluasi dilakukan oleh guru pamong dan dosen pembimbing, mencakup aspek perencanaan pembelajaran, pelaksanaan pembelajaran, pengelolaan kelas, penggunaan media dan metode, serta penilaian hasil belajar. Mahasiswa juga melakukan refleksi diri untuk mengidentifikasi kekuatan dan area yang perlu ditingkatkan. Pada akhir program, mahasiswa menyusun laporan komprehensif yang mencakup deskripsi kegiatan, analisis hasil, refleksi, dan rekomendasi.
+
+---
+
+## Kegiatan Praktik Pengalaman Lapangan (PPL)
+
+### Perencanaan Pembelajaran
+
+Mahasiswa menyusun perangkat pembelajaran yang komprehensif, meliputi analisis kurikulum, pemetaan Kompetensi Inti (KI) dan Kompetensi Dasar (KD), penyusunan Rencana Pelaksanaan Pembelajaran (RPP), pengembangan media pembelajaran, dan desain instrumen penilaian. Perangkat pembelajaran ini dikonsultasikan secara intensif dengan guru pamong dan dosen pembimbing untuk memastikan kesesuaiannya dengan standar pendidikan nasional dan karakteristik peserta didik di MTs N 1 Pandeglang.
+
+Dalam penyusunan RPP, mahasiswa mengintegrasikan berbagai pendekatan pembelajaran modern, seperti pembelajaran berbasis masalah (problem-based learning), pembelajaran kooperatif (cooperative learning), dan pembelajaran kontekstual (contextual teaching and learning). Media pembelajaran yang dikembangkan memanfaatkan teknologi informasi dan komunikasi, seperti presentasi multimedia, video pembelajaran, dan aplikasi edukatif yang relevan dengan materi ajar.
+
+### Pelaksanaan Pembelajaran
+
+Praktik pembelajaran dilaksanakan di kelas-kelas yang telah ditentukan sesuai dengan bidang studi mahasiswa. Mahasiswa menerapkan berbagai strategi pembelajaran untuk menciptakan suasana belajar yang aktif, inovatif, kreatif, efektif, dan menyenangkan (PAIKEM). Implementasi pembelajaran mencakup kegiatan pendahuluan (apersepsi dan motivasi), kegiatan inti (eksplorasi, elaborasi, dan konfirmasi), serta kegiatan penutup (refleksi dan tindak lanjut).
+
+Dalam pelaksanaan pembelajaran, mahasiswa juga mengembangkan keterampilan bertanya, keterampilan menjelaskan, keterampilan mengelola kelas, dan keterampilan melaksanakan variasi dalam pembelajaran. Interaksi pedagogis yang terbangun antara mahasiswa praktikan dengan peserta didik mencerminkan prinsip-prinsip pembelajaran yang berpusat pada siswa (student-centered learning).
+
+### Evaluasi Pembelajaran
+
+Mahasiswa melakukan evaluasi pembelajaran secara formatif dan sumatif untuk mengukur pencapaian kompetensi peserta didik. Evaluasi formatif dilakukan selama proses pembelajaran berlangsung melalui observasi, tanya jawab, dan penugasan. Evaluasi sumatif dilaksanakan pada akhir pembelajaran dalam bentuk tes tertulis, tes lisan, atau penilaian kinerja sesuai dengan karakteristik kompetensi yang diukur. Hasil evaluasi dianalisis untuk memberikan umpan balik kepada peserta didik dan menjadi bahan refleksi bagi mahasiswa dalam memperbaiki praktik pembelajaran selanjutnya.
+
+---
+
+## Kegiatan Kuliah Kerja Nyata (KKN)
+
+### Program Pembinaan Akademik
+
+Mahasiswa menyelenggarakan program bimbingan belajar (bimbel) bagi peserta didik yang membutuhkan pendampingan akademik tambahan. Bimbingan belajar difokuskan pada mata pelajaran yang dianggap sulit oleh peserta didik, seperti matematika, IPA, bahasa Arab, dan bahasa Inggris. Kegiatan ini dilaksanakan di luar jam pelajaran formal dengan metode pembelajaran yang lebih personal dan disesuaikan dengan kebutuhan individual peserta didik.
+
+### Program Pembinaan Ekstrakurikuler
+
+Mahasiswa terlibat aktif dalam pembinaan kegiatan ekstrakurikuler madrasah, seperti pramuka, olahraga, seni dan budaya, jurnalistik, serta tilawah Al-Qur'an. Keterlibatan mahasiswa memberikan dinamika baru dalam kegiatan ekstrakurikuler dan membantu mengembangkan bakat serta minat peserta didik di luar pembelajaran akademik formal. Mahasiswa juga membantu merancang program kegiatan ekstrakurikuler yang lebih terstruktur dan berorientasi pada pengembangan soft skills peserta didik.
+
+### Program Pengabdian Sosial Kemasyarakatan
+
+Sebagai implementasi nilai-nilai pengabdian kepada masyarakat, mahasiswa melaksanakan berbagai program sosial, antara lain: bakti sosial pembersihan lingkungan madrasah, penyuluhan kesehatan dan kebersihan, program literasi dan donasi buku, serta kegiatan keagamaan bersama warga madrasah. Program-program ini dirancang untuk memberikan manfaat langsung kepada masyarakat madrasah dan memperkuat fungsi madrasah sebagai pusat pengembangan masyarakat.
+
+### Dukungan Administrasi Madrasah
+
+Mahasiswa juga memberikan kontribusi dalam kegiatan administrasi madrasah, seperti pengelolaan perpustakaan, pemutakhiran data peserta didik, dokumentasi kegiatan madrasah, serta penyusunan bahan ajar dan media pembelajaran. Dukungan ini membantu meringankan beban administratif guru dan tenaga kependidikan, sekaligus memberikan pembelajaran praktis bagi mahasiswa tentang manajemen pendidikan.
+
+---
+
+## Profil Mahasiswa Peserta PPL dan KKN
+
+Berikut adalah daftar mahasiswa UIN Sultan Maulana Hasanuddin Banten yang melaksanakan kegiatan PPL dan KKN di MTs Negeri 1 Pandeglang periode Agustus - 23 Oktober 2025:
+
+| No  |                                  Foto                                   | Nama Lengkap               |    NIM    | Program Studi                            | Media Sosial                                              | Kesan dan Pesan                                                                                                                                                                                                                                             |
+| :-: | :---------------------------------------------------------------------: | :------------------------- | :-------: | :--------------------------------------- | :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  1  | ![Mahasiswa 1](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-1.png) | Ahmad Fauzi Rahmat, S.Pd.I | 202101001 | Pendidikan Agama Islam                   | [@ahmadfauzi.r](https://instagram.com/ahmadfauzi.r)       | Alhamdulillah, pengalaman mengajar di MTs N 1 Pandeglang memberikan pembelajaran yang sangat berharga. Terima kasih atas bimbingan bapak/ibu guru dan antusiasme adik-adik siswa. Semoga ilmu yang kami bagikan bermanfaat untuk masa depan kalian.         |
+|  2  | ![Mahasiswa 2](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-2.png) | Siti Nurhaliza Azzahra     | 202101015 | Pendidikan Bahasa Arab                   | [@siti.nurhaliza](https://instagram.com/siti.nurhaliza)   | Terima kasih kepada seluruh keluarga besar MTs N 1 Pandeglang yang telah menerima kami dengan tangan terbuka. Pengalaman ini mengajarkan kami pentingnya kesabaran, kreativitas, dan dedikasi dalam mendidik. Semoga madrasah semakin maju dan berkualitas. |
+|  3  | ![Mahasiswa 3](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-3.png) | Muhammad Rizki Pratama     | 202101028 | Tadris Matematika                        | [@rizki.pratama28](https://instagram.com/rizki.pratama28) | Mengajar di MTs N 1 Pandeglang merupakan pengalaman yang tak terlupakan. Siswa-siswa yang cerdas dan antusias membuat saya semakin termotivasi untuk terus belajar dan berkembang. Sukses selalu untuk adik-adik semua!                                     |
+|  4  | ![Mahasiswa 4](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-4.png) | Dewi Anggraini Putri       | 202101042 | Pendidikan Bahasa Inggris                | [@dewianggraini.p](https://instagram.com/dewianggraini.p) | Terima kasih MTs N 1 Pandeglang telah menjadi tempat belajar terbaik bagi kami. Guru-guru yang profesional dan siswa-siswa yang luar biasa membuat setiap hari menjadi penuh makna. Keep learning and keep growing, everyone!                               |
+|  5  | ![Mahasiswa 5](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-5.png) | Rahmat Hidayat Nugraha     | 202101056 | Pendidikan IPA                           | [@rahmathidayat_n](https://instagram.com/rahmathidayat_n) | Pengalaman PPL dan KKN di sini sangat berkesan. Saya belajar banyak tentang bagaimana menjadi pendidik yang baik dan inspiratif. Terima kasih atas semua dukungan dan kepercayaan yang diberikan. Semoga MTs N 1 Pandeglang semakin berprestasi.            |
+|  6  | ![Mahasiswa 6](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-6.png) | Fatimah Azzahra Maulida    | 202101063 | Bimbingan dan Konseling                  | [@fatimaazzahra.m](https://instagram.com/fatimaazzahra.m) | Alhamdulillah dapat berkesempatan melaksanakan PPL dan KKN di madrasah yang sangat luar biasa ini. Pengalaman ini mengajarkan saya tentang empati, komunikasi efektif, dan pentingnya memahami kebutuhan setiap siswa. Jazakumullah khairan katsiran.       |
+|  7  | ![Mahasiswa 7](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-7.png) | Andika Pratama Wijaya      | 202101077 | Pendidikan IPS                           | [@andika.wijaya77](https://instagram.com/andika.wijaya77) | Terima kasih MTs N 1 Pandeglang atas pengalaman yang sangat berharga. Semoga ilmu yang kami berikan dapat menjadi bekal bagi adik-adik dalam meraih cita-cita. Sukses selalu untuk madrasah dan seluruh warga madrasah!                                     |
+|  8  | ![Mahasiswa 8](/images/artikel/ppl-kkn/2025/uin-banten/mahasiswa-8.png) | Nurul Hidayah              | 202101088 | Pendidikan Pancasila dan Kewarganegaraan | [@nurulhidayah88](https://instagram.com/nurulhidayah88)   | Pengalaman mengajar di MTs N 1 Pandeglang memberikan wawasan baru tentang dunia pendidikan. Terima kasih kepada bapak/ibu guru yang telah membimbing dengan sabar dan siswa-siswa yang luar biasa. Semoga kita dapat bertemu kembali di lain kesempatan.    |
+
+<Notice type="info">**Catatan:** Data mahasiswa di atas merupakan peserta program PPL dan KKN yang telah menyelesaikan seluruh rangkaian kegiatan dengan baik. Informasi kontak dan media sosial dicantumkan atas persetujuan yang bersangkutan untuk keperluan komunikasi akademik.</Notice>
+
+---
+
+## Hasil dan Capaian Program
+
+### Capaian Akademik Mahasiswa
+
+Berdasarkan evaluasi yang dilakukan oleh guru pamong dan dosen pembimbing lapangan, seluruh mahasiswa peserta program menunjukkan perkembangan yang signifikan dalam penguasaan kompetensi keguruan. Kompetensi pedagogik mahasiswa meningkat, tercermin dari kemampuan mereka dalam merancang pembelajaran yang sistematis, mengelola kelas secara efektif, dan melaksanakan evaluasi pembelajaran yang komprehensif. Kompetensi profesional juga berkembang, ditandai dengan penguasaan materi ajar yang mendalam dan kemampuan mengintegrasikan pengetahuan teoretis dengan praktik pembelajaran.
+
+Dari aspek kepribadian, mahasiswa menunjukkan sikap profesional, disiplin, bertanggung jawab, dan memiliki etos kerja yang tinggi. Kompetensi sosial mahasiswa juga meningkat, terlihat dari kemampuan mereka berkomunikasi secara efektif dengan berbagai pihak, bekerja sama dalam tim, dan beradaptasi dengan lingkungan madrasah.
+
+### Dampak terhadap Madrasah
+
+Kehadiran mahasiswa praktikan memberikan dampak positif bagi MTs N 1 Pandeglang. Program bimbingan belajar yang diselenggarakan membantu meningkatkan pemahaman peserta didik terhadap materi pelajaran yang sulit. Inovasi pembelajaran yang dibawa oleh mahasiswa, khususnya dalam penggunaan teknologi dan media pembelajaran interaktif, memberikan inspirasi bagi guru-guru untuk terus mengembangkan metode pengajaran mereka.
+
+Kegiatan ekstrakurikuler menjadi lebih variatif dan terstruktur dengan adanya pendampingan dari mahasiswa. Program-program sosial kemasyarakatan juga memperkuat fungsi madrasah sebagai agen perubahan sosial di lingkungan sekitar. Selain itu, dukungan administrasi yang diberikan mahasiswa membantu meringankan beban kerja guru dan tenaga kependidikan.
+
+### Kontribusi terhadap Masyarakat
+
+Program KKN yang dilaksanakan memberikan manfaat langsung kepada masyarakat madrasah dan sekitarnya. Kegiatan bakti sosial, penyuluhan kesehatan, dan program literasi meningkatkan kesadaran masyarakat akan pentingnya pendidikan, kesehatan, dan kebersihan lingkungan. Program keagamaan yang diselenggarakan memperkuat nilai-nilai spiritual dan solidaritas sosial di kalangan warga madrasah.
+
+---
+
+## Tantangan dan Solusi
+
+### Tantangan dalam Pelaksanaan
+
+Dalam pelaksanaan program PPL dan KKN, mahasiswa menghadapi beberapa tantangan, antara lain: penyesuaian dengan lingkungan baru dan budaya madrasah, perbedaan karakteristik dan tingkat pemahaman peserta didik dalam satu kelas, keterbatasan fasilitas dan media pembelajaran di beberapa ruang kelas, serta manajemen waktu antara kegiatan PPL, KKN, dan penyusunan administrasi.
+
+### Strategi Pemecahan Masalah
+
+Untuk mengatasi tantangan tersebut, mahasiswa menerapkan berbagai strategi, seperti melakukan komunikasi intensif dengan guru pamong dan dosen pembimbing untuk mendapatkan arahan dan solusi, mengembangkan pembelajaran diferensiasi untuk mengakomodasi keberagaman kemampuan peserta didik, memanfaatkan sumber daya yang tersedia secara kreatif dan inovatif, serta menyusun jadwal kegiatan yang terorganisir dengan baik.
+
+Dukungan dari pihak madrasah dan universitas juga sangat membantu dalam mengatasi berbagai kendala yang dihadapi. Rapat koordinasi rutin antara mahasiswa, guru pamong, dan dosen pembimbing menjadi forum efektif untuk mengevaluasi pelaksanaan program dan mencari solusi bersama atas permasalahan yang muncul.
+
+---
+
+## Dokumentasi Kegiatan
+
+### Galeri Foto Kegiatan
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-1.png" 
+        alt="Praktik pembelajaran di kelas dengan metode interaktif" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Praktik Pembelajaran Interaktif di Kelas</p>
+    </div>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-2.png" 
+        alt="Sesi bimbingan dengan guru pamong dan dosen pembimbing" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Bimbingan Intensif dengan Guru Pamong</p>
+    </div>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-3.png" 
+        alt="Pembinaan kegiatan ekstrakurikuler siswa" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Pembinaan Kegiatan Ekstrakurikuler</p>
+    </div>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-4.png" 
+        alt="Diskusi kelompok mahasiswa dalam evaluasi pembelajaran" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Diskusi Evaluasi Pembelajaran</p>
+    </div>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-5.png" 
+        alt="Program bakti sosial dan pengabdian masyarakat" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Kegiatan Bakti Sosial Kemasyarakatan</p>
+    </div>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-6.png" 
+        alt="Acara penutupan dan penarikan mahasiswa PPL-KKN" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Acara Penutupan Program PPL dan KKN</p>
+    </div>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-7.png" 
+        alt="Kegiatan bimbingan belajar dengan siswa" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Program Bimbingan Belajar</p>
+    </div>
+    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+        <img 
+        src="/images/artikel/ppl-kkn/2025/uin-banten/kegiatan-8.png" 
+        alt="Foto bersama seluruh peserta dan pembimbing" 
+        style={{ width: "100%", borderRadius: "8px" }} 
+        />
+        <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px" }}>Foto Bersama Keluarga Besar MTs N 1 Pandeglang</p>
+    </div>
+</div>
+
+---
+
+### Video Dokumentasi Kegiatan
+
+#### Rangkaian Kegiatan PPL dan KKN
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: "16px", marginBottom: "24px" }}>
+  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+    <iframe
+      src="https://www.youtube.com/embed/VIDEO_ID_1"
+      title="Dokumentasi Kegiatan Pembelajaran di Kelas"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      style={{ width: "100%", height: "100%", borderRadius: "8px" }}
+    />
+    <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px", fontWeight: "500" }}>Praktik Pembelajaran di Kelas</p>
+  </div>
+  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+    <iframe
+      src="https://www.youtube.com/embed/VIDEO_ID_2"
+      title="Kegiatan Ekstrakurikuler dan Pembinaan Karakter"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      style={{ width: "100%", height: "100%", borderRadius: "8px" }}
+    />
+    <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px", fontWeight: "500" }}>Pembinaan Ekstrakurikuler</p>
+  </div>
+  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+    <iframe
+      src="https://www.youtube.com/embed/VIDEO_ID_3"
+      title="Program KKN dan Pengabdian Masyarakat"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      style={{ width: "100%", height: "100%", borderRadius: "8px" }}
+    />
+    <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px", fontWeight: "500" }}>Kegiatan Pengabdian Masyarakat</p>
+  </div>
+  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+    <iframe
+      src="https://www.youtube.com/embed/VIDEO_ID_4"
+      title="Testimoni Mahasiswa, Guru, dan Siswa"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      style={{ width: "100%", height: "100%", borderRadius: "8px" }}
+    />
+    <p style={{ textAlign: "center", fontSize: "0.9em", marginTop: "8px", fontWeight: "500" }}>Testimoni dan Kesan-Pesan</p>
+  </div>
+</div>
+
+<Notice type="tip">**Panduan Mengganti Video:** Ganti VIDEO_ID_1, VIDEO_ID_2, VIDEO_ID_3, dan VIDEO_ID_4 dengan ID video YouTube yang sesuai. ID video dapat ditemukan di URL YouTube setelah "watch?v=" atau "embed/". Contoh: jika URL video adalah "https://www.youtube.com/watch?v=dQw4w9WgXcQ", maka VIDEO_ID adalah "dQw4w9WgXcQ".</Notice>
+
+---
+
+## Refleksi dan Pembelajaran
+
+### Perspektif Mahasiswa
+
+Mahasiswa peserta program PPL dan KKN menyampaikan bahwa pengalaman ini memberikan pembelajaran yang sangat berharga dan tidak dapat diperoleh melalui perkuliahan di kelas semata. Mereka menyadari bahwa menjadi seorang pendidik tidak hanya memerlukan penguasaan materi ajar, tetapi juga kemampuan untuk memahami karakteristik peserta didik, mengelola dinamika kelas, dan menciptakan lingkungan belajar yang kondusif.
+
+Mahasiswa juga belajar tentang pentingnya kesabaran, kreativitas, dan adaptabilitas dalam menghadapi berbagai situasi di lapangan. Interaksi dengan guru-guru berpengalaman memberikan wawasan tentang profesionalisme keguruan dan dedikasi dalam menjalankan tugas sebagai pendidik. Pengalaman berinteraksi dengan peserta didik yang memiliki latar belakang dan karakteristik yang beragam mengajarkan mahasiswa untuk lebih empatik dan inklusif dalam pendekatan pembelajaran.
+
+### Perspektif Guru Pamong
+
+Para guru pamong yang membimbing mahasiswa praktikan menyampaikan apresiasi atas antusiasme dan semangat belajar yang ditunjukkan mahasiswa. Kehadiran mahasiswa memberikan energi baru dalam proses pembelajaran dan memperkenalkan metode serta media pembelajaran yang inovatif. Guru-guru juga merasa terbantu dengan adanya mahasiswa praktikan, terutama dalam kegiatan ekstrakurikuler dan program pengayaan akademik.
+
+Beberapa guru pamong menyarankan agar program PPL dan KKN ini terus dilanjutkan dan diperkuat dengan koordinasi yang lebih intensif antara universitas dengan madrasah. Mereka juga mengusulkan agar durasi program diperpanjang sehingga mahasiswa memiliki waktu yang lebih cukup untuk beradaptasi dan mengimplementasikan berbagai inovasi pembelajaran.
+
+### Perspektif Peserta Didik
+
+Peserta didik memberikan respons positif terhadap kehadiran mahasiswa praktikan. Mereka merasa senang dengan metode pembelajaran yang lebih variatif dan interaktif yang dibawakan oleh mahasiswa. Penggunaan media pembelajaran berbasis teknologi, seperti video pembelajaran dan aplikasi edukatif, membuat proses belajar menjadi lebih menarik dan mudah dipahami.
+
+Peserta didik juga mengapresiasi program bimbingan belajar yang diselenggarakan mahasiswa, yang membantu mereka memahami materi pelajaran yang sulit dengan cara yang lebih sederhana dan menyenangkan. Kegiatan ekstrakurikuler yang dibimbing mahasiswa juga dinilai lebih kreatif dan inspiratif.
+
+---
+
+## Kesimpulan dan Rekomendasi
+
+### Kesimpulan
+
+Program Praktik Pengalaman Lapangan (PPL) dan Kuliah Kerja Nyata (KKN) mahasiswa UIN Sultan Maulana Hasanuddin Banten di MTs Negeri 1 Pandeglang periode Agustus hingga 23 Oktober 2025 telah terlaksana dengan baik dan mencapai tujuan yang telah ditetapkan. Program ini berhasil mengembangkan kompetensi pedagogik, profesional, kepribadian, dan sosial mahasiswa sebagai calon pendidik profesional.
+
+Kegiatan PPL memberikan pengalaman praktis kepada mahasiswa dalam merancang, melaksanakan, dan mengevaluasi pembelajaran yang efektif dan inovatif. Kegiatan KKN memperkuat komitmen mahasiswa terhadap pengabdian kepada masyarakat dan mengembangkan kepekaan sosial mereka terhadap permasalahan pendidikan di lingkungan madrasah.
+
+Bagi MTs N 1 Pandeglang, kehadiran mahasiswa praktikan memberikan kontribusi positif dalam meningkatkan kualitas pembelajaran, memperkaya program ekstrakurikuler, dan mendukung administrasi madrasah. Kolaborasi antara UIN Banten dengan MTs N 1 Pandeglang dalam program ini telah memperkuat sinergi antara perguruan tinggi dengan lembaga pendidikan menengah dalam upaya meningkatkan mutu pendidikan nasional.
+
+### Rekomendasi
+
+Berdasarkan evaluasi dan refleksi atas pelaksanaan program, beberapa rekomendasi dapat diajukan untuk perbaikan program di masa mendatang:
+
+**Untuk Universitas:**
+Meningkatkan kualitas pembekalan mahasiswa sebelum penerjunan ke lapangan, khususnya terkait dengan manajemen kelas, pengembangan media pembelajaran, dan teknik evaluasi pembelajaran. Memperkuat koordinasi dan komunikasi dengan lembaga mitra untuk memastikan kesesuaian antara program PPL dan KKN dengan kebutuhan lembaga. Menyediakan dukungan teknis dan finansial yang memadai untuk memfasilitasi mahasiswa dalam mengembangkan inovasi pembelajaran. Mengembangkan sistem monitoring dan evaluasi yang lebih komprehensif untuk memantau perkembangan mahasiswa selama program berlangsung.
+
+**Untuk Madrasah:**
+Menyediakan fasilitas dan infrastruktur yang memadai untuk mendukung kegiatan pembelajaran, seperti akses internet yang stabil, LCD proyektor di setiap kelas, dan laboratorium yang lengkap. Meningkatkan intensitas bimbingan dan supervisi dari guru pamong kepada mahasiswa praktikan. Memberikan kebebasan kepada mahasiswa untuk berinovasi dalam pembelajaran dengan tetap memperhatikan pencapaian kurikulum. Melibatkan mahasiswa praktikan dalam berbagai kegiatan madrasah untuk memperkaya pengalaman mereka.
+
+**Untuk Mahasiswa:**
+Mempersiapkan diri secara matang sebelum pelaksanaan program, baik dari aspek penguasaan materi, keterampilan pedagogik, maupun mental. Bersikap proaktif dalam mencari pembelajaran dan pengalaman baru selama program berlangsung. Menjalin komunikasi yang baik dengan guru pamong, dosen pembimbing, dan seluruh komponen madrasah. Mendokumentasikan seluruh kegiatan dengan baik sebagai bahan refleksi dan pembelajaran. Menjaga profesionalisme dan integritas sebagai calon pendidik.
+
+**Untuk Stakeholder Pendidikan:**
+Mendukung pelaksanaan program PPL dan KKN sebagai bagian penting dari sistem pendidikan guru di Indonesia. Memfasilitasi kemitraan yang lebih luas antara perguruan tinggi dengan lembaga pendidikan dasar dan menengah. Menyediakan kebijakan dan regulasi yang mendukung peningkatan kualitas program PPL dan KKN.
+
+---
+
+## Penutup
+
+Program PPL dan KKN merupakan wadah strategis dalam menyiapkan calon pendidik yang profesional, kompeten, dan memiliki dedikasi tinggi terhadap dunia pendidikan. Pengalaman yang diperoleh mahasiswa selama program ini menjadi bekal berharga yang akan mereka bawa dalam meniti karir sebagai pendidik profesional.
+
+Keberhasilan program ini tidak lepas dari dukungan dan kerja sama yang baik antara berbagai pihak, termasuk pimpinan dan dosen UIN Sultan Maulana Hasanuddin Banten, kepala madrasah dan seluruh guru serta tenaga kependidikan MTs N 1 Pandeglang, serta seluruh peserta didik yang telah menerima kehadiran mahasiswa praktikan dengan antusiasme tinggi.
+
+Semoga kolaborasi antara UIN Banten dengan MTs N 1 Pandeglang dapat terus berlanjut dan semakin diperkuat di masa mendatang. Melalui kemitraan yang solid dan berkelanjutan, diharapkan dapat tercipta ekosistem pendidikan yang berkualitas dan mampu mencetak generasi penerus bangsa yang cerdas, berkarakter, dan berakhlak mulia.
+
+Akhir kata, semoga program PPL dan KKN ini memberikan manfaat yang maksimal bagi semua pihak yang terlibat dan berkontribusi nyata dalam memajukan pendidikan Indonesia menuju masa depan yang lebih gemilang.
+
+---
+
+## Ucapan Terima Kasih
+
+Pelaksanaan program PPL dan KKN ini tidak akan berjalan dengan lancar tanpa dukungan dari berbagai pihak. Oleh karena itu, kami menyampaikan terima kasih dan penghargaan setinggi-tingginya kepada:
+
+1. **Bapak Rektor UIN Sultan Maulana Hasanuddin Banten** beserta jajaran pimpinan universitas yang telah memfasilitasi pelaksanaan program ini.
+
+2. **Bapak Dekan Fakultas Tarbiyah dan Keguruan** beserta seluruh dosen pembimbing lapangan yang telah memberikan bimbingan dan arahan kepada mahasiswa.
+
+3. **Bapak Kepala MTs Negeri 1 Pandeglang** yang telah berkenan menerima mahasiswa praktikan dan menyediakan fasilitas yang dibutuhkan.
+
+4. **Bapak/Ibu Guru Pamong MTs N 1 Pandeglang** yang telah membimbing mahasiswa dengan penuh kesabaran dan dedikasi.
+
+5. **Seluruh Tenaga Kependidikan MTs N 1 Pandeglang** yang telah membantu kelancaran administrasi dan kegiatan program.
+
+6. **Peserta Didik MTs N 1 Pandeglang** yang telah menerima mahasiswa praktikan dengan antusias dan berpartisipasi aktif dalam setiap kegiatan.
+
+7. **Orang Tua/Wali Peserta Didik** yang telah memberikan dukungan terhadap pelaksanaan program ini.
+
+8. **Seluruh pihak** yang tidak dapat disebutkan satu per satu yang telah berkontribusi dalam mensukseskan program PPL dan KKN ini.
+
+Semoga Allah SWT membalas semua kebaikan yang telah diberikan dengan pahala yang berlimpah dan keberkahan dalam setiap langkah. Aamiin ya Rabbal 'Alamin.
+
+---
+
+## Referensi
+
+Darling-Hammond, L. (2006). Powerful Teacher Education: Lessons from Exemplary Programs. San Francisco: Jossey-Bass.
+
+Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2022). Standar Nasional Pendidikan Tinggi. Jakarta: Kemdikbudristek.
+
+Peraturan Menteri Agama Republik Indonesia Nomor 90 Tahun 2013 tentang Penyelenggaraan Pendidikan Madrasah.
+
+Undang-Undang Republik Indonesia Nomor 14 Tahun 2005 tentang Guru dan Dosen.
+
+Universitas Islam Negeri Sultan Maulana Hasanuddin Banten. (2024). Pedoman Praktik Pengalaman Lapangan dan Kuliah Kerja Nyata. Serang: UIN Banten Press.
+
+---
+
+<Notice type="info">
+**Informasi Kontak:**
+
+**MTs Negeri 1 Pandeglang**  
+Alamat: [Alamat lengkap madrasah]  
+Telepon: [Nomor telepon]  
+Email: [Email madrasah]  
+Website: www.mtsn1pandeglang.sch.id
+
+**UIN Sultan Maulana Hasanuddin Banten**  
+Alamat: Jl. Jenderal Sudirman No. 30, Serang, Banten  
+Telepon: (0254) 200323  
+Email: info@uinbanten.ac.id  
+Website: www.uinbanten.ac.id
+</Notice>
+
+---
+
+**Penulis:** Yahya Zulfikri  
+**Jabatan:** Koordinator Lapangan PPL-KKN  
+**Institusi:** UIN Sultan Maulana Hasanuddin Banten  
+**Email:** yahya.zulfikri@uinbanten.ac.id  
+**Tanggal Publikasi:** 15 Oktober 2025
+
+---
+
+_Artikel ini dipublikasikan sebagai dokumentasi resmi kegiatan PPL dan KKN mahasiswa UIN Sultan Maulana Hasanuddin Banten di MTs Negeri 1 Pandeglang. Dilarang memperbanyak atau menyebarluaskan sebagian atau seluruh isi artikel ini tanpa izin tertulis dari pihak yang berwenang._

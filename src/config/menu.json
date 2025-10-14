@@ -120,7 +120,7 @@
       "children": [
         {
           "name": "Pelayanan Terpadu Satu Pintu",
-          "url": "https://ptsp.mtsn1pandeglang.sch.id"
+          "url": "https://mtsn1pandeglang.sch.id/pelayanan"
         },
         {
           "name": "Pendaftaran",
@@ -148,11 +148,11 @@
         },
         {
           "name": "Jurnal Kelas",
-          "url": "https://jurnal.mtsn1pandeglang.sch.id"
+          "url": "https://mtsn1pandeglang.sch.id"
         },
         {
           "name": "Perpustakaan",
-          "url": "https://perpustakaan.mtsn1pandeglang.sch.id"
+          "url": "https://mtsn1pandeglang.sch.id"
         }
       ]
     }
