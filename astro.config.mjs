@@ -8,6 +8,7 @@ import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
 import sharp from "sharp";
 import config from "./src/config/config.json";
+import AstroPWA from "@vite-pwa/astro";
 
 // https://astro.build/config
 export default defineConfig({
@@ -33,6 +34,83 @@ export default defineConfig({
       ],
     }),
     mdx(),
+    AstroPWA({
+      registerType: "autoUpdate",
+      manifest: {
+        name: "Madrasah Tsanawiyah Negeri 1 Pandeglang",
+        short_name: "MTs Negeri 1 Pandeglang",
+        description: "Mandiri, Takwa, Peduli Lingkungan, Prestasi.",
+        theme_color: "#00dc82",
+        background_color: "#ffffff",
+        display: "standalone",
+        start_url: "/", // ← TAMBAHKAN INI
+        scope: "/", // ← TAMBAHKAN INI
+        icons: [
+          {
+            src: "/images/icons/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any maskable", // ← TAMBAHKAN purpose
+          },
+          {
+            src: "/images/icons/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable", // ← TAMBAHKAN purpose
+          },
+        ],
+      },
+      workbox: {
+        navigateFallback: "/", // ← TAMBAHKAN INI untuk offline fallback
+        globPatterns: [
+          "**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}",
+        ],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "google-fonts-cache",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "gstatic-fonts-cache",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "images-cache",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // ← ubah jadi 30 hari
+              },
+            },
+          },
+        ],
+      },
+      devOptions: {
+        enabled: true,
+      },
+    }),
   ],
   markdown: {
     remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],

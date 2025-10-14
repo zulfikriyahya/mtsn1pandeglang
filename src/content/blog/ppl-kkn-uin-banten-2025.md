@@ -7,7 +7,7 @@ image: "/images/artikel/ppl-kkn/2025/uin-banten/banner.png"
 categories: ["Kegiatan Mahasiswa"]
 author: "Yahya Zulfikri"
 tags: ["UIN Banten", "Kegiatan Mahasiswa", "PPL", "KKN", "MTs N 1 Pandeglang"]
-draft: false
+draft: true
 ---
 
 ## Abstrak

@@ -2,38 +2,38 @@
   "colors": {
     "default": {
       "theme_color": {
-        "primary": "#003300",
-        "body": "#d1efd7",
-        "border": "#a4d7b4",
-        "light": "#effaf3",
-        "dark": "#001f00"
+        "primary": "#00dc82",
+        "body": "#ffffff",
+        "border": "#e5e7eb",
+        "light": "#f9fafb",
+        "dark": "#020420"
       },
       "text_color": {
-        "text": "#334433",
-        "text-dark": "#002200",
-        "text-light": "#6a8a76"
+        "text": "#0f172a",
+        "text-dark": "#020420",
+        "text-light": "#64748b"
       }
     },
     "darkmode": {
       "theme_color": {
-        "primary": "#99ffcc",
-        "body": "#121a14",
-        "border": "#2a3b31",
-        "light": "#1b2c24",
-        "dark": "#000d06"
+        "primary": "#00dc82",
+        "body": "#020420",
+        "border": "#1e293b",
+        "light": "#0f172a",
+        "dark": "#000000"
       },
       "text_color": {
-        "text": "#ccf1dd",
-        "text-dark": "#e8fff3",
-        "text-light": "#89b8a0"
+        "text": "#f1f5f9",
+        "text-dark": "#ffffff",
+        "text-light": "#94a3b8"
       }
     }
   },
   "fonts": {
     "font_family": {
-      "primary": "Ubuntu:wght@400;600",
+      "primary": "Lexend:wght@400;600",
       "primary_type": "sans-serif",
-      "secondary": "Signika:wght@500;700",
+      "secondary": "Lexend:wght@500;700",
       "secondary_type": "sans-serif"
     },
     "font_size": {
