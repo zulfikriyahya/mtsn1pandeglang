@@ -238,7 +238,7 @@
 - ✅ **Maintainability:** 95/100 (Low maintenance, modern stack)
 - ⚠️ **Features:** 75/100 (Static, perlu external service untuk dynamic features)
 
-**Yang Lebih Baik dari MTs N 1 Pandeglang:**
+**Yang Lebih Baik dari (Astro) MTs N 1 Pandeglang:**
 
 1. Next.js Enterprise (tapi 5x lebih mahal)
 2. Remix + Cloudflare (tapi 3x lebih mahal)
