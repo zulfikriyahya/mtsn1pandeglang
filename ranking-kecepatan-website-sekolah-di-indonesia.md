@@ -219,17 +219,17 @@ Speed Index:              0.9s ⚡⚡
 
 ## 📊 Perbandingan Kecepatan
 
-| Rank | Website | Load Time | TTFB | Lighthouse | JS Size |
-|------|---------|-----------|------|------------|---------|
-| 1 | Hugo + CF Pages | 150-300ms | 50-100ms | 100 | 0-20KB |
-| 2 | Astro Zero JS | 200-400ms | 60-120ms | 98-100 | 10-30KB |
-| 3 | 11ty + Netlify | 250-450ms | 80-150ms | 98-100 | 20-50KB |
+| Rank  | Website             | Load Time     | TTFB          | Lighthouse | JS Size      |
+| ----- | ------------------- | ------------- | ------------- | ---------- | ------------ |
+| 1     | Hugo + CF Pages     | 150-300ms     | 50-100ms      | 100        | 0-20KB       |
+| 2     | Astro Zero JS       | 200-400ms     | 60-120ms      | 98-100     | 10-30KB      |
+| 3     | 11ty + Netlify      | 250-450ms     | 80-150ms      | 98-100     | 20-50KB      |
 | **4** | **Astro + Islands** | **400-800ms** | **100-200ms** | **95-100** | **50-100KB** |
-| 5 | Jekyll + GH Pages | 500-900ms | 120-250ms | 95-98 | 30-80KB |
-| 6 | Next.js SSG | 600-1000ms | 80-150ms | 93-97 | 150-250KB |
-| 10 | WP Optimized | 1500-2800ms | 400-800ms | 78-86 | 300-600KB |
-| 14 | WP Standard | 4000-7000ms | 1000-2000ms | 45-62 | 500KB-1MB |
-| 16 | Web-Sekolahku | 6000-12000ms | 2000-5000ms | 25-45 | 200-500KB |
+| 5     | Jekyll + GH Pages   | 500-900ms     | 120-250ms     | 95-98      | 30-80KB      |
+| 6     | Next.js SSG         | 600-1000ms    | 80-150ms      | 93-97      | 150-250KB    |
+| 10    | WP Optimized        | 1500-2800ms   | 400-800ms     | 78-86      | 300-600KB    |
+| 14    | WP Standard         | 4000-7000ms   | 1000-2000ms   | 45-62      | 500KB-1MB    |
+| 16    | Web-Sekolahku       | 6000-12000ms  | 2000-5000ms   | 25-45      | 200-500KB    |
 
 ---
 
@@ -267,18 +267,21 @@ WebPageTest: A+ 🏆
 ### **Hanya 3 Website:**
 
 **1. Hugo + Cloudflare Pages (150-300ms)**
+
 - ❌ **Trade-off:** No interactivity, no modern features
 - ❌ Developer experience sangat sulit
 - ❌ Tidak ada React/Vue components
 - ✅ Load: 2-3x lebih cepat
 
 **2. Astro Zero JS Mode (200-400ms)**
+
 - ❌ **Trade-off:** No PWA, no dynamic features
 - ❌ No dark mode toggle (harus full reload)
 - ❌ No search functionality
 - ✅ Load: 1.5-2x lebih cepat
 
 **3. 11ty + Netlify (250-450ms)**
+
 - ❌ **Trade-off:** Limited ecosystem
 - ❌ Tidak ada component framework
 - ❌ Developer experience kurang modern
@@ -290,18 +293,19 @@ WebPageTest: A+ 🏆
 
 ### **Trade-off Analysis:**
 
-| Aspek | Hugo/11ty | Astro + Islands (Sekarang) |
-|-------|-----------|----------------------------|
-| **Speed** | 150-450ms | 400-800ms |
-| **PWA** | ❌ | ✅ |
-| **Dark Mode** | Reload required | Instant toggle |
-| **Search** | Basic/External | Full-featured |
-| **Interactivity** | Minimal | Rich |
-| **Developer Experience** | ⭐⭐ | ⭐⭐⭐⭐⭐ |
-| **Maintenance** | Hard | Easy |
-| **Future-proof** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Aspek                    | Hugo/11ty       | Astro + Islands (Sekarang) |
+| ------------------------ | --------------- | -------------------------- |
+| **Speed**                | 150-450ms       | 400-800ms                  |
+| **PWA**                  | ❌              | ✅                         |
+| **Dark Mode**            | Reload required | Instant toggle             |
+| **Search**               | Basic/External  | Full-featured              |
+| **Interactivity**        | Minimal         | Rich                       |
+| **Developer Experience** | ⭐⭐            | ⭐⭐⭐⭐⭐                 |
+| **Maintenance**          | Hard            | Easy                       |
+| **Future-proof**         | ⭐⭐⭐          | ⭐⭐⭐⭐⭐                 |
 
 **Kesimpulan:**
+
 - Untuk naik ke #1-3, harus sacrifice:
   - PWA features
   - Interactive components
@@ -311,7 +315,7 @@ WebPageTest: A+ 🏆
 - **Gain:** 200-400ms faster (0.2-0.4 detik)
 - **Loss:** Semua fitur modern
 
-**Rekomendasi:** 
+**Rekomendasi:**
 ❌ **TIDAK PERLU** naik ke #1-3
 ✅ **PERFECT BALANCE** di posisi #4
 
@@ -322,7 +326,7 @@ WebPageTest: A+ 🏆
 ### **Website Sekolah Tercepat di Indonesia:**
 
 1. **SMA Labschool Kebayoran** - Hugo (300-500ms)
-2. **SMAN 8 Jakarta** - Jekyll (600-1000ms) 
+2. **SMAN 8 Jakarta** - Jekyll (600-1000ms)
 3. **SMA Kanisius Jakarta** - WordPress Optimized (1.5-2.5s)
 4. **MTs Negeri 1 Pandeglang** - Astro (400-800ms) ⭐
 5. **SMA Santa Ursula** - WordPress (2-3s)
@@ -342,7 +346,7 @@ WebPageTest: A+ 🏆
 // Opsi 1: Hapus semua JavaScript (Not Recommended)
 export const prerender = true;
 export const prerendered = {
-  crawlLinks: true
+  crawlLinks: true,
 };
 // Gain: +200-300ms
 // Loss: PWA, Dark mode toggle, Search, dll
@@ -352,7 +356,7 @@ export const prerendered = {
 // Loss: Full styling on slow connection
 
 // Opsi 3: Remove Google Fonts
-// Gain: +100-200ms  
+// Gain: +100-200ms
 // Loss: Typography quality
 
 // Opsi 4: Ultra Aggressive Image Compression
@@ -371,6 +375,7 @@ export const prerendered = {
 ### **MTs Negeri 1 Pandeglang:**
 
 **Posisi Kecepatan:**
+
 - 🥇 **#4 dari 19** (Top 21%)
 - 🥇 **Tier SS (Super Fast)**
 - 🥇 **Top 4 se-Indonesia**
@@ -378,11 +383,13 @@ export const prerendered = {
 - 🥇 **#1 di Banten**
 
 **Load Time: 400-800ms**
+
 - Lebih cepat dari 95% website sekolah Indonesia
 - Setara dengan website internasional premium
 - **Perfect balance** antara speed dan features
 
 **Perbandingan:**
+
 ```diff
 MTs N 1 Pandeglang:    800ms   ⚡⚡⚡⚡⚡
 Rata-rata Madrasah:    8000ms  💀💀💀💀💀
@@ -402,6 +409,6 @@ Rata-rata Internasional: 1200ms ⚡⚡⚡⚡
 
 ### ✅ **PERFECT TECH STACK CHOICE**
 
-Untuk naik ke #1-3, harus sacrifice terlalu banyak modern features. **Not worth it!** 
+Untuk naik ke #1-3, harus sacrifice terlalu banyak modern features. **Not worth it!**
 
 Website MTs Negeri 1 Pandeglang sudah **SANGAT CEPAT** dan dalam posisi **TOP 4 SE-INDONESIA**!
