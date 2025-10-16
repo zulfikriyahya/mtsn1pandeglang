@@ -1,8 +1,8 @@
 {
-  "name": "astroplate",
-  "version": "5.5.1",
+  "name": "mtsn1pandeglang",
+  "version": "0.0.1",
   "description": "Astro and Tailwindcss boilerplate",
-  "author": "zeon.studio",
+  "author": "zulfikriyahya",
   "license": "MIT",
   "type": "module",
   "packageManager": "yarn@1.22.22",
