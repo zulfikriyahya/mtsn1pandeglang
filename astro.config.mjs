@@ -42,25 +42,25 @@ export default defineConfig({
         theme_color: "#00dc82",
         background_color: "#ffffff",
         display: "standalone",
-        start_url: "/", // ← TAMBAHKAN INI
-        scope: "/", // ← TAMBAHKAN INI
+        start_url: "/",
+        scope: "/",
         icons: [
           {
             src: "/images/icons/icon-192x192.png",
             sizes: "192x192",
             type: "image/png",
-            purpose: "any maskable", // ← TAMBAHKAN purpose
+            purpose: "any maskable",
           },
           {
             src: "/images/icons/icon-512x512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable", // ← TAMBAHKAN purpose
+            purpose: "any maskable",
           },
         ],
       },
       workbox: {
-        navigateFallback: "/", // ← TAMBAHKAN INI untuk offline fallback
+        navigateFallback: "/",
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}",
         ],
@@ -100,7 +100,7 @@ export default defineConfig({
               cacheName: "images-cache",
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // ← ubah jadi 30 hari
+                maxAgeSeconds: 60 * 60 * 24 * 30,
               },
             },
           },
