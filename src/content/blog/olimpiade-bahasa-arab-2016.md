@@ -3,7 +3,7 @@ title: "Olimpiade Bahasa Arab Tingkat Nasional Tahun 2016"
 meta_title: "Olimpiade Bahasa Arab Tingkat Nasional Tahun 2016 MTs Negeri 1 Pandeglang"
 description: "Olimpiade Bahasa Arab Tingkat Nasional Tahun 2016 MTs Negeri 1 Pandeglang"
 date: 2016-02-04T05:00:00Z
-image: "/images/artikel/isra-miraj.png"
+image: "/images/artikel/banner.png"
 categories: ["Olimpiade"]
 author: "Yahya Zulfikri"
 tags: ["Olimpiade Tingkat Nasional"]
