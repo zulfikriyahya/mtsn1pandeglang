@@ -134,6 +134,7 @@
 ```bash
 .
 ├── astro.config.mjs
+├── bun.lock
 ├── config
 │   └── nginx
 │       └── nginx.conf
@@ -143,7 +144,27 @@
 ├── public
 │   ├── images
 │   │   ├── artikel
-│   │   │   └── banner.png
+│   │   │   ├── banner.png
+│   │   │   └── plp-kkn
+│   │   │       └── 2025
+│   │   │           └── uin-banten
+│   │   │               ├── banner.png
+│   │   │               ├── kegiatan-1.png
+│   │   │               ├── kegiatan-2.png
+│   │   │               ├── kegiatan-3.png
+│   │   │               ├── kegiatan-4.png
+│   │   │               ├── kegiatan-5.png
+│   │   │               ├── kegiatan-6.png
+│   │   │               ├── kegiatan-7.png
+│   │   │               ├── kegiatan-8.png
+│   │   │               ├── mahasiswa-1.png
+│   │   │               ├── mahasiswa-2.png
+│   │   │               ├── mahasiswa-3.png
+│   │   │               ├── mahasiswa-4.png
+│   │   │               ├── mahasiswa-5.png
+│   │   │               ├── mahasiswa-6.png
+│   │   │               ├── mahasiswa-7.png
+│   │   │               └── mahasiswa-8.png
 │   │   ├── assets
 │   │   │   ├── akreditasi.png
 │   │   │   ├── banner.png
@@ -193,7 +214,8 @@
 │   │   ├── blog
 │   │   │   ├── -index.md
 │   │   │   ├── olimpiade-bahasa-arab-2016.md
-│   │   │   └── olimpiade-sains-2016.md
+│   │   │   ├── olimpiade-sains-2016.md
+│   │   │   └── plp-kkn-uin-banten-2025.md
 │   │   ├── contact
 │   │   │   └── -index.md
 │   │   ├── homepage
@@ -308,6 +330,8 @@
 │       └── index.d.ts
 ├── struktur.txt
 └── tsconfig.json
+
+41 directories, 157 files
 ```
 
 ---
