@@ -1,4 +1,4 @@
-# Weebsite MTs Negeri 1 Pandeglang v0.0.1
+# Website MTs Negeri 1 Pandeglang v0.0.1
 
 ## Project Info
 
