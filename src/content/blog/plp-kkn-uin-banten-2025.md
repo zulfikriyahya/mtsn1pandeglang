@@ -7,7 +7,7 @@ image: "/images/artikel/plp-kkn/2025/uin-banten/banner.png"
 categories: ["Kegiatan Mahasiswa"]
 author: "Yahya Zulfikri"
 tags: ["UIN Banten", "Kegiatan Mahasiswa", "PLP", "KKN"]
-draft: true
+draft: false
 ---
 
 ## Abstrak
@@ -170,7 +170,7 @@ Dukungan dari pihak madrasah dan universitas juga sangat membantu dalam mengatas
 
 ---
 
-## Dokumentasi Kegiatan
+<!-- ## Dokumentasi Kegiatan
 
 ### Galeri Foto Kegiatan
 
@@ -296,7 +296,7 @@ Dukungan dari pihak madrasah dan universitas juga sangat membantu dalam mengatas
 
 <Notice type="tip">**Panduan Mengganti Video:** Ganti VIDEO_ID_1, VIDEO_ID_2, VIDEO_ID_3, dan VIDEO_ID_4 dengan ID video YouTube yang sesuai. ID video dapat ditemukan di URL YouTube setelah "watch?v=" atau "embed/". Contoh: jika URL video adalah "https://www.youtube.com/watch?v=dQw4w9WgXcQ", maka VIDEO_ID adalah "dQw4w9WgXcQ".</Notice>
 
----
+--- -->
 
 ## Refleksi dan Pembelajaran
 
