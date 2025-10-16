@@ -10,7 +10,6 @@ import sharp from "sharp";
 import config from "./src/config/config.json";
 import AstroPWA from "@vite-pwa/astro";
 
-// https://astro.build/config
 export default defineConfig({
   site: config.site.base_url
     ? config.site.base_url

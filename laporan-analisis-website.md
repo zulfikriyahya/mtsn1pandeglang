@@ -18,7 +18,7 @@
 
 ### Diagram Tier Teknologi Website Sekolah
 
-```
+```diff
 Tier S+ (Enterprise Grade) - Top 1%
 ┌─────────────────────────────────────────────────────────┐
 │ #1  Next.js 14+ Enterprise   Budget: Rp 50-200 jt/thn  │
@@ -66,7 +66,7 @@ Tier D-E (Below Average/Outdated) - Bottom 30%
 
 ### Load Time Comparison (Lower is Better)
 
-```
+```diff
 Load Time (milliseconds)
 0ms    500ms   1000ms  2000ms  4000ms  8000ms  12000ms
 │──────│───────│───────│───────│───────│───────│
@@ -104,7 +104,7 @@ Load Time (milliseconds)
 
 ## 🛡️ Matriks Keamanan vs Kecepatan
 
-```
+```diff
 Security
   100% │                    ⭐ MTs N 1 PDG
        │                    (Static/Astro)
@@ -183,7 +183,7 @@ Legend:
 
 ### ROI (Return on Investment) Comparison
 
-```
+```diff
 Performance/Budget Ratio (Higher is Better)
 
          Performance Score / Budget (juta)
@@ -306,7 +306,7 @@ ROI Rankings:
 
 ### What You Get vs What You Pay
 
-```
+```diff
                     MTs N 1 PDG        Next.js Ent      Web-Sekolahku
 Budget              Rp 10-30 jt        Rp 50-200 jt     Rp 2-5 jt
                     ═══════════        ═════════════    ═══════
@@ -326,7 +326,7 @@ Recommendation      ✅ Best Balance   ⚠️ Overkill      ❌ Risky
 
 ### 3-Year Technology Roadmap
 
-```
+```diff
 Year 1 (Current)
 ├─ Tech Stack: Astro 5 + React 19
 ├─ Performance: 97/100
@@ -431,7 +431,7 @@ Verdict: ❌ Not worth it
 
 **If Need Dynamic Features:**
 
-```
+```diff
 Add: Supabase Backend
 Cost: +Rp 10 jt/tahun
 Gain:
