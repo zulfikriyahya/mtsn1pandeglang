@@ -1,16 +1,16 @@
 ---
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
+import { getListPage } from "@/lib/contentParser.astro";
 import PageHeader from "@/partials/PageHeader.astro";
-import { getEntry } from "astro:content";
-import type { CollectionEntry } from "astro:content";
 
-const contact = (await getEntry(
-  "contact",
-  "-index"
-)) as CollectionEntry<"contact">;
+const contactIndex = await getListPage("contact", "-index");
 const { contact_form_action }: { contact_form_action: string } = config.params;
-const { title, description, meta_title, image } = contact.data;
+const { title, description, meta_title, image } = contactIndex.data;
+
+if (contactIndex.data.draft) {
+  return Astro.redirect("/404");
+}
 ---
 
 <Base
@@ -27,7 +27,7 @@ const { title, description, meta_title, image } = contact.data;
           <form action={contact_form_action} method="POST">
             <div class="mb-6">
               <label for="name" class="form-label">
-                Nama Lengkap <span class="text-red-500">*</span>
+                Full Name <span class="text-red-500">*</span>
               </label>
               <input
                 id="name"
@@ -35,11 +35,12 @@ const { title, description, meta_title, image } = contact.data;
                 class="form-input"
                 placeholder="John Doe"
                 type="text"
+                required
               />
             </div>
             <div class="mb-6">
               <label for="email" class="form-label">
-                Surel <span class="text-red-500">*</span>
+                Working Mail <span class="text-red-500">*</span>
               </label>
               <input
                 id="email"
@@ -47,20 +48,22 @@ const { title, description, meta_title, image } = contact.data;
                 class="form-input"
                 placeholder="john.doe@email.com"
                 type="email"
+                required
               />
             </div>
             <div class="mb-6">
               <label for="message" class="form-label">
-                Pesan <span class="text-red-500">*</span>
+                Anything else? <span class="text-red-500">*</span>
               </label>
               <textarea
                 id="message"
                 name="message"
                 class="form-input"
                 placeholder="Message goes here..."
+                required
                 rows="8"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Kirim</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>

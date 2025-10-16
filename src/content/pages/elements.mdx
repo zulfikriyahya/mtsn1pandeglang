@@ -1,8 +1,22 @@
 ---
 title: "Elements"
 meta_title: ""
-description: ""
+description: "this is meta description"
 draft: false
+---
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6
+
 ---
 
 ### Paragraph
@@ -113,14 +127,14 @@ img {
 window.addEventListener("load", (e) => {
   document.querySelector(".preloader").style.display = "none";
 });
-
 ```
 
 ---
 
 ### Button
 
-<Button label="Button" link="#" style="solid" />
+<Button label="Solid" link="#" style="solid" />
+<Button label="Outline" link="#" style="outline" />
 
 ---
 
@@ -180,11 +194,11 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 ### Table
 
-| #    |    First     |     Last     |       Handle  |
-| :--: | :----------: | :----------: | :-----------: |
-| 1    | Row:1 Cell:1 | Row:1 Cell:2 | Row:1 Cell:3  |
-| 2    | Row:2 Cell:1 | Row:2 Cell:2 | Row:2 Cell:3  |
-| 3    | Row:3 Cell:1 | Row:3 Cell:2 | Row:3 Cell:3  |
+| #   |    First     |     Last     |       Handle |
+| :-- | :----------: | :----------: | -----------: |
+| 1   | Row:1 Cell:1 | Row:1 Cell:2 | Row:1 Cell:3 |
+| 2   | Row:2 Cell:1 | Row:2 Cell:2 | Row:2 Cell:3 |
+| 3   | Row:3 Cell:1 | Row:3 Cell:2 | Row:3 Cell:3 |
 
 ---
 
@@ -222,96 +236,18 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 ---
 
-### Image Custom
+### Image
 
-<div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
-    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-        <img
-        src="https://daftar.mtsn1pandeglang.sch.id/storage/berkas/foto/3129339851/01JSX0Y8WE9ASWSXE7M5B6VQK2.jpeg"
-        alt="image"
-        style={{ width: "100%" }}
-        />
-    </div>
-    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-        <img
-        src="https://daftar.mtsn1pandeglang.sch.id/storage/berkas/foto/3129339851/01JSX0Y8WE9ASWSXE7M5B6VQK2.jpeg"
-        alt="image"
-        style={{ width: "100%" }}
-        />
-    </div>
-    <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-        <img
-        src="https://daftar.mtsn1pandeglang.sch.id/storage/berkas/foto/3129339851/01JSX0Y8WE9ASWSXE7M5B6VQK2.jpeg"
-        alt="image"
-        style={{ width: "100%" }}
-        />
-    </div>
-</div>
----
+![image](/images/image-placeholder.png)
 
-### Video Custom
-
-<div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <iframe
-      src="https://www.youtube.com/embed/rZNgKNkfaMM"
-      title="YouTube video player 1"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      style={{ width: "100%", height: "100%" }}
-    />
-  </div>
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <iframe
-      src="https://www.youtube.com/embed/rZNgKNkfaMM"
-      title="YouTube video player 2"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      style={{ width: "100%", height: "100%" }}
-    />
-  </div>
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <iframe
-      src="https://www.youtube.com/embed/rZNgKNkfaMM"
-      title="YouTube video player 2"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      style={{ width: "100%", height: "100%" }}
-    />
-  </div>
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <iframe
-      src="https://www.youtube.com/embed/rZNgKNkfaMM"
-      title="YouTube video player 2"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      style={{ width: "100%", height: "100%" }}
-    />
-  </div>
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <iframe
-      src="https://www.youtube.com/embed/rZNgKNkfaMM"
-      title="YouTube video player 2"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      style={{ width: "100%", height: "100%" }}
-    />
-  </div>
-</div>
 ---
 
 ### Youtube video
 
-<Youtube client:load id="rZNgKNkfaMM" title="Play:Youtube" width="300"
-  height="168" />
+<Youtube client:load id="C0DPdy98e4c" title="Play:Youtube" />
 
 ---
 
 ### Custom video
 
-<Video width="100%" src="https://daftar.mtsn1pandeglang.sch.id/storage/berkas/foto/3129339851/01JSX0Y8WE9ASWSXE7M5B6VQK2.jpeg" />
+<Video width="100%" src="https://www.w3schools.com/html/mov_bbb.mp4" />
