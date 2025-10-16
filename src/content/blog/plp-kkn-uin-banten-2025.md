@@ -399,6 +399,7 @@ Universitas Islam Negeri Sultan Maulana Hasanuddin Banten. (2024). Pedoman Prakt
 ---
 
 <Notice type="info">
+
 **Informasi Kontak:**
 
 **MTs Negeri 1 Pandeglang**  
@@ -412,6 +413,7 @@ Alamat: Jl. Jenderal Sudirman No. 30, Serang, Banten
 Telepon: (0254) 200323  
 Email: info@uinbanten.ac.id  
 Website: www.uinbanten.ac.id
+
 </Notice>
 
 ---
