@@ -64,6 +64,12 @@ export default defineConfig({
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}",
         ],
+        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
+        globIgnores: [
+          "**/kegiatan-*.png",
+          "**/images/artikel/plp-kkn/**",
+          "**/videos/artikel/plp-kkn/**",
+        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
