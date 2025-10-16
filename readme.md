@@ -143,7 +143,7 @@
 ├── public
 │   ├── images
 │   │   ├── artikel
-│   │   │   └── isra-miraj.png
+│   │   │   └── banner.png
 │   │   ├── assets
 │   │   │   ├── akreditasi.png
 │   │   │   ├── banner.png
