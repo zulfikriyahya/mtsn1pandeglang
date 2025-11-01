@@ -46,19 +46,36 @@ confirm() {
 # Cek apakah script dijalankan sebagai root
 if [ "$EUID" -ne 0 ]; then 
     print_error "Script ini harus dijalankan sebagai root!"
-    print_info "Jalankan dengan: sudo bash install.sh"
+    print_info "Jalankan dengan: sudo bash install.sh atau bash install.sh sebagai root"
     exit 1
 fi
 
-# Cek user yang menjalankan sudo
-REAL_USER=${SUDO_USER:-$(whoami)}
-if [ "$REAL_USER" = "root" ]; then
-    print_error "Jangan login sebagai root langsung!"
-    print_info "Gunakan user biasa dan jalankan dengan: sudo bash install.sh"
-    exit 1
+# Tentukan user yang akan digunakan
+if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+    # Jika menggunakan sudo dari user biasa
+    REAL_USER="$SUDO_USER"
+    print_info "Detected sudo user: $REAL_USER"
+else
+    # Jika login sebagai root langsung, tanyakan user yang akan digunakan
+    print_warning "Anda login sebagai root."
+    read -p "Masukkan username yang akan digunakan untuk menjalankan aplikasi (default: www-data): " input_user
+    REAL_USER=${input_user:-"www-data"}
+    
+    # Cek apakah user exists
+    if ! id "$REAL_USER" &>/dev/null; then
+        print_error "User $REAL_USER tidak ditemukan!"
+        if confirm "Apakah Anda ingin membuat user $REAL_USER?"; then
+            useradd -m -s /bin/bash "$REAL_USER"
+            print_success "User $REAL_USER berhasil dibuat"
+        else
+            print_error "Instalasi dibatalkan"
+            exit 1
+        fi
+    fi
 fi
 
 REAL_HOME=$(eval echo ~${REAL_USER})
+print_info "Menggunakan user: $REAL_USER"
 
 # Banner
 clear
