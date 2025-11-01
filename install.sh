@@ -44,11 +44,21 @@ confirm() {
 }
 
 # Cek apakah script dijalankan sebagai root
-if [ "$EUID" -eq 0 ]; then 
-    print_error "Jangan jalankan script ini sebagai root!"
-    print_info "Jalankan dengan: bash install.sh"
+if [ "$EUID" -ne 0 ]; then 
+    print_error "Script ini harus dijalankan sebagai root!"
+    print_info "Jalankan dengan: sudo bash install.sh"
     exit 1
 fi
+
+# Cek user yang menjalankan sudo
+REAL_USER=${SUDO_USER:-$(whoami)}
+if [ "$REAL_USER" = "root" ]; then
+    print_error "Jangan login sebagai root langsung!"
+    print_info "Gunakan user biasa dan jalankan dengan: sudo bash install.sh"
+    exit 1
+fi
+
+REAL_HOME=$(eval echo ~${REAL_USER})
 
 # Banner
 clear
@@ -71,6 +81,8 @@ echo "  • Node.js (versi terbaru LTS)"
 echo "  • Yarn"
 echo "  • Setup deployment automation untuk Astro"
 echo ""
+print_info "Running as user: $REAL_USER"
+echo ""
 
 if ! confirm "Lanjutkan instalasi?"; then
     print_warning "Instalasi dibatalkan."
@@ -83,10 +95,10 @@ fi
 print_header "STEP 1: UPDATE SISTEM"
 
 print_info "Mengupdate package list..."
-sudo apt update
+apt update
 
 if confirm "Apakah Anda ingin upgrade sistem?"; then
-    sudo apt upgrade -y
+    apt upgrade -y
     print_success "Sistem berhasil diupdate dan upgrade"
 else
     print_success "Sistem berhasil diupdate"
@@ -102,9 +114,9 @@ if command -v nginx &> /dev/null; then
     print_warning "Nginx sudah terinstall"
 else
     print_info "Menginstall Nginx..."
-    sudo apt install -y nginx
-    sudo systemctl enable nginx
-    sudo systemctl start nginx
+    apt install -y nginx
+    systemctl enable nginx
+    systemctl start nginx
     print_success "Nginx berhasil diinstall"
 fi
 
@@ -113,7 +125,7 @@ if command -v curl &> /dev/null; then
     print_warning "Curl sudah terinstall"
 else
     print_info "Menginstall Curl..."
-    sudo apt install -y curl
+    apt install -y curl
     print_success "Curl berhasil diinstall"
 fi
 
@@ -122,7 +134,7 @@ if command -v git &> /dev/null; then
     print_warning "Git sudah terinstall"
 else
     print_info "Menginstall Git..."
-    sudo apt install -y git
+    apt install -y git
     print_success "Git berhasil diinstall"
 fi
 
@@ -131,14 +143,14 @@ if command -v node &> /dev/null; then
     print_warning "Node.js sudah terinstall ($(node -v))"
     if confirm "Apakah Anda ingin reinstall Node.js versi terbaru?"; then
         print_info "Menginstall Node.js versi terbaru..."
-        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-        sudo apt install -y nodejs
+        curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+        apt install -y nodejs
         print_success "Node.js berhasil diupdate ke versi $(node -v)"
     fi
 else
     print_info "Menginstall Node.js versi terbaru LTS..."
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-    sudo apt install -y nodejs
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+    apt install -y nodejs
     print_success "Node.js berhasil diinstall ($(node -v))"
 fi
 
@@ -147,7 +159,7 @@ if command -v yarn &> /dev/null; then
     print_warning "Yarn sudah terinstall ($(yarn -v))"
 else
     print_info "Menginstall Yarn..."
-    sudo npm install -g yarn
+    npm install -g yarn
     print_success "Yarn berhasil diinstall ($(yarn -v))"
 fi
 
@@ -156,22 +168,30 @@ fi
 # ============================================================
 print_header "STEP 3: SETUP SSH KEY UNTUK GITHUB"
 
-if [ -f ~/.ssh/id_ed25519.pub ]; then
+SSH_DIR="$REAL_HOME/.ssh"
+SSH_KEY="$SSH_DIR/id_ed25519"
+
+if [ -f "$SSH_KEY.pub" ]; then
     print_warning "SSH key sudah ada"
     if confirm "Apakah Anda ingin membuat SSH key baru?"; then
         read -p "Masukkan email untuk SSH key: " ssh_email
-        ssh-keygen -t ed25519 -C "$ssh_email" -f ~/.ssh/id_ed25519 -N ""
+        su - $REAL_USER -c "ssh-keygen -t ed25519 -C '$ssh_email' -f '$SSH_KEY' -N ''"
         print_success "SSH key baru berhasil dibuat"
     fi
 else
+    mkdir -p "$SSH_DIR"
     read -p "Masukkan email untuk SSH key: " ssh_email
-    ssh-keygen -t ed25519 -C "$ssh_email" -f ~/.ssh/id_ed25519 -N ""
+    su - $REAL_USER -c "ssh-keygen -t ed25519 -C '$ssh_email' -f '$SSH_KEY' -N ''"
+    chown -R $REAL_USER:$REAL_USER "$SSH_DIR"
+    chmod 700 "$SSH_DIR"
+    chmod 600 "$SSH_KEY"
+    chmod 644 "$SSH_KEY.pub"
     print_success "SSH key berhasil dibuat"
 fi
 
 echo ""
 print_info "Public SSH Key Anda:"
-echo -e "${GREEN}$(cat ~/.ssh/id_ed25519.pub)${NC}"
+echo -e "${GREEN}$(cat $SSH_KEY.pub)${NC}"
 echo ""
 print_warning "PENTING: Tambahkan SSH key di atas ke GitHub!"
 print_info "1. Buka https://github.com/settings/ssh/new"
@@ -180,12 +200,27 @@ print_info "3. Klik 'Add SSH key'"
 echo ""
 read -p "Tekan ENTER setelah menambahkan SSH key ke GitHub..."
 
+# Setup SSH config untuk GitHub
+SSH_CONFIG="$SSH_DIR/config"
+if [ ! -f "$SSH_CONFIG" ]; then
+    cat > "$SSH_CONFIG" <<SSHEOF
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile $SSH_KEY
+    StrictHostKeyChecking no
+SSHEOF
+    chown $REAL_USER:$REAL_USER "$SSH_CONFIG"
+    chmod 600 "$SSH_CONFIG"
+fi
+
 # Test koneksi GitHub
 print_info "Testing koneksi ke GitHub..."
-if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+su - $REAL_USER -c "ssh -T git@github.com" 2>&1 | grep -q "successfully authenticated"
+if [ $? -eq 0 ]; then
     print_success "Koneksi ke GitHub berhasil!"
 else
-    print_warning "Tidak dapat terkoneksi ke GitHub. Pastikan SSH key sudah ditambahkan."
+    print_warning "Testing koneksi... (Pesan 'Permission denied' adalah normal jika SSH key belum ditambahkan)"
 fi
 
 # ============================================================
@@ -275,6 +310,7 @@ echo "Domain          : ${domain_name:-"(menggunakan IP)"}"
 echo "Package Manager : $package_manager"
 echo "Deployment      : $interval_text"
 echo "Cron Schedule   : $cron_schedule"
+echo "User            : $REAL_USER"
 echo ""
 
 if ! confirm "Apakah konfigurasi sudah benar?"; then
@@ -290,7 +326,7 @@ print_header "STEP 5: CLONE REPOSITORY"
 if [ -d "$project_dir" ]; then
     print_warning "Directory $project_dir sudah ada"
     if confirm "Apakah Anda ingin menghapus dan clone ulang?"; then
-        sudo rm -rf "$project_dir"
+        rm -rf "$project_dir"
     else
         print_info "Menggunakan directory yang ada"
     fi
@@ -298,11 +334,11 @@ fi
 
 if [ ! -d "$project_dir" ]; then
     print_info "Membuat directory $project_dir..."
-    sudo mkdir -p "$project_dir"
-    sudo chown $USER:$USER "$project_dir"
+    mkdir -p "$project_dir"
+    chown $REAL_USER:$REAL_USER "$project_dir"
     
     print_info "Cloning repository..."
-    git clone "$repo_ssh" "$project_dir"
+    su - $REAL_USER -c "git clone '$repo_ssh' '$project_dir'"
     
     if [ $? -eq 0 ]; then
         print_success "Repository berhasil di clone"
@@ -316,11 +352,11 @@ fi
 cd "$project_dir"
 
 # Checkout branch
-git checkout "$branch_name"
+su - $REAL_USER -c "cd '$project_dir' && git checkout '$branch_name'"
 
 # Install dependencies
 print_info "Menginstall dependencies dengan $package_manager..."
-$install_cmd
+su - $REAL_USER -c "cd '$project_dir' && $install_cmd"
 
 if [ $? -eq 0 ]; then
     print_success "Dependencies berhasil diinstall"
@@ -331,7 +367,7 @@ fi
 
 # Build project
 print_info "Building project..."
-$build_cmd
+su - $REAL_USER -c "cd '$project_dir' && $build_cmd"
 
 if [ $? -eq 0 ]; then
     print_success "Project berhasil di build"
@@ -350,7 +386,7 @@ log_file="/var/log/deploy-$project_name.log"
 
 print_info "Membuat deployment script di $deploy_script..."
 
-sudo tee "$deploy_script" > /dev/null <<EOF
+cat > "$deploy_script" <<EOF
 #!/bin/bash
 
 # Konfigurasi
@@ -358,6 +394,7 @@ PROJECT_DIR="$project_dir"
 LOG_FILE="$log_file"
 BRANCH="$branch_name"
 PACKAGE_MANAGER="$package_manager"
+REAL_USER="$REAL_USER"
 
 # Fungsi logging
 log() {
@@ -370,11 +407,11 @@ log "=== Starting deployment process ==="
 cd "\$PROJECT_DIR" || exit 1
 
 # Stash perubahan lokal jika ada
-git stash
+su - \$REAL_USER -c "cd '\$PROJECT_DIR' && git stash"
 
 # Pull perubahan terbaru
 log "Pulling latest changes from GitHub..."
-git pull origin "\$BRANCH"
+su - \$REAL_USER -c "cd '\$PROJECT_DIR' && git pull origin '\$BRANCH'"
 
 if [ \$? -ne 0 ]; then
     log "ERROR: Git pull failed"
@@ -384,9 +421,9 @@ fi
 # Install/update dependencies
 log "Installing dependencies with \$PACKAGE_MANAGER..."
 if [ "\$PACKAGE_MANAGER" == "yarn" ]; then
-    yarn install
+    su - \$REAL_USER -c "cd '\$PROJECT_DIR' && yarn install"
 else
-    npm install
+    su - \$REAL_USER -c "cd '\$PROJECT_DIR' && npm install"
 fi
 
 if [ \$? -ne 0 ]; then
@@ -397,9 +434,9 @@ fi
 # Build project
 log "Building Astro project..."
 if [ "\$PACKAGE_MANAGER" == "yarn" ]; then
-    yarn build
+    su - \$REAL_USER -c "cd '\$PROJECT_DIR' && yarn build"
 else
-    npm run build
+    su - \$REAL_USER -c "cd '\$PROJECT_DIR' && npm run build"
 fi
 
 if [ \$? -ne 0 ]; then
@@ -409,19 +446,19 @@ fi
 
 # Set permissions untuk Nginx
 log "Setting permissions..."
-sudo chown -R www-data:www-data "\$PROJECT_DIR/dist"
-sudo chmod -R 755 "\$PROJECT_DIR/dist"
+chown -R www-data:www-data "\$PROJECT_DIR/dist"
+chmod -R 755 "\$PROJECT_DIR/dist"
 
 log "=== Deployment completed successfully ==="
 log ""
 EOF
 
-sudo chmod +x "$deploy_script"
+chmod +x "$deploy_script"
 print_success "Deployment script berhasil dibuat"
 
 # Buat log file
-sudo touch "$log_file"
-sudo chown $USER:$USER "$log_file"
+touch "$log_file"
+chown $REAL_USER:$REAL_USER "$log_file"
 print_success "Log file dibuat di $log_file"
 
 # ============================================================
@@ -431,13 +468,17 @@ print_header "STEP 7: SETUP CRON JOB"
 
 print_info "Menambahkan cron job untuk deployment otomatis..."
 
-# Hapus cron job lama jika ada
-(crontab -l 2>/dev/null | grep -v "deploy-$project_name.sh") | crontab -
+# Setup cron job sebagai root
+CRON_FILE="/etc/cron.d/$project_name-deploy"
 
-# Tambah cron job baru
-(crontab -l 2>/dev/null; echo "$cron_schedule $deploy_script >> $log_file 2>&1") | crontab -
+cat > "$CRON_FILE" <<EOF
+# Auto deployment untuk $project_name
+$cron_schedule root $deploy_script >> $log_file 2>&1
+EOF
 
+chmod 644 "$CRON_FILE"
 print_success "Cron job berhasil ditambahkan ($interval_text)"
+print_info "Cron job disimpan di: $CRON_FILE"
 
 # ============================================================
 # STEP 8: KONFIGURASI NGINX
@@ -456,7 +497,7 @@ else
     print_info "Menggunakan domain: $domain_name"
 fi
 
-sudo tee "$nginx_conf" > /dev/null <<EOF
+cat > "$nginx_conf" <<EOF
 server {
     listen 80;
     server_name $server_name;
@@ -496,21 +537,21 @@ server {
 EOF
 
 # Enable site
-sudo ln -sf "$nginx_conf" "/etc/nginx/sites-enabled/$project_name"
+ln -sf "$nginx_conf" "/etc/nginx/sites-enabled/$project_name"
 
 # Hapus default site jika ada
 if [ -L "/etc/nginx/sites-enabled/default" ]; then
     if confirm "Apakah Anda ingin menonaktifkan default Nginx site?"; then
-        sudo rm /etc/nginx/sites-enabled/default
+        rm /etc/nginx/sites-enabled/default
         print_success "Default site dinonaktifkan"
     fi
 fi
 
 # Test konfigurasi Nginx
 print_info "Testing konfigurasi Nginx..."
-if sudo nginx -t; then
+if nginx -t; then
     print_success "Konfigurasi Nginx valid"
-    sudo systemctl reload nginx
+    systemctl reload nginx
     print_success "Nginx berhasil di reload"
 else
     print_error "Konfigurasi Nginx tidak valid!"
@@ -525,11 +566,11 @@ print_header "STEP 9: SETUP SSL (OPSIONAL)"
 if [ ! -z "$domain_name" ]; then
     if confirm "Apakah Anda ingin menginstall SSL certificate dengan Let's Encrypt?"; then
         print_info "Menginstall Certbot..."
-        sudo apt install -y certbot python3-certbot-nginx
+        apt install -y certbot python3-certbot-nginx
         
         print_info "Generating SSL certificate..."
-        sudo certbot --nginx -d "$domain_name" -d "www.$domain_name" --non-interactive --agree-tos --register-unsafely-without-email || \
-        sudo certbot --nginx -d "$domain_name" -d "www.$domain_name"
+        certbot --nginx -d "$domain_name" -d "www.$domain_name" --non-interactive --agree-tos --register-unsafely-without-email || \
+        certbot --nginx -d "$domain_name" -d "www.$domain_name"
         
         if [ $? -eq 0 ]; then
             print_success "SSL certificate berhasil diinstall"
@@ -550,19 +591,27 @@ print_header "STEP 10: MEMBUAT MANAGEMENT SCRIPT"
 
 manage_script="/usr/local/bin/manage-$project_name.sh"
 
-sudo tee "$manage_script" > /dev/null <<'EOFMANAGE'
+cat > "$manage_script" <<'EOFMANAGE'
 #!/bin/bash
 
 PROJECT_NAME="PROJECT_NAME_PLACEHOLDER"
 PROJECT_DIR="PROJECT_DIR_PLACEHOLDER"
 LOG_FILE="LOG_FILE_PLACEHOLDER"
 DEPLOY_SCRIPT="DEPLOY_SCRIPT_PLACEHOLDER"
+CRON_FILE="CRON_FILE_PLACEHOLDER"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+
+# Cek root
+if [ "$EUID" -ne 0 ]; then 
+    echo -e "${RED}Script ini harus dijalankan sebagai root!${NC}"
+    echo "Gunakan: sudo bash $0"
+    exit 1
+fi
 
 print_header() {
     echo -e "\n${BLUE}═══════════════════════════════════════════${NC}"
@@ -579,18 +628,20 @@ show_menu() {
     echo "╚═══════════════════════════════════════════════════════╝"
     echo -e "${NC}"
     echo "1. Deploy Now (Manual)"
-    echo "2. View Deployment Log"
+    echo "2. View Deployment Log (last 50 lines)"
     echo "3. View Live Log (tail -f)"
     echo "4. Check Deployment Status"
     echo "5. View Cron Job"
     echo "6. Edit Cron Job"
     echo "7. Restart Nginx"
     echo "8. View Nginx Error Log"
-    echo "9. Check Disk Usage"
-    echo "10. Git Status"
+    echo "9. View Nginx Access Log"
+    echo "10. Check Disk Usage"
+    echo "11. Git Status"
+    echo "12. Test Nginx Config"
     echo "0. Exit"
     echo ""
-    read -p "Pilih menu (0-10): " choice
+    read -p "Pilih menu (0-12): " choice
 }
 
 while true; do
@@ -602,7 +653,7 @@ while true; do
             read -p "Press ENTER to continue..."
             ;;
         2)
-            print_header "DEPLOYMENT LOG"
+            print_header "DEPLOYMENT LOG (Last 50 lines)"
             tail -50 "$LOG_FILE"
             read -p "Press ENTER to continue..."
             ;;
@@ -621,37 +672,51 @@ while true; do
             ;;
         5)
             print_header "CRON JOB"
-            crontab -l | grep "$PROJECT_NAME"
+            cat "$CRON_FILE"
             read -p "Press ENTER to continue..."
             ;;
         6)
             print_header "EDIT CRON JOB"
-            crontab -e
+            nano "$CRON_FILE"
+            echo "Cron job updated!"
+            read -p "Press ENTER to continue..."
             ;;
         7)
             print_header "RESTART NGINX"
-            sudo nginx -t && sudo systemctl restart nginx
+            nginx -t && systemctl restart nginx
             echo "Nginx restarted"
             read -p "Press ENTER to continue..."
             ;;
         8)
-            print_header "NGINX ERROR LOG"
-            sudo tail -50 /var/log/nginx/$PROJECT_NAME-error.log
+            print_header "NGINX ERROR LOG (Last 50 lines)"
+            tail -50 /var/log/nginx/$PROJECT_NAME-error.log
             read -p "Press ENTER to continue..."
             ;;
         9)
-            print_header "DISK USAGE"
-            df -h "$PROJECT_DIR"
-            echo ""
-            du -sh "$PROJECT_DIR"/*
+            print_header "NGINX ACCESS LOG (Last 50 lines)"
+            tail -50 /var/log/nginx/$PROJECT_NAME-access.log
             read -p "Press ENTER to continue..."
             ;;
         10)
+            print_header "DISK USAGE"
+            df -h "$PROJECT_DIR"
+            echo ""
+            echo "Project directory size:"
+            du -sh "$PROJECT_DIR"/*
+            read -p "Press ENTER to continue..."
+            ;;
+        11)
             print_header "GIT STATUS"
             cd "$PROJECT_DIR"
             git status
             echo ""
+            echo "Last 5 commits:"
             git log --oneline -5
+            read -p "Press ENTER to continue..."
+            ;;
+        12)
+            print_header "TEST NGINX CONFIG"
+            nginx -t
             read -p "Press ENTER to continue..."
             ;;
         0)
@@ -667,12 +732,13 @@ done
 EOFMANAGE
 
 # Replace placeholders
-sudo sed -i "s|PROJECT_NAME_PLACEHOLDER|$project_name|g" "$manage_script"
-sudo sed -i "s|PROJECT_DIR_PLACEHOLDER|$project_dir|g" "$manage_script"
-sudo sed -i "s|LOG_FILE_PLACEHOLDER|$log_file|g" "$manage_script"
-sudo sed -i "s|DEPLOY_SCRIPT_PLACEHOLDER|$deploy_script|g" "$manage_script"
+sed -i "s|PROJECT_NAME_PLACEHOLDER|$project_name|g" "$manage_script"
+sed -i "s|PROJECT_DIR_PLACEHOLDER|$project_dir|g" "$manage_script"
+sed -i "s|LOG_FILE_PLACEHOLDER|$log_file|g" "$manage_script"
+sed -i "s|DEPLOY_SCRIPT_PLACEHOLDER|$deploy_script|g" "$manage_script"
+sed -i "s|CRON_FILE_PLACEHOLDER|$CRON_FILE|g" "$manage_script"
 
-sudo chmod +x "$manage_script"
+chmod +x "$manage_script"
 print_success "Management script dibuat di $manage_script"
 
 # ============================================================
@@ -686,22 +752,24 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 print_info "Ringkasan Instalasi:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "👤 User              : $REAL_USER"
 echo "📁 Project Directory  : $project_dir"
 echo "🌐 Website URL        : http://$([ -z "$domain_name" ] && hostname -I | awk '{print $1}' || echo "$domain_name")"
 echo "📋 Deployment Log     : $log_file"
 echo "⚙️  Deployment Script  : $deploy_script"
 echo "🔧 Management Script  : $manage_script"
 echo "⏰ Cron Schedule      : $interval_text"
+echo "📝 Cron File          : $CRON_FILE"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-print_info "Command yang bisa digunakan:"
+print_info "Command yang bisa digunakan (sebagai root):"
 echo "  • Deploy manual        : bash $deploy_script"
 echo "  • Lihat log           : tail -f $log_file"
 echo "  • Management menu     : bash $manage_script"
-echo "  • Edit cron           : crontab -e"
-echo "  • Test nginx config   : sudo nginx -t"
-echo "  • Reload nginx        : sudo systemctl reload nginx"
+echo "  • Edit cron           : nano $CRON_FILE"
+echo "  • Test nginx config   : nginx -t"
+echo "  • Reload nginx        : systemctl reload nginx"
 echo ""
 
 if confirm "Apakah Anda ingin menjalankan deployment sekarang?"; then
@@ -722,6 +790,7 @@ else
 fi
 
 echo ""
-print_info "Untuk management, jalankan: bash $manage_script"
+print_info "Untuk management, jalankan: sudo bash $manage_script"
 echo ""
 print_success "Terima kasih telah menggunakan installer ini! 🚀"
+print_info "Repository: https://github.com/zulfikriyahya/mtsn1pandeglang"
