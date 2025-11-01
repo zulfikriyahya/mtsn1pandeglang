@@ -358,6 +358,7 @@ PROJECT_DIR="$project_dir"
 LOG_FILE="$log_file"
 BRANCH="$branch_name"
 PACKAGE_MANAGER="$package_manager"
+USER="zulfikriyahya"
 
 # Fungsi logging
 log() {
@@ -367,7 +368,11 @@ log() {
 log "=== Starting deployment process ==="
 
 # Pindah ke directory project
-cd "\$PROJECT_DIR" || exit 1
+cd "$PROJECT_DIR" || exit 1
+
+# Set ownership ke user sebelum operasi Git
+log "Setting ownership to user..."
+sudo chown -R $USER:$USER "$PROJECT_DIR"
 
 # Stash perubahan lokal jika ada
 git stash
@@ -392,16 +397,6 @@ fi
 if [ \$? -ne 0 ]; then
     log "ERROR: Dependency installation failed"
     exit 1
-fi
-
-# Set permissions untuk user
-log "Setting permissions for build..."
-sudo chown -R $USER:$USER "$PROJECT_DIR"
-sudo chmod -R 755 "$PROJECT_DIR"
-
-# Hapus dist directory lama jika ada
-if [ -d "$PROJECT_DIR/dist" ]; then
-    rm -rf "$PROJECT_DIR/dist"
 fi
 
 # Build project
