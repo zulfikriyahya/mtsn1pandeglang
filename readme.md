@@ -3,7 +3,7 @@
 ## Project Info
 
 - **Name**: mtsn1pandeglang
-- **Version**: 0.0.1
+- **Version**: 0.0.2
 - **Description**: Astro and Tailwindcss boilerplate
 - **Author**: zulfikriyahya
 - **License**: MIT
