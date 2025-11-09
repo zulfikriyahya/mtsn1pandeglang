@@ -17,13 +17,13 @@
     "remove-darkmode": "node scripts/removeDarkmode.js && yarn format"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.4",
-    "@astrojs/mdx": "4.3.7",
-    "@astrojs/react": "4.4.0",
+    "@astrojs/check": "0.9.5",
+    "@astrojs/mdx": "4.3.10",
+    "@astrojs/react": "4.4.2",
     "@astrojs/sitemap": "3.6.0",
     "@digi4care/astro-google-tagmanager": "^1.6.0",
     "@justinribeiro/lite-youtube": "^1.8.2",
-    "astro": "5.14.5",
+    "astro": "5.15.4",
     "astro-auto-import": "^0.4.5",
     "astro-font": "^1.1.0",
     "date-fns": "^4.1.0",
