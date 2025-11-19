@@ -29,8 +29,8 @@
 
   "navigation_button": {
     "enable": true,
-    "label": "Dokumentasi",
-    "link": "https://docs.mtsn1pandeglang.sch.id"
+    "label": "Daftar Sekatang",
+    "link": "https://daftar.mtsn1pandeglang.sch.id"
   },
 
   "google_tag_manager": {

@@ -5,8 +5,6 @@ import {
   FaGraduationCap,
   FaUser,
   FaBook,
-  FaUsers,
-  FaInfoCircle,
   FaPause,
   FaPlay,
 } from "react-icons/fa";
