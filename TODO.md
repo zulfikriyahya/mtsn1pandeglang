@@ -4,8 +4,8 @@
 
 ### Environment Setup
 
-- [ ] Install Directus (via Docker/npm)
-- [ ] Setup PostgreSQL/MySQL database
+- [x] Install Directus (via Docker/npm)
+- [x] Setup PostgreSQL/MySQL database
 - [ ] Configure `.env` file (DB credentials, secret keys)
 - [ ] Install Directus CLI tools
 - [ ] Setup backup strategy untuk existing files
