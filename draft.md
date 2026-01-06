@@ -34,8 +34,8 @@
 
   "navigation_button": {
     "enable": true,
-    "label": "Dokumentasi",
-    "link": "https://docs.mtsn1pandeglang.sch.id"
+    "label": "Daftar Sekatang",
+    "link": "https://daftar.mtsn1pandeglang.sch.id"
   },
 
   "google_tag_manager": {
@@ -55,6 +55,7 @@
     "meta_description": "Penulis di MTs Negeri 1 Pandeglang"
   }
 }
+
 ```
 
 ---
@@ -236,6 +237,7 @@
     }
   ]
 }
+
 ```
 
 ---
@@ -267,6 +269,7 @@
     }
   ]
 }
+
 ```
 
 ---
@@ -318,6 +321,7 @@
     }
   }
 }
+
 ```
 
 ---
@@ -481,6 +485,7 @@ export const collections = {
   ctaSection: ctaSectionCollection,
   testimonialSection: testimonialSectionCollection,
 };
+
 ```
 
 ---
@@ -497,6 +502,7 @@ draft: false
 ---
 
 MTs Negeri 1 Pandeglang adalah Madrasah Tsanawiyah terkemuka di Kabupaten Pandeglang, Banten - Indonesia. Madrasah ini terkenal karena prestasi gemilang yang diraihnya dalam berbagai bidang, baik akademik maupun non-akademik. Para siswa di MTs Negeri 1 Pandeglang tidak hanya dibimbing untuk meraih kesuksesan akademik, tetapi juga diperkaya dengan nilai-nilai keagamaan yang mendalam, keterampilan sosial, dan berbagai kemampuan hidup lainnya. Dengan fasilitas yang lengkap dan tenaga pengajar yang berdedikasi tinggi, MTs Negeri 1 Pandeglang terus berkomitmen untuk mencetak generasi muda yang cerdas, beriman, dan berakhlak mulia. Semua ini menjadikannya sebagai Madrasah Tsanawiyah terbaik di Kabupaten Pandeglang.
+
 ```
 
 ---
@@ -522,6 +528,7 @@ social:
 **_Full Stack Developer in Pandeglang, Banten - Indonesia! 😎_**
 
 With a passion for coding and a love for creating user-friendly applications, I strive to bridge the gap between front-end and back-end development. When I'm not buried in code, you'll find me exploring new technologies, sipping on my favorite coffee, or enjoying the vibrant culture of Pandeglang. Let's connect and build something amazing together!
+
 ```
 
 ---
@@ -536,6 +543,7 @@ description: "Penulis Artikel MTs Negeri 1 Pandeglang"
 image: ""
 draft: false
 ---
+
 ```
 
 ---
@@ -582,7 +590,7 @@ draft: false
 - Website madrasah lainnya: **8 detik**
 - Website SMA biasa: **4.5 detik**
 
-> **Bayangkan:** Orang tua/siswa membuka website Anda, langsung tampil! Sementara website lain masih loading.
+> **Bayangkan:** Orang tua/siswa membuka website, langsung tampil! Sementara website lain masih loading.
 
 ---
 
@@ -618,7 +626,7 @@ Ketika orang mencari:
 - "MTs terbaik Banten"
 - "Sekolah Islam Pandeglang"
 
-**Website Anda muncul di halaman pertama Google!**
+**Website muncul di halaman pertama Google!**
 
 ---
 
@@ -634,7 +642,7 @@ Ketika orang mencari:
 
 ---
 
-## Posisi Website Anda
+## Posisi Website
 
 ```
 Tier SS (Super Elite) - Sekolah Internasional Mahal
@@ -903,7 +911,7 @@ Alasan:
 
 ## Pesan untuk Pimpinan Sekolah
 
-**Selamat! Website Anda sudah sangat baik.**
+**Selamat! Website sudah sangat baik.**
 
 Yang perlu dilakukan:
 
@@ -939,6 +947,7 @@ Website ini sudah sangat baik dan tidak perlu perubahan besar. Focus pada konten
 - **Website:** mtsn1pandeglang.sch.id
 - **Teknologi:** Astro 5.14.4 + React 19.2.0 + TailwindCSS 4.1.14
 - **Status:** Optimal - No Action Required
+
 ````
 
 ---
@@ -1326,6 +1335,76 @@ Semoga Allah SWT membalas semua kebaikan yang telah diberikan dengan pahala yang
   - **Website:** www.uinbanten.ac.id
 </Tab>
 </Tabs>
+
+```
+
+---
+
+### File: `./src/content/blog/zona-integritas.mdx`
+
+```markdown
+---
+title: "Wujudkan Zona Integritas, Kepala Kemenag Resmikan Gedung PTSP MTsN 1 Pandeglang"
+meta_title: "Peresmian Gedung PTSP MTsN 1 Pandeglang Menuju Zona Integritas WBK dan WBBM"
+description: "Kepala Kemenag Pandeglang meresmikan gedung Pelayanan Terpadu Satu Pintu MTsN 1 Pandeglang sebagai langkah strategis menuju Wilayah Bebas Korupsi dan Wilayah Birokrasi Bersih Melayani"
+date: 2024-01-03T08:00:00Z
+image: "/images/artikel/zona-integritas.png"
+categories: ["Artikel"]
+author: "Yahya Zulfikri"
+tags: ["Zona Integritas", "PTSP", "Pendidikan", "Madrasah"]
+draft: false
+---
+
+Kepala Kantor Kementerian Agama Kabupaten Pandeglang H. Amin Hidayat meresmikan gedung Pelayanan Terpadu Satu Pintu (PTSP) MTsN 1 Pandeglang di Kampung Kadulisung, Desa Palurahan, Kecamatan Kaduhejo, Kabupaten Pandeglang, Rabu (3/1/2024). Peresmian ini menandai langkah strategis dalam mewujudkan zona integritas menuju Wilayah Bebas Korupsi (WBK) dan Wilayah Birokrasi Bersih Melayani (WBBM) di seluruh madrasah di Kabupaten Pandeglang.
+
+Peresmian dilakukan bersama Kepala Seksi (Kasi) Penyelenggara Haji dan Umrah (PHU) Kantor Kemenag Pandeglang Haji Kholid, sebagai implementasi nyata dari program pembangunan zona integritas di lingkungan madrasah.
+
+## Pilot Project Zona Integritas
+
+Kepala MTsN 1 Pandeglang Eman Sulaeman menjelaskan bahwa peresmian gedung PTSP ini merupakan salah satu implementasi konkret setelah MTsN 1 Pandeglang ditunjuk sebagai pilot project pembangunan satuan kerja zona integritas pada tahun 2023.
+
+"Ini merupakan salah satu implementasi dari upaya MTsN 1 Pandeglang yang tahun ini ditunjuk sebagai pilot project untuk pembangunan satuan kerja zona integritas. Jadi MTsN 1 Pandeglang sedang menuju zona integritas, menuju Wilayah Bebas Korupsi dan Wilayah Birokrasi Bersih Melayani," ujar H. Eman Sulaiman.
+
+MTsN 1 Pandeglang menjadi sekolah pertama di Kabupaten Pandeglang yang menuju pembangunan zona integritas, menjadikannya pionir dalam reformasi birokrasi pendidikan berbasis madrasah.
+
+## Tahapan Pembangunan Zona Integritas
+
+Untuk mencapai tujuan WBK dan WBBM, Eman menjelaskan bahwa proses dilakukan secara bertahap. Sebelumnya, ia bersama seluruh dewan guru dan staf MTsN 1 Pandeglang telah menandatangani pakta integritas sebagai komitmen bersama.
+
+Tahapan kegiatan yang disiapkan meliputi pembangunan infrastruktur gedung layanan PTSP dan pengembangan Sumber Daya Manusia (SDM) yang kompeten dalam memberikan pelayanan prima.
+
+## Pelayanan Terpadu dan Terintegrasi
+
+Melalui gedung PTSP, seluruh jenis pelayanan yang berkaitan dengan pendidikan akan terpusat di satu lokasi. Pelayanan yang tersedia mencakup layanan terhadap masyarakat, alumni, kesiswaan, wali siswa, serta Kelompok Kerja Madrasah (KKM) dan anggotanya.
+
+"Jenis layanan yang bisa dilayani di PTSP yaitu menyangkut semua pelayanan yang berkaitan dengan pendidikan. Pelayanan terhadap masyarakat dan wali siswa khususnya, baik layanan surat-menyurat yang dibutuhkan oleh wali siswa, legalisir ijazah bisa dilayani di sini dengan cepat," jelas Eman.
+
+Terpusatnya penyelenggaraan pelayanan ini memberikan kemudahan dalam hal pengawasan sekaligus meningkatkan efektivitas dan efisiensi dalam praktiknya.
+
+## Teknologi Mendukung Transparansi
+
+Untuk mendukung terwujudnya zona integritas WBK dan WBBM, gedung PTSP dilengkapi dengan berbagai sarana modern. Kamera keamanan dipasang di seluruh area sehingga aktivitas petugas, guru, dan stakeholder lainnya dapat terlihat secara real-time.
+
+"Kita juga akan punya aplikasi big data. Jadi melalui aplikasi tersebut seluruh data dan informasi pelayanan dari sekolah kami ini akan bisa diakses oleh masyarakat," ungkap Eman.
+
+Seluruh sistem akan terkoneksi ke platform digital yang dapat diakses melalui perangkat android, memberikan keterbukaan informasi yang optimal. Menurut Eman, implementasi teknologi ini berdampak signifikan pada pengurangan potensi korupsi dan pungutan liar.
+
+"Jadi nanti seluruhnya akan terkoneksi ke android. Selain itu, jika dibandingkan dengan sekolah yang belum memiliki PTSP ini, tentu secara keterbukaan pelayanan kita lebih baik," tambahnya.
+
+## Apresiasi dan Harapan Kepala Kemenag
+
+Kepala Kantor Kementerian Agama Kabupaten Pandeglang H. Amin Hidayat memberikan apresiasi tinggi atas terobosan yang dilakukan MTsN 1 Pandeglang. Menurutnya, hal ini merupakan bukti bahwa pendidikan di Kabupaten Pandeglang, terutama yang berbasis madrasah, terus mengalami perkembangan positif.
+
+"Saya berharap seluruh madrasah juga mengikuti dan membuat layanan satu pintu di masing-masing madrasah. Mudah-mudahan pelayanan satu pintu itu bisa juga diikuti oleh sekolah-sekolah yang lainnya," ujar H. Amin Hidayat.
+
+H. Amin Hidayat mengakui bahwa menyiapkan konsep zona integritas bukanlah hal yang mudah dan memerlukan komitmen dari seluruh civitas akademika. "Saya berharap seluruh madrasah juga, mengikuti dan membuat layanan satu pintu. Menyiapkan konsep seperti ini tidaklah mudah, ini harus dilaksanakan oleh seluruh civitas akademika MTsN 1 Pandeglang," tegasnya.
+
+## Komitmen Menuju WBK dan WBBM
+
+H. Amin Hidayat menegaskan bahwa pencapaian zona integritas memerlukan konsistensi dan disiplin dari seluruh elemen. "Kalau sudah zona integritas maka jangan juga ada yang kesiangan. Ngajar jangan telat, semuanya harus benar-benar mengikuti komitmen bersama mewujudkan madrasah menuju Wilayah Bebas Korupsi (WBK) dan Wilayah Birokrasi Bersih Melayani (WBBM)," tandasnya.
+
+Peresmian gedung PTSP MTsN 1 Pandeglang ini diharapkan menjadi inspirasi dan contoh bagi madrasah serta sekolah lainnya di Kabupaten Pandeglang untuk terus meningkatkan kualitas pelayanan publik yang transparan, akuntabel, dan bebas dari praktik korupsi.
+
 ```
 
 ---
@@ -1340,6 +1419,7 @@ description: "Artikel MTs Negeri 1 Pandeglang"
 image: ""
 draft: false
 ---
+
 ```
 
 ---
@@ -1354,6 +1434,7 @@ meta_title: "Kontak MTs Negeri 1 Pandeglang"
 draft: false
 image: ""
 ---
+
 ```
 
 ---
@@ -1476,6 +1557,7 @@ features:
       label: "Ekstrakurikuler"
       link: "/ekstrakurikuler"
 ---
+
 ```
 
 ---
@@ -1554,6 +1636,7 @@ MTs Negeri 1 Pandeglang melakukan evaluasi berkala terhadap pelaksanaan program 
 ---
 
 > "Program Adiwiyata di MTs Negeri 1 Pandeglang adalah langkah nyata kami untuk menciptakan sekolah yang peduli dan berbudaya lingkungan. Kami berkomitmen untuk melibatkan seluruh warga sekolah dalam upaya pelestarian lingkungan dan pembangunan berkelanjutan." - Kepala Sekolah MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -1621,6 +1704,7 @@ MTs Negeri 1 Pandeglang telah menerima sertifikat akreditasi dari Badan Akredita
 <Button label="Lihat Data" link="https://ban-pdm.id//satuanpendidikan/69788409" style="solid" />
 
 > "Akreditasi MTs Negeri 1 Pandeglang adalah bukti nyata komitmen kami untuk memberikan pendidikan berkualitas kepada siswa-siswi. Kami akan terus berusaha untuk meningkatkan mutu pendidikan dan mencapai prestasi yang lebih tinggi." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -1702,6 +1786,7 @@ MTs Negeri 1 Pandeglang mendorong pembentukan komunitas alumni berdasarkan angka
 ---
 
 > "Kami sangat bangga dengan prestasi dan kontribusi yang telah diberikan oleh para alumni MTs Negeri 1 Pandeglang. Halaman Alumni ini adalah wujud apresiasi kami dan harapan untuk terus menjaga hubungan baik dengan para alumni." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -1784,6 +1869,7 @@ MTs Negeri 1 Pandeglang memberikan penilaian dan penghargaan kepada siswa yang a
 ---
 
 > "Kegiatan ekstrakurikuler di MTs Negeri 1 Pandeglang memberikan kesempatan bagi siswa untuk mengembangkan bakat dan minat mereka di luar kegiatan akademik. Kami percaya bahwa kegiatan-kegiatan ini dapat membentuk karakter siswa yang kuat dan berintegritas." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2044,6 +2130,7 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 ### Custom video
 
 <Video width="100%" src="https://www.w3schools.com/html/mov_bbb.mp4" />
+
 ````
 
 ---
@@ -2120,6 +2207,7 @@ Halaman Guru MTs Negeri 1 Pandeglang bertujuan untuk:
 ---
 
 > "Guru di MTs Negeri 1 Pandeglang adalah pilar utama dalam proses pembelajaran. Kami berkomitmen untuk memberikan pendidikan yang berkualitas dan mendukung perkembangan akademik serta personal siswa-siswi." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2154,6 +2242,7 @@ MTs Negeri 1 Pandeglang berkomitmen untuk melindungi informasi pribadi yang diku
 2. Setiap perubahan dalam kebijakan privasi akan diumumkan di situs web kami dan pengguna akan diberitahu melalui email.
 3. Pengguna dianjurkan untuk secara berkala memeriksa kebijakan privasi ini untuk mengetahui pembaruan terbaru.
 4. Dengan terus menggunakan layanan kami setelah perubahan kebijakan, pengguna dianggap menyetujui perubahan tersebut.
+
 ```
 
 ---
@@ -2225,6 +2314,7 @@ MTs Negeri 1 Pandeglang menyediakan layanan bimbingan dan konseling untuk menduk
 ---
 
 > "Kurikulum Merdeka Belajar memberikan kebebasan kepada siswa untuk belajar sesuai dengan potensi dan minat mereka. Ini adalah langkah besar menuju pendidikan yang lebih humanis dan inklusif." - Wakil Kepala Bidang Kurikulum MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2301,6 +2391,7 @@ Selain mengembangkan keterampilan kepemimpinan dan organisasi, OSIM di MTs Neger
 ---
 
 > "OSIM di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan keterampilan kepemimpinan dan organisasi. Melalui kegiatan OSIM, kami berharap dapat membentuk generasi yang tanggap, bertanggung jawab, dan mampu mengelola berbagai kegiatan dengan baik." - Pembina OSIM MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2373,6 +2464,7 @@ Selain mengembangkan keterampilan baris-berbaris, Paskibra di MTs Negeri 1 Pande
 ---
 
 > "Paskibra di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan keterampilan baris-berbaris dan karakter yang kuat. Melalui kegiatan Paskibra, kami berharap dapat membentuk generasi yang disiplin, tangguh, dan memiliki jiwa kepemimpinan." - Pembina Paskibra MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2457,6 +2549,7 @@ Selain mengembangkan keterampilan hidup di alam bebas, Pecinta Alam di MTs Neger
 ---
 
 > "Pecinta Alam di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk menumbuhkan kecintaan terhadap alam dan kesadaran lingkungan. Melalui kegiatan Pecinta Alam, kami berharap dapat membentuk generasi yang peduli dan bertanggung jawab terhadap kelestarian alam." - Pembina Pecinta Alam MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2530,6 +2623,7 @@ PTSP menyediakan sistem antrian online untuk memudahkan pengaturan waktu kunjung
 ---
 
 > "Pelayanan Terpadu Satu Pintu di MTs Negeri 1 Pandeglang adalah upaya kami untuk memberikan pelayanan terbaik kepada siswa, orang tua, dan masyarakat. Kami berkomitmen untuk terus meningkatkan kualitas pelayanan kami." - Kepala Tata Usaha MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2607,6 +2701,7 @@ Selain mengembangkan keterampilan pertolongan pertama, PMR di MTs Negeri 1 Pande
 ---
 
 > "PMR di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk belajar dan mengembangkan keterampilan pertolongan pertama serta nilai-nilai kemanusiaan. Melalui kegiatan PMR, kami berharap dapat membentuk generasi yang tanggap, peduli, dan siap membantu sesama." - Pembina PMR MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2685,6 +2780,7 @@ Selain mengembangkan keterampilan kepramukaan, Pramuka di MTs Negeri 1 Pandeglan
 ---
 
 > "Pramuka di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan keterampilan hidup dan karakter yang kuat. Melalui kegiatan Pramuka, kami berharap dapat membentuk generasi yang mandiri, disiplin, dan berjiwa kepemimpinan." - Pembina Pramuka MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2736,6 +2832,7 @@ MTs Negeri 1 Pandeglang menyediakan layanan bimbingan dan konseling untuk menduk
 ---
 
 > "Program-program unggulan di MTs Negeri 1 Pandeglang dirancang untuk mengembangkan potensi siswa secara menyeluruh. Kami percaya bahwa setiap siswa memiliki potensi yang luar biasa, dan tugas kami adalah membantu mereka mengembangkannya." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2776,6 +2873,7 @@ Para pendiri dan penyelenggara MTs Negeri 1 Pandeglang memiliki komitmen yang ti
 ---
 
 > "MTs Negeri 1 Pandeglang adalah madrasah yang memiliki sejarah panjang dan prestasi yang membanggakan. Kami berkomitmen untuk terus memberikan pendidikan yang berkualitas dan membentuk generasi yang berakhlak mulia." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2849,6 +2947,7 @@ Siswa-siswi yang telah meraih prestasi akan mendapatkan penghargaan dan sertifik
 ---
 
 > "Siswa di MTs Negeri 1 Pandeglang adalah aset berharga yang kami banggakan. Kami berkomitmen untuk menyediakan pendidikan yang berkualitas dan mendukung pengembangan potensi mereka secara menyeluruh." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2870,6 +2969,7 @@ Staf MTs Negeri 1 Pandeglang terdiri dari tenaga pendidik dan kependidikan yang 
 ---
 
 > "Staf MTs Negeri 1 Pandeglang adalah pilar utama dalam mewujudkan visi dan misi sekolah. Kami berkomitmen untuk bekerja sama dalam menciptakan lingkungan belajar yang kondusif dan inspiratif bagi siswa-siswi." - Kepala Tata Usaha MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2913,6 +3013,7 @@ Tujuan dari MTs Negeri 1 Pandeglang adalah sebagai berikut:
 ---
 
 > "Dengan visi, misi, dan tujuan yang jelas, MTs Negeri 1 Pandeglang berkomitmen untuk terus meningkatkan kualitas pendidikan dan mencetak generasi yang berakhlak mulia, berprestasi, dan peduli terhadap lingkungan." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2981,6 +3082,7 @@ Selain mengembangkan keterampilan bermain bola voli, Volleyball Club juga berfok
 ---
 
 > "Volleyball Club di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan bakat dan minat mereka dalam olahraga bola voli. Kami berkomitmen untuk membentuk siswa yang tidak hanya unggul dalam keterampilan bermain, tetapi juga memiliki karakter yang kuat dan sportif." - Pembina Volleyball Club MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -3051,6 +3153,7 @@ Pengawasan dan pengendalian dilakukan secara berkala untuk memastikan pelaksanaa
 ---
 
 > "Penerapan Zona Integritas di MTs Negeri 1 Pandeglang adalah langkah nyata kami untuk menciptakan lingkungan pendidikan yang bersih, transparan, dan berintegritas. Kami berkomitmen untuk memberikan pelayanan terbaik dan membangun kepercayaan masyarakat." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -3068,6 +3171,7 @@ button:
   label: "Daftar Sekarang!"
   link: "https://daftar.mtsn1pandeglang.sch.id"
 ---
+
 ```
 
 ---
@@ -3171,7 +3275,9 @@ testimonials:
     designation: "Alumni 2021"
     avatar: "/images/avatar-sm.png"
     content: "MTs Negeri 1 Pandeglang punya semangat inovatif. Banyak teknologi pembelajaran diterapkan secara menarik."
+
 ---
+
 ```
 
 ---
@@ -3194,6 +3300,7 @@ const useTheme = (): string => {
 };
 
 export default useTheme;
+
 ```
 
 ---
@@ -3385,21 +3492,19 @@ const { title, meta_title, description, image, noindex, canonical } =
       }`}
     />
     <meta name="twitter:card" content="summary_large_image" />
-
+    
     <!-- Tawk.to -->
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
-      var Tawk_API = Tawk_API || {},
-        Tawk_LoadStart = new Date();
-      (function () {
-        var s1 = document.createElement("script"),
-          s0 = document.getElementsByTagName("script")[0];
-        s1.async = true;
-        s1.src = "https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj";
-        s1.charset = "UTF-8";
-        s1.setAttribute("crossorigin", "*");
-        s0.parentNode.insertBefore(s1, s0);
-      })();
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
     </script>
     <!--End of Tawk.to Script-->
   </head>
@@ -3421,6 +3526,7 @@ const { title, meta_title, description, image, noindex, canonical } =
     <InstallPrompt client:load />
   </body>
 </html>
+
 ```
 
 ---
@@ -3541,6 +3647,7 @@ const { title, description, author, categories, image, date, tags } = post.data;
     </div>
   </div>
 </section>
+
 ```
 
 ---
@@ -3578,6 +3685,7 @@ const { title, image, social } = data.data;
   </p>
   <Social source={social} className="social-icons" />
 </div>
+
 ```
 
 ---
@@ -3643,6 +3751,7 @@ const { title, image, date, author, categories } = data.data;
     selengkapnya
   </a>
 </div>
+
 ```
 
 ---
@@ -3695,6 +3804,7 @@ paths.forEach((label: string, i: number) => {
     }
   </ol>
 </nav>
+
 ```
 
 ---
@@ -3762,6 +3872,7 @@ const isValidPath = images[src] ? true : false;
     />
   )
 }
+
 ```
 
 ---
@@ -3832,6 +3943,7 @@ const { theme_switcher }: { theme_switcher: boolean } = config.settings;
     )
   }
 </a>
+
 ```
 
 ---
@@ -3928,7 +4040,7 @@ for (let i = 1; i <= totalPages; i++) {
           >
             {pagination}
           </a>
-        ),
+        )
       )}
 
       {/* next page */}
@@ -3973,6 +4085,7 @@ for (let i = 1; i <= totalPages; i++) {
     </nav>
   )
 }
+
 ```
 
 ---
@@ -4032,6 +4145,7 @@ const {
     </a>
   </li>
 </ul>
+
 ```
 
 ---
@@ -4067,6 +4181,7 @@ export interface ISocial {
     ))
   }
 </ul>
+
 ```
 
 ---
@@ -4125,7 +4240,7 @@ const { className }: { className?: string } = Astro.props;
   const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
   matchMedia.addEventListener("change", () =>
-    toggleTheme(document.querySelectorAll("[data-theme-switcher]")),
+    toggleTheme(document.querySelectorAll("[data-theme-switcher]"))
   );
 
   function toggleTheme(themeSwitch: NodeListOf<Element>) {
@@ -4165,6 +4280,7 @@ const { className }: { className?: string } = Astro.props;
   // Runs on view transitions navigation
   document.addEventListener("astro:after-swap", setDarkMode);
 </script>
+
 ```
 
 ---
@@ -4173,7 +4289,6 @@ const { className }: { className?: string } = Astro.props;
 
 ```astro
 ---
-
 ---
 
 {
@@ -4188,6 +4303,7 @@ const { className }: { className?: string } = Astro.props;
     </div>
   )
 }
+
 ```
 
 ---
@@ -4214,6 +4330,7 @@ const Disqus = ({ className }: { className?: string }) => {
 };
 
 export default Disqus;
+
 ```
 
 ---
@@ -4261,6 +4378,7 @@ const getIconLibrary = (icon: string): IconMap | undefined => {
 };
 
 export default DynamicIcon;
+
 ```
 
 ---
@@ -4432,6 +4550,7 @@ const InstallPrompt = () => {
 };
 
 export default InstallPrompt;
+
 ```
 
 ---
@@ -4446,8 +4565,6 @@ import {
   FaGraduationCap,
   FaUser,
   FaBook,
-  FaUsers,
-  FaInfoCircle,
   FaPause,
   FaPlay,
 } from "react-icons/fa";
@@ -4922,6 +5039,7 @@ export default function ProfilMahasiswaPLP() {
     </div>
   );
 }
+
 ```
 
 ---
@@ -5160,6 +5278,7 @@ const SearchModal = () => {
 };
 
 export default SearchModal;
+
 ```
 
 ---
@@ -5414,8 +5533,7 @@ const SearchResult = ({
                 ></path>
               </svg>
               <p className="mt-4">
-                Tidak ada hasil untuk &quot;<strong>{searchString}</strong>
-                &quot;
+                Tidak ada hasil untuk &quot;<strong>{searchString}</strong>&quot;
               </p>
             </div>
           )}
@@ -5428,6 +5546,7 @@ const SearchResult = ({
 };
 
 export default SearchResult;
+
 ```
 
 ---
@@ -5481,6 +5600,7 @@ const { call_to_action } = Astro.props;
     </section>
   )
 }
+
 ```
 
 ---
@@ -5529,6 +5649,7 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
     </div>
   </div>
 </footer>
+
 ```
 
 ---
@@ -5687,6 +5808,7 @@ const { pathname } = Astro.url;
     </div>
   </nav>
 </header>
+
 ```
 
 ---
@@ -5711,6 +5833,7 @@ const { title = "" }: { title?: string } = Astro.props;
     </div>
   </div>
 </section>
+
 ```
 
 ---
@@ -5752,7 +5875,7 @@ const { tags, categories, allCategories } = Astro.props;
         </li>
         <li class="text-center">
           <b>H. Eman Sulaiman, S.Ag., M.Pd.</b>
-          <br />NIP 197006032000031002
+          <br>NIP 197006032000031002
         </li>
       </ul>
     </div>
@@ -5765,7 +5888,7 @@ const { tags, categories, allCategories } = Astro.props;
         {
           categories.map((category: any) => {
             const count = allCategories.filter(
-              (c: any) => c === category,
+              (c: any) => c === category
             ).length;
             return (
               <li>
@@ -5805,6 +5928,7 @@ const { tags, categories, allCategories } = Astro.props;
     </div>
   </div>
 </div>
+
 ```
 
 ---
@@ -5925,6 +6049,7 @@ const { testimonial } = Astro.props;
     });
   });
 </script>
+
 ```
 
 ---
@@ -5968,6 +6093,7 @@ const Accordion = ({
 };
 
 export default Accordion;
+
 ```
 
 ---
@@ -6005,6 +6131,7 @@ const Button = ({
 };
 
 export default Button;
+
 ```
 
 ---
@@ -6097,6 +6224,7 @@ function Notice({
 }
 
 export default Notice;
+
 ```
 
 ---
@@ -6111,6 +6239,7 @@ function Tab({ name, children }: { name: string; children: React.ReactNode }) {
 }
 
 export default Tab;
+
 ```
 
 ---
@@ -6189,6 +6318,7 @@ const Tabs = ({ children }: { children: React.ReactElement }) => {
 };
 
 export default Tabs;
+
 ```
 
 ---
@@ -6228,6 +6358,7 @@ function Video({
 }
 
 export default Video;
+
 ```
 
 ---
@@ -6262,6 +6393,7 @@ const Youtube = ({
 };
 
 export default Youtube;
+
 ```
 
 ---
@@ -6313,6 +6445,7 @@ export const getListPage = async <C extends CollectionKey>(
   return data;
 };
 ---
+
 ```
 
 ---
@@ -6353,6 +6486,7 @@ export const getAllTaxonomy = async (collection: any, name: string) => {
   return taxonomies;
 };
 ---
+
 ```
 
 ---
@@ -6401,6 +6535,7 @@ const bgImageMod = async (
 };
 
 export default bgImageMod;
+
 ```
 
 ---
@@ -6420,6 +6555,7 @@ const dateFormat = (
 };
 
 export default dateFormat;
+
 ```
 
 ---
@@ -6467,6 +6603,7 @@ const readingTime = (content: string): string => {
 };
 
 export default readingTime;
+
 ```
 
 ---
@@ -6511,6 +6648,7 @@ const similarItems = (currentItem: any, allItems: any[]) => {
 };
 
 export default similarItems;
+
 ```
 
 ---
@@ -6543,6 +6681,7 @@ export const sortByWeight = (array: any[]) => {
   const sortedArray = [...new Set([...sortedWeightedArray, ...withoutWeight])];
   return sortedArray;
 };
+
 ```
 
 ---
@@ -6558,6 +6697,7 @@ const taxonomyFilter = (posts: any[], name: string, key: string) =>
   );
 
 export default taxonomyFilter;
+
 ```
 
 ---
@@ -6625,6 +6765,7 @@ const htmlEntityDecoder = (htmlWithEntities: string) => {
   );
   return htmlWithoutEntities;
 };
+
 ```
 
 ---
@@ -6659,6 +6800,7 @@ import Base from "@/layouts/Base.astro";
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -6751,6 +6893,7 @@ const authors = await getSinglePage("authors");
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -6789,7 +6932,7 @@ const { Content } = await render(author);
 const BLOG_FOLDER = "blog";
 const posts = await getSinglePage(BLOG_FOLDER);
 const postFilterByAuthor = posts.filter(
-  (post) => slugify(post.data.author) === slugify(title),
+  (post) => slugify(post.data.author) === slugify(title)
 );
 ---
 
@@ -6837,6 +6980,7 @@ const postFilterByAuthor = posts.filter(
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -6908,6 +7052,7 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -7001,6 +7146,7 @@ export async function getStaticPaths() {
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -7038,6 +7184,7 @@ const { title, meta_title, description, image } = post.data;
 >
   <PostSingle post={post} />
 </Base>
+
 ```
 
 ---
@@ -7084,6 +7231,7 @@ const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -7137,6 +7285,7 @@ const sortedPosts = sortByDate(filterByCategories);
     </div>
   </div>
 </Base>
+
 ```
 
 ---
@@ -7216,6 +7365,7 @@ if (contactIndex.data.draft) {
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -7327,6 +7477,7 @@ const { banner, features } = homepage.data;
   <Testimonial testimonial={testimonial} />
   <CallToAction call_to_action={call_to_action} />
 </Base>
+
 ```
 
 ---
@@ -7373,6 +7524,7 @@ const allTags = await getAllTaxonomy(BLOG_FOLDER, "tags");
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -7425,6 +7577,7 @@ const sortedPosts = sortByDate(filterByTags);
     </div>
   </div>
 </Base>
+
 ```
 
 ---
@@ -7547,6 +7700,7 @@ blockquote > p {
 button {
   @apply cursor-pointer;
 }
+
 ```
 
 ---
@@ -7569,6 +7723,7 @@ button {
 .btn-outline-primary {
   @apply border-dark text-text-dark hover:bg-dark dark:hover:text-text-dark bg-transparent hover:text-white dark:border-darkmode-primary dark:text-white dark:hover:bg-darkmode-primary;
 }
+
 ```
 
 ---
@@ -7746,6 +7901,7 @@ button {
   @apply prose-tr:border-border dark:prose-tr:border-darkmode-border;
   @apply prose-td:relative prose-td:z-10 prose-td:px-3 prose-td:py-[18px] dark:prose-td:text-darkmode-text;
 }
+
 ```
 
 ---
@@ -7774,6 +7930,7 @@ button {
   @import "./buttons.css";
   @import "./search.css";
 }
+
 ```
 
 ---
@@ -7847,6 +8004,7 @@ button {
     }
   }
 }
+
 ```
 
 ---
@@ -7875,6 +8033,7 @@ input#nav-toggle:checked ~ #nav-menu {
 .swiper-pagination-bullet-active {
   @apply !h-4 !w-4 !bg-primary dark:!bg-darkmode-primary;
 }
+
 ```
 
 ---
@@ -7979,6 +8138,7 @@ input#nav-toggle:checked ~ #nav-menu {
 .search-result-item:hover .search-result-item-taxonomies {
   @apply text-white/90;
 }
+
 ```
 
 ---
@@ -8013,6 +8173,7 @@ input#nav-toggle:checked ~ #nav-menu {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
 ```
 
 ---
@@ -8123,6 +8284,7 @@ module.exports = plugin.withOptions(() => {
     );
   };
 });
+
 ```
 
 ---
@@ -8269,6 +8431,7 @@ module.exports = plugin.withOptions(() => {
     );
   };
 });
+
 ```
 
 ---
@@ -8289,6 +8452,7 @@ export type Button = {
   label: string;
   link: string;
 };
+
 ```
 
 ---
@@ -8300,7 +8464,7 @@ export type Button = {
 ```
 ##### Optimize default expiration time - BEGIN
 <IfModule mod_expires.c>
-
+  
   ## Enable expiration control
   ExpiresActive On
 
@@ -8446,6 +8610,7 @@ export type Button = {
     }
   ]
 }
+
 ```
 
 ---
@@ -8532,6 +8697,7 @@ try {
 } catch (err) {
   console.error(err);
 }
+
 ```
 
 ---
@@ -8627,6 +8793,7 @@ const path = require("path");
     delete currentObj[properties[properties.length - 1]];
   }
 })();
+
 ```
 
 ---
@@ -8757,6 +8924,7 @@ export default defineConfig({
     extendDefaultPlugins: true,
   },
 });
+
 ```
 
 ---
@@ -8768,7 +8936,7 @@ export default defineConfig({
   "name": "mtsn1pandeglang",
   "version": "0.0.1",
   "description": "Mandiri, Takwa, Peduli Lingkungan, Prestasi",
-  "author": "zulfikriyahya",
+  "author": "Yahya ZUlfikri",
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@1.22.22",
@@ -8826,6 +8994,7 @@ export default defineConfig({
     "workbox-window": "^7.3.0"
   }
 }
+
 ```
 
 ---
@@ -8857,6 +9026,8 @@ export default defineConfig({
   "include": [".astro/types.d.ts", "**/*.ts", "**/*.tsx", "**/*.astro"],
   "exclude": ["node_modules", "dist"]
 }
+
 ```
 
 ---
+
