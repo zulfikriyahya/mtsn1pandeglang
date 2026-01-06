@@ -12,6 +12,7 @@ EXCLUDE_PATTERNS=(
   "./.yarn/*" 
   "./.json/*" 
   "./.vscode/*" 
+  "./.env.example"
   "./.gitignore"
   "./.gitattributes"
   "./.yarnrc.yml"
