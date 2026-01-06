@@ -29,6 +29,7 @@ EXCLUDE_PATTERNS=(
   "./.markdownlint.json"
   "./README.mdx"
   "./README.md"
+  "./TODO.md"
   "./readme.mdx"
   "./readme.md"
   "./LICENSE"
