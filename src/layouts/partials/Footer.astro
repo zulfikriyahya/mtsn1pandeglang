@@ -5,14 +5,16 @@ import config from "@/config/config.json";
 import { markdownify } from "@/lib/utils/textConverter";
 import { getNavigationMenus, getSiteSettings } from "@/lib/directus";
 
-// Fetch Dynamic Data
+// Fetch Footer Data
 const footerMenus = await getNavigationMenus("footer");
 const siteSettings = await getSiteSettings();
 
-// Fallback jika Directus belum diset
-import socialFallback from "@/config/social.json";
-const socialMedia = siteSettings?.social_media || socialFallback.main;
-const copyrightText = siteSettings?.copyright_text || config.params.copyright;
+// PERBAIKAN: Hapus import social.json dan gunakan array kosong sebagai fallback
+const socialMedia = siteSettings?.social_media || [];
+const copyrightText =
+  siteSettings?.copyright_text ||
+  config.params.copyright ||
+  "Copyright © 2025";
 ---
 
 <footer class="bg-light dark:bg-darkmode-light mt-auto">
@@ -39,7 +41,12 @@ const copyrightText = siteSettings?.copyright_text || config.params.copyright;
         </ul>
       </div>
       <div class="mb-8 text-center lg:col-3 lg:mb-0 lg:mt-0 lg:text-right">
-        <Social source={socialMedia} className="social-icons" />
+        {/* Hanya render jika ada data sosial media */}
+        {
+          socialMedia.length > 0 && (
+            <Social source={socialMedia} className="social-icons" />
+          )
+        }
       </div>
     </div>
   </div>

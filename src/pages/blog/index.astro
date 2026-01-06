@@ -5,8 +5,6 @@ import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import PostSidebar from "@/partials/PostSidebar.astro";
-
-// Import Directus functions
 import {
   getArticles,
   getCategories,
@@ -14,64 +12,53 @@ import {
   getAssetURL,
 } from "@/lib/directus";
 
-// Fetch data
-const articles = await getArticles({
-  sort: ["-publish_date"], // Sort by newest
-  filter: { status: { _eq: "published" } },
-});
-
+// 1. Fetch Data
+const allArticles = await getArticles(); // Ambil semua untuk sidebar count
 const categories = await getCategories();
 const tags = await getTags();
 
-// Mapping categories for sidebar (array of strings)
-const categoryNames = categories.map((c) => c.name);
-const tagNames = tags.map((t) => t.name);
-
-// Get all categories used in articles (for count in sidebar)
-const usedCategories = articles
-  .flatMap(
-    (article) =>
-      article.categories?.map((cat: any) => cat.categories_id?.name || "") ||
-      [],
-  )
-  .filter(Boolean);
-
-// Pagination Logic
+// 2. Pagination Logic (Halaman 1)
 const paginationLength = config.settings.pagination;
-const totalPages = Math.ceil(articles.length / paginationLength);
-const currentArticles = articles.slice(0, paginationLength);
+const totalPages = Math.ceil(allArticles.length / paginationLength);
+const currentArticles = allArticles.slice(0, paginationLength);
 
-// Map Directus Data to BlogCard props format
+// 3. Mapping Data untuk Komponen
 const mappedArticles = currentArticles.map((article) => ({
-  id: article.slug, // BlogCard expects id/slug
-  body: article.excerpt || article.content, // BlogCard uses body for summary
+  id: article.slug,
+  body: article.excerpt || article.content,
   data: {
     title: article.title,
     image: getAssetURL(article.featured_image),
     date: article.publish_date,
     author: typeof article.author === "object" ? article.author?.name : "Admin",
-    categories: article.categories?.map((c: any) => c.categories_id?.name) || [
-      "Uncategorized",
-    ],
+    categories:
+      article.categories?.map((c: any) => c.categories_id?.name) || [],
   },
 }));
+
+// Data Sidebar
+const categoryNames = categories.map((c) => c.name);
+const tagNames = tags.map((t) => t.name);
+// Ambil semua kategori yang terpakai di artikel untuk hitung jumlah
+const usedCategories = allArticles.flatMap(
+  (article) => article.categories?.map((c: any) => c.categories_id?.name) || [],
+);
 
 const pageTitle = "Artikel Terkini";
 ---
 
-<Base title={pageTitle} meta_title={`Blog - ${config.site.title}`}>
+<Base title={pageTitle}>
   <PageHeader title={pageTitle} />
-
   <section class="section">
     <div class="container">
       <div class="row gx-5">
-        <!-- Blog Posts Grid -->
+        <!-- Blog Posts -->
         <div class="lg:col-8">
           <div class="row gsap-stagger-container">
             {
-              mappedArticles.map((article) => (
+              mappedArticles.map((post) => (
                 <div class="mb-14 md:col-6">
-                  <BlogCard data={article} />
+                  <BlogCard data={post} />
                 </div>
               ))
             }

@@ -3,16 +3,24 @@ import { marked } from "marked";
 
 // slugify
 export const slugify = (content: string) => {
+  if (!content) return ""; // Safety check
   return slug(content);
 };
 
 // markdownify
-export const markdownify = (content: string, div?: boolean) => {
+export const markdownify = (
+  content: string | null | undefined,
+  div?: boolean,
+) => {
+  // PERBAIKAN: Jika content null/undefined, kembalikan string kosong
+  if (!content) return "";
+
   return div ? marked.parse(content) : marked.parseInline(content);
 };
 
 // humanize
 export const humanize = (content: string) => {
+  if (!content) return ""; // Safety check
   return content
     .replace(/^[\s_]+|[\s_]+$/g, "")
     .replace(/[_\s]+/g, " ")
@@ -24,6 +32,7 @@ export const humanize = (content: string) => {
 
 // titleify
 export const titleify = (content: string) => {
+  if (!content) return ""; // Safety check
   const humanized = humanize(content);
   return humanized
     .split(" ")
@@ -32,7 +41,10 @@ export const titleify = (content: string) => {
 };
 
 // plainify
-export const plainify = (content: string) => {
+export const plainify = (content: string | null | undefined) => {
+  // PERBAIKAN: Jika content null/undefined, kembalikan string kosong
+  if (!content) return "";
+
   const parseMarkdown: any = marked.parse(content);
   const filterBrackets = parseMarkdown.replace(/<\/?[^>]+(>|$)/gm, "");
   const filterSpaces = filterBrackets.replace(/[\r\n]\s*[\r\n]/gm, "");

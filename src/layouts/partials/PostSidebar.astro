@@ -1,59 +1,56 @@
 ---
-import { humanize } from "@/lib/utils/textConverter";
+import { humanize, slugify } from "@/lib/utils/textConverter";
 
 const { tags, categories, allCategories } = Astro.props;
 ---
 
-<div class="lg:col-4">
-  <!-- sambutan -->
-  <div class="mb-8">
-    <div class="rounded bg-light p-8 dark:bg-darkmode-light">
-      <ul class="space-y-4">
+<div class="lg:col-4 mt-12 lg:mt-0">
+  <!-- Sambutan Kepala Sekolah (Bisa dibuat dinamis juga via Directus Singleton jika mau) -->
+  <div class="mb-8 gsap-fade-up">
+    <div class="rounded bg-light p-8 dark:bg-darkmode-light shadow-sm">
+      <div class="text-center mb-4">
         <img
           src="/images/assets/kepala-madrasah.png"
-          width="100%"
-          class="rounded-lg"
+          alt="Kepala Madrasah"
+          class="rounded-full w-24 h-24 mx-auto mb-4 object-cover border-4 border-white shadow-md"
         />
-        <li class="text-justify">
-          Puji syukur Alhamdulillah senantiasa kita panjatkan kepada Ilahi Robbi
-          atas segala nikmat dan karunia-Nya. Dalam kehidupan, kebutuhan akan
-          informasi adalah suatu hal yang sangat esensial. MTs Negeri 1
-          Pandeglang sebagai lembaga pendidikan memiliki tugas dan tanggung
-          jawab untuk mendidik generasi muda yang berkualitas dan tanggap
-          terhadap perkembangan ilmu pengetahuan dan teknologi di era
-          globalisasi ini. Internet menjadi jendela utama untuk melihat dunia.
-          MTs Negeri 1 Pandeglang telah memiliki fasilitas ini, oleh karena itu
-          kami akan menampilkan segala hal yang ada dan terjadi di lembaga kami,
-          sehingga dunia dapat melihat kondisi, kegiatan, prestasi, dan kemajuan
-          yang ada di sini. Kami sangat mengharapkan kritik dan saran dari
-          berbagai pihak demi kebaikan dan kemajuan MTs Negeri 1 Pandeglang.
-          Untuk seluruh civitas akademika, mari kita bersama-sama ukir prestasi
-          demi kejayaan madrasah kita. Amin.
-        </li>
-        <li class="text-center">
-          <b>H. Eman Sulaiman, S.Ag., M.Pd.</b>
-          <br>NIP 197006032000031002
-        </li>
-      </ul>
+        <h5 class="mb-1">H. Eman Sulaiman, S.Ag., M.Pd.</h5>
+        <p class="text-sm text-text-light dark:text-darkmode-text-light">
+          Kepala Madrasah
+        </p>
+      </div>
+      <p class="text-justify text-sm mb-4">
+        Selamat datang di website resmi MTs Negeri 1 Pandeglang. Website ini
+        merupakan sarana informasi dan komunikasi bagi seluruh civitas akademika
+        dan masyarakat luas.
+      </p>
     </div>
   </div>
-  <!-- categories -->
-  <div class="mb-8">
-    <h5 class="mb-6">Kategori</h5>
-    <div class="rounded bg-light p-8 dark:bg-darkmode-light">
+
+  <!-- Categories -->
+  <div class="mb-8 gsap-fade-up">
+    <h5
+      class="mb-6 relative inline-block pl-3 after:absolute after:left-0 after:top-0 after:h-full after:w-1 after:bg-primary after:content-['']"
+    >
+      Kategori
+    </h5>
+    <div class="rounded bg-light p-8 dark:bg-darkmode-light shadow-sm">
       <ul class="space-y-4">
         {
           categories.map((category: any) => {
             const count = allCategories.filter(
-              (c: any) => c === category
+              (c: any) => c === category,
             ).length;
             return (
               <li>
                 <a
-                  class="flex justify-between hover:text-primary dark:hover:text-darkmode-primary"
-                  href={`/categories/${category}`}
+                  class="flex justify-between hover:text-primary dark:hover:text-darkmode-primary transition-colors"
+                  href={`/categories/${slugify(category)}`}
                 >
-                  {humanize(category)} <span>({count})</span>
+                  {humanize(category)}{" "}
+                  <span class="bg-white dark:bg-darkmode-body px-2 rounded-full text-xs py-0.5 shadow-sm">
+                    {count}
+                  </span>
                 </a>
               </li>
             );
@@ -62,24 +59,27 @@ const { tags, categories, allCategories } = Astro.props;
       </ul>
     </div>
   </div>
-  <!-- tags -->
-  <div class="mb-8">
-    <h5 class="mb-6">Tagar</h5>
-    <div class="rounded bg-light p-6 dark:bg-darkmode-light">
-      <ul>
+
+  <!-- Tags -->
+  <div class="mb-8 gsap-fade-up">
+    <h5
+      class="mb-6 relative inline-block pl-3 after:absolute after:left-0 after:top-0 after:h-full after:w-1 after:bg-primary after:content-['']"
+    >
+      Tagar Populer
+    </h5>
+    <div class="rounded bg-light p-6 dark:bg-darkmode-light shadow-sm">
+      <ul class="flex flex-wrap gap-2">
         {
-          tags.map((tag: any) => {
-            return (
-              <li class="inline-block">
-                <a
-                  class="m-1 block rounded bg-white px-3 py-1 hover:bg-primary hover:text-white dark:bg-darkmode-body dark:hover:bg-darkmode-primary dark:hover:text-text-dark"
-                  href={`/tags/${tag}`}
-                >
-                  {humanize(tag)}
-                </a>
-              </li>
-            );
-          })
+          tags.map((tag: any) => (
+            <li class="inline-block">
+              <a
+                class="block rounded bg-white px-3 py-1 text-sm hover:bg-primary hover:text-white dark:bg-darkmode-body dark:hover:bg-darkmode-primary dark:hover:text-text-dark transition-all shadow-sm"
+                href={`/tags/${slugify(tag)}`}
+              >
+                #{humanize(tag)}
+              </a>
+            </li>
+          ))
         }
       </ul>
     </div>

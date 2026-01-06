@@ -1,13 +1,12 @@
 ---
 import Base from "@/layouts/Base.astro";
 import ImageMod from "@/components/ImageMod.astro";
-import { getArticleBySlug, getAssetURL, getArticles } from "@/lib/directus";
+import Share from "@/components/Share.astro";
+import { getArticles, getAssetURL } from "@/lib/directus";
 import { markdownify, humanize, slugify } from "@/lib/utils/textConverter";
 import dateFormat from "@/lib/utils/dateFormat";
 import { FaRegClock, FaRegFolder, FaRegUserCircle } from "react-icons/fa";
-import Share from "@/components/Share.astro";
 
-// Generate Static Paths (SSG)
 export async function getStaticPaths() {
   const articles = await getArticles();
   return articles.map((article) => ({
@@ -16,19 +15,7 @@ export async function getStaticPaths() {
   }));
 }
 
-// Get Params & Props
-const { single } = Astro.params;
-let { article } = Astro.props;
-
-// Fallback if SSR (though getStaticPaths handles SSG)
-if (!article) {
-  article = await getArticleBySlug(single as string);
-}
-
-if (!article) {
-  return Astro.redirect("/404");
-}
-
+const { article } = Astro.props;
 const {
   title,
   content,
@@ -41,8 +28,8 @@ const {
   meta_description,
 } = article;
 
-// Prepare data
 const authorName = typeof author === "object" ? author?.name : "Admin";
+const authorSlug = typeof author === "object" ? author?.slug : "#";
 const categoryList = categories?.map((c: any) => c.categories_id?.name) || [];
 const tagList = tags?.map((t: any) => t.tags_id?.name) || [];
 const imageUrl = getAssetURL(featured_image);
@@ -57,10 +44,10 @@ const imageUrl = getAssetURL(featured_image);
   <section class="section pt-7">
     <div class="container">
       <div class="row justify-center">
-        <article class="lg:col-10 gsap-fade-up">
+        <article class="lg:col-10">
           {
             imageUrl && (
-              <div class="mb-10">
+              <div class="mb-10 gsap-fade-up">
                 <ImageMod
                   src={imageUrl}
                   height={500}
@@ -73,40 +60,46 @@ const imageUrl = getAssetURL(featured_image);
             )
           }
 
-          <h1 set:html={markdownify(title)} class="h2 mb-4" />
+          <div class="gsap-fade-up">
+            <h1 set:html={markdownify(title)} class="h2 mb-4" />
+            <ul
+              class="mb-4 text-text-light dark:text-darkmode-text-light flex flex-wrap gap-4"
+            >
+              <li class="inline-flex items-center">
+                <FaRegUserCircle className="mr-2" />
+                <a
+                  href={`/authors/${authorSlug}`}
+                  class="hover:text-primary transition-colors"
+                  >{humanize(authorName)}</a
+                >
+              </li>
+              <li class="inline-flex items-center">
+                <FaRegFolder className="mr-2" />
+                {
+                  categoryList.map((category: string, index: number) => (
+                    <a
+                      href={`/categories/${slugify(category)}`}
+                      class="hover:text-primary transition-colors"
+                    >
+                      {humanize(category)}
+                      {index !== categoryList.length - 1 && ", "}
+                    </a>
+                  ))
+                }
+              </li>
+              <li class="inline-flex items-center">
+                <FaRegClock className="mr-2" />
+                {dateFormat(publish_date || new Date())}
+              </li>
+            </ul>
+          </div>
 
-          <ul class="mb-4 text-text-light dark:text-darkmode-text-light">
-            <li class="mr-4 inline-block">
-              <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
-              {humanize(authorName)}
-            </li>
-            <li class="mr-4 inline-block">
-              <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
-              {
-                categoryList.map((category: string, index: number) => (
-                  <a
-                    href={`/categories/${slugify(category)}`}
-                    class="hover:text-primary"
-                  >
-                    {humanize(category)}
-                    {index !== categoryList.length - 1 && ","}
-                  </a>
-                ))
-              }
-            </li>
-            <li class="mr-4 inline-block">
-              <FaRegClock className={"mr-2 -mt-1 inline-block"} />
-              {dateFormat(publish_date || new Date())}
-            </li>
-          </ul>
-
-          <div class="content mb-10">
-            <!-- Render HTML content from Directus WYSIWYG/Markdown -->
+          <div class="content mb-10 gsap-fade-up">
             <div set:html={markdownify(content, true)} />
           </div>
 
           <div
-            class="row items-start justify-between border-t border-border pt-10 dark:border-darkmode-border"
+            class="row items-start justify-between border-t border-border pt-10 dark:border-darkmode-border gsap-fade-up"
           >
             <div class="mb-10 flex items-center lg:col-5 lg:mb-0">
               <h5 class="mr-3">Tags :</h5>

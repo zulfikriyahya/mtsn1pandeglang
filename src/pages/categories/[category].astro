@@ -5,33 +5,25 @@ import PageHeader from "@/partials/PageHeader.astro";
 import { getCategories, getArticles, getAssetURL } from "@/lib/directus";
 import { humanize } from "@/lib/utils/textConverter";
 
-// 1. Generate Static Paths untuk setiap Kategori
 export async function getStaticPaths() {
   const categories = await getCategories();
-  return categories.map((category) => {
-    return {
-      params: { category: category.slug },
-      props: { categoryName: category.name },
-    };
-  });
+  return categories.map((category) => ({
+    params: { category: category.slug },
+    props: { categoryName: category.name },
+  }));
 }
 
 const { category } = Astro.params;
 const { categoryName } = Astro.props;
 
-// 2. Fetch Artikel dan Filter berdasarkan Kategori
-// Directus API filter agak kompleks untuk nested relation,
-// untuk SSG lebih aman fetch semua lalu filter di JS (kecuali datanya ribuan)
 const allArticles = await getArticles();
-
 const filteredArticles = allArticles.filter((article) =>
   article.categories?.some((cat: any) => cat.categories_id?.slug === category),
 );
 
-// Mapping untuk BlogCard
 const mappedArticles = filteredArticles.map((article) => ({
   id: article.slug,
-  body: article.excerpt || article.content,
+  body: article.excerpt,
   data: {
     title: article.title,
     image: getAssetURL(article.featured_image),
@@ -43,7 +35,7 @@ const mappedArticles = filteredArticles.map((article) => ({
 }));
 ---
 
-<Base title={categoryName}>
+<Base title={`Kategori: ${categoryName}`}>
   <PageHeader title={humanize(categoryName)} />
   <div class="section-sm pb-0">
     <div class="container">

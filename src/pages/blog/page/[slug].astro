@@ -12,52 +12,32 @@ import {
   getAssetURL,
 } from "@/lib/directus";
 
-// 1. Generate Static Paths untuk Pagination
 export async function getStaticPaths() {
-  const articles = await getArticles({
-    filter: { status: { _eq: "published" } },
-  });
+  const articles = await getArticles();
   const totalPages = Math.ceil(articles.length / config.settings.pagination);
   const paths = [];
 
   for (let i = 1; i < totalPages; i++) {
     paths.push({
-      params: {
-        slug: (i + 1).toString(), // Mulai dari halaman 2
-      },
-      props: { articles }, // Pass articles agar tidak fetch ulang
+      params: { slug: (i + 1).toString() },
+      props: { allArticles: articles },
     });
   }
   return paths;
 }
 
 const { slug } = Astro.params;
-const { articles: allArticles } = Astro.props;
+const { allArticles } = Astro.props;
+const currentPage = Number(slug);
 
-// Fetch data sidebar (Category & Tags)
-const categories = await getCategories();
-const tags = await getTags();
-const categoryNames = categories.map((c) => c.name);
-const tagNames = tags.map((t) => t.name);
-
-// Get Used Categories for Count
-const usedCategories = allArticles
-  .flatMap(
-    (article) =>
-      article.categories?.map((cat: any) => cat.categories_id?.name || "") ||
-      [],
-  )
-  .filter(Boolean);
-
-// Logic Pagination
-const currentPage = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
+// Pagination Logic
 const paginationLength = config.settings.pagination;
 const totalPages = Math.ceil(allArticles.length / paginationLength);
 const indexOfLastPost = currentPage * paginationLength;
 const indexOfFirstPost = indexOfLastPost - paginationLength;
 const currentArticles = allArticles.slice(indexOfFirstPost, indexOfLastPost);
 
-// Mapping Data untuk BlogCard
+// Mapping Articles
 const mappedArticles = currentArticles.map((article) => ({
   id: article.slug,
   body: article.excerpt || article.content,
@@ -66,24 +46,24 @@ const mappedArticles = currentArticles.map((article) => ({
     image: getAssetURL(article.featured_image),
     date: article.publish_date,
     author: typeof article.author === "object" ? article.author?.name : "Admin",
-    categories: article.categories?.map((c: any) => c.categories_id?.name) || [
-      "Uncategorized",
-    ],
+    categories:
+      article.categories?.map((c: any) => c.categories_id?.name) || [],
   },
 }));
 
-const pageTitle = "Artikel Terkini";
+// Sidebar Data
+const categories = await getCategories();
+const tags = await getTags();
+const usedCategories = allArticles.flatMap(
+  (a) => a.categories?.map((c: any) => c.categories_id?.name) || [],
+);
 ---
 
-<Base
-  title={pageTitle}
-  meta_title={`Blog Page ${currentPage} - ${config.site.title}`}
->
-  <PageHeader title={pageTitle} />
+<Base title={`Blog Halaman ${currentPage}`}>
+  <PageHeader title="Artikel Terkini" />
   <section class="section">
     <div class="container">
       <div class="row gx-5">
-        <!-- Blog Posts -->
         <div class="lg:col-8">
           <div class="row gsap-stagger-container">
             {
@@ -100,11 +80,9 @@ const pageTitle = "Artikel Terkini";
             totalPages={totalPages}
           />
         </div>
-
-        <!-- Sidebar -->
         <PostSidebar
-          categories={categoryNames}
-          tags={tagNames}
+          categories={categories.map((c) => c.name)}
+          tags={tags.map((t) => t.name)}
           allCategories={usedCategories}
         />
       </div>

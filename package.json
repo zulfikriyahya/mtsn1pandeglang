@@ -8,8 +8,8 @@
   "packageManager": "yarn@1.22.22",
   "type": "module",
   "scripts": {
-    "dev": "yarn generate-json && astro dev",
-    "build": "yarn generate-json && astro build",
+    "dev": "astro dev",
+    "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
     "format": "prettier -w ./src",
