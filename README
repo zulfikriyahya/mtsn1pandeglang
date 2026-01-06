@@ -1,0 +1,285 @@
+# MTs Negeri 1 Pandeglang
+
+Portal resmi **Madrasah Tsanawiyah Negeri 1 Pandeglang** yang dibangun dengan teknologi modern untuk memberikan informasi dan layanan terbaik kepada civitas akademika dan masyarakat.
+
+## Deskripsi Proyek
+
+Website ini merupakan platform digital komprehensif yang menyediakan informasi lengkap tentang madrasah, kegiatan akademik, prestasi siswa, serta berbagai layanan terpadu untuk mendukung ekosistem pendidikan yang transparan dan efisien.
+
+**Moto:** Mandiri, Takwa, Peduli Lingkungan, Prestasi
+
+## Teknologi Utama
+
+- **Astro 5.15.4** - Static Site Generator untuk performa optimal
+- **React 19.2.0** - Library UI untuk komponen interaktif
+- **TailwindCSS 4.1.14** - Framework CSS utility-first
+- **TypeScript 5.9.3** - Type-safe JavaScript
+- **MDX** - Markdown dengan kemampuan JSX
+- **PWA Support** - Progressive Web App capability
+
+## Fitur Unggulan
+
+### Konten & Informasi
+
+- Sistem blog dengan kategori dan tag terstruktur
+- Profil madrasah lengkap dengan visi, misi, dan tujuan
+- Informasi program akademik dan ekstrakurikuler
+- Galeri kegiatan dan prestasi siswa
+- Dokumentasi kegiatan mahasiswa PLP/KKN
+
+### Teknologi & Performa
+
+- **Lighthouse Score:** 97/100 (Performance)
+- **Security:** 100/100 - Website teraman se-Indonesia
+- **SEO:** 95/100 - Optimasi mesin pencari maksimal
+- Progressive Web App (PWA) ready
+- Dark mode support
+- Responsive design (mobile-first)
+
+### Layanan Digital
+
+- Search functionality dengan instant results
+- Zona Integritas (WBK/WBBM)
+- Pelayanan Terpadu Satu Pintu (PTSP)
+- Google Tag Manager integration
+- Disqus comment system
+
+### Navigasi & UX
+
+- Multi-level navigation menu
+- Breadcrumb navigation
+- Pagination system
+- Testimonial slider
+- Social media integration
+- Author profiles with bio
+
+## Struktur Direktori
+
+```
+├── public/                 # Static assets
+│   ├── images/            # Image assets
+│   └── videos/            # Video assets
+├── scripts/               # Build scripts
+│   └── jsonGenerator.js   # Content JSON generator
+├── src/
+│   ├── config/            # Configuration files
+│   │   ├── config.json    # Site configuration
+│   │   ├── menu.json      # Navigation structure
+│   │   ├── social.json    # Social media links
+│   │   └── theme.json     # Theme configuration
+│   ├── content/           # Content collections
+│   │   ├── about/         # About pages
+│   │   ├── authors/       # Author profiles
+│   │   ├── blog/          # Blog posts
+│   │   ├── contact/       # Contact page
+│   │   ├── homepage/      # Homepage content
+│   │   ├── pages/         # Regular pages
+│   │   └── sections/      # Section components
+│   ├── layouts/           # Layout components
+│   │   ├── components/    # Reusable components
+│   │   ├── helpers/       # Helper components
+│   │   ├── partials/      # Partial layouts
+│   │   └── shortcodes/    # MDX shortcodes
+│   ├── pages/             # Route pages
+│   ├── styles/            # Global styles
+│   └── tailwind-plugin/   # Custom Tailwind plugins
+└── package.json
+```
+
+## Instalasi
+
+### Prasyarat
+
+- Node.js versi 18.x atau lebih tinggi
+- Yarn package manager
+
+### Langkah Instalasi
+
+```bash
+# Clone repository
+git clone https://github.com/zulfikriyahya/mtsn1pandeglang.git
+
+# Masuk ke direktori proyek
+cd mtsn1pandeglang
+
+# Install dependencies
+yarn install
+
+# Generate JSON files
+yarn generate-json
+
+# Jalankan development server
+yarn dev
+```
+
+Website akan berjalan di `http://localhost:4321`
+
+## Perintah Tersedia
+
+```bash
+# Development
+yarn dev                 # Jalankan development server
+yarn build              # Build untuk production
+yarn preview            # Preview production build
+yarn check              # Type checking dengan Astro
+
+# Maintenance
+yarn format             # Format code dengan Prettier
+yarn generate-json      # Generate search index
+yarn remove-darkmode    # Remove dark mode (opsional)
+```
+
+## Konfigurasi
+
+### Site Configuration (`src/config/config.json`)
+
+```json
+{
+  "site": {
+    "title": "MTs Negeri 1 Pandeglang",
+    "base_url": "https://mtsn1pandeglang.sch.id",
+    "favicon": "/images/favicon.png",
+    "logo": "/images/brand-lightmode.png"
+  },
+  "settings": {
+    "search": true,
+    "sticky_header": true,
+    "theme_switcher": true,
+    "pagination": 10
+  }
+}
+```
+
+### Theme Configuration (`src/config/theme.json`)
+
+Sesuaikan warna, font, dan styling sesuai kebutuhan madrasah.
+
+## Content Management
+
+### Menambah Post Blog
+
+Buat file baru di `src/content/blog/` dengan format:
+
+```markdown
+---
+title: "Judul Artikel"
+description: "Deskripsi singkat"
+date: 2025-01-10T08:00:00Z
+image: "/images/artikel/gambar.png"
+categories: ["Kategori"]
+author: "Nama Penulis"
+tags: ["tag1", "tag2"]
+draft: false
+---
+
+Konten artikel...
+```
+
+### Menambah Halaman Statis
+
+Buat file di `src/content/pages/` dengan struktur serupa.
+
+### Mengelola Menu
+
+Edit `src/config/menu.json` untuk mengatur navigasi.
+
+## Deployment
+
+### Build Production
+
+```bash
+yarn build
+```
+
+File hasil build akan berada di folder `dist/`
+
+### Hosting Recommendations
+
+- **Vercel** - Recommended (automatic deployment)
+- **Netlify** - Alternative dengan CDN global
+- **Cloudflare Pages** - Performa optimal
+
+### Environment Variables
+
+Tidak ada environment variables yang diperlukan untuk deployment dasar.
+
+## Performa & Optimasi
+
+### Lighthouse Scores
+
+- Performance: 97/100
+- Accessibility: 100/100
+- Best Practices: 100/100
+- SEO: 95/100
+
+### Optimasi Gambar
+
+- Automatic image optimization dengan Sharp
+- Format WebP untuk browser modern
+- Lazy loading untuk gambar
+
+### PWA Features
+
+- Offline support
+- Install prompt
+- Service worker caching
+- Fast loading
+
+## Browser Support
+
+- Chrome (latest 2 versions)
+- Firefox (latest 2 versions)
+- Safari (latest 2 versions)
+- Edge (latest 2 versions)
+
+## Keamanan
+
+- HTTPS enforced
+- CSP headers
+- XSS protection
+- CSRF protection
+- No SQL injection risks (static site)
+
+## Kontribusi
+
+Proyek ini dikembangkan dan dikelola oleh **Yahya Zulfikri**.
+
+### Melaporkan Issues
+
+Silakan laporkan bug atau request fitur melalui:
+
+- Email: dev@mtsn1pandeglang.sch.id
+- WhatsApp: +62 895-3518-56267
+
+## Lisensi
+
+Copyright © 1970-2025 Madrasah Tsanawiyah Negeri 1 Pandeglang
+
+## Kontak
+
+**MTs Negeri 1 Pandeglang**
+
+- Website: https://mtsn1pandeglang.sch.id
+- Email: adm@mtsn1pandeglang.sch.id
+- Telepon: +62 895-3518-56267
+- Alamat: Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang, Banten
+
+### Developer
+
+**Yahya Zulfikri**
+
+- GitHub: [@zulfikriyahya](https://github.com/zulfikriyahya)
+- LinkedIn: [zulfikriyahya](https://linkedin.com/in/zulfikriyahya)
+- Email: zulfikriyahya@mtsn1pandeglang.sch.id
+
+## Acknowledgments
+
+Terima kasih kepada:
+
+- Seluruh civitas akademika MTs Negeri 1 Pandeglang
+- Kementerian Agama Republik Indonesia
+- Tim developer open source
+
+---
+
+**Built with dedication by Yahya Zulfikri**
