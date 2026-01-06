@@ -2,14 +2,20 @@
 import Logo from "@/components/Logo.astro";
 import Social from "@/components/Social.astro";
 import config from "@/config/config.json";
-import menu from "@/config/menu.json";
-import social from "@/config/social.json";
 import { markdownify } from "@/lib/utils/textConverter";
+import { getNavigationMenus, getSiteSettings } from "@/lib/directus";
 
-const { footer }: { footer: { name: string; url: string }[] } = menu;
+// Fetch Dynamic Data
+const footerMenus = await getNavigationMenus("footer");
+const siteSettings = await getSiteSettings();
+
+// Fallback jika Directus belum diset
+import socialFallback from "@/config/social.json";
+const socialMedia = siteSettings?.social_media || socialFallback.main;
+const copyrightText = siteSettings?.copyright_text || config.params.copyright;
 ---
 
-<footer class="bg-light dark:bg-darkmode-light">
+<footer class="bg-light dark:bg-darkmode-light mt-auto">
   <div class="container">
     <div class="row items-center py-10">
       <div class="mb-8 text-center lg:col-3 lg:mb-0 lg:text-left">
@@ -18,16 +24,22 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
       <div class="mb-8 text-center lg:col-6 lg:mb-0">
         <ul>
           {
-            footer.map((menu) => (
+            footerMenus.map((menu) => (
               <li class="m-3 inline-block">
-                <a href={menu.url}>{menu.name}</a>
+                <a
+                  href={menu.url}
+                  class="hover:text-primary transition-colors"
+                  target={menu.open_in_new_tab ? "_blank" : "_self"}
+                >
+                  {menu.name}
+                </a>
               </li>
             ))
           }
         </ul>
       </div>
       <div class="mb-8 text-center lg:col-3 lg:mb-0 lg:mt-0 lg:text-right">
-        <Social source={social.main} className="social-icons" />
+        <Social source={socialMedia} className="social-icons" />
       </div>
     </div>
   </div>
@@ -35,7 +47,7 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
     <div
       class="container text-center text-text-light dark:text-darkmode-text-light"
     >
-      <p set:html={markdownify(config.params.copyright)} />
+      <div set:html={markdownify(copyrightText)} />
     </div>
   </div>
 </footer>

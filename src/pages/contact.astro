@@ -1,72 +1,125 @@
 ---
-import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import { getListPage } from "@/lib/contentParser.astro";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getSiteSettings } from "@/lib/directus";
+import { markdownify } from "@/lib/utils/textConverter";
+import {
+  IoLocationOutline,
+  IoCallOutline,
+  IoMailOutline,
+} from "react-icons/io5";
 
-const contactIndex = await getListPage("contact", "-index");
-const { contact_form_action }: { contact_form_action: string } = config.params;
-const { title, description, meta_title, image } = contactIndex.data;
-
-if (contactIndex.data.draft) {
-  return Astro.redirect("/404");
-}
+const settings = await getSiteSettings();
+const { contact_address, contact_email, contact_phone, google_map_embed } =
+  settings || {};
+const pageTitle = "Hubungi Kami";
 ---
 
 <Base
-  title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
+  title={pageTitle}
+  meta_title={pageTitle}
+  description="Halaman kontak sekolah"
 >
-  <PageHeader title={title} />
+  <PageHeader title={pageTitle} />
   <section class="section-sm">
     <div class="container">
       <div class="row">
-        <div class="mx-auto md:col-10 lg:col-6">
-          <form action={contact_form_action} method="POST">
+        <div class="md:col-5 lg:col-4 mb-10 md:mb-0 gsap-fade-up">
+          <h2 class="h4 mb-6">Informasi Kontak</h2>
+          <ul class="pl-0">
+            <li class="flex items-start mb-6">
+              <div class="text-primary text-2xl mr-4 mt-1">
+                <IoLocationOutline />
+              </div>
+              <div>
+                <h3 class="h6 mb-2">Alamat</h3>
+                <p
+                  set:html={markdownify(
+                    contact_address || "Alamat belum diatur",
+                  )}
+                />
+              </div>
+            </li>
+            <li class="flex items-start mb-6">
+              <div class="text-primary text-2xl mr-4 mt-1">
+                <IoMailOutline />
+              </div>
+              <div>
+                <h3 class="h6 mb-2">Email</h3>
+                <a href={`mailto:${contact_email}`} class="hover:text-primary"
+                  >{contact_email || "dev@mtsn1pandeglang.sch.id"}</a
+                >
+              </div>
+            </li>
+            <li class="flex items-start mb-6">
+              <div class="text-primary text-2xl mr-4 mt-1">
+                <IoCallOutline />
+              </div>
+              <div>
+                <h3 class="h6 mb-2">Telepon</h3>
+                <a href={`tel:${contact_phone}`} class="hover:text-primary"
+                  >{contact_phone || "Hubungi Kami"}</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="md:col-7 lg:col-8 gsap-fade-up">
+          <h2 class="h4 mb-6">Kirim Pesan</h2>
+          <form class="contact-form" method="POST">
             <div class="mb-6">
-              <label for="name" class="form-label">
-                Full Name <span class="text-red-500">*</span>
-              </label>
+              <label class="mb-2 block font-secondary" for="name"
+                >Nama Lengkap <small class="text-red-500">*</small></label
+              >
               <input
-                id="name"
+                class="form-input w-full"
                 name="name"
-                class="form-input"
-                placeholder="John Doe"
                 type="text"
+                placeholder="Nama Anda"
                 required
               />
             </div>
             <div class="mb-6">
-              <label for="email" class="form-label">
-                Working Mail <span class="text-red-500">*</span>
-              </label>
+              <label class="mb-2 block font-secondary" for="email"
+                >Email <small class="text-red-500">*</small></label
+              >
               <input
-                id="email"
+                class="form-input w-full"
                 name="email"
-                class="form-input"
-                placeholder="john.doe@email.com"
                 type="email"
+                placeholder="email@contoh.com"
                 required
               />
             </div>
             <div class="mb-6">
-              <label for="message" class="form-label">
-                Anything else? <span class="text-red-500">*</span>
-              </label>
+              <label class="mb-2 block font-secondary" for="message"
+                >Pesan <small class="text-red-500">*</small></label
+              >
               <textarea
-                id="message"
+                class="form-textarea w-full"
                 name="message"
-                class="form-input"
-                placeholder="Message goes here..."
-                required
-                rows="8"></textarea>
+                rows="5"
+                placeholder="Tulis pesan Anda di sini..."
+                required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button class="btn btn-primary" type="submit">Kirim Pesan</button>
           </form>
         </div>
       </div>
+      {
+        google_map_embed && (
+          <div class="row mt-16 gsap-fade-up">
+            <div class="col-12">
+              <div class="overflow-hidden rounded-lg shadow-md h-[400px]">
+                <div
+                  set:html={google_map_embed}
+                  class="w-full h-full [&>iframe]:w-full [&>iframe]:h-full"
+                />
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
   </section>
 </Base>

@@ -1,31 +1,35 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { humanize } from "@/lib/utils/textConverter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getTags, getArticles } from "@/lib/directus";
+import { humanize } from "@/lib/utils/textConverter";
 
-const BLOG_FOLDER = "blog";
-
-const tags = await getTaxonomy(BLOG_FOLDER, "tags");
-const allTags = await getAllTaxonomy(BLOG_FOLDER, "tags");
+const tags = await getTags();
+const articles = await getArticles();
+const allUsedTags = articles
+  .flatMap(
+    (article) => article.tags?.map((t: any) => t.tags_id?.name || "") || [],
+  )
+  .filter(Boolean);
 ---
 
-<Base title={"Tags"}>
-  <PageHeader title={"Tags"} />
+<Base title={"Tagar"}>
+  <PageHeader title={"Daftar Tagar"} />
   <section class="section">
     <div class="container text-center">
-      <ul>
+      <ul class="gsap-stagger-container">
         {
-          tags.map((tag: any) => {
-            const count = allTags.filter((c) => c === tag).length;
+          tags.map((tag) => {
+            const count = allUsedTags.filter((c) => c === tag.name).length;
             return (
               <li class="m-3 inline-block">
                 <a
-                  href={`/tags/${tag}`}
-                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark"
+                  href={`/tags/${tag.slug}`}
+                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark hover:bg-primary hover:text-white transition-colors duration-300"
                 >
-                  {humanize(tag)}{" "}
-                  <span class="ml-2 rounded bg-body px-2 dark:bg-darkmode-body">
+                  <span class="mr-1">#</span>
+                  {humanize(tag.name)}{" "}
+                  <span class="ml-2 rounded bg-body px-2 text-sm dark:bg-darkmode-body">
                     {count}
                   </span>
                 </a>

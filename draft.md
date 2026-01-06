@@ -3341,7 +3341,6 @@ if (theme.fonts.font_family.secondary) {
     .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
 }
 
-// types for frontmatters
 export interface Props {
   title?: string;
   meta_title?: string;
@@ -3351,7 +3350,6 @@ export interface Props {
   canonical?: string;
 }
 
-// destructure frontmatter
 const { title, meta_title, description, image, noindex, canonical } =
   Astro.props;
 ---
@@ -3415,18 +3413,12 @@ const { title, meta_title, description, image, noindex, canonical } =
       content="width=device-width, initial-scale=1, maximum-scale=5"
     />
 
-    <!-- title -->
     <title>
       {plainify(meta_title ? meta_title : title ? title : config.site.title)}
     </title>
 
-    <!-- canonical url -->
     {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
-
-    <!-- noindex robots -->
     {noindex && <meta name="robots" content="noindex,nofollow" />}
-
-    <!-- meta-description -->
     <meta
       name="description"
       content={plainify(
@@ -3436,18 +3428,13 @@ const { title, meta_title, description, image, noindex, canonical } =
 
     <ClientRouter />
 
-    <!-- author from config.json -->
     <meta name="author" content={config.metadata.meta_author} />
-
-    <!-- og-title -->
     <meta
       property="og:title"
       content={plainify(
         meta_title ? meta_title : title ? title : config.site.title,
       )}
     />
-
-    <!-- og-description -->
     <meta
       property="og:description"
       content={plainify(
@@ -3459,32 +3446,24 @@ const { title, meta_title, description, image, noindex, canonical } =
       property="og:url"
       content={`${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`}
     />
-
-    <!-- twitter-title -->
     <meta
       name="twitter:title"
       content={plainify(
         meta_title ? meta_title : title ? title : config.site.title,
       )}
     />
-
-    <!-- twitter-description -->
     <meta
       name="twitter:description"
       content={plainify(
         description ? description : config.metadata.meta_description,
       )}
     />
-
-    <!-- og-image -->
     <meta
       property="og:image"
       content={`${config.site.base_url}${
         image ? image : config.metadata.meta_image
       }`}
     />
-
-    <!-- twitter-image -->
     <meta
       name="twitter:image"
       content={`${config.site.base_url}${
@@ -3492,24 +3471,23 @@ const { title, meta_title, description, image, noindex, canonical } =
       }`}
     />
     <meta name="twitter:card" content="summary_large_image" />
-    
-    <!-- Tawk.to -->
-    <!--Start of Tawk.to Script-->
+
+    <!-- Tawk.to Script -->
     <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
+      var Tawk_API = Tawk_API || {},
+        Tawk_LoadStart = new Date();
+      (function () {
+        var s1 = document.createElement("script"),
+          s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = "https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj";
+        s1.charset = "UTF-8";
+        s1.setAttribute("crossorigin", "*");
+        s0.parentNode.insertBefore(s1, s0);
+      })();
     </script>
-    <!--End of Tawk.to Script-->
   </head>
   <body>
-    {/* google tag manager noscript */}
     {
       config.google_tag_manager.enable && (
         <GoogleTagmanagerNoscript id={config.google_tag_manager.gtm_id} />
@@ -3524,6 +3502,72 @@ const { title, meta_title, description, image, noindex, canonical } =
     </main>
     <Footer />
     <InstallPrompt client:load />
+
+    <!-- GSAP Global Setup -->
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      // Register plugin
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Fungsi inisialisasi animasi
+      const initAnimations = () => {
+        // Animasi Fade Up Standar
+        const fadeUpElements = document.querySelectorAll(".gsap-fade-up");
+        fadeUpElements.forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            },
+          );
+        });
+
+        // Animasi Stagger untuk list/grid
+        const staggerContainers = document.querySelectorAll(
+          ".gsap-stagger-container",
+        );
+        staggerContainers.forEach((container) => {
+          const children = container.children;
+          gsap.fromTo(
+            children,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: container,
+                start: "top 85%",
+              },
+            },
+          );
+        });
+      };
+
+      // Jalankan saat load pertama
+      initAnimations();
+
+      // Jalankan saat navigasi View Transitions (ClientRouter)
+      document.addEventListener("astro:page-load", () => {
+        // Kill old ScrollTriggers to prevent memory leaks/bugs
+        ScrollTrigger.getAll().forEach((t) => t.kill());
+        ScrollTrigger.refresh();
+        initAnimations();
+      });
+    </script>
   </body>
 </html>
 
@@ -3816,7 +3860,6 @@ paths.forEach((label: string, i: number) => {
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
-// Props interface for the component
 interface Props {
   src: string;
   alt: string;
@@ -3829,7 +3872,6 @@ interface Props {
   style?: any;
 }
 
-// Destructuring Astro.props to get the component's props
 let {
   src,
   alt,
@@ -3842,25 +3884,41 @@ let {
   style,
 } = Astro.props;
 
-src = `/public${src}`;
+// Cek apakah src adalah URL Remote (dari Directus/External)
+const isRemote = src.startsWith("http") || src.startsWith("//");
 
-// Glob pattern to load images from the /public/images folder
+// Jika lokal, tambahkan prefix public jika belum ada (untuk logic lama)
+let localSrc = src;
+if (!isRemote && !src.startsWith("/images")) {
+  localSrc = `/public${src}`;
+}
+
 const images = import.meta.glob("/public/images/**/*.{jpeg,jpg,png,gif}");
+const isValidLocalPath = !isRemote && images[localSrc] ? true : false;
 
-// Check if the source path is valid
-const isValidPath = images[src] ? true : false;
-
-// Log a warning message in red if the image is not found
-!isValidPath &&
+if (!isRemote && !isValidLocalPath) {
   console.error(
-    `\x1b[31mImage not found - ${src}.\x1b[0m Make sure the image is in the /public/images folder.`,
+    `\x1b[31mImage not found - ${localSrc}.\x1b[0m Make sure the image is in the /public/images folder.`,
   );
+}
 ---
 
 {
-  isValidPath && (
+  isRemote ? (
+    // Render tag IMG biasa atau Astro Image untuk remote url (jika domain di whitelist astro.config)
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      class={className}
+      style={style}
+    />
+  ) : isValidLocalPath ? (
     <Image
-      src={images[src]() as Promise<{ default: ImageMetadata }>}
+      src={images[localSrc]() as Promise<{ default: ImageMetadata }>}
       alt={alt}
       width={width}
       height={height}
@@ -3870,7 +3928,7 @@ const isValidPath = images[src] ? true : false;
       format={format}
       style={style}
     />
-  )
+  ) : null
 }
 
 ```
@@ -5047,12 +5105,34 @@ export default function ProfilMahasiswaPLP() {
 ### File: `./src/layouts/helpers/SearchModal.tsx`
 
 ```tsx
-import searchData from ".json/search.json";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import SearchResult, { type ISearchItem } from "./SearchResult";
 
 const SearchModal = () => {
   const [searchString, setSearchString] = useState("");
+  const [searchData, setSearchData] = useState<ISearchItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Load Search Data Async
+  useEffect(() => {
+    const loadSearchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("/search.json");
+        if (!response.ok) throw new Error("Search index not found");
+        const data = await response.json();
+        setSearchData(data);
+      } catch (error) {
+        console.error("Failed to load search data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Load data only when user interacts (hover/focus) or after initial load
+    // For simplicity here, we load on mount
+    loadSearchData();
+  }, []);
 
   // handle input change
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
@@ -5060,116 +5140,74 @@ const SearchModal = () => {
   };
 
   // generate search result
-  const doSearch = (searchData: ISearchItem[]) => {
-    const regex = new RegExp(`${searchString}`, "gi");
-    if (searchString === "") {
-      return [];
-    } else {
-      const searchResult = searchData.filter((item) => {
-        const title = item.frontmatter.title.toLowerCase().match(regex);
-        const description = item.frontmatter.description
-          ?.toLowerCase()
-          .match(regex);
-        const categories = item.frontmatter.categories
-          ?.join(" ")
-          .toLowerCase()
-          .match(regex);
-        const tags = item.frontmatter.tags
-          ?.join(" ")
-          .toLowerCase()
-          .match(regex);
-        const content = item.content.toLowerCase().match(regex);
+  const doSearch = (data: ISearchItem[]) => {
+    if (searchString === "") return [];
 
-        if (title || content || description || categories || tags) {
-          return item;
-        }
-      });
-      return searchResult;
-    }
+    const regex = new RegExp(`${searchString}`, "gi");
+    return data.filter((item) => {
+      const title = item.frontmatter.title?.toLowerCase().match(regex);
+      const description = item.frontmatter.description
+        ?.toLowerCase()
+        .match(regex);
+      const categories = item.frontmatter.categories
+        ?.join(" ")
+        .toLowerCase()
+        .match(regex);
+      const tags = item.frontmatter.tags?.join(" ").toLowerCase().match(regex);
+      // Optional: Search content (might be heavy)
+      // const content = item.content?.toLowerCase().match(regex);
+
+      return title || description || categories || tags;
+    });
   };
 
-  // get search result
-  const startTime = performance.now();
   const searchResult = doSearch(searchData);
-  const endTime = performance.now();
-  const totalTime = ((endTime - startTime) / 1000).toFixed(3);
 
-  // search dom manipulation
+  // DOM Event Listeners for Modal
   useEffect(() => {
     const searchModal = document.getElementById("searchModal");
     const searchInput = document.getElementById("searchInput");
     const searchModalOverlay = document.getElementById("searchModalOverlay");
-    const searchResultItems = document.querySelectorAll("#searchItem");
     const searchModalTriggers = document.querySelectorAll(
       "[data-search-trigger]",
     );
 
-    // search modal open
-    searchModalTriggers.forEach((button) => {
-      button.addEventListener("click", function () {
-        const searchModal = document.getElementById("searchModal");
-        searchModal!.classList.add("show");
-        searchInput!.focus();
-      });
-    });
-
-    // search modal close
-    searchModalOverlay!.addEventListener("click", function () {
-      searchModal!.classList.remove("show");
-    });
-
-    // keyboard navigation
-    let selectedIndex = -1;
-
-    const updateSelection = () => {
-      searchResultItems.forEach((item, index) => {
-        if (index === selectedIndex) {
-          item.classList.add("search-result-item-active");
-        } else {
-          item.classList.remove("search-result-item-active");
-        }
-      });
-
-      searchResultItems[selectedIndex]?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
+    const openModal = () => {
+      searchModal?.classList.add("show");
+      searchInput?.focus();
     };
 
-    document.addEventListener("keydown", function (event) {
-      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        searchModal!.classList.add("show");
-        searchInput!.focus();
-        updateSelection();
-      }
+    const closeModal = () => {
+      searchModal?.classList.remove("show");
+      setSearchString(""); // Clear search on close
+    };
 
-      if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        event.preventDefault();
-      }
-
-      if (event.key === "Escape") {
-        searchModal!.classList.remove("show");
-      }
-
-      if (event.key === "ArrowUp" && selectedIndex > 0) {
-        selectedIndex--;
-      } else if (
-        event.key === "ArrowDown" &&
-        selectedIndex < searchResultItems.length - 1
-      ) {
-        selectedIndex++;
-      } else if (event.key === "Enter") {
-        const activeLink = document.querySelector(
-          ".search-result-item-active a",
-        ) as HTMLAnchorElement;
-        if (activeLink) {
-          activeLink?.click();
-        }
-      }
-
-      updateSelection();
+    searchModalTriggers.forEach((button) => {
+      button.addEventListener("click", openModal);
     });
-  }, [searchString]);
+
+    searchModalOverlay?.addEventListener("click", closeModal);
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        openModal();
+      }
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      searchModalTriggers.forEach((button) => {
+        button.removeEventListener("click", openModal);
+      });
+      searchModalOverlay?.removeEventListener("click", closeModal);
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, []);
 
   return (
     <div id="searchModal" className="search-modal">
@@ -5178,99 +5216,67 @@ const SearchModal = () => {
         <div className="search-wrapper-header">
           <label
             htmlFor="searchInput"
-            className="absolute left-7 top-[calc(50%-7px)]"
+            className="absolute left-7 top-[calc(50%-9px)]"
           >
-            <span className="sr-only">Cari ikon</span>
-            {searchString ? (
-              <svg
-                onClick={() => setSearchString("")}
-                viewBox="0 0 512 512"
-                height="18"
-                width="18"
-                className="hover:text-red-500 cursor-pointer -mt-0.5"
-              >
-                <title>Ikon Tutup</title>
-                <path
-                  fill="currentcolor"
-                  d="M256 512A256 256 0 10256 0a256 256 0 100 512zM175 175c9.4-9.4 24.6-9.4 33.9.0l47 47 47-47c9.4-9.4 24.6-9.4 33.9.0s9.4 24.6.0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6.0 33.9s-24.6 9.4-33.9.0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9.0s-9.4-24.6.0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6.0-33.9z"
-                ></path>
-              </svg>
-            ) : (
-              <svg
-                viewBox="0 0 512 512"
-                height="18"
-                width="18"
-                className="-mt-0.5"
-              >
-                <title>Ikon Cari</title>
-                <path
-                  fill="currentcolor"
-                  d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8.0 45.3s-32.8 12.5-45.3.0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9.0 208S93.1.0 208 0 416 93.1 416 208zM208 352a144 144 0 100-288 144 144 0 100 288z"
-                ></path>
-              </svg>
-            )}
+            <span className="sr-only">Search Icon</span>
+            <svg
+              viewBox="0 0 512 512"
+              height="18"
+              width="18"
+              className="fill-current text-gray-400"
+            >
+              <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8.0 45.3s-32.8 12.5-45.3.0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9.0 208S93.1.0 208 0 416 93.1 416 208zM208 352a144 144 0 100-288 144 144 0 100 288z"></path>
+            </svg>
           </label>
           <input
             id="searchInput"
-            placeholder="Search..."
+            placeholder="Cari artikel, kategori, atau tag..."
             className="search-wrapper-header-input"
-            type="input"
-            name="search"
+            type="text"
             value={searchString}
             onChange={handleSearch}
             autoComplete="off"
           />
+          {searchString && (
+            <button
+              onClick={() => setSearchString("")}
+              className="absolute right-4 top-[calc(50%-9px)] text-gray-400 hover:text-red-500"
+            >
+              <svg
+                viewBox="0 0 512 512"
+                height="18"
+                width="18"
+                fill="currentColor"
+              >
+                <path d="M256 512A256 256 0 10256 0a256 256 0 100 512zM175 175c9.4-9.4 24.6-9.4 33.9.0l47 47 47-47c9.4-9.4 24.6-9.4 33.9.0s9.4 24.6.0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6.0 33.9s-24.6 9.4-33.9.0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9.0s-9.4-24.6.0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6.0-33.9z"></path>
+              </svg>
+            </button>
+          )}
         </div>
-        <SearchResult searchResult={searchResult} searchString={searchString} />
+
+        {isLoading ? (
+          <div className="p-4 text-center text-sm text-gray-500">
+            Memuat data...
+          </div>
+        ) : (
+          <SearchResult
+            searchResult={searchResult}
+            searchString={searchString}
+          />
+        )}
+
         <div className="search-wrapper-footer">
           <span className="flex items-center">
-            <kbd>
-              <svg
-                width="14"
-                height="14"
-                fill="currentcolor"
-                viewBox="0 0 16 16"
-              >
-                <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 011.506.0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 01-.753-1.659z"></path>
-              </svg>
-            </kbd>
-            <kbd>
-              <svg
-                width="14"
-                height="14"
-                fill="currentcolor"
-                viewBox="0 0 16 16"
-              >
-                <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 001.506.0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 00-.753 1.659z"></path>
-              </svg>
-            </kbd>
-            untuk navigasi
+            <span className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs mr-2">
+              ESC
+            </span>
+            untuk menutup
           </span>
-          <span className="flex items-center">
-            <kbd>
-              <svg
-                width="12"
-                height="12"
-                fill="currentcolor"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M14.5 1.5a.5.5.0 01.5.5v4.8a2.5 2.5.0 01-2.5 2.5H2.707l3.347 3.346a.5.5.0 01-.708.708l-4.2-4.2a.5.5.0 010-.708l4-4a.5.5.0 11.708.708L2.707 8.3H12.5A1.5 1.5.0 0014 6.8V2a.5.5.0 01.5-.5z"
-                ></path>
-              </svg>
-            </kbd>
-            untuk memilih
-          </span>
-          {searchString && (
-            <span>
-              <strong>{searchResult.length} </strong> Hasil - dalam{" "}
-              <strong>{totalTime} </strong> detik
+          {searchResult.length > 0 && (
+            <span className="ml-auto">
+              <strong>{searchResult.length}</strong> Hasil ditemukan
             </span>
           )}
-          <span>
-            <kbd>ESC</kbd> untuk menutup
-          </span>
         </div>
       </div>
     </div>
@@ -5612,14 +5618,21 @@ const { call_to_action } = Astro.props;
 import Logo from "@/components/Logo.astro";
 import Social from "@/components/Social.astro";
 import config from "@/config/config.json";
-import menu from "@/config/menu.json";
-import social from "@/config/social.json";
 import { markdownify } from "@/lib/utils/textConverter";
+import { getNavigationMenus, getSiteSettings } from "@/lib/directus";
 
-const { footer }: { footer: { name: string; url: string }[] } = menu;
+// Fetch Footer Data
+const footerMenus = await getNavigationMenus("footer");
+const siteSettings = await getSiteSettings();
+
+// Fallback social media jika di settings kosong
+import socialFallback from "@/config/social.json";
+const socialMedia = siteSettings?.social_media || socialFallback.main;
+
+const copyrightText = siteSettings?.copyright_text || config.params.copyright;
 ---
 
-<footer class="bg-light dark:bg-darkmode-light">
+<footer class="bg-light dark:bg-darkmode-light mt-auto">
   <div class="container">
     <div class="row items-center py-10">
       <div class="mb-8 text-center lg:col-3 lg:mb-0 lg:text-left">
@@ -5628,16 +5641,22 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
       <div class="mb-8 text-center lg:col-6 lg:mb-0">
         <ul>
           {
-            footer.map((menu) => (
+            footerMenus.map((menu) => (
               <li class="m-3 inline-block">
-                <a href={menu.url}>{menu.name}</a>
+                <a
+                  href={menu.url}
+                  class="hover:text-primary transition-colors"
+                  target={menu.open_in_new_tab ? "_blank" : "_self"}
+                >
+                  {menu.name}
+                </a>
               </li>
             ))
           }
         </ul>
       </div>
       <div class="mb-8 text-center lg:col-3 lg:mb-0 lg:mt-0 lg:text-right">
-        <Social source={social.main} className="social-icons" />
+        <Social source={socialMedia} className="social-icons" />
       </div>
     </div>
   </div>
@@ -5645,7 +5664,7 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
     <div
       class="container text-center text-text-light dark:text-darkmode-text-light"
     >
-      <p set:html={markdownify(config.params.copyright)} />
+      <div set:html={markdownify(copyrightText)} />
     </div>
   </div>
 </footer>
@@ -5661,32 +5680,56 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
 import Logo from "@/components/Logo.astro";
 import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import config from "@/config/config.json";
-import menu from "@/config/menu.json";
 import { IoSearch } from "react-icons/io5";
 
-export interface ChildNavigationLink {
-  name: string;
-  url: string;
+// Import Directus
+import { getNavigationMenus, getSiteSettings } from "@/lib/directus";
+
+// 1. Fetch Menu Header dari Directus
+// Pastikan di Directus ada collection 'navigation_menus' dengan field: name, url, position ('header'), parent_id (untuk dropdown), sort.
+const allMenus = await getNavigationMenus("header");
+
+// Helper untuk menyusun struktur Tree (Parent -> Children)
+function buildMenuTree(items: any[]) {
+  const map = new Map();
+  const roots: any[] = [];
+
+  // Inisialisasi map
+  items.forEach((item) => {
+    map.set(item.id, { ...item, children: [] });
+  });
+
+  // Susun hirarki
+  items.forEach((item) => {
+    if (item.parent_id) {
+      // Jika punya parent (Directus biasanya return ID atau Object tergantung setting interface)
+      const parentId =
+        typeof item.parent_id === "object" ? item.parent_id.id : item.parent_id;
+      if (map.has(parentId)) {
+        map.get(parentId).children.push(map.get(item.id));
+      }
+    } else {
+      roots.push(map.get(item.id));
+    }
+  });
+
+  return roots.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 }
 
-export interface NavigationLink {
-  name: string;
-  url: string;
-  hasChildren?: boolean;
-  children?: ChildNavigationLink[];
-}
-
-const { main }: { main: NavigationLink[] } = menu;
+const menuTree = buildMenuTree(allMenus);
 const { navigation_button, settings } = config;
 const { pathname } = Astro.url;
 ---
 
-<header class={`header z-30 ${settings.sticky_header && "sticky top-0"}`}>
+<header
+  class="header z-30 sticky top-0 bg-white/90 backdrop-blur-md dark:bg-darkmode-body/90 transition-all duration-300 shadow-sm"
+>
   <nav class="navbar container">
     <!-- logo -->
     <div class="order-0">
       <Logo />
     </div>
+
     <!-- navbar toggler -->
     <input id="nav-toggle" type="checkbox" class="hidden" />
     <label
@@ -5704,15 +5747,16 @@ const { pathname } = Astro.url;
           transform="rotate(45 10 10)"></polygon>
       </svg>
     </label>
-    <!-- /navbar toggler -->
+
+    <!-- Menu List -->
     <ul
       id="nav-menu"
       class="navbar-nav order-3 hidden w-full pb-6 lg:order-1 lg:flex lg:w-auto lg:space-x-2 lg:pb-0 xl:space-x-8"
     >
       {
-        main.map((menu) => (
+        menuTree.map((menu) => (
           <>
-            {menu.hasChildren ? (
+            {menu.children && menu.children.length > 0 ? (
               <li class="nav-item nav-dropdown group relative">
                 <input
                   type="checkbox"
@@ -5722,30 +5766,25 @@ const { pathname } = Astro.url;
                 <label
                   for={`submenu-${menu.name}`}
                   class={`nav-link inline-flex items-center ${
-                    menu.children?.map(({ url }) => url).includes(pathname) ||
-                    menu.children
-                      ?.map(({ url }) => `${url}/`)
-                      .includes(pathname)
+                    menu.children.map((c: any) => c.url).includes(pathname)
                       ? "active"
                       : ""
                   }`}
                 >
                   {menu.name}
-                  <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                  <svg class="h-4 w-4 fill-current ml-1" viewBox="0 0 20 20">
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
                 </label>
-                <ul class="nav-dropdown-list hidden peer-checked:block lg:invisible lg:absolute lg:block lg:opacity-0 lg:group-hover:visible lg:group-hover:opacity-100">
-                  {menu.children?.map((child) => (
+                <ul class="nav-dropdown-list hidden peer-checked:block lg:invisible lg:absolute lg:block lg:opacity-0 lg:group-hover:visible lg:group-hover:opacity-100 lg:translate-y-2 lg:group-hover:translate-y-0 transition-all duration-300">
+                  {menu.children.map((child: any) => (
                     <li class="nav-dropdown-item">
                       <a
                         href={child.url}
-                        aria-label={child.name}
                         class={`nav-dropdown-link block ${
-                          (pathname === `${child.url}/` ||
-                            pathname === child.url) &&
-                          "active"
+                          pathname === child.url && "active"
                         }`}
+                        target={child.open_in_new_tab ? "_blank" : "_self"}
                       >
                         {child.name}
                       </a>
@@ -5757,10 +5796,8 @@ const { pathname } = Astro.url;
               <li class="nav-item">
                 <a
                   href={menu.url}
-                  class={`nav-link block ${
-                    (pathname === `${menu.url}/` || pathname === menu.url) &&
-                    "active"
-                  }`}
+                  class={`nav-link block ${pathname === menu.url && "active"}`}
+                  target={menu.open_in_new_tab ? "_blank" : "_self"}
                 >
                   {menu.name}
                 </a>
@@ -5769,36 +5806,25 @@ const { pathname } = Astro.url;
           </>
         ))
       }
-      {
-        navigation_button.enable && (
-          <li class="mt-4 inline-block lg:hidden">
-            <a
-              class="btn btn-outline-primary btn-sm"
-              href={navigation_button.link}
-            >
-              {navigation_button.label}
-            </a>
-          </li>
-        )
-      }
     </ul>
-    <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
+
+    <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0 gap-3">
       {
         settings.search && (
           <button
-            class="border-border text-text-dark hover:text-primary dark:border-darkmode-border mr-5 inline-block border-r pr-5 text-xl dark:text-white dark:hover:text-darkmode-primary"
+            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             aria-label="search"
             data-search-trigger
           >
-            <IoSearch />
+            <IoSearch className="text-xl" />
           </button>
         )
       }
-      <ThemeSwitcher className="mr-5" />
+      <ThemeSwitcher />
       {
         navigation_button.enable && (
           <a
-            class="btn btn-outline-primary btn-sm hidden lg:inline-block"
+            class="btn btn-primary btn-sm hidden lg:inline-block transition-transform hover:-translate-y-0.5"
             href={navigation_button.link}
           >
             {navigation_button.label}
@@ -6403,48 +6429,993 @@ export default Youtube;
 ```astro
 ---
 import {
-  getCollection,
-  getEntry,
-  type CollectionEntry,
-  type CollectionKey,
-} from "astro:content";
+  getArticles,
+  getArticleBySlug,
+  getPages,
+  getPageBySlug,
+  getAssetURL,
+} from "@/lib/directus";
 
-type PageData = {
-  title: string;
-  meta_title?: string;
-  description?: string;
-  image?: string;
-  draft?: boolean;
+// Tipe data yang diharapkan oleh komponen lama
+type CollectionEntry = {
+  id: string;
+  slug: string;
+  body: string;
+  collection: string;
+  data: {
+    title: string;
+    meta_title?: string;
+    description?: string;
+    image?: string;
+    date?: Date;
+    author?: string;
+    categories?: string[];
+    tags?: string[];
+    draft?: boolean;
+  };
 };
 
-export const getSinglePage = async <C extends CollectionKey>(
-  collectionName: C,
-): Promise<CollectionEntry<C>[]> => {
-  const allPages = await getCollection(
-    collectionName,
-    ({ data, id }) => !(data as PageData)?.draft && !id.startsWith("-"),
-  );
-  return allPages;
-};
+export const getSinglePage = async (
+  collectionName: string,
+): Promise<CollectionEntry[]> => {
+  let items = [];
 
-export const getListPage = async <C extends CollectionKey>(
-  collectionName: C,
-  documentId: "-index" | string,
-): Promise<CollectionEntry<C>> => {
-  const data = (await getEntry(
-    collectionName,
-    documentId,
-  )) as CollectionEntry<C> | null;
-
-  if (!data) {
-    throw new Error(
-      `No page found for the collection: ${collectionName} with filename: ${documentId}`,
-    );
+  if (collectionName === "blog") {
+    const articles = await getArticles();
+    items = articles.map((article) => ({
+      id: article.slug,
+      slug: article.slug,
+      body: article.content,
+      collection: "blog",
+      data: {
+        title: article.title,
+        meta_title: article.meta_title,
+        description: article.excerpt,
+        image: getAssetURL(article.featured_image),
+        date: article.publish_date
+          ? new Date(article.publish_date)
+          : new Date(),
+        author:
+          typeof article.author === "object" ? article.author?.name : "Admin",
+        categories:
+          article.categories?.map((c: any) => c.categories_id?.name) || [],
+        tags: article.tags?.map((t: any) => t.tags_id?.name) || [],
+        draft: article.status !== "published",
+      },
+    }));
+  } else if (collectionName === "pages") {
+    const pages = await getPages();
+    items = pages.map((page) => ({
+      id: page.slug,
+      slug: page.slug,
+      body: page.content,
+      collection: "pages",
+      data: {
+        title: page.title,
+        meta_title: page.meta_title,
+        description: page.meta_description,
+        image: getAssetURL(page.image),
+        draft: page.status !== "published",
+      },
+    }));
   }
+  // Tambahkan kondisi untuk 'authors' dll jika diperlukan
 
-  return data;
+  return items;
+};
+
+export const getListPage = async (
+  collectionName: string,
+  slug: string,
+): Promise<CollectionEntry> => {
+  // Fungsi ini biasanya mengambil metadata halaman index (seperti blog/index.md)
+  // Kita bisa mock datanya atau ambil dari directus 'pages' jika ada page dengan slug 'blog'
+
+  // Fallback Mock Data agar tidak error
+  return {
+    id: slug,
+    slug: slug,
+    body: "",
+    collection: collectionName,
+    data: {
+      title: collectionName.charAt(0).toUpperCase() + collectionName.slice(1),
+      description: `Halaman ${collectionName}`,
+      draft: false,
+    },
+  };
 };
 ---
+
+```
+
+---
+
+### File: `./src/lib/directus.ts`
+
+```typescript
+// src/lib/directus.ts
+import {
+  createDirectus,
+  rest,
+  authentication,
+  staticToken,
+  readItems,
+  readItem,
+  readSingleton,
+} from "@directus/sdk";
+
+// ============================================
+// TYPE DEFINITIONS - DIRECTUS SCHEMA
+// ============================================
+
+// Global Site Settings (Singleton)
+type SiteSettings = {
+  id: number;
+  site_title: string;
+  site_tagline?: string;
+  site_description?: string;
+  logo?: string;
+  logo_darkmode?: string;
+  favicon?: string;
+  contact_email?: string;
+  contact_phone?: string;
+  address?: string;
+  social_media?: SocialMedia[];
+  google_analytics_id?: string;
+  gtm_id?: string;
+  enable_search: boolean;
+  enable_dark_mode: boolean;
+  copyright_text?: string;
+};
+
+type SocialMedia = {
+  platform:
+    | "facebook"
+    | "instagram"
+    | "twitter"
+    | "youtube"
+    | "whatsapp"
+    | "email";
+  url: string;
+  icon?: string;
+};
+
+// Articles & Blog
+type Article = {
+  id: number;
+  status: "published" | "draft" | "archived";
+  sort?: number;
+  date_created?: string;
+  date_updated?: string;
+  user_created?: string;
+  user_updated?: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  featured_image?: string | DirectusFile;
+  gallery?: ArticleFile[];
+  publish_date?: string;
+  author?: string | Author;
+  meta_title?: string;
+  meta_description?: string;
+  categories?: ArticleCategory[];
+  tags?: ArticleTag[];
+  view_count?: number;
+  reading_time?: number;
+};
+
+type Author = {
+  id: string;
+  status: "active" | "inactive";
+  name: string;
+  slug: string;
+  email?: string;
+  title?: string;
+  avatar?: string | DirectusFile;
+  bio?: string;
+  social_media?: SocialMedia[];
+};
+
+type Category = {
+  id: number;
+  sort?: number;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+};
+
+type Tag = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+// Junction Tables for M2M Relations
+type ArticleCategory = {
+  id: number;
+  articles_id: number | Article;
+  categories_id: number | Category;
+};
+
+type ArticleTag = {
+  id: number;
+  articles_id: number | Article;
+  tags_id: number | Tag;
+};
+
+type ArticleFile = {
+  id: number;
+  articles_id: number | Article;
+  directus_files_id: string | DirectusFile;
+};
+
+// Directus File
+type DirectusFile = {
+  id: string;
+  storage: string;
+  filename_disk: string;
+  filename_download: string;
+  title?: string;
+  type: string;
+  folder?: string;
+  uploaded_by?: string;
+  uploaded_on: string;
+  modified_by?: string;
+  modified_on: string;
+  charset?: string;
+  filesize: number;
+  width?: number;
+  height?: number;
+  duration?: number;
+  embed?: string;
+  description?: string;
+  location?: string;
+  tags?: string[];
+  metadata?: Record<string, any>;
+};
+
+// Homepage Content
+type HomepageBanner = {
+  id: number;
+  title: string;
+  content: string;
+  image: string | DirectusFile;
+  button_enable: boolean;
+  button_label?: string;
+  button_link?: string;
+};
+
+type HomepageFeature = {
+  id: number;
+  status: "published" | "draft";
+  sort?: number;
+  title: string;
+  content: string;
+  image: string | DirectusFile;
+  bulletpoints?: BulletPoint[];
+  button_enable: boolean;
+  button_label?: string;
+  button_link?: string;
+};
+
+type BulletPoint = {
+  text: string;
+};
+
+type Testimonial = {
+  id: number;
+  status: "published" | "draft";
+  sort?: number;
+  name: string;
+  designation?: string;
+  avatar?: string | DirectusFile;
+  content: string;
+  rating?: 1 | 2 | 3 | 4 | 5;
+};
+
+// Pages
+type Page = {
+  id: number;
+  status: "published" | "draft";
+  sort?: number;
+  date_created?: string;
+  date_updated?: string;
+  title: string;
+  slug: string;
+  content: string;
+  image?: string | DirectusFile;
+  template: "default" | "full-width" | "with-sidebar";
+  meta_title?: string;
+  meta_description?: string;
+};
+
+// Navigation
+type NavigationMenu = {
+  id: number;
+  status: "published" | "draft";
+  sort?: number;
+  position: "header" | "footer" | "sidebar";
+  name: string;
+  url?: string;
+  parent_id?: number | NavigationMenu;
+  open_in_new_tab: boolean;
+  icon?: string;
+};
+
+// Teachers & Staff
+type Teacher = {
+  id: number;
+  status: "active" | "inactive";
+  sort?: number;
+  name: string;
+  nip?: string;
+  position?: string;
+  photo?: string | DirectusFile;
+  bio?: string;
+  subjects?: TeacherSubject[];
+  classes?: TeacherClass[];
+  education?: string;
+  certifications?: string;
+  email?: string;
+  phone?: string;
+};
+
+type Staff = {
+  id: number;
+  status: "active" | "inactive";
+  sort?: number;
+  name: string;
+  nip?: string;
+  position?: string;
+  division?: string;
+  photo?: string | DirectusFile;
+  contact?: string;
+  email?: string;
+};
+
+type Subject = {
+  id: number;
+  name: string;
+  code?: string;
+};
+
+type Class = {
+  id: number;
+  name: string;
+  level?: string;
+};
+
+type TeacherSubject = {
+  id: number;
+  teachers_id: number | Teacher;
+  subjects_id: number | Subject;
+};
+
+type TeacherClass = {
+  id: number;
+  teachers_id: number | Teacher;
+  classes_id: number | Class;
+};
+
+// Extracurricular & Activities
+type Extracurricular = {
+  id: number;
+  status: "published" | "draft";
+  sort?: number;
+  name: string;
+  slug: string;
+  description?: string;
+  coach?: string | Teacher;
+  schedule?: string;
+  gallery?: ExtracurricularFile[];
+  achievements?: string;
+};
+
+type Activity = {
+  id: number;
+  status: "published" | "draft";
+  title: string;
+  slug: string;
+  date?: string;
+  description?: string;
+  photos?: ActivityFile[];
+  participants?: string;
+  category: "event" | "competition" | "ceremony" | "workshop";
+};
+
+type ExtracurricularFile = {
+  id: number;
+  extracurricular_id: number | Extracurricular;
+  directus_files_id: string | DirectusFile;
+};
+
+type ActivityFile = {
+  id: number;
+  activities_id: number | Activity;
+  directus_files_id: string | DirectusFile;
+};
+
+// Achievements
+type Achievement = {
+  id: number;
+  status: "published" | "draft";
+  title: string;
+  date?: string;
+  category?: string | AchievementCategory;
+  description?: string;
+  level: "school" | "district" | "province" | "national" | "international";
+  participants?: string;
+  photo?: string | DirectusFile;
+};
+
+type AchievementCategory = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+// Gallery
+type Gallery = {
+  id: number;
+  status: "published" | "draft";
+  sort?: number;
+  title: string;
+  description?: string;
+  date?: string;
+  images?: GalleryFile[];
+  category: "activities" | "achievements" | "facilities" | "events";
+};
+
+type GalleryFile = {
+  id: number;
+  gallery_id: number | Gallery;
+  directus_files_id: string | DirectusFile;
+};
+
+// PLP/KKN Students
+type PLPStudent = {
+  id: number;
+  status: "active" | "completed" | "inactive";
+  name: string;
+  nim: string;
+  university?: string | University;
+  program_study: string;
+  supervisor?: string | Teacher;
+  photo?: string | DirectusFile;
+  period_start?: string;
+  period_end?: string;
+  activities?: string;
+};
+
+type University = {
+  id: number;
+  name: string;
+  short_name?: string;
+  logo?: string | DirectusFile;
+};
+
+// Announcements
+type Announcement = {
+  id: number;
+  status: "published" | "draft" | "archived";
+  title: string;
+  content: string;
+  type: "info" | "warning" | "urgent";
+  start_date?: string;
+  end_date?: string;
+  target_audience: "students" | "teachers" | "public" | "all";
+  show_on_homepage: boolean;
+};
+
+// Downloads
+type Download = {
+  id: number;
+  status: "published" | "draft";
+  title: string;
+  category?: string;
+  file?: string | DirectusFile;
+  description?: string;
+  date_uploaded?: string;
+  access_level: "public" | "member";
+  download_count?: number;
+};
+
+// Students (Optional - for advanced features)
+type Student = {
+  id: number;
+  status: "active" | "inactive" | "alumni";
+  name: string;
+  nisn?: string;
+  class?: string | Class;
+  achievements?: StudentAchievement[];
+  photo?: string | DirectusFile;
+};
+
+type StudentAchievement = {
+  id: number;
+  students_id: number | Student;
+  achievements_id: number | Achievement;
+};
+
+// ============================================
+// MAIN SCHEMA TYPE
+// ============================================
+
+type Schema = {
+  // Core Collections
+  articles: Article[];
+  authors: Author[];
+  categories: Category[];
+  tags: Tag[];
+
+  // Junction Tables
+  articles_categories: ArticleCategory[];
+  articles_tags: ArticleTag[];
+  articles_files: ArticleFile[];
+
+  // Homepage
+  homepage_banner: HomepageBanner;
+  homepage_features: HomepageFeature[];
+  testimonials: Testimonial[];
+
+  // Pages & Navigation
+  pages: Page[];
+  navigation_menus: NavigationMenu[];
+
+  // Settings
+  site_settings: SiteSettings;
+
+  // Organization
+  teachers: Teacher[];
+  staff: Staff[];
+  subjects: Subject[];
+  classes: Class[];
+  teachers_subjects: TeacherSubject[];
+  teachers_classes: TeacherClass[];
+
+  // Activities
+  extracurricular: Extracurricular[];
+  activities: Activity[];
+  extracurricular_files: ExtracurricularFile[];
+  activities_files: ActivityFile[];
+
+  // Achievements & Gallery
+  achievements: Achievement[];
+  achievement_categories: AchievementCategory[];
+  gallery: Gallery[];
+  gallery_files: GalleryFile[];
+
+  // PLP/KKN
+  plp_students: PLPStudent[];
+  universities: University[];
+
+  // Other
+  announcements: Announcement[];
+  downloads: Download[];
+  students: Student[];
+  student_achievements: StudentAchievement[];
+
+  // Directus System
+  directus_files: DirectusFile[];
+};
+
+// ============================================
+// DIRECTUS CLIENT CONFIGURATION
+// ============================================
+
+const directusUrl =
+  import.meta.env.PUBLIC_DIRECTUS_URL || "http://localhost:8055";
+const directusToken = import.meta.env.DIRECTUS_API_TOKEN;
+
+if (!directusToken) {
+  console.warn("⚠️ DIRECTUS_API_TOKEN is not set. Some features may not work.");
+}
+
+// Create Directus client with authentication
+const directus = createDirectus<Schema>(directusUrl)
+  .with(rest())
+  .with(authentication("json"))
+  .with(staticToken(directusToken || ""));
+
+// ============================================
+// API FUNCTIONS
+// ============================================
+
+/**
+ * Get site settings
+ */
+export const getSiteSettings = async (): Promise<SiteSettings | null> => {
+  try {
+    return await directus.request(readSingleton("site_settings"));
+  } catch (error) {
+    console.error("Error fetching site settings:", error);
+    return null;
+  }
+};
+
+/**
+ * Get all articles
+ */
+export const getArticles = async (params?: {
+  limit?: number;
+  filter?: any;
+  sort?: string[];
+}): Promise<Article[]> => {
+  try {
+    return await directus.request(
+      readItems("articles", {
+        filter: { status: { _eq: "published" }, ...params?.filter },
+        limit: params?.limit || -1,
+        sort: params?.sort || ["-publish_date"],
+        fields: [
+          "*",
+          "author.*",
+          "categories.categories_id.*",
+          "tags.tags_id.*",
+        ],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    return [];
+  }
+};
+
+/**
+ * Get single article by slug
+ */
+export const getArticleBySlug = async (
+  slug: string,
+): Promise<Article | null> => {
+  try {
+    const articles = await directus.request(
+      readItems("articles", {
+        filter: { slug: { _eq: slug }, status: { _eq: "published" } },
+        limit: 1,
+        fields: [
+          "*",
+          "author.*",
+          "categories.categories_id.*",
+          "tags.tags_id.*",
+          "gallery.directus_files_id.*",
+        ],
+      }),
+    );
+    return articles[0] || null;
+  } catch (error) {
+    console.error(`Error fetching article with slug ${slug}:`, error);
+    return null;
+  }
+};
+
+/**
+ * Get all categories
+ */
+export const getCategories = async (): Promise<Category[]> => {
+  try {
+    return await directus.request(
+      readItems("categories", {
+        sort: ["sort", "name"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+};
+
+/**
+ * Get all tags
+ */
+export const getTags = async (): Promise<Tag[]> => {
+  try {
+    return await directus.request(
+      readItems("tags", {
+        sort: ["name"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching tags:", error);
+    return [];
+  }
+};
+
+/**
+ * Get all authors
+ */
+export const getAuthors = async (): Promise<Author[]> => {
+  try {
+    return await directus.request(
+      readItems("authors", {
+        filter: { status: { _eq: "active" } },
+        fields: ["*"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching authors:", error);
+    return [];
+  }
+};
+
+/**
+ * Get author by slug
+ */
+export const getAuthorBySlug = async (slug: string): Promise<Author | null> => {
+  try {
+    const authors = await directus.request(
+      readItems("authors", {
+        filter: { slug: { _eq: slug }, status: { _eq: "active" } },
+        limit: 1,
+      }),
+    );
+    return authors[0] || null;
+  } catch (error) {
+    console.error(`Error fetching author with slug ${slug}:`, error);
+    return null;
+  }
+};
+
+/**
+ * Get homepage banner
+ */
+export const getHomepageBanner = async (): Promise<HomepageBanner | null> => {
+  try {
+    return await directus.request(readSingleton("homepage_banner"));
+  } catch (error) {
+    console.error("Error fetching homepage banner:", error);
+    return null;
+  }
+};
+
+/**
+ * Get homepage features
+ */
+export const getHomepageFeatures = async (): Promise<HomepageFeature[]> => {
+  try {
+    return await directus.request(
+      readItems("homepage_features", {
+        filter: { status: { _eq: "published" } },
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching homepage features:", error);
+    return [];
+  }
+};
+
+/**
+ * Get testimonials
+ */
+export const getTestimonials = async (): Promise<Testimonial[]> => {
+  try {
+    return await directus.request(
+      readItems("testimonials", {
+        filter: { status: { _eq: "published" } },
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
+    return [];
+  }
+};
+
+/**
+ * Get pages
+ */
+export const getPages = async (): Promise<Page[]> => {
+  try {
+    return await directus.request(
+      readItems("pages", {
+        filter: { status: { _eq: "published" } },
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching pages:", error);
+    return [];
+  }
+};
+
+/**
+ * Get page by slug
+ */
+export const getPageBySlug = async (slug: string): Promise<Page | null> => {
+  try {
+    const pages = await directus.request(
+      readItems("pages", {
+        filter: { slug: { _eq: slug }, status: { _eq: "published" } },
+        limit: 1,
+      }),
+    );
+    return pages[0] || null;
+  } catch (error) {
+    console.error(`Error fetching page with slug ${slug}:`, error);
+    return null;
+  }
+};
+
+/**
+ * Get navigation menus
+ */
+export const getNavigationMenus = async (
+  position?: "header" | "footer" | "sidebar",
+): Promise<NavigationMenu[]> => {
+  try {
+    const filter = position
+      ? { position: { _eq: position }, status: { _eq: "published" } }
+      : { status: { _eq: "published" } };
+
+    return await directus.request(
+      readItems("navigation_menus", {
+        filter,
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching navigation menus:", error);
+    return [];
+  }
+};
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Get full URL for Directus assets
+ */
+export const getAssetURL = (
+  fileId: string | DirectusFile | undefined | null,
+): string => {
+  if (!fileId) return "";
+
+  const id = typeof fileId === "string" ? fileId : fileId.id;
+  return `${directusUrl}/assets/${id}`;
+};
+
+/**
+ * Get thumbnail URL for images
+ */
+export const getThumbnailURL = (
+  fileId: string | DirectusFile | undefined | null,
+  width: number = 400,
+  height?: number,
+  fit: "cover" | "contain" | "inside" | "outside" = "cover",
+): string => {
+  if (!fileId) return "";
+
+  const id = typeof fileId === "string" ? fileId : fileId.id;
+  const params = new URLSearchParams({
+    width: width.toString(),
+    ...(height && { height: height.toString() }),
+    fit,
+  });
+
+  return `${directusUrl}/assets/${id}?${params.toString()}`;
+};
+
+/**
+ * Format date to readable string
+ */
+export const formatDate = (date: string | undefined | null): string => {
+  if (!date) return "";
+  return new Date(date).toLocaleDateString("id-ID", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+/**
+ * Calculate reading time from content
+ */
+export const calculateReadingTime = (content: string): number => {
+  const wordsPerMinute = 200;
+  const wordCount = content.trim().split(/\s+/).length;
+  return Math.ceil(wordCount / wordsPerMinute);
+};
+
+/**
+ * Strip HTML tags from content
+ */
+export const stripHtml = (html: string): string => {
+  return html.replace(/<[^>]*>/g, "");
+};
+
+/**
+ * Truncate text to specified length
+ */
+export const truncateText = (text: string, length: number = 160): string => {
+  if (text.length <= length) return text;
+  return text.substring(0, length).trim() + "...";
+};
+
+/**
+ * Generate excerpt from content
+ */
+export const generateExcerpt = (
+  content: string,
+  length: number = 160,
+): string => {
+  const plainText = stripHtml(content);
+  return truncateText(plainText, length);
+};
+
+// ============================================
+// EXPORT
+// ============================================
+
+export default directus;
+
+// Export types for use in other files
+export type {
+  Schema,
+  Article,
+  Author,
+  Category,
+  Tag,
+  Page,
+  NavigationMenu,
+  SiteSettings,
+  HomepageBanner,
+  HomepageFeature,
+  Testimonial,
+  Teacher,
+  Staff,
+  Subject,
+  Class,
+  Extracurricular,
+  Activity,
+  Achievement,
+  Gallery,
+  PLPStudent,
+  University,
+  Announcement,
+  Download,
+  Student,
+  DirectusFile,
+  SocialMedia,
+  BulletPoint,
+};
+
+// Export enums for convenience
+export const ArticleStatus = {
+  PUBLISHED: "published" as const,
+  DRAFT: "draft" as const,
+  ARCHIVED: "archived" as const,
+};
+
+export const ActivityCategory = {
+  EVENT: "event" as const,
+  COMPETITION: "competition" as const,
+  CEREMONY: "ceremony" as const,
+  WORKSHOP: "workshop" as const,
+};
+
+export const AchievementLevel = {
+  SCHOOL: "school" as const,
+  DISTRICT: "district" as const,
+  PROVINCE: "province" as const,
+  NATIONAL: "national" as const,
+  INTERNATIONAL: "international" as const,
+};
+
+export const AnnouncementType = {
+  INFO: "info" as const,
+  WARNING: "warning" as const,
+  URGENT: "urgent" as const,
+};
+
+export const MenuPosition = {
+  HEADER: "header" as const,
+  FOOTER: "footer" as const,
+  SIDEBAR: "sidebar" as const,
+};
 
 ```
 
@@ -6775,6 +7746,7 @@ const htmlEntityDecoder = (htmlWithEntities: string) => {
 ```astro
 ---
 import Base from "@/layouts/Base.astro";
+import { IoWarning } from "react-icons/io5";
 ---
 
 <Base title="Halaman Tidak Ditemukan">
@@ -6787,14 +7759,14 @@ import Base from "@/layouts/Base.astro";
           >
             404
           </span>
-          <h1 class="h2 mb-4">Halaman Tidak Ditemukan</h1>
+          <h1 class="h2 mb-4">Halaman tidak ditemukan</h1>
           <div class="content">
-            <p>
-              Halaman yang Anda cari mungkin telah dihapus, namanya diubah, atau
-              sementara tidak tersedia.
+            <p class="mb-8">
+              Maaf, halaman yang Anda cari mungkin telah dihapus, namanya
+              diganti, atau tidak tersedia untuk sementara waktu.
             </p>
           </div>
-          <a href="/" class="btn btn-primary mt-8">Kembali ke Beranda</a>
+          <a href="/" class="btn btn-primary"> Kembali ke Beranda </a>
         </div>
       </div>
     </div>
@@ -6865,25 +7837,33 @@ if (aboutIndex.data.draft) {
 ---
 import AuthorCard from "@/components/AuthorCard.astro";
 import Base from "@/layouts/Base.astro";
-import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getAuthors, getAssetURL } from "@/lib/directus";
 
-const authorIndex = await getListPage("authors", "-index");
+// Fetch Authors
+const authors = await getAuthors();
 
-if (authorIndex.data.draft) {
-  return Astro.redirect("/404");
-}
+// Mapping agar sesuai dengan props AuthorCard
+const mappedAuthors = authors.map((author) => ({
+  id: author.slug,
+  body: author.bio || "Penulis di MTs Negeri 1 Pandeglang",
+  data: {
+    title: author.name,
+    image: getAssetURL(author.avatar),
+    social: author.social_media, // Pastikan struktur JSON di Directus sesuai (name, icon, link)
+  },
+}));
 
-const authors = await getSinglePage("authors");
+const pageTitle = "Penulis";
 ---
 
-<Base title={authorIndex.data.title}>
-  <PageHeader title={authorIndex.data.title} />
+<Base title={pageTitle}>
+  <PageHeader title={pageTitle} />
   <section class="section-sm pb-0">
     <div class="container">
-      <div class="row justify-center">
+      <div class="row justify-center gsap-stagger-container">
         {
-          authors.map((author) => (
+          mappedAuthors.map((author) => (
             <div class="mb-14 md:col-6 lg:col-4">
               <AuthorCard data={author} />
             </div>
@@ -6906,75 +7886,99 @@ import BlogCard from "@/components/BlogCard.astro";
 import ImageMod from "@/components/ImageMod.astro";
 import Social from "@/components/Social.astro";
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
-import { slugify } from "@/lib/utils/textConverter";
-import { render } from "astro:content";
+import { getAuthors, getArticles, getAssetURL } from "@/lib/directus";
+import { markdownify, slugify } from "@/lib/utils/textConverter";
 
-// get all static paths for authors
+// 1. Generate Static Paths
 export async function getStaticPaths() {
-  const COLLECTION_FOLDER = "authors";
-  const authors = await getSinglePage(COLLECTION_FOLDER);
-
-  const paths = authors.map((author) => ({
-    params: {
-      single: author.id,
-    },
+  const authors = await getAuthors();
+  return authors.map((author) => ({
+    params: { single: author.slug },
     props: { author },
   }));
-  return paths;
 }
 
 const { author } = Astro.props;
-const { title, social, meta_title, description, image } = author.data;
-const { Content } = await render(author);
+const { name, bio, social_media, avatar, meta_title, meta_description } =
+  author;
+const imageUrl = getAssetURL(avatar);
 
-// get all posts by author
-const BLOG_FOLDER = "blog";
-const posts = await getSinglePage(BLOG_FOLDER);
-const postFilterByAuthor = posts.filter(
-  (post) => slugify(post.data.author) === slugify(title)
-);
+// 2. Get Articles by Author
+// Note: Kita fetch semua lalu filter. Jika artikel ribuan, sebaiknya filter di API level.
+const allArticles = await getArticles();
+const authorPosts = allArticles.filter((post) => {
+  // Cek apakah post.author adalah object (populated) atau ID string
+  const postAuthorSlug =
+    typeof post.author === "object" && post.author !== null
+      ? post.author.slug
+      : "";
+  return postAuthorSlug === author.slug;
+});
+
+// Mapping artikel untuk BlogCard
+const mappedPosts = authorPosts.map((article) => ({
+  id: article.slug,
+  body: article.excerpt || article.content,
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: name,
+    categories:
+      article.categories?.map((c: any) => c.categories_id?.name) || [],
+  },
+}));
 ---
 
 <Base
-  title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
+  title={name}
+  meta_title={meta_title || name}
+  description={meta_description || bio?.slice(0, 150)}
+  image={imageUrl}
 >
   <section class="section-sm pb-0">
     <div class="container">
       <div
         class="row justify-center border-b border-border pb-14 dark:border-darkmode-border"
       >
-        <div class="text-center lg:col-4">
+        <div class="text-center lg:col-4 gsap-fade-up">
           {
-            image && (
+            imageUrl && (
               <ImageMod
-                src={image}
-                class="mx-auto mb-10 rounded"
+                src={imageUrl}
+                class="mx-auto mb-10 rounded-full shadow-lg"
                 height={200}
                 width={200}
-                alt={title}
+                alt={name}
                 format="webp"
               />
             )
           }
-          <h1 class="h3 mb-6">{title}</h1>
-          <div class="content">
-            <Content />
+          <h1 class="h3 mb-6">{name}</h1>
+          <div class="content mb-6">
+            <div set:html={markdownify(bio || "")} />
           </div>
-          <Social source={social} className="social-icons" />
+          {
+            social_media && (
+              <Social source={social_media} className="social-icons" />
+            )
+          }
         </div>
       </div>
 
-      <div class="row justify-center pb-16 pt-14">
+      <div class="row justify-center pb-16 pt-14 gsap-stagger-container">
         {
-          postFilterByAuthor.map((post) => (
-            <div class="mb-12 md:col-6 lg:col-4">
-              <BlogCard data={post} />
+          mappedPosts.length > 0 ? (
+            mappedPosts.map((post) => (
+              <div class="mb-12 md:col-6 lg:col-4">
+                <BlogCard data={post} />
+              </div>
+            ))
+          ) : (
+            <div class="text-center text-gray-500">
+              <p>Belum ada artikel yang ditulis.</p>
             </div>
-          ))
+          )
         }
       </div>
     </div>
@@ -6993,60 +7997,87 @@ import BlogCard from "@/components/BlogCard.astro";
 import Pagination from "@/components/Pagination.astro";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
 import PageHeader from "@/partials/PageHeader.astro";
 import PostSidebar from "@/partials/PostSidebar.astro";
 
-const BLOG_FOLDER = "blog";
+// Import Directus functions
+import {
+  getArticles,
+  getCategories,
+  getTags,
+  getAssetURL,
+} from "@/lib/directus";
 
-const postIndex = await getListPage(BLOG_FOLDER, "-index");
-if (postIndex.data.draft) {
-  return Astro.redirect("/404");
-}
-const posts = await getSinglePage(BLOG_FOLDER);
-const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
-const categories = await getTaxonomy(BLOG_FOLDER, "categories");
-const tags = await getTaxonomy(BLOG_FOLDER, "tags");
-const sortedPosts = sortByDate(posts);
-const totalPages: number = Math.ceil(posts.length / config.settings.pagination);
-const currentPosts = sortedPosts.slice(0, config.settings.pagination);
+// Fetch data
+const articles = await getArticles({
+  sort: ["-publish_date"], // Sort by newest
+  filter: { status: { _eq: "published" } },
+});
+
+const categories = await getCategories();
+const tags = await getTags();
+
+// Mapping categories for sidebar (array of strings)
+const categoryNames = categories.map((c) => c.name);
+const tagNames = tags.map((t) => t.name);
+
+// Get all categories used in articles (for count in sidebar)
+const usedCategories = articles
+  .flatMap(
+    (article) =>
+      article.categories?.map((cat: any) => cat.categories_id?.name || "") ||
+      [],
+  )
+  .filter(Boolean);
+
+// Pagination Logic
+const paginationLength = config.settings.pagination;
+const totalPages = Math.ceil(articles.length / paginationLength);
+const currentArticles = articles.slice(0, paginationLength);
+
+// Map Directus Data to BlogCard props format
+const mappedArticles = currentArticles.map((article) => ({
+  id: article.slug, // BlogCard expects id/slug
+  body: article.excerpt || article.content, // BlogCard uses body for summary
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: typeof article.author === "object" ? article.author?.name : "Admin",
+    categories: article.categories?.map((c: any) => c.categories_id?.name) || [
+      "Uncategorized",
+    ],
+  },
+}));
+
+const pageTitle = "Artikel Terkini";
 ---
 
-<Base
-  title={postIndex.data.title}
-  meta_title={postIndex.data.meta_title}
-  image={postIndex.data.image}
-  description={postIndex.data.description}
->
-  <PageHeader title={postIndex?.data.title} />
+<Base title={pageTitle} meta_title={`Blog - ${config.site.title}`}>
+  <PageHeader title={pageTitle} />
+
   <section class="section">
     <div class="container">
       <div class="row gx-5">
-        <!-- blog posts -->
+        <!-- Blog Posts Grid -->
         <div class="lg:col-8">
-          <div class="row">
+          <div class="row gsap-stagger-container">
             {
-              currentPosts.map((post) => (
+              mappedArticles.map((article) => (
                 <div class="mb-14 md:col-6">
-                  <BlogCard data={post} />
+                  <BlogCard data={article} />
                 </div>
               ))
             }
           </div>
-          <Pagination
-            section={BLOG_FOLDER}
-            currentPage={1}
-            totalPages={totalPages}
-          />
+          <Pagination section="blog" currentPage={1} totalPages={totalPages} />
         </div>
 
-        <!-- sidebar -->
+        <!-- Sidebar -->
         <PostSidebar
-          categories={categories}
-          tags={tags}
-          allCategories={allCategories}
+          categories={categoryNames}
+          tags={tagNames}
+          allCategories={usedCategories}
         />
       </div>
     </div>
@@ -7065,64 +8096,91 @@ import BlogCard from "@/components/BlogCard.astro";
 import Pagination from "@/components/Pagination.astro";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
 import PageHeader from "@/partials/PageHeader.astro";
 import PostSidebar from "@/partials/PostSidebar.astro";
+import {
+  getArticles,
+  getCategories,
+  getTags,
+  getAssetURL,
+} from "@/lib/directus";
 
-const BLOG_FOLDER = "blog";
-
-const { slug } = Astro.params;
-const postIndex = await getListPage(BLOG_FOLDER, "-index");
-
-if (postIndex.data.draft) {
-  return Astro.redirect("/404");
-}
-
-const posts = await getSinglePage(BLOG_FOLDER);
-const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
-const categories = await getTaxonomy(BLOG_FOLDER, "categories");
-const tags = await getTaxonomy(BLOG_FOLDER, "tags");
-const sortedPosts = sortByDate(posts);
-const totalPages = Math.ceil(posts.length / config.settings.pagination);
-const currentPage = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
-const indexOfLastPost = currentPage * config.settings.pagination;
-const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
-const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
-
+// 1. Generate Static Paths untuk Pagination
 export async function getStaticPaths() {
-  const BLOG_FOLDER = "blog";
-  const posts = await getSinglePage(BLOG_FOLDER);
-  const totalPages = Math.ceil(posts.length / config.settings.pagination);
+  const articles = await getArticles({
+    filter: { status: { _eq: "published" } },
+  });
+  const totalPages = Math.ceil(articles.length / config.settings.pagination);
   const paths = [];
 
   for (let i = 1; i < totalPages; i++) {
     paths.push({
       params: {
-        slug: (i + 1).toString(),
+        slug: (i + 1).toString(), // Mulai dari halaman 2
       },
+      props: { articles }, // Pass articles agar tidak fetch ulang
     });
   }
   return paths;
 }
+
+const { slug } = Astro.params;
+const { articles: allArticles } = Astro.props;
+
+// Fetch data sidebar (Category & Tags)
+const categories = await getCategories();
+const tags = await getTags();
+const categoryNames = categories.map((c) => c.name);
+const tagNames = tags.map((t) => t.name);
+
+// Get Used Categories for Count
+const usedCategories = allArticles
+  .flatMap(
+    (article) =>
+      article.categories?.map((cat: any) => cat.categories_id?.name || "") ||
+      [],
+  )
+  .filter(Boolean);
+
+// Logic Pagination
+const currentPage = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
+const paginationLength = config.settings.pagination;
+const totalPages = Math.ceil(allArticles.length / paginationLength);
+const indexOfLastPost = currentPage * paginationLength;
+const indexOfFirstPost = indexOfLastPost - paginationLength;
+const currentArticles = allArticles.slice(indexOfFirstPost, indexOfLastPost);
+
+// Mapping Data untuk BlogCard
+const mappedArticles = currentArticles.map((article) => ({
+  id: article.slug,
+  body: article.excerpt || article.content,
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: typeof article.author === "object" ? article.author?.name : "Admin",
+    categories: article.categories?.map((c: any) => c.categories_id?.name) || [
+      "Uncategorized",
+    ],
+  },
+}));
+
+const pageTitle = "Artikel Terkini";
 ---
 
 <Base
-  title={postIndex.data.title}
-  meta_title={postIndex.data.meta_title}
-  image={postIndex.data.image}
-  description={postIndex.data.description}
+  title={pageTitle}
+  meta_title={`Blog Page ${currentPage} - ${config.site.title}`}
 >
-  <PageHeader title={postIndex.data.title} />
+  <PageHeader title={pageTitle} />
   <section class="section">
     <div class="container">
       <div class="row gx-5">
-        <!-- blog posts -->
+        <!-- Blog Posts -->
         <div class="lg:col-8">
-          <div class="row">
+          <div class="row gsap-stagger-container">
             {
-              currentPosts.map((post) => (
+              mappedArticles.map((post) => (
                 <div class="mb-14 md:col-6">
                   <BlogCard data={post} />
                 </div>
@@ -7130,17 +8188,17 @@ export async function getStaticPaths() {
             }
           </div>
           <Pagination
-            section={BLOG_FOLDER}
+            section="blog"
             currentPage={currentPage}
             totalPages={totalPages}
           />
         </div>
 
-        <!-- sidebar -->
+        <!-- Sidebar -->
         <PostSidebar
-          categories={categories}
-          tags={tags}
-          allCategories={allCategories}
+          categories={categoryNames}
+          tags={tagNames}
+          allCategories={usedCategories}
         />
       </div>
     </div>
@@ -7156,33 +8214,145 @@ export async function getStaticPaths() {
 ```astro
 ---
 import Base from "@/layouts/Base.astro";
-import PostSingle from "@/layouts/PostSingle.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import ImageMod from "@/components/ImageMod.astro";
+import { getArticleBySlug, getAssetURL, getArticles } from "@/lib/directus";
+import { markdownify, humanize, slugify } from "@/lib/utils/textConverter";
+import dateFormat from "@/lib/utils/dateFormat";
+import { FaRegClock, FaRegFolder, FaRegUserCircle } from "react-icons/fa";
+import Share from "@/components/Share.astro";
 
+// Generate Static Paths (SSG)
 export async function getStaticPaths() {
-  const BLOG_FOLDER = "blog";
-  const posts = await getSinglePage(BLOG_FOLDER);
-
-  const paths = posts.map((post) => ({
-    params: {
-      single: post.id,
-    },
-    props: { post },
+  const articles = await getArticles();
+  return articles.map((article) => ({
+    params: { single: article.slug },
+    props: { article },
   }));
-  return paths;
 }
 
-const { post } = Astro.props;
-const { title, meta_title, description, image } = post.data;
+// Get Params & Props
+const { single } = Astro.params;
+let { article } = Astro.props;
+
+// Fallback if SSR (though getStaticPaths handles SSG)
+if (!article) {
+  article = await getArticleBySlug(single as string);
+}
+
+if (!article) {
+  return Astro.redirect("/404");
+}
+
+const {
+  title,
+  content,
+  author,
+  publish_date,
+  featured_image,
+  categories,
+  tags,
+  meta_title,
+  meta_description,
+} = article;
+
+// Prepare data
+const authorName = typeof author === "object" ? author?.name : "Admin";
+const categoryList = categories?.map((c: any) => c.categories_id?.name) || [];
+const tagList = tags?.map((t: any) => t.tags_id?.name) || [];
+const imageUrl = getAssetURL(featured_image);
 ---
 
 <Base
   title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
+  meta_title={meta_title || title}
+  description={meta_description || content.slice(0, 150)}
+  image={imageUrl}
 >
-  <PostSingle post={post} />
+  <section class="section pt-7">
+    <div class="container">
+      <div class="row justify-center">
+        <article class="lg:col-10 gsap-fade-up">
+          {
+            imageUrl && (
+              <div class="mb-10">
+                <ImageMod
+                  src={imageUrl}
+                  height={500}
+                  width={1200}
+                  alt={title}
+                  class="w-full rounded-xl shadow-md"
+                  format="webp"
+                />
+              </div>
+            )
+          }
+
+          <h1 set:html={markdownify(title)} class="h2 mb-4" />
+
+          <ul class="mb-4 text-text-light dark:text-darkmode-text-light">
+            <li class="mr-4 inline-block">
+              <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
+              {humanize(authorName)}
+            </li>
+            <li class="mr-4 inline-block">
+              <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
+              {
+                categoryList.map((category: string, index: number) => (
+                  <a
+                    href={`/categories/${slugify(category)}`}
+                    class="hover:text-primary"
+                  >
+                    {humanize(category)}
+                    {index !== categoryList.length - 1 && ","}
+                  </a>
+                ))
+              }
+            </li>
+            <li class="mr-4 inline-block">
+              <FaRegClock className={"mr-2 -mt-1 inline-block"} />
+              {dateFormat(publish_date || new Date())}
+            </li>
+          </ul>
+
+          <div class="content mb-10">
+            <!-- Render HTML content from Directus WYSIWYG/Markdown -->
+            <div set:html={markdownify(content, true)} />
+          </div>
+
+          <div
+            class="row items-start justify-between border-t border-border pt-10 dark:border-darkmode-border"
+          >
+            <div class="mb-10 flex items-center lg:col-5 lg:mb-0">
+              <h5 class="mr-3">Tags :</h5>
+              <ul>
+                {
+                  tagList.map((tag: string) => (
+                    <li class="inline-block">
+                      <a
+                        class="m-1 block rounded bg-light px-3 py-1 hover:bg-primary hover:text-white dark:bg-darkmode-light dark:hover:bg-darkmode-primary dark:hover:text-text-dark transition-colors"
+                        href={`/tags/${slugify(tag)}`}
+                      >
+                        {humanize(tag)}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+            <div class="flex items-center lg:col-4">
+              <h5 class="mr-3">Share :</h5>
+              <Share
+                className="social-icons"
+                title={title}
+                description={meta_description}
+                slug={`blog/${article.slug}`}
+              />
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 </Base>
 
 ```
@@ -7194,32 +8364,47 @@ const { title, meta_title, description, image } = post.data;
 ```astro
 ---
 import Base from "@/layouts/Base.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { humanize } from "@/lib/utils/textConverter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getCategories, getArticles } from "@/lib/directus";
+import { humanize, slugify } from "@/lib/utils/textConverter";
 
-const BLOG_FOLDER = "blog";
+// Ambil Kategori
+const categories = await getCategories();
 
-const categories = await getTaxonomy(BLOG_FOLDER, "categories");
-const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
+// Ambil Artikel untuk menghitung jumlah postingan per kategori
+const articles = await getArticles();
+const allUsedCategories = articles
+  .flatMap(
+    (article) =>
+      article.categories?.map((cat: any) => cat.categories_id?.name || "") ||
+      [],
+  )
+  .filter(Boolean);
 ---
 
-<Base title={"Categories"}>
-  <PageHeader title={"Categories"} />
+<Base title={"Kategori"}>
+  <PageHeader title={"Daftar Kategori"} />
   <section class="section">
     <div class="container text-center">
-      <ul>
+      <ul class="gsap-stagger-container">
         {
-          categories.map((category: string) => {
-            const count = allCategories.filter((c) => c === category).length;
+          categories.map((category) => {
+            // Hitung jumlah artikel di kategori ini
+            const count = allUsedCategories.filter(
+              (c) => c === category.name,
+            ).length;
+
+            // Hanya tampilkan kategori yang memiliki artikel (opsional, hapus if jika ingin tampil semua)
+            // if (count === 0) return null;
+
             return (
               <li class="m-3 inline-block">
                 <a
-                  href={`/categories/${category}`}
-                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark"
+                  href={`/categories/${category.slug}`}
+                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
                 >
-                  {humanize(category)}{" "}
-                  <span class="ml-2 rounded bg-body px-2 dark:bg-darkmode-body">
+                  {humanize(category.name)}{" "}
+                  <span class="ml-2 rounded-full bg-body px-2 text-sm font-bold dark:bg-darkmode-body">
                     {count}
                   </span>
                 </a>
@@ -7242,44 +8427,67 @@ const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
 ---
 import BlogCard from "@/components/BlogCard.astro";
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
-import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getCategories, getArticles, getAssetURL } from "@/lib/directus";
+import { humanize } from "@/lib/utils/textConverter";
 
-// get static paths for all categories
+// 1. Generate Static Paths untuk setiap Kategori
 export async function getStaticPaths() {
-  const BLOG_FOLDER = "blog";
-  const categories = await getTaxonomy(BLOG_FOLDER, "categories");
-
+  const categories = await getCategories();
   return categories.map((category) => {
     return {
-      params: { category },
+      params: { category: category.slug },
+      props: { categoryName: category.name },
     };
   });
 }
 
 const { category } = Astro.params;
+const { categoryName } = Astro.props;
 
-// get posts by category
-const BLOG_FOLDER = "blog";
-const posts = await getSinglePage(BLOG_FOLDER);
-const filterByCategories = taxonomyFilter(posts, "categories", category!);
-const sortedPosts = sortByDate(filterByCategories);
+// 2. Fetch Artikel dan Filter berdasarkan Kategori
+// Directus API filter agak kompleks untuk nested relation,
+// untuk SSG lebih aman fetch semua lalu filter di JS (kecuali datanya ribuan)
+const allArticles = await getArticles();
+
+const filteredArticles = allArticles.filter((article) =>
+  article.categories?.some((cat: any) => cat.categories_id?.slug === category),
+);
+
+// Mapping untuk BlogCard
+const mappedArticles = filteredArticles.map((article) => ({
+  id: article.slug,
+  body: article.excerpt || article.content,
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: typeof article.author === "object" ? article.author?.name : "Admin",
+    categories:
+      article.categories?.map((c: any) => c.categories_id?.name) || [],
+  },
+}));
 ---
 
-<Base title={category}>
-  <PageHeader title={category} />
+<Base title={categoryName}>
+  <PageHeader title={humanize(categoryName)} />
   <div class="section-sm pb-0">
     <div class="container">
-      <div class="row">
+      <div class="row gsap-stagger-container">
         {
-          sortedPosts.map((post) => (
-            <div class="mb-14 md:col-6 lg:col-4">
-              <BlogCard data={post} />
+          mappedArticles.length > 0 ? (
+            mappedArticles.map((post) => (
+              <div class="mb-14 md:col-6 lg:col-4">
+                <BlogCard data={post} />
+              </div>
+            ))
+          ) : (
+            <div class="col-12 text-center py-20">
+              <p class="text-xl text-gray-500">
+                Belum ada artikel di kategori ini.
+              </p>
             </div>
-          ))
+          )
         }
       </div>
     </div>
@@ -7294,74 +8502,146 @@ const sortedPosts = sortByDate(filterByCategories);
 
 ```astro
 ---
-import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import { getListPage } from "@/lib/contentParser.astro";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getSiteSettings } from "@/lib/directus";
+import { markdownify } from "@/lib/utils/textConverter";
+import {
+  IoLocationOutline,
+  IoCallOutline,
+  IoMailOutline,
+} from "react-icons/io5";
 
-const contactIndex = await getListPage("contact", "-index");
-const { contact_form_action }: { contact_form_action: string } = config.params;
-const { title, description, meta_title, image } = contactIndex.data;
+const settings = await getSiteSettings();
+const { contact_address, contact_email, contact_phone, google_map_embed } =
+  settings || {};
 
-if (contactIndex.data.draft) {
-  return Astro.redirect("/404");
-}
+const pageTitle = "Hubungi Kami";
 ---
 
 <Base
-  title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
+  title={pageTitle}
+  meta_title={pageTitle}
+  description="Halaman kontak sekolah"
 >
-  <PageHeader title={title} />
+  <PageHeader title={pageTitle} />
+
   <section class="section-sm">
     <div class="container">
       <div class="row">
-        <div class="mx-auto md:col-10 lg:col-6">
-          <form action={contact_form_action} method="POST">
+        <!-- Info Kontak -->
+        <div class="md:col-5 lg:col-4 mb-10 md:mb-0">
+          <h2 class="h4 mb-6">Informasi Kontak</h2>
+          <ul class="pl-0">
+            <li class="flex items-start mb-6">
+              <div class="text-primary text-2xl mr-4 mt-1">
+                <IoLocationOutline />
+              </div>
+              <div>
+                <h3 class="h6 mb-2">Alamat</h3>
+                <p
+                  set:html={markdownify(
+                    contact_address || "Alamat belum diatur",
+                  )}
+                />
+              </div>
+            </li>
+            <li class="flex items-start mb-6">
+              <div class="text-primary text-2xl mr-4 mt-1">
+                <IoMailOutline />
+              </div>
+              <div>
+                <h3 class="h6 mb-2">Email</h3>
+                <a href={`mailto:${contact_email}`} class="hover:text-primary">
+                  {contact_email || "email@sekolah.sch.id"}
+                </a>
+              </div>
+            </li>
+            <li class="flex items-start mb-6">
+              <div class="text-primary text-2xl mr-4 mt-1">
+                <IoCallOutline />
+              </div>
+              <div>
+                <h3 class="h6 mb-2">Telepon</h3>
+                <a href={`tel:${contact_phone}`} class="hover:text-primary">
+                  {contact_phone || "021-xxxxxxx"}
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Form Kontak -->
+        <div class="md:col-7 lg:col-8">
+          <h2 class="h4 mb-6">Kirim Pesan</h2>
+          <form class="contact-form" method="POST" action="/api/submit-contact">
+            <!-- Ganti action dengan endpoint formspree atau logic form handler -->
             <div class="mb-6">
-              <label for="name" class="form-label">
-                Full Name <span class="text-red-500">*</span>
-              </label>
+              <label class="mb-2 block font-secondary" for="name"
+                >Nama Lengkap <small class="text-red-500">*</small></label
+              >
               <input
-                id="name"
+                class="form-input w-full"
                 name="name"
-                class="form-input"
-                placeholder="John Doe"
                 type="text"
+                placeholder="Nama Anda"
                 required
               />
             </div>
             <div class="mb-6">
-              <label for="email" class="form-label">
-                Working Mail <span class="text-red-500">*</span>
-              </label>
+              <label class="mb-2 block font-secondary" for="email"
+                >Email <small class="text-red-500">*</small></label
+              >
               <input
-                id="email"
+                class="form-input w-full"
                 name="email"
-                class="form-input"
-                placeholder="john.doe@email.com"
                 type="email"
+                placeholder="email@contoh.com"
                 required
               />
             </div>
             <div class="mb-6">
-              <label for="message" class="form-label">
-                Anything else? <span class="text-red-500">*</span>
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                class="form-input"
-                placeholder="Message goes here..."
-                required
-                rows="8"></textarea>
+              <label class="mb-2 block font-secondary" for="subject"
+                >Subjek</label
+              >
+              <input
+                class="form-input w-full"
+                name="subject"
+                type="text"
+                placeholder="Perihal pesan"
+              />
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="mb-6">
+              <label class="mb-2 block font-secondary" for="message"
+                >Pesan <small class="text-red-500">*</small></label
+              >
+              <textarea
+                class="form-textarea w-full"
+                name="message"
+                rows="5"
+                placeholder="Tulis pesan Anda di sini..."
+                required></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Kirim Pesan</button>
           </form>
         </div>
       </div>
+
+      <!-- Google Map Embed -->
+      {
+        google_map_embed && (
+          <div class="row mt-16">
+            <div class="col-12">
+              <div class="overflow-hidden rounded-lg shadow-md h-[400px]">
+                <div
+                  set:html={google_map_embed}
+                  class="w-full h-full [&>iframe]:w-full [&>iframe]:h-full"
+                />
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
   </section>
 </Base>
@@ -7376,53 +8656,88 @@ if (contactIndex.data.draft) {
 ---
 import ImageMod from "@/components/ImageMod.astro";
 import Base from "@/layouts/Base.astro";
-import { getListPage } from "@/lib/contentParser.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import CallToAction from "@/partials/CallToAction.astro";
 import Testimonial from "@/partials/Testimonial.astro";
 import { FaCheck } from "react-icons/fa";
 
-const homepage = await getListPage("homepage", "-index");
-const call_to_action = await getListPage("ctaSection", "call-to-action");
-const testimonial = await getListPage("testimonialSection", "testimonial");
+// Import Directus functions
+import {
+  getHomepageBanner,
+  getHomepageFeatures,
+  getTestimonials,
+  getAssetURL,
+} from "@/lib/directus";
 
-const { banner, features } = homepage.data;
+// 1. FETCH DATA DARI DIRECTUS
+const banner = await getHomepageBanner();
+const features = await getHomepageFeatures();
+const testimonials = await getTestimonials();
+
+// Fallback data (jika Directus belum diisi/error)
+const defaultBanner = {
+  title: "Selamat Datang di MTs Negeri 1 Pandeglang",
+  content: "Temukan pengalaman belajar terbaik di MTs Negeri 1 Pandeglang.",
+  image: "/images/assets/banner.png", // Path lokal
+  button_enable: true,
+  button_label: "Daftar Sekarang!",
+  button_link: "https://daftar.mtsn1pandeglang.sch.id",
+};
+
+const activeBanner = banner || defaultBanner;
+
+// Helper URL Gambar
+const bannerImageUrl = banner?.image
+  ? getAssetURL(banner.image)
+  : defaultBanner.image;
+
+// Mapping data CallToAction (CTA biasanya statis di config atau collection, tapi bisa juga dari Directus)
+// Disini kita gunakan dummy mapping agar kompatibel dengan komponen CallToAction yang ada
+// Jika ingin CTA dari Directus, Anda perlu membuat koleksi 'cta' di Directus.
+// Untuk sekarang kita biarkan CTA statis dari markdown (default behavior) atau matikan.
+// Kita fokus ke Banner dan Features dulu.
 ---
 
 <Base>
-  <!-- Banner -->
+  <!-- Banner Section -->
   <section class="section pt-14">
     <div class="container">
-      <div class="row justify-center">
-        <div class="lg:col-7 md:col-9 mb-8 text-center">
+      <div class="row justify-center items-center">
+        <!-- Content Banner -->
+        <div class="lg:col-7 md:col-9 mb-8 text-center gsap-fade-up">
           <h1
-            set:html={markdownify(banner.title)}
+            set:html={markdownify(activeBanner.title)}
             class="mb-4 text-h3 lg:text-h1"
           />
-          <p set:html={markdownify(banner.content)} class="mb-8" />
+          <p set:html={markdownify(activeBanner.content)} class="mb-8" />
           {
-            banner.button.enable && (
+            activeBanner.button_enable && (
               <a
-                class="btn btn-primary"
-                href={banner.button.link}
+                class="btn btn-primary transition-transform hover:scale-105"
+                href={activeBanner.button_link}
                 target={
-                  banner.button.link.startsWith("http") ? "_blank" : "_self"
+                  activeBanner.button_link?.startsWith("http")
+                    ? "_blank"
+                    : "_self"
                 }
                 rel="noopener"
               >
-                {banner.button.label}
+                {activeBanner.button_label}
               </a>
             )
           }
         </div>
+        
+        <!-- Image Banner -->
         {
-          banner.image && (
-            <div class="col-12">
+          bannerImageUrl && (
+            <div class="col-12 gsap-fade-up">
               <ImageMod
-                src={banner.image}
-                height={380}
+                src={bannerImageUrl}
+                alt={activeBanner.title}
+                class="w-full h-auto rounded-xl shadow-lg"
                 width={1200}
-                alt="banner"
+                height={380}
                 format="webp"
               />
             </div>
@@ -7433,51 +8748,97 @@ const { banner, features } = homepage.data;
   </section>
   <!-- /Banner -->
 
-  <!-- Features -->
+  <!-- Features Section -->
   {
-    features.map((feature, index: number) => (
-      <section class={`section-sm ${index % 2 === 0 && "bg-gradient"}`}>
-        <div class="container">
-          <div class="row items-center justify-between">
-            <div
-              class={`mb:md-0 mb-6 md:col-5 ${index % 2 !== 0 && "md:order-2"}`}
-            >
-              <ImageMod
-                src={feature.image}
-                height={480}
-                width={520}
-                alt={feature.title}
-                format="webp"
-              />
-            </div>
-            <div class={`md:col-7 lg:col-6 ${index % 2 !== 0 && "md:order-1"}`}>
-              <h2 set:html={markdownify(feature.title)} class="mb-4" />
-              <p set:html={markdownify(feature.content)} class="mb-8 text-lg" />
-              <ul>
-                {feature.bulletpoints.map((bullet: string) => (
-                  <li class="relative mb-4 pl-6">
-                    <FaCheck className={"absolute left-0 top-1.5"} />
-                    <span set:html={markdownify(bullet)} />
-                  </li>
-                ))}
-              </ul>
-              {feature.button.enable && (
-                <a class="btn btn-primary mt-5" href={feature.button.link}>
-                  {feature.button.label}
-                </a>
-              )}
+    features.map((feature, index: number) => {
+      const featureImageUrl = getAssetURL(feature.image);
+      const isEven = index % 2 === 0;
+
+      return (
+        <section class={`section-sm ${isEven && "bg-gradient"}`}>
+          <div class="container">
+            <div class="row items-center justify-between">
+              <!-- Image Feature -->
+              <div
+                class={`mb:md-0 mb-6 md:col-5 gsap-fade-up ${!isEven && "md:order-2"}`}
+              >
+                {featureImageUrl && (
+                  <ImageMod
+                    src={featureImageUrl}
+                    alt={feature.title}
+                    class="w-full h-auto rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                    width={520}
+                    height={480}
+                    format="webp"
+                  />
+                )}
+              </div>
+
+              <!-- Content Feature -->
+              <div
+                class={`md:col-7 lg:col-6 gsap-fade-up ${!isEven && "md:order-1"}`}
+              >
+                <h2 set:html={markdownify(feature.title)} class="mb-4" />
+                <p
+                  set:html={markdownify(feature.content)}
+                  class="mb-8 text-lg"
+                />
+                
+                {/* Bulletpoints */}
+                {feature.bulletpoints && (
+                  <ul class="gsap-stagger-container">
+                    {feature.bulletpoints.map((bullet: any) => (
+                      <li class="relative mb-4 pl-6">
+                        <FaCheck className={"absolute left-0 top-1.5 text-primary"} />
+                        <span set:html={markdownify(bullet.text || bullet)} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {feature.button_enable && (
+                  <a class="btn btn-primary mt-5" href={feature.button_link}>
+                    {feature.button_label}
+                  </a>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    ))
+        </section>
+      );
+    })
   }
   <!-- /Features -->
 
-  <Testimonial testimonial={testimonial} />
-  <CallToAction call_to_action={call_to_action} />
-</Base>
+  <!-- Testimonials: Pass data from Directus to Component -->
+  <!-- Note: We need to adapt the Testimonial component to accept directus data structure if different, 
+       or map it here. Assuming directus returns array similar to component expectation. -->
+  {testimonials.length > 0 && (
+    <Testimonial 
+      testimonial={{
+        data: {
+          enable: true,
+          title: "Apa Kata Mereka",
+          description: "Testimoni dari alumni dan warga sekolah",
+          testimonials: testimonials.map(t => ({
+            name: t.name,
+            designation: t.designation,
+            avatar: getAssetURL(t.avatar), // Handle avatar URL
+            content: t.content
+          }))
+        }
+      }} 
+    />
+  )}
 
+  <CallToAction call_to_action={{ data: { 
+      enable: true, 
+      title: "Siap Bergabung?", 
+      description: "Daftarkan diri anda sekarang juga.", 
+      image: "/images/call-to-action.png", // Bisa diganti remote jika ada settings di Directus
+      button: { enable: true, label: "Daftar", link: "https://daftar.mtsn1pandeglang.sch.id" }
+  }}} />
+</Base>
 ```
 
 ---
@@ -7487,32 +8848,36 @@ const { banner, features } = homepage.data;
 ```astro
 ---
 import Base from "@/layouts/Base.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { humanize } from "@/lib/utils/textConverter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getTags, getArticles } from "@/lib/directus";
+import { humanize } from "@/lib/utils/textConverter";
 
-const BLOG_FOLDER = "blog";
-
-const tags = await getTaxonomy(BLOG_FOLDER, "tags");
-const allTags = await getAllTaxonomy(BLOG_FOLDER, "tags");
+const tags = await getTags();
+const articles = await getArticles();
+const allUsedTags = articles
+  .flatMap(
+    (article) => article.tags?.map((t: any) => t.tags_id?.name || "") || [],
+  )
+  .filter(Boolean);
 ---
 
-<Base title={"Tags"}>
-  <PageHeader title={"Tags"} />
+<Base title={"Tagar"}>
+  <PageHeader title={"Daftar Tagar"} />
   <section class="section">
     <div class="container text-center">
-      <ul>
+      <ul class="gsap-stagger-container">
         {
-          tags.map((tag: any) => {
-            const count = allTags.filter((c) => c === tag).length;
+          tags.map((tag) => {
+            const count = allUsedTags.filter((c) => c === tag.name).length;
             return (
               <li class="m-3 inline-block">
                 <a
-                  href={`/tags/${tag}`}
-                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark"
+                  href={`/tags/${tag.slug}`}
+                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark hover:bg-primary hover:text-white transition-colors duration-300"
                 >
-                  {humanize(tag)}{" "}
-                  <span class="ml-2 rounded bg-body px-2 dark:bg-darkmode-body">
+                  <span class="mr-1">#</span>
+                  {humanize(tag.name)}{" "}
+                  <span class="ml-2 rounded bg-body px-2 text-sm dark:bg-darkmode-body">
                     {count}
                   </span>
                 </a>
@@ -7535,43 +8900,61 @@ const allTags = await getAllTaxonomy(BLOG_FOLDER, "tags");
 ---
 import BlogCard from "@/components/BlogCard.astro";
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
-import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getTags, getArticles, getAssetURL } from "@/lib/directus";
+import { humanize } from "@/lib/utils/textConverter";
 
 export async function getStaticPaths() {
-  const BLOG_FOLDER = "blog";
-  const tags = await getTaxonomy(BLOG_FOLDER, "tags");
-
+  const tags = await getTags();
   return tags.map((tag) => {
     return {
-      params: { tag },
+      params: { tag: tag.slug },
+      props: { tagName: tag.name },
     };
   });
 }
 
 const { tag } = Astro.params;
+const { tagName } = Astro.props;
 
-// get posts by tag
-const BLOG_FOLDER = "blog";
-const posts = await getSinglePage(BLOG_FOLDER);
-const filterByTags = taxonomyFilter(posts, "tags", tag!);
-const sortedPosts = sortByDate(filterByTags);
+const allArticles = await getArticles();
+const filteredArticles = allArticles.filter((article) =>
+  article.tags?.some((t: any) => t.tags_id?.slug === tag),
+);
+
+const mappedArticles = filteredArticles.map((article) => ({
+  id: article.slug,
+  body: article.excerpt || article.content,
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: typeof article.author === "object" ? article.author?.name : "Admin",
+    categories:
+      article.categories?.map((c: any) => c.categories_id?.name) || [],
+  },
+}));
 ---
 
-<Base title={tag}>
-  <PageHeader title={tag} />
+<Base title={`Tag: ${tagName}`}>
+  <PageHeader title={`Tag: ${humanize(tagName)}`} />
   <div class="section-sm pb-0">
     <div class="container">
-      <div class="row">
+      <div class="row gsap-stagger-container">
         {
-          sortedPosts.map((post) => (
-            <div class="mb-14 md:col-6 lg:col-4">
-              <BlogCard data={post} />
+          mappedArticles.length > 0 ? (
+            mappedArticles.map((post) => (
+              <div class="mb-14 md:col-6 lg:col-4">
+                <BlogCard data={post} />
+              </div>
+            ))
+          ) : (
+            <div class="col-12 text-center py-20">
+              <p class="text-xl text-gray-500">
+                Belum ada artikel dengan tag ini.
+              </p>
             </div>
-          ))
+          )
         }
       </div>
     </div>
@@ -7587,49 +8970,82 @@ const sortedPosts = sortByDate(filterByTags);
 ```astro
 ---
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import ImageMod from "@/components/ImageMod.astro";
 import PageHeader from "@/partials/PageHeader.astro";
-import { render } from "astro:content";
+import { getPages, getPageBySlug, getAssetURL } from "@/lib/directus";
+import { markdownify } from "@/lib/utils/textConverter";
 
-// get static paths for all pages
+// 1. Generate Static Paths untuk SSG
+// Mengambil semua halaman published dari Directus untuk membuat route
 export async function getStaticPaths() {
-  const COLLECTION_FOLDER = "pages";
-
-  const pages = await getSinglePage(COLLECTION_FOLDER);
-
-  const paths = pages.map((page) => ({
+  const pages = await getPages();
+  return pages.map((page) => ({
     params: {
-      regular: page.id,
+      regular: page.slug,
     },
     props: { page },
   }));
-  return paths;
 }
 
-const { page } = Astro.props;
-const { title, meta_title, description, image } = page.data;
-const { Content } = await render(page);
+// 2. Ambil props halaman
+const { regular } = Astro.params;
+let { page } = Astro.props;
+
+// Fallback jika page tidak ada di props (kasus SSR jarang terjadi di Astro default)
+if (!page) {
+  page = await getPageBySlug(regular as string);
+}
+
+if (!page) {
+  return Astro.redirect("/404");
+}
+
+const { title, meta_title, meta_description, image, content } = page;
+const imageUrl = getAssetURL(image);
 ---
 
 <Base
   title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
+  meta_title={meta_title || title}
+  description={meta_description}
+  image={imageUrl}
 >
   <PageHeader title={title} />
+
   <section class="section-sm">
     <div class="container">
       <div class="row justify-center">
         <div class="lg:col-10">
-          <div class="content">
-            <Content />
+          <!-- Gambar Halaman (jika ada) -->
+          {
+            imageUrl && (
+              <div class="mb-10 text-center gsap-fade-up">
+                <ImageMod
+                  src={imageUrl}
+                  height={500}
+                  width={1000}
+                  alt={title}
+                  class="w-full rounded-xl shadow-md"
+                  format="webp"
+                />
+              </div>
+            )
+          }
+
+          <!-- Konten Halaman -->
+          <div class="content gsap-fade-up">
+            <!-- 
+              markdownify dengan argumen kedua 'true' akan merender HTML 
+              (berguna jika output Directus adalah WYSIWYG HTML) 
+            -->
+            <div set:html={markdownify(content, true)} />
           </div>
         </div>
       </div>
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -8632,71 +10048,84 @@ Disallow: /api/*
 
 ```javascript
 import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
+import { createDirectus, rest, readItems, staticToken } from "@directus/sdk";
+import "dotenv/config";
 
-const CONTENT_DEPTH = 2;
-const JSON_FOLDER = "./.json";
-const BLOG_FOLDER = "src/content/blog";
+const JSON_FOLDER = "./public"; // Simpan langsung di public agar bisa diakses fetch
+const DIRECTUS_URL = process.env.PUBLIC_DIRECTUS_URL || "http://localhost:8055";
+const DIRECTUS_TOKEN = process.env.DIRECTUS_API_TOKEN;
 
-// get data from markdown
-const getData = (folder, groupDepth) => {
-  const getPath = fs.readdirSync(folder);
-  const removeIndex = getPath.filter((item) => !item.startsWith("-"));
+if (!DIRECTUS_TOKEN) {
+  console.warn("⚠️ Warning: DIRECTUS_API_TOKEN not found in .env");
+}
 
-  const getPaths = removeIndex.flatMap((filename) => {
-    const filepath = path.join(folder, filename);
-    const stats = fs.statSync(filepath);
-    const isFolder = stats.isDirectory();
+const directus = createDirectus(DIRECTUS_URL)
+  .with(rest())
+  .with(staticToken(DIRECTUS_TOKEN || ""));
 
-    if (isFolder) {
-      return getData(filepath, groupDepth);
-    } else if (filename.endsWith(".md") || filename.endsWith(".mdx")) {
-      const file = fs.readFileSync(filepath, "utf-8");
-      const { data, content } = matter(file);
-      const pathParts = filepath.split(path.sep);
-      const slug =
-        data.slug ||
-        pathParts
-          .slice(CONTENT_DEPTH)
-          .join("/")
-          .replace(/\.[^/.]+$/, "");
-      const group = pathParts[groupDepth];
+const generateSearchIndex = async () => {
+  try {
+    console.log("🔍 Fetching articles from Directus for Search Index...");
+
+    // Fetch articles with necessary fields
+    const articles = await directus.request(
+      readItems("articles", {
+        filter: { status: { _eq: "published" } },
+        fields: [
+          "title",
+          "slug",
+          "content",
+          "excerpt",
+          "featured_image",
+          "categories.categories_id.name",
+          "tags.tags_id.name",
+        ],
+      }),
+    );
+
+    // Transform data to match Search Component expectation
+    const searchData = articles.map((article) => {
+      // Handle Image URL
+      const image = article.featured_image
+        ? `${DIRECTUS_URL}/assets/${article.featured_image}`
+        : "";
+
+      // Handle Categories & Tags (flatten nested arrays)
+      const categories =
+        article.categories?.map((c) => c.categories_id?.name).filter(Boolean) ||
+        [];
+      const tags =
+        article.tags?.map((t) => t.tags_id?.name).filter(Boolean) || [];
 
       return {
-        group: group,
-        slug: slug,
-        frontmatter: data,
-        content: content,
+        slug: `blog/${article.slug}`,
+        group: "blog",
+        frontmatter: {
+          title: article.title,
+          image: image,
+          description: article.excerpt,
+          categories: categories,
+          tags: tags,
+        },
+        content: article.content,
       };
-    } else {
-      return [];
-    }
-  });
+    });
 
-  return getPaths.filter((page) => !page.frontmatter?.draft && page);
+    // Create folder if not exists
+    if (!fs.existsSync(JSON_FOLDER)) {
+      fs.mkdirSync(JSON_FOLDER);
+    }
+
+    // Write to search.json
+    fs.writeFileSync(`${JSON_FOLDER}/search.json`, JSON.stringify(searchData));
+
+    console.log(`✅ Search index generated with ${searchData.length} items.`);
+  } catch (error) {
+    console.error("❌ Error generating search index:", error);
+  }
 };
 
-try {
-  // create folder if it doesn't exist
-  if (!fs.existsSync(JSON_FOLDER)) {
-    fs.mkdirSync(JSON_FOLDER);
-  }
-
-  // create json files
-  fs.writeFileSync(
-    `${JSON_FOLDER}/posts.json`,
-    JSON.stringify(getData(BLOG_FOLDER, 2)),
-  );
-
-  // merger json files for search
-  const postsPath = new URL(`../${JSON_FOLDER}/posts.json`, import.meta.url);
-  const posts = JSON.parse(fs.readFileSync(postsPath, "utf8"));
-  const search = [...posts];
-  fs.writeFileSync(`${JSON_FOLDER}/search.json`, JSON.stringify(search));
-} catch (err) {
-  console.error(err);
-}
+generateSearchIndex();
 
 ```
 
@@ -8799,6 +10228,23 @@ const path = require("path");
 ---
 
 ## Direktori: ROOT
+
+### File: `./.env`
+
+```
+# Directus Configuration
+PUBLIC_DIRECTUS_URL=http://localhost:8055
+DIRECTUS_API_TOKEN=P@ssw0rd
+
+# Optional: For production
+# PUBLIC_DIRECTUS_URL=https://directus.yourdomain.com
+# DIRECTUS_API_TOKEN=your-production-token
+
+# Site Configuration
+PUBLIC_SITE_URL=https://mtsn1pandeglang.sch.id
+```
+
+---
 
 ### File: `./astro.config.mjs`
 
@@ -8956,6 +10402,7 @@ export default defineConfig({
     "@astrojs/react": "4.4.2",
     "@astrojs/sitemap": "3.6.0",
     "@digi4care/astro-google-tagmanager": "^1.6.0",
+    "@directus/sdk": "^20.3.0",
     "@justinribeiro/lite-youtube": "^1.8.2",
     "astro": "5.16.6",
     "astro-auto-import": "^0.4.5",
@@ -9022,6 +10469,7 @@ export default defineConfig({
       "@/shortcodes/*": ["./src/layouts/shortcodes/*"],
       "@/helpers/*": ["./src/layouts/helpers/*"],
       "@/partials/*": ["./src/layouts/partials/*"],
+      "@/lib/*": ["./src/lib/*"],
       "@/*": ["./src/*"]
     }
   },

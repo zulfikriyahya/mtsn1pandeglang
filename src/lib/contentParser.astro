@@ -1,44 +1,98 @@
 ---
 import {
-  getCollection,
-  getEntry,
-  type CollectionEntry,
-  type CollectionKey,
-} from "astro:content";
+  getArticles,
+  getArticleBySlug,
+  getPages,
+  getPageBySlug,
+  getAssetURL,
+} from "@/lib/directus";
 
-type PageData = {
-  title: string;
-  meta_title?: string;
-  description?: string;
-  image?: string;
-  draft?: boolean;
+// Tipe data yang diharapkan oleh komponen lama
+type CollectionEntry = {
+  id: string;
+  slug: string;
+  body: string;
+  collection: string;
+  data: {
+    title: string;
+    meta_title?: string;
+    description?: string;
+    image?: string;
+    date?: Date;
+    author?: string;
+    categories?: string[];
+    tags?: string[];
+    draft?: boolean;
+  };
 };
 
-export const getSinglePage = async <C extends CollectionKey>(
-  collectionName: C,
-): Promise<CollectionEntry<C>[]> => {
-  const allPages = await getCollection(
-    collectionName,
-    ({ data, id }) => !(data as PageData)?.draft && !id.startsWith("-"),
-  );
-  return allPages;
-};
+export const getSinglePage = async (
+  collectionName: string,
+): Promise<CollectionEntry[]> => {
+  let items = [];
 
-export const getListPage = async <C extends CollectionKey>(
-  collectionName: C,
-  documentId: "-index" | string,
-): Promise<CollectionEntry<C>> => {
-  const data = (await getEntry(
-    collectionName,
-    documentId,
-  )) as CollectionEntry<C> | null;
-
-  if (!data) {
-    throw new Error(
-      `No page found for the collection: ${collectionName} with filename: ${documentId}`,
-    );
+  if (collectionName === "blog") {
+    const articles = await getArticles();
+    items = articles.map((article) => ({
+      id: article.slug,
+      slug: article.slug,
+      body: article.content,
+      collection: "blog",
+      data: {
+        title: article.title,
+        meta_title: article.meta_title,
+        description: article.excerpt,
+        image: getAssetURL(article.featured_image),
+        date: article.publish_date
+          ? new Date(article.publish_date)
+          : new Date(),
+        author:
+          typeof article.author === "object" ? article.author?.name : "Admin",
+        categories:
+          article.categories?.map((c: any) => c.categories_id?.name) || [],
+        tags: article.tags?.map((t: any) => t.tags_id?.name) || [],
+        draft: article.status !== "published",
+      },
+    }));
+  } else if (collectionName === "pages") {
+    const pages = await getPages();
+    items = pages.map((page) => ({
+      id: page.slug,
+      slug: page.slug,
+      body: page.content,
+      collection: "pages",
+      data: {
+        title: page.title,
+        meta_title: page.meta_title,
+        description: page.meta_description,
+        image: getAssetURL(page.image),
+        draft: page.status !== "published",
+      },
+    }));
   }
+  // Tambahkan kondisi untuk 'authors' dll jika diperlukan
 
-  return data;
+  return items;
+};
+
+export const getListPage = async (
+  collectionName: string,
+  slug: string,
+): Promise<CollectionEntry> => {
+  // Fungsi ini biasanya mengambil metadata halaman index (seperti blog/index.md)
+  // Kita bisa mock datanya atau ambil dari directus 'pages' jika ada page dengan slug 'blog'
+
+  // Fallback Mock Data agar tidak error
+  return {
+    id: slug,
+    slug: slug,
+    body: "",
+    collection: collectionName,
+    data: {
+      title: collectionName.charAt(0).toUpperCase() + collectionName.slice(1),
+      description: `Halaman ${collectionName}`,
+      draft: false,
+    },
+  };
 };
 ---

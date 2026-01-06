@@ -15,10 +15,9 @@ import { ClientRouter } from "astro:transitions";
 import SearchModal from "./helpers/SearchModal";
 import InstallPrompt from "@/layouts/helpers/InstallPrompt";
 
-// font families
+// Font Setup
 const pf = theme.fonts.font_family.primary;
 const sf = theme.fonts.font_family.secondary;
-
 let fontPrimary, fontSecondary;
 if (theme.fonts.font_family.primary) {
   fontPrimary = theme.fonts.font_family.primary
@@ -31,7 +30,6 @@ if (theme.fonts.font_family.secondary) {
     .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
 }
 
-// types for frontmatters
 export interface Props {
   title?: string;
   meta_title?: string;
@@ -41,25 +39,20 @@ export interface Props {
   canonical?: string;
 }
 
-// destructure frontmatter
 const { title, meta_title, description, image, noindex, canonical } =
   Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
-    <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    <!-- google tag manager -->
     {
       config.google_tag_manager.enable && (
         <GoogleTagmanager id={config.google_tag_manager.gtm_id} />
       )
     }
-    <!-- favicon -->
     <link rel="shortcut icon" href={config.site.favicon} />
-    <!-- theme meta -->
     <meta name="theme-name" content="astroplate" />
     <meta name="msapplication-TileColor" content="#000000" />
     <meta
@@ -75,7 +68,6 @@ const { title, meta_title, description, image, noindex, canonical } =
     <meta name="generator" content={Astro.generator} />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-    <!-- google font css -->
     <AstroFont
       config={[
         {
@@ -99,24 +91,17 @@ const { title, meta_title, description, image, noindex, canonical } =
       ]}
     />
 
-    <!-- responsive meta -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=5"
     />
 
-    <!-- title -->
     <title>
       {plainify(meta_title ? meta_title : title ? title : config.site.title)}
     </title>
 
-    <!-- canonical url -->
     {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
-
-    <!-- noindex robots -->
     {noindex && <meta name="robots" content="noindex,nofollow" />}
-
-    <!-- meta-description -->
     <meta
       name="description"
       content={plainify(
@@ -126,18 +111,14 @@ const { title, meta_title, description, image, noindex, canonical } =
 
     <ClientRouter />
 
-    <!-- author from config.json -->
+    <!-- Open Graph & Twitter Meta Tags -->
     <meta name="author" content={config.metadata.meta_author} />
-
-    <!-- og-title -->
     <meta
       property="og:title"
       content={plainify(
         meta_title ? meta_title : title ? title : config.site.title,
       )}
     />
-
-    <!-- og-description -->
     <meta
       property="og:description"
       content={plainify(
@@ -149,57 +130,30 @@ const { title, meta_title, description, image, noindex, canonical } =
       property="og:url"
       content={`${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`}
     />
-
-    <!-- twitter-title -->
-    <meta
-      name="twitter:title"
-      content={plainify(
-        meta_title ? meta_title : title ? title : config.site.title,
-      )}
-    />
-
-    <!-- twitter-description -->
-    <meta
-      name="twitter:description"
-      content={plainify(
-        description ? description : config.metadata.meta_description,
-      )}
-    />
-
-    <!-- og-image -->
     <meta
       property="og:image"
-      content={`${config.site.base_url}${
-        image ? image : config.metadata.meta_image
-      }`}
-    />
-
-    <!-- twitter-image -->
-    <meta
-      name="twitter:image"
-      content={`${config.site.base_url}${
-        image ? image : config.metadata.meta_image
-      }`}
+      content={image
+        ? image
+        : `${config.site.base_url}${config.metadata.meta_image}`}
     />
     <meta name="twitter:card" content="summary_large_image" />
-    
-    <!-- Tawk.to -->
-    <!--Start of Tawk.to Script-->
+
+    <!-- Tawk.to Script (Opsional) -->
     <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
+      var Tawk_API = Tawk_API || {},
+        Tawk_LoadStart = new Date();
+      (function () {
+        var s1 = document.createElement("script"),
+          s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = "https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj";
+        s1.charset = "UTF-8";
+        s1.setAttribute("crossorigin", "*");
+        s0.parentNode.insertBefore(s1, s0);
+      })();
     </script>
-    <!--End of Tawk.to Script-->
   </head>
   <body>
-    {/* google tag manager noscript */}
     {
       config.google_tag_manager.enable && (
         <GoogleTagmanagerNoscript id={config.google_tag_manager.gtm_id} />
@@ -209,10 +163,75 @@ const { title, meta_title, description, image, noindex, canonical } =
     <TwSizeIndicator />
     <Header />
     <SearchModal client:load />
+
     <main id="main-content">
       <slot />
     </main>
+
     <Footer />
     <InstallPrompt client:load />
+
+    <!-- GSAP Animation Logic -->
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      function initAnimations() {
+        // 1. Fade Up Animation (.gsap-fade-up)
+        const fadeElements = document.querySelectorAll(".gsap-fade-up");
+        fadeElements.forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            },
+          );
+        });
+
+        // 2. Stagger Animation for Children (.gsap-stagger-container)
+        const staggerContainers = document.querySelectorAll(
+          ".gsap-stagger-container",
+        );
+        staggerContainers.forEach((container) => {
+          const children = container.children;
+          gsap.fromTo(
+            children,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: container,
+                start: "top 85%",
+              },
+            },
+          );
+        });
+      }
+
+      // Initialize on first load
+      initAnimations();
+
+      // Re-initialize on View Transitions navigation
+      document.addEventListener("astro:page-load", () => {
+        ScrollTrigger.getAll().forEach((t) => t.kill()); // Bersihkan trigger lama
+        ScrollTrigger.refresh();
+        initAnimations();
+      });
+    </script>
   </body>
 </html>

@@ -1,44 +1,67 @@
 ---
 import BlogCard from "@/components/BlogCard.astro";
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
-import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getCategories, getArticles, getAssetURL } from "@/lib/directus";
+import { humanize } from "@/lib/utils/textConverter";
 
-// get static paths for all categories
+// 1. Generate Static Paths untuk setiap Kategori
 export async function getStaticPaths() {
-  const BLOG_FOLDER = "blog";
-  const categories = await getTaxonomy(BLOG_FOLDER, "categories");
-
+  const categories = await getCategories();
   return categories.map((category) => {
     return {
-      params: { category },
+      params: { category: category.slug },
+      props: { categoryName: category.name },
     };
   });
 }
 
 const { category } = Astro.params;
+const { categoryName } = Astro.props;
 
-// get posts by category
-const BLOG_FOLDER = "blog";
-const posts = await getSinglePage(BLOG_FOLDER);
-const filterByCategories = taxonomyFilter(posts, "categories", category!);
-const sortedPosts = sortByDate(filterByCategories);
+// 2. Fetch Artikel dan Filter berdasarkan Kategori
+// Directus API filter agak kompleks untuk nested relation,
+// untuk SSG lebih aman fetch semua lalu filter di JS (kecuali datanya ribuan)
+const allArticles = await getArticles();
+
+const filteredArticles = allArticles.filter((article) =>
+  article.categories?.some((cat: any) => cat.categories_id?.slug === category),
+);
+
+// Mapping untuk BlogCard
+const mappedArticles = filteredArticles.map((article) => ({
+  id: article.slug,
+  body: article.excerpt || article.content,
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: typeof article.author === "object" ? article.author?.name : "Admin",
+    categories:
+      article.categories?.map((c: any) => c.categories_id?.name) || [],
+  },
+}));
 ---
 
-<Base title={category}>
-  <PageHeader title={category} />
+<Base title={categoryName}>
+  <PageHeader title={humanize(categoryName)} />
   <div class="section-sm pb-0">
     <div class="container">
-      <div class="row">
+      <div class="row gsap-stagger-container">
         {
-          sortedPosts.map((post) => (
-            <div class="mb-14 md:col-6 lg:col-4">
-              <BlogCard data={post} />
+          mappedArticles.length > 0 ? (
+            mappedArticles.map((post) => (
+              <div class="mb-14 md:col-6 lg:col-4">
+                <BlogCard data={post} />
+              </div>
+            ))
+          ) : (
+            <div class="col-12 text-center py-20">
+              <p class="text-xl text-gray-500">
+                Belum ada artikel di kategori ini.
+              </p>
             </div>
-          ))
+          )
         }
       </div>
     </div>

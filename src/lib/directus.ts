@@ -4,6 +4,9 @@ import {
   rest,
   authentication,
   staticToken,
+  readItems,
+  readItem,
+  readSingleton,
 } from "@directus/sdk";
 
 // ============================================
@@ -472,11 +475,257 @@ const directusUrl =
   import.meta.env.PUBLIC_DIRECTUS_URL || "http://localhost:8055";
 const directusToken = import.meta.env.DIRECTUS_API_TOKEN;
 
+if (!directusToken) {
+  console.warn("⚠️ DIRECTUS_API_TOKEN is not set. Some features may not work.");
+}
+
 // Create Directus client with authentication
 const directus = createDirectus<Schema>(directusUrl)
   .with(rest())
   .with(authentication("json"))
   .with(staticToken(directusToken || ""));
+
+// ============================================
+// API FUNCTIONS
+// ============================================
+
+/**
+ * Get site settings
+ */
+export const getSiteSettings = async (): Promise<SiteSettings | null> => {
+  try {
+    return await directus.request(readSingleton("site_settings"));
+  } catch (error) {
+    console.error("Error fetching site settings:", error);
+    return null;
+  }
+};
+
+/**
+ * Get all articles
+ */
+export const getArticles = async (params?: {
+  limit?: number;
+  filter?: any;
+  sort?: string[];
+}): Promise<Article[]> => {
+  try {
+    return await directus.request(
+      readItems("articles", {
+        filter: { status: { _eq: "published" }, ...params?.filter },
+        limit: params?.limit || -1,
+        sort: params?.sort || ["-publish_date"],
+        fields: [
+          "*",
+          "author.*",
+          "categories.categories_id.*",
+          "tags.tags_id.*",
+        ],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    return [];
+  }
+};
+
+/**
+ * Get single article by slug
+ */
+export const getArticleBySlug = async (
+  slug: string,
+): Promise<Article | null> => {
+  try {
+    const articles = await directus.request(
+      readItems("articles", {
+        filter: { slug: { _eq: slug }, status: { _eq: "published" } },
+        limit: 1,
+        fields: [
+          "*",
+          "author.*",
+          "categories.categories_id.*",
+          "tags.tags_id.*",
+          "gallery.directus_files_id.*",
+        ],
+      }),
+    );
+    return articles[0] || null;
+  } catch (error) {
+    console.error(`Error fetching article with slug ${slug}:`, error);
+    return null;
+  }
+};
+
+/**
+ * Get all categories
+ */
+export const getCategories = async (): Promise<Category[]> => {
+  try {
+    return await directus.request(
+      readItems("categories", {
+        sort: ["sort", "name"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+};
+
+/**
+ * Get all tags
+ */
+export const getTags = async (): Promise<Tag[]> => {
+  try {
+    return await directus.request(
+      readItems("tags", {
+        sort: ["name"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching tags:", error);
+    return [];
+  }
+};
+
+/**
+ * Get all authors
+ */
+export const getAuthors = async (): Promise<Author[]> => {
+  try {
+    return await directus.request(
+      readItems("authors", {
+        filter: { status: { _eq: "active" } },
+        fields: ["*"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching authors:", error);
+    return [];
+  }
+};
+
+/**
+ * Get author by slug
+ */
+export const getAuthorBySlug = async (slug: string): Promise<Author | null> => {
+  try {
+    const authors = await directus.request(
+      readItems("authors", {
+        filter: { slug: { _eq: slug }, status: { _eq: "active" } },
+        limit: 1,
+      }),
+    );
+    return authors[0] || null;
+  } catch (error) {
+    console.error(`Error fetching author with slug ${slug}:`, error);
+    return null;
+  }
+};
+
+/**
+ * Get homepage banner
+ */
+export const getHomepageBanner = async (): Promise<HomepageBanner | null> => {
+  try {
+    return await directus.request(readSingleton("homepage_banner"));
+  } catch (error) {
+    console.error("Error fetching homepage banner:", error);
+    return null;
+  }
+};
+
+/**
+ * Get homepage features
+ */
+export const getHomepageFeatures = async (): Promise<HomepageFeature[]> => {
+  try {
+    return await directus.request(
+      readItems("homepage_features", {
+        filter: { status: { _eq: "published" } },
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching homepage features:", error);
+    return [];
+  }
+};
+
+/**
+ * Get testimonials
+ */
+export const getTestimonials = async (): Promise<Testimonial[]> => {
+  try {
+    return await directus.request(
+      readItems("testimonials", {
+        filter: { status: { _eq: "published" } },
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
+    return [];
+  }
+};
+
+/**
+ * Get pages
+ */
+export const getPages = async (): Promise<Page[]> => {
+  try {
+    return await directus.request(
+      readItems("pages", {
+        filter: { status: { _eq: "published" } },
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching pages:", error);
+    return [];
+  }
+};
+
+/**
+ * Get page by slug
+ */
+export const getPageBySlug = async (slug: string): Promise<Page | null> => {
+  try {
+    const pages = await directus.request(
+      readItems("pages", {
+        filter: { slug: { _eq: slug }, status: { _eq: "published" } },
+        limit: 1,
+      }),
+    );
+    return pages[0] || null;
+  } catch (error) {
+    console.error(`Error fetching page with slug ${slug}:`, error);
+    return null;
+  }
+};
+
+/**
+ * Get navigation menus
+ */
+export const getNavigationMenus = async (
+  position?: "header" | "footer" | "sidebar",
+): Promise<NavigationMenu[]> => {
+  try {
+    const filter = position
+      ? { position: { _eq: position }, status: { _eq: "published" } }
+      : { status: { _eq: "published" } };
+
+    return await directus.request(
+      readItems("navigation_menus", {
+        filter,
+        sort: ["sort"],
+      }),
+    );
+  } catch (error) {
+    console.error("Error fetching navigation menus:", error);
+    return [];
+  }
+};
 
 // ============================================
 // HELPER FUNCTIONS

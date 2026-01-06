@@ -1,25 +1,33 @@
 ---
 import AuthorCard from "@/components/AuthorCard.astro";
 import Base from "@/layouts/Base.astro";
-import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getAuthors, getAssetURL } from "@/lib/directus";
 
-const authorIndex = await getListPage("authors", "-index");
+// Fetch Authors
+const authors = await getAuthors();
 
-if (authorIndex.data.draft) {
-  return Astro.redirect("/404");
-}
+// Mapping agar sesuai dengan props AuthorCard
+const mappedAuthors = authors.map((author) => ({
+  id: author.slug,
+  body: author.bio || "Penulis di MTs Negeri 1 Pandeglang",
+  data: {
+    title: author.name,
+    image: getAssetURL(author.avatar),
+    social: author.social_media, // Pastikan struktur JSON di Directus sesuai (name, icon, link)
+  },
+}));
 
-const authors = await getSinglePage("authors");
+const pageTitle = "Penulis";
 ---
 
-<Base title={authorIndex.data.title}>
-  <PageHeader title={authorIndex.data.title} />
+<Base title={pageTitle}>
+  <PageHeader title={pageTitle} />
   <section class="section-sm pb-0">
     <div class="container">
-      <div class="row justify-center">
+      <div class="row justify-center gsap-stagger-container">
         {
-          authors.map((author) => (
+          mappedAuthors.map((author) => (
             <div class="mb-14 md:col-6 lg:col-4">
               <AuthorCard data={author} />
             </div>

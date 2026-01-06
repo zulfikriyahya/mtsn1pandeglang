@@ -1,31 +1,46 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { humanize } from "@/lib/utils/textConverter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getCategories, getArticles } from "@/lib/directus";
+import { humanize, slugify } from "@/lib/utils/textConverter";
 
-const BLOG_FOLDER = "blog";
+// Ambil Kategori
+const categories = await getCategories();
 
-const categories = await getTaxonomy(BLOG_FOLDER, "categories");
-const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
+// Ambil Artikel untuk menghitung jumlah postingan per kategori
+const articles = await getArticles();
+const allUsedCategories = articles
+  .flatMap(
+    (article) =>
+      article.categories?.map((cat: any) => cat.categories_id?.name || "") ||
+      [],
+  )
+  .filter(Boolean);
 ---
 
-<Base title={"Categories"}>
-  <PageHeader title={"Categories"} />
+<Base title={"Kategori"}>
+  <PageHeader title={"Daftar Kategori"} />
   <section class="section">
     <div class="container text-center">
-      <ul>
+      <ul class="gsap-stagger-container">
         {
-          categories.map((category: string) => {
-            const count = allCategories.filter((c) => c === category).length;
+          categories.map((category) => {
+            // Hitung jumlah artikel di kategori ini
+            const count = allUsedCategories.filter(
+              (c) => c === category.name,
+            ).length;
+
+            // Hanya tampilkan kategori yang memiliki artikel (opsional, hapus if jika ingin tampil semua)
+            // if (count === 0) return null;
+
             return (
               <li class="m-3 inline-block">
                 <a
-                  href={`/categories/${category}`}
-                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark"
+                  href={`/categories/${category.slug}`}
+                  class="block rounded bg-light px-4 py-2 text-xl text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
                 >
-                  {humanize(category)}{" "}
-                  <span class="ml-2 rounded bg-body px-2 dark:bg-darkmode-body">
+                  {humanize(category.name)}{" "}
+                  <span class="ml-2 rounded-full bg-body px-2 text-sm font-bold dark:bg-darkmode-body">
                     {count}
                   </span>
                 </a>

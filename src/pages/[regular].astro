@@ -1,42 +1,62 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import ImageMod from "@/components/ImageMod.astro";
 import PageHeader from "@/partials/PageHeader.astro";
-import { render } from "astro:content";
+import { getPages, getPageBySlug, getAssetURL } from "@/lib/directus";
+import { markdownify } from "@/lib/utils/textConverter";
 
-// get static paths for all pages
+// Generate Static Paths untuk SSG
 export async function getStaticPaths() {
-  const COLLECTION_FOLDER = "pages";
-
-  const pages = await getSinglePage(COLLECTION_FOLDER);
-
-  const paths = pages.map((page) => ({
-    params: {
-      regular: page.id,
-    },
+  const pages = await getPages();
+  return pages.map((page) => ({
+    params: { regular: page.slug },
     props: { page },
   }));
-  return paths;
 }
 
-const { page } = Astro.props;
-const { title, meta_title, description, image } = page.data;
-const { Content } = await render(page);
+const { regular } = Astro.params;
+let { page } = Astro.props;
+
+// Fallback
+if (!page) {
+  page = await getPageBySlug(regular as string);
+}
+
+if (!page) {
+  return Astro.redirect("/404");
+}
+
+const { title, meta_title, meta_description, image, content } = page;
+const imageUrl = getAssetURL(image);
 ---
 
 <Base
   title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
+  meta_title={meta_title || title}
+  description={meta_description}
+  image={imageUrl}
 >
   <PageHeader title={title} />
   <section class="section-sm">
     <div class="container">
       <div class="row justify-center">
         <div class="lg:col-10">
-          <div class="content">
-            <Content />
+          {
+            imageUrl && (
+              <div class="mb-10 text-center gsap-fade-up">
+                <ImageMod
+                  src={imageUrl}
+                  height={500}
+                  width={1000}
+                  alt={title}
+                  class="w-full rounded-xl shadow-md"
+                  format="webp"
+                />
+              </div>
+            )
+          }
+          <div class="content gsap-fade-up">
+            <div set:html={markdownify(content, true)} />
           </div>
         </div>
       </div>

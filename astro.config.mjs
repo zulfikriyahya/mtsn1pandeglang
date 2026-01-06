@@ -10,13 +10,22 @@ import sharp from "sharp";
 import config from "./src/config/config.json";
 import AstroPWA from "@vite-pwa/astro";
 
+// Ambil domain dari env untuk image optimization whitelist
+const directusUrl = process.env.PUBLIC_DIRECTUS_URL || "http://localhost:8055";
+const directusDomain = new URL(directusUrl).hostname;
+
 export default defineConfig({
-  site: config.site.base_url
-    ? config.site.base_url
-    : "https://mtsn1pandeglang.sch.id",
-  base: config.site.base_path ? config.site.base_path : "/",
+  site: config.site.base_url || "https://mtsn1pandeglang.sch.id",
+  base: config.site.base_path || "/",
   trailingSlash: config.site.trailing_slash ? "always" : "never",
-  image: { service: sharp() },
+
+  // Konfigurasi Image Service untuk Remote Images
+  image: {
+    service: sharp(),
+    domains: [directusDomain, "localhost"],
+    remotePatterns: [{ protocol: "https" }, { protocol: "http" }],
+  },
+
   vite: { plugins: [tailwindcss()] },
   integrations: [
     react(),
@@ -34,6 +43,7 @@ export default defineConfig({
     }),
     mdx(),
     AstroPWA({
+      // ... (Konfigurasi PWA tetap sama seperti sebelumnya)
       registerType: "autoUpdate",
       manifest: {
         name: "Madrasah Tsanawiyah Negeri 1 Pandeglang",
@@ -64,53 +74,23 @@ export default defineConfig({
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}",
         ],
-        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
-        globIgnores: ["**/videos/artikel/plp-kkn/**"],
+        maximumFileSizeToCacheInBytes: 50 * 1024 * 1024,
         runtimeCaching: [
+          // Cache images from Directus
           {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
+            urlPattern: new RegExp(`^${directusUrl}/assets/.*`),
+            handler: "StaleWhileRevalidate",
             options: {
-              cacheName: "google-fonts-cache",
+              cacheName: "directus-assets",
               expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "gstatic-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "images-cache",
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30,
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
               },
             },
           },
         ],
       },
-      devOptions: {
-        enabled: true,
-      },
+      devOptions: { enabled: true },
     }),
   ],
   markdown: {

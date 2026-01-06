@@ -1,30 +1,142 @@
 ---
 import Base from "@/layouts/Base.astro";
-import PostSingle from "@/layouts/PostSingle.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import ImageMod from "@/components/ImageMod.astro";
+import { getArticleBySlug, getAssetURL, getArticles } from "@/lib/directus";
+import { markdownify, humanize, slugify } from "@/lib/utils/textConverter";
+import dateFormat from "@/lib/utils/dateFormat";
+import { FaRegClock, FaRegFolder, FaRegUserCircle } from "react-icons/fa";
+import Share from "@/components/Share.astro";
 
+// Generate Static Paths (SSG)
 export async function getStaticPaths() {
-  const BLOG_FOLDER = "blog";
-  const posts = await getSinglePage(BLOG_FOLDER);
-
-  const paths = posts.map((post) => ({
-    params: {
-      single: post.id,
-    },
-    props: { post },
+  const articles = await getArticles();
+  return articles.map((article) => ({
+    params: { single: article.slug },
+    props: { article },
   }));
-  return paths;
 }
 
-const { post } = Astro.props;
-const { title, meta_title, description, image } = post.data;
+// Get Params & Props
+const { single } = Astro.params;
+let { article } = Astro.props;
+
+// Fallback if SSR (though getStaticPaths handles SSG)
+if (!article) {
+  article = await getArticleBySlug(single as string);
+}
+
+if (!article) {
+  return Astro.redirect("/404");
+}
+
+const {
+  title,
+  content,
+  author,
+  publish_date,
+  featured_image,
+  categories,
+  tags,
+  meta_title,
+  meta_description,
+} = article;
+
+// Prepare data
+const authorName = typeof author === "object" ? author?.name : "Admin";
+const categoryList = categories?.map((c: any) => c.categories_id?.name) || [];
+const tagList = tags?.map((t: any) => t.tags_id?.name) || [];
+const imageUrl = getAssetURL(featured_image);
 ---
 
 <Base
   title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
+  meta_title={meta_title || title}
+  description={meta_description || content.slice(0, 150)}
+  image={imageUrl}
 >
-  <PostSingle post={post} />
+  <section class="section pt-7">
+    <div class="container">
+      <div class="row justify-center">
+        <article class="lg:col-10 gsap-fade-up">
+          {
+            imageUrl && (
+              <div class="mb-10">
+                <ImageMod
+                  src={imageUrl}
+                  height={500}
+                  width={1200}
+                  alt={title}
+                  class="w-full rounded-xl shadow-md"
+                  format="webp"
+                />
+              </div>
+            )
+          }
+
+          <h1 set:html={markdownify(title)} class="h2 mb-4" />
+
+          <ul class="mb-4 text-text-light dark:text-darkmode-text-light">
+            <li class="mr-4 inline-block">
+              <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
+              {humanize(authorName)}
+            </li>
+            <li class="mr-4 inline-block">
+              <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
+              {
+                categoryList.map((category: string, index: number) => (
+                  <a
+                    href={`/categories/${slugify(category)}`}
+                    class="hover:text-primary"
+                  >
+                    {humanize(category)}
+                    {index !== categoryList.length - 1 && ","}
+                  </a>
+                ))
+              }
+            </li>
+            <li class="mr-4 inline-block">
+              <FaRegClock className={"mr-2 -mt-1 inline-block"} />
+              {dateFormat(publish_date || new Date())}
+            </li>
+          </ul>
+
+          <div class="content mb-10">
+            <!-- Render HTML content from Directus WYSIWYG/Markdown -->
+            <div set:html={markdownify(content, true)} />
+          </div>
+
+          <div
+            class="row items-start justify-between border-t border-border pt-10 dark:border-darkmode-border"
+          >
+            <div class="mb-10 flex items-center lg:col-5 lg:mb-0">
+              <h5 class="mr-3">Tags :</h5>
+              <ul>
+                {
+                  tagList.map((tag: string) => (
+                    <li class="inline-block">
+                      <a
+                        class="m-1 block rounded bg-light px-3 py-1 hover:bg-primary hover:text-white dark:bg-darkmode-light dark:hover:bg-darkmode-primary dark:hover:text-text-dark transition-colors"
+                        href={`/tags/${slugify(tag)}`}
+                      >
+                        {humanize(tag)}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+            <div class="flex items-center lg:col-4">
+              <h5 class="mr-3">Share :</h5>
+              <Share
+                className="social-icons"
+                title={title}
+                description={meta_description}
+                slug={`blog/${article.slug}`}
+              />
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 </Base>

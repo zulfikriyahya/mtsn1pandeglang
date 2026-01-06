@@ -1,43 +1,61 @@
 ---
 import BlogCard from "@/components/BlogCard.astro";
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
-import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import PageHeader from "@/partials/PageHeader.astro";
+import { getTags, getArticles, getAssetURL } from "@/lib/directus";
+import { humanize } from "@/lib/utils/textConverter";
 
 export async function getStaticPaths() {
-  const BLOG_FOLDER = "blog";
-  const tags = await getTaxonomy(BLOG_FOLDER, "tags");
-
+  const tags = await getTags();
   return tags.map((tag) => {
     return {
-      params: { tag },
+      params: { tag: tag.slug },
+      props: { tagName: tag.name },
     };
   });
 }
 
 const { tag } = Astro.params;
+const { tagName } = Astro.props;
 
-// get posts by tag
-const BLOG_FOLDER = "blog";
-const posts = await getSinglePage(BLOG_FOLDER);
-const filterByTags = taxonomyFilter(posts, "tags", tag!);
-const sortedPosts = sortByDate(filterByTags);
+const allArticles = await getArticles();
+const filteredArticles = allArticles.filter((article) =>
+  article.tags?.some((t: any) => t.tags_id?.slug === tag),
+);
+
+const mappedArticles = filteredArticles.map((article) => ({
+  id: article.slug,
+  body: article.excerpt || article.content,
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: typeof article.author === "object" ? article.author?.name : "Admin",
+    categories:
+      article.categories?.map((c: any) => c.categories_id?.name) || [],
+  },
+}));
 ---
 
-<Base title={tag}>
-  <PageHeader title={tag} />
+<Base title={`Tag: ${tagName}`}>
+  <PageHeader title={`Tag: ${humanize(tagName)}`} />
   <div class="section-sm pb-0">
     <div class="container">
-      <div class="row">
+      <div class="row gsap-stagger-container">
         {
-          sortedPosts.map((post) => (
-            <div class="mb-14 md:col-6 lg:col-4">
-              <BlogCard data={post} />
+          mappedArticles.length > 0 ? (
+            mappedArticles.map((post) => (
+              <div class="mb-14 md:col-6 lg:col-4">
+                <BlogCard data={post} />
+              </div>
+            ))
+          ) : (
+            <div class="col-12 text-center py-20">
+              <p class="text-xl text-gray-500">
+                Belum ada artikel dengan tag ini.
+              </p>
             </div>
-          ))
+          )
         }
       </div>
     </div>

@@ -2,20 +2,18 @@
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
-// Props interface for the component
 interface Props {
   src: string;
   alt: string;
   width: number;
   height: number;
-  loading?: "eager" | "lazy" | null | undefined;
-  decoding?: "async" | "auto" | "sync" | null | undefined;
+  loading?: "eager" | "lazy" | null;
+  decoding?: "async" | "auto" | "sync" | null;
   format?: "auto" | "avif" | "jpeg" | "png" | "svg" | "webp";
   class?: string;
   style?: any;
 }
 
-// Destructuring Astro.props to get the component's props
 let {
   src,
   alt,
@@ -28,25 +26,36 @@ let {
   style,
 } = Astro.props;
 
-src = `/public${src}`;
+// Cek apakah URL Remote
+const isRemote = src.startsWith("http") || src.startsWith("//");
 
-// Glob pattern to load images from the /public/images folder
+// Handle Lokal Path
+let localSrc = src;
+if (!isRemote && !src.startsWith("/images")) {
+  localSrc = `/public${src}`;
+}
+
 const images = import.meta.glob("/public/images/**/*.{jpeg,jpg,png,gif}");
-
-// Check if the source path is valid
-const isValidPath = images[src] ? true : false;
-
-// Log a warning message in red if the image is not found
-!isValidPath &&
-  console.error(
-    `\x1b[31mImage not found - ${src}.\x1b[0m Make sure the image is in the /public/images folder.`,
-  );
+const isValidLocalPath = !isRemote && images[localSrc] ? true : false;
 ---
 
 {
-  isValidPath && (
+  isRemote ? (
     <Image
-      src={images[src]() as Promise<{ default: ImageMetadata }>}
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      class={className}
+      style={style}
+      format={format}
+      inferSize={true}
+    />
+  ) : isValidLocalPath ? (
+    <Image
+      src={images[localSrc]() as Promise<{ default: ImageMetadata }>}
       alt={alt}
       width={width}
       height={height}
@@ -54,6 +63,15 @@ const isValidPath = images[src] ? true : false;
       decoding={decoding}
       class={className}
       format={format}
+      style={style}
+    />
+  ) : (
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      class={className}
       style={style}
     />
   )

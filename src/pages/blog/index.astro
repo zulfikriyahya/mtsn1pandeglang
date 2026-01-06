@@ -3,60 +3,87 @@ import BlogCard from "@/components/BlogCard.astro";
 import Pagination from "@/components/Pagination.astro";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
 import PageHeader from "@/partials/PageHeader.astro";
 import PostSidebar from "@/partials/PostSidebar.astro";
 
-const BLOG_FOLDER = "blog";
+// Import Directus functions
+import {
+  getArticles,
+  getCategories,
+  getTags,
+  getAssetURL,
+} from "@/lib/directus";
 
-const postIndex = await getListPage(BLOG_FOLDER, "-index");
-if (postIndex.data.draft) {
-  return Astro.redirect("/404");
-}
-const posts = await getSinglePage(BLOG_FOLDER);
-const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
-const categories = await getTaxonomy(BLOG_FOLDER, "categories");
-const tags = await getTaxonomy(BLOG_FOLDER, "tags");
-const sortedPosts = sortByDate(posts);
-const totalPages: number = Math.ceil(posts.length / config.settings.pagination);
-const currentPosts = sortedPosts.slice(0, config.settings.pagination);
+// Fetch data
+const articles = await getArticles({
+  sort: ["-publish_date"], // Sort by newest
+  filter: { status: { _eq: "published" } },
+});
+
+const categories = await getCategories();
+const tags = await getTags();
+
+// Mapping categories for sidebar (array of strings)
+const categoryNames = categories.map((c) => c.name);
+const tagNames = tags.map((t) => t.name);
+
+// Get all categories used in articles (for count in sidebar)
+const usedCategories = articles
+  .flatMap(
+    (article) =>
+      article.categories?.map((cat: any) => cat.categories_id?.name || "") ||
+      [],
+  )
+  .filter(Boolean);
+
+// Pagination Logic
+const paginationLength = config.settings.pagination;
+const totalPages = Math.ceil(articles.length / paginationLength);
+const currentArticles = articles.slice(0, paginationLength);
+
+// Map Directus Data to BlogCard props format
+const mappedArticles = currentArticles.map((article) => ({
+  id: article.slug, // BlogCard expects id/slug
+  body: article.excerpt || article.content, // BlogCard uses body for summary
+  data: {
+    title: article.title,
+    image: getAssetURL(article.featured_image),
+    date: article.publish_date,
+    author: typeof article.author === "object" ? article.author?.name : "Admin",
+    categories: article.categories?.map((c: any) => c.categories_id?.name) || [
+      "Uncategorized",
+    ],
+  },
+}));
+
+const pageTitle = "Artikel Terkini";
 ---
 
-<Base
-  title={postIndex.data.title}
-  meta_title={postIndex.data.meta_title}
-  image={postIndex.data.image}
-  description={postIndex.data.description}
->
-  <PageHeader title={postIndex?.data.title} />
+<Base title={pageTitle} meta_title={`Blog - ${config.site.title}`}>
+  <PageHeader title={pageTitle} />
+
   <section class="section">
     <div class="container">
       <div class="row gx-5">
-        <!-- blog posts -->
+        <!-- Blog Posts Grid -->
         <div class="lg:col-8">
-          <div class="row">
+          <div class="row gsap-stagger-container">
             {
-              currentPosts.map((post) => (
+              mappedArticles.map((article) => (
                 <div class="mb-14 md:col-6">
-                  <BlogCard data={post} />
+                  <BlogCard data={article} />
                 </div>
               ))
             }
           </div>
-          <Pagination
-            section={BLOG_FOLDER}
-            currentPage={1}
-            totalPages={totalPages}
-          />
+          <Pagination section="blog" currentPage={1} totalPages={totalPages} />
         </div>
 
-        <!-- sidebar -->
+        <!-- Sidebar -->
         <PostSidebar
-          categories={categories}
-          tags={tags}
-          allCategories={allCategories}
+          categories={categoryNames}
+          tags={tagNames}
+          allCategories={usedCategories}
         />
       </div>
     </div>
