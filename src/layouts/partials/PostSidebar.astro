@@ -9,6 +9,7 @@ const { tags, categories, allCategories } = Astro.props;
   <div class="mb-8">
     <div class="rounded bg-light p-8 dark:bg-darkmode-light">
       <ul class="space-y-4">
+        <h5 class="text-center">Sambutan Kepala MTs Negeri 1 Pandeglang</h5>
         <img
           src="/images/assets/kepala-madrasah.png"
           width="100%"
@@ -31,8 +32,11 @@ const { tags, categories, allCategories } = Astro.props;
           demi kejayaan madrasah kita. Amin.
         </li>
         <li class="text-center">
+          <b>Kepala MTs Negeri 1 Pandeglang</b>
+          <br />
           <b>H. Eman Sulaiman, S.Ag., M.Pd.</b>
-          <br>NIP 197006032000031002
+          <br />
+          NIP 197006032000031002
         </li>
       </ul>
     </div>
@@ -45,7 +49,7 @@ const { tags, categories, allCategories } = Astro.props;
         {
           categories.map((category: any) => {
             const count = allCategories.filter(
-              (c: any) => c === category
+              (c: any) => c === category,
             ).length;
             return (
               <li>
