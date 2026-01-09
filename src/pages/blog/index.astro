@@ -53,13 +53,11 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
         </div>
 
         <!-- sidebar -->
-        <div class="lg:col-4 gsap-fade-up">
-          <PostSidebar
-            categories={categories}
-            tags={tags}
-            allCategories={allCategories}
-          />
-        </div>
+        <PostSidebar
+          categories={categories}
+          tags={tags}
+          allCategories={allCategories}
+        />
       </div>
     </div>
   </section>
