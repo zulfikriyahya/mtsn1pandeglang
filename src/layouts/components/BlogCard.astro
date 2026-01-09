@@ -1,9 +1,9 @@
 ---
 import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
-import readingTime from "@/lib/utils/readingTime"; // <--- 1. Import readingTime
+import readingTime from "@/lib/utils/readingTime"; // Import Reading Time
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
-import { FaRegFolder, FaRegUserCircle, FaRegClock } from "react-icons/fa"; // <--- 2. Tambah FaRegClock
+import { FaRegFolder, FaRegUserCircle, FaRegClock } from "react-icons/fa"; // Tambah FaRegClock
 import ImageMod from "./ImageMod.astro";
 
 const {
@@ -50,12 +50,13 @@ const { title, image, date, author, categories } = data.data;
         ))
       }
     </li>
-    {/* 3. Menambahkan Waktu Baca */}
+
+    {/* Penambahan Waktu Baca */}
     <li class="mr-4 inline-block">
       <FaRegClock className={"mr-2 -mt-1 inline-block"} />
       {readingTime(data.body)}
     </li>
-    {/* Akhir penambahan */}
+
     {date && <li class="inline-block">{dateFormat(date)}</li>}
   </ul>
   <p class="mb-6">{plainify(data.body?.slice(0, Number(summary_length)))}</p>

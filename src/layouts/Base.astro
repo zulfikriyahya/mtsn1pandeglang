@@ -184,7 +184,6 @@ const { title, meta_title, description, image, noindex, canonical } =
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Tawk.to -->
-    <!--Start of Tawk.to Script-->
     <script type="text/javascript">
       var Tawk_API = Tawk_API || {},
         Tawk_LoadStart = new Date();
@@ -198,7 +197,6 @@ const { title, meta_title, description, image, noindex, canonical } =
         s0.parentNode.insertBefore(s1, s0);
       })();
     </script>
-    <!--End of Tawk.to Script-->
   </head>
   <body>
     {/* google tag manager noscript */}
@@ -216,5 +214,25 @@ const { title, meta_title, description, image, noindex, canonical } =
     </main>
     <Footer />
     <InstallPrompt client:load />
+
+    <!-- Busuanzi Visitor Count Script -->
+    <script
+      async
+      src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <!-- Fix untuk Astro View Transitions agar counter update saat ganti halaman -->
+    <script>
+      document.addEventListener("astro:page-load", () => {
+        // @ts-ignore
+        if (window.bszCaller && window.bszTag) {
+          const script = document.createElement("script");
+          script.src =
+            "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js?t=" +
+            new Date().getTime();
+          script.async = true;
+          document.body.appendChild(script);
+        }
+      });
+    </script>
   </body>
 </html>
