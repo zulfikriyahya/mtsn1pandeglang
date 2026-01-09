@@ -52,7 +52,7 @@
   "metadata": {
     "meta_author": "Yahya Zulfikri",
     "meta_image": "/images/authors/yahya-zulfikri.png",
-    "meta_description": "Penulis di MTs Negeri 1 Pandeglang"
+    "meta_description": "Petugas Pengelola Administrasi Belanja Pegawai (PPABP), Customer Service Officer (CSO), Web Developer, System Administrator di MTs Negeri 1 Pandeglang"
   }
 }
 ```
@@ -135,10 +135,6 @@
         {
           "name": "Tagar",
           "url": "/tags"
-        },
-        {
-          "name": "Kontak",
-          "url": "/contact"
         }
       ]
     },
@@ -536,6 +532,123 @@ description: "Penulis Artikel MTs Negeri 1 Pandeglang"
 image: ""
 draft: false
 ---
+```
+
+---
+
+### File: `./src/content/blog/guest-teacher-session-1.mdx`
+
+```markdown
+---
+title: "Perkuat Kolaborasi Rumah dan Madrasah, MTsN 1 Pandeglang Gelar Program Guru Tamu"
+meta_title: "Perkuat Kolaborasi Rumah dan Madrasah, MTsN 1 Pandeglang Gelar Program Guru Tamu Perdana"
+description: "Kolaborasi Rumah – Madrasah untuk Keberhasilan Pendidikan. Program inovatif yang menghadirkan orang tua sebagai guru tamu untuk berbagi pengalaman nyata dunia kerja kepada siswa."
+date: 2026-01-08T09:00:00Z
+image: "/images/artikel/guest-teacher/banner.jpeg"
+categories:
+  ["Artikel", "Berita Utama", "Inovasi Pendidikan", "Kolaborasi Orang Tua"]
+author: "Yahya Zulfikri"
+tags:
+  [
+    "KolaborasiRumahMadrasah",
+    "GuruTamuMTsN1Pandeglang",
+    "PembelajaranKontekstual",
+    "InspirasiPendidikan",
+  ]
+draft: false
+---
+
+**Pandeglang, 08 Januari 2026** – Suasana belajar di MTs Negeri 1 Pandeglang hari ini terasa begitu istimewa dan penuh energi. Memasuki Tahun Pelajaran 2025–2026, madrasah kebanggaan kita secara resmi meluncurkan program inovatif bertajuk **Guest Teacher Session #1: Program Guru Tamu**.
+
+Mengangkat tema besar **"Kolaborasi Rumah – Madrasah untuk Keberhasilan Pendidikan"**, kegiatan ini menjadi bukti nyata bahwa mendidik generasi bangsa bukan hanya tugas guru di madrasah, melainkan sebuah sinergi indah bersama orang tua di rumah.
+
+### Menghadirkan "Dunia Nyata" ke Ruang Kelas
+
+Program inovatif ini melibatkan satu orang perwakilan orang tua atau wali siswa dari setiap kelas untuk berperan sebagai guru tamu (guest teacher) di kelas anak mereka masing-masing. Selama 80 menit (2 jam pelajaran), para orang tua berbagi pengalaman nyata mengenai profesi, tantangan kerja, serta pelajaran hidup yang inspiratif kepada para siswa.
+Materi yang disampaikan dirancang secara khusus agar relevan dengan dunia kerja, sehingga siswa dapat memahami manfaat langsung dari pelajaran yang mereka terima di sekolah dalam kehidupan sehari-hari.
+
+#### Mengapa Program Ini Begitu Berarti?
+
+Kepala MTsN 1 Pandeglang, **H. Eman Sulaiman, S.Ag., M.Pd.**, menekankan bahwa program ini adalah cara terbaik memberikan pengalaman belajar yang **kontekstual dan bermakna**.
+
+> "Kita ingin siswa tidak hanya terpaku pada teori di buku teks. Dengan menghadirkan orang tua sebagai praktisi, siswa bisa melihat langsung bagaimana ilmu yang mereka pelajari di kelas diaplikasikan dalam dunia kerja. Cerita sukses dan tantangan dari para orang tua akan menjadi kompas berharga bagi masa depan mereka."
+>
+> — **H. Eman Sulaiman, S.Ag., M.Pd.** (_Kepala MTsN 1 Pandeglang_)
+
+### Momen Berharga: 80 Menit yang Menggugah Semangat
+
+Kemeriahan dimulai sejak pagi. Sebelum memasuki ruang kelas pada pukul 08.10 WIB, para guru tamu berkumpul hangat di **Ruang PPDB** untuk mengikuti pembukaan singkat bersama Koordinator Bidang Akademik, **Mahbudin, S.Pd.I., M.Pd.**
+
+#### Bukan Sekadar Materi, Tapi Berbagi Hati
+
+<div
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "16px",
+    marginBottom: "24px",
+  }}
+>
+  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+    <Video width="100%" src="artikel/guest-teacher/session-1.mp4" />
+  </div>
+</div>
+
+Materi yang disampaikan sangat kaya karena lahir dari latar belakang profesi yang beragam. Para guru tamu tidak hanya bicara soal tugas pekerjaan, tetapi juga menyentuh aspek emosional dan karakter:
+
+1. **Jejak Langkah** – Perkenalan diri dan latar belakang pendidikan.
+2. **Kisah di Balik Layar** – Cerita masa sekolah/madrasah, kegagalan yang pernah dialami, hingga bagaimana mereka bangkit kembali.
+3. **Wawasan Profesional** – Realita dunia kerja, keterampilan yang dibutuhkan, hingga peluang karier di masa depan.
+4. **Pesan Cinta** – Wejangan tulus untuk memotivasi peserta didik.
+5. **Dialog Interaktif** – Sesi tanya jawab yang seru dan refleksi bersama.
+
+Siswa tampak terpaku menyimak kisah jatuh bangun, nilai kejujuran, serta disiplin yang menjadi kunci sukses para orang tua mereka.
+
+### Dampak Nyata: Lebih dari Sekadar Belajar
+
+Program ini meninggalkan jejak positif bagi perkembangan mental dan akademik siswa:
+
+- **Belajar dari Sang Praktisi:** Siswa mendapatkan wawasan autentik yang tidak ditemukan di lembar modul manapun.
+- **Menemukan "Why" dalam Belajar:** Mereka mulai paham mengapa harus belajar matematika, bahasa, atau agama, karena melihat langsung manfaatnya di masa depan.
+- **Bangga dan Termotivasi:** Ada binar bangga di mata siswa saat melihat orang tua mereka (atau orang tua temannya) berbagi ilmu. Ini adalah _booster_ kepercayaan diri yang luar biasa.
+- **Cakrawala Baru:** Membuka mata siswa bahwa pilihan masa depan itu luas dan menantang untuk diraih.
+
+### Mempererat Ikatan: Madrasah, Rumah, dan Masyarakat
+
+Keberhasilan acara perdana ini adalah buah manis dari kerja keras para **Wali Kelas** yang telah mengkurasi orang tua hebat sebagai narasumber. Kepala TU MTsN 1 Pandeglang, **Umar Mu'tamar, S.Ag.**, menyambut hangat kolaborasi ini sebagai energi baru bagi madrasah.
+
+> "Ini adalah langkah awal dari penguatan kolaborasi segitiga emas: Rumah, Madrasah, dan Masyarakat. Dukungan orang tua adalah ruh bagi keberhasilan pendidikan siswa, baik dalam aspek kognitif maupun pembentukan karakter."
+>
+> — **Umar Mu'tamar, S.Ag.** (_Kepala TU MTsN 1 Pandeglang_)
+
+### Wujud Sinergi Madrasah dan Orang Tua
+
+Pihak madrasah menekankan bahwa keberhasilan pendidikan siswa sangat bergantung pada dukungan dan keterlibatan aktif orang tua. Program ini merupakan langkah awal yang strategis dalam memperkuat kolaborasi antara Madrasah, Rumah, dan Masyarakat.
+"Madrasah berharap program ini dapat meningkatkan kualitas pembelajaran melalui kolaborasi yang nyata antara pihak madrasah dan orang tua siswa," tutup Mahbudin.
+
+### Menatap Masa Depan yang Lebih Cerah
+
+Dengan berakhirnya **Guest Teacher Session #1**, MTsN 1 Pandeglang menegaskan komitmennya untuk menjadi madrasah yang **adaptif dan inklusif**. Ke depan, sesi-sesi lanjutan dengan tema yang lebih beragam sudah menanti untuk dieksplorasi.
+
+#### Apresiasi Setinggi-tingginya
+
+Terima kasih kami haturkan kepada:
+
+- **Seluruh Orang Tua** yang telah meluangkan waktu berharga untuk berbagi inspirasi.
+- **Bapak/Ibu Wali Kelas** atas koordinasi yang luar biasa.
+- **Tim Akademik** sebagai dirigen utama program ini.
+- **Seluruh Siswa** yang telah menyambut guru tamu mereka dengan penuh antusias.
+
+**Mari Bersinergi untuk Pendidikan Terbaik**
+
+_Bagaimana kesan Bapak/Ibu mengenai program ini? Apakah ada profesi tertentu yang ingin Bapak/Ibu lihat di sesi berikutnya? Tuliskan aspirasi Anda di kolom komentar di bawah ini! Mari terus bergandengan tangan demi masa depan putra-putri kita._
+
+**Tim Redaksi:**
+
+- **Penulis:** Yahya Zulfikri
+- **Editor:** Tim Humas MTsN 1 Pandeglang
+- **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
+- **Instagram** [@mtsn1_pandeglang](https://www.instagram.com/reel/DTRj60-kZvW/?igsh=MWkxZzFrejYzOXJzbA==)
 ```
 
 ---
@@ -1145,53 +1258,53 @@ Dukungan dari pihak madrasah dan universitas juga sangat membantu dalam mengatas
 
 <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
 
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <img
-      src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-1.png"
-      alt="Praktik pembelajaran di kelas dengan metode interaktif"
-      style={{ width: "100%", borderRadius: "8px" }}
-    />
-  </div>
+<div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+  <img
+    src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-1.png"
+    alt="Praktik pembelajaran di kelas dengan metode interaktif"
+    style={{ width: "100%", borderRadius: "8px" }}
+  />
+</div>
 
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <img
-      src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-3.png"
-      alt="Pembinaan kegiatan ekstrakurikuler siswa"
-      style={{ width: "100%", borderRadius: "8px" }}
-    />
-  </div>
+<div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+  <img
+    src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-3.png"
+    alt="Pembinaan kegiatan ekstrakurikuler siswa"
+    style={{ width: "100%", borderRadius: "8px" }}
+  />
+</div>
 
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <img
-      src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-4.png"
-      alt="Diskusi kelompok mahasiswa dalam evaluasi pembelajaran"
-      style={{ width: "100%", borderRadius: "8px" }}
-    />
-  </div>
+<div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+  <img
+    src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-4.png"
+    alt="Diskusi kelompok mahasiswa dalam evaluasi pembelajaran"
+    style={{ width: "100%", borderRadius: "8px" }}
+  />
+</div>
 
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <img
-      src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-6.png"
-      alt="Kegiatan bimbingan belajar dengan siswa"
-      style={{ width: "100%", borderRadius: "8px" }}
-    />
-  </div>
+<div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+  <img
+    src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-6.png"
+    alt="Kegiatan bimbingan belajar dengan siswa"
+    style={{ width: "100%", borderRadius: "8px" }}
+  />
+</div>
 
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <img
-      src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-5.png"
-      alt="Program bakti sosial dan pengabdian masyarakat"
-      style={{ width: "100%", borderRadius: "8px" }}
-    />
-  </div>
+<div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+  <img
+    src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-5.png"
+    alt="Program bakti sosial dan pengabdian masyarakat"
+    style={{ width: "100%", borderRadius: "8px" }}
+  />
+</div>
 
-  <div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
-    <img
-      src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-7.png"
-      alt="Kegiatan bimbingan belajar dengan siswa"
-      style={{ width: "100%", borderRadius: "8px" }}
-    />
-  </div>
+<div style={{ flex: "1 1 320px", aspectRatio: "16/9" }}>
+  <img
+    src="/images/artikel/plp-kkn/2025/uin-banten/kegiatan-7.png"
+    alt="Kegiatan bimbingan belajar dengan siswa"
+    style={{ width: "100%", borderRadius: "8px" }}
+  />
+</div>
 
 </div>
 
@@ -1686,7 +1799,11 @@ Akreditasi memberikan berbagai manfaat bagi MTs Negeri 1 Pandeglang, antara lain
 
 MTs Negeri 1 Pandeglang telah menerima sertifikat akreditasi dari Badan Akreditasi Nasional Sekolah/Madrasah (BAN-S/M) sebagai bukti pengakuan resmi atas kualitas pendidikan yang diberikan.
 
-<Button label="Lihat Data" link="https://ban-pdm.id//satuanpendidikan/69788409" style="solid" />
+<Button
+  label="Lihat Data"
+  link="https://ban-pdm.id//satuanpendidikan/69788409"
+  style="solid"
+/>
 
 > "Akreditasi MTs Negeri 1 Pandeglang adalah bukti nyata komitmen kami untuk memberikan pendidikan berkualitas kepada siswa-siswi. Kami akan terus berusaha untuk meningkatkan mutu pendidikan dan mencapai prestasi yang lebih tinggi." - Kepala MTs Negeri 1 Pandeglang
 ```
@@ -5795,6 +5912,7 @@ const { tags, categories, allCategories } = Astro.props;
   <div class="mb-8">
     <div class="rounded bg-light p-8 dark:bg-darkmode-light">
       <ul class="space-y-4">
+        <h5 class="text-center">Sambutan Kepala MTs Negeri 1 Pandeglang</h5>
         <img
           src="/images/assets/kepala-madrasah.png"
           width="100%"
@@ -5817,8 +5935,11 @@ const { tags, categories, allCategories } = Astro.props;
           demi kejayaan madrasah kita. Amin.
         </li>
         <li class="text-center">
+          <b>Kepala MTs Negeri 1 Pandeglang</b>
+          <br />
           <b>H. Eman Sulaiman, S.Ag., M.Pd.</b>
-          <br />NIP 197006032000031002
+          <br />
+          NIP 197006032000031002
         </li>
       </ul>
     </div>
@@ -6703,7 +6824,7 @@ import Base from "@/layouts/Base.astro";
 ---
 
 <Base title="Halaman Tidak Ditemukan">
-  <section class="section-sm text-center">
+  <section class="section-sm text-center width:100">
     <div class="container">
       <div class="row justify-center">
         <div class="sm:col-10 md:col-8 lg:col-6">
@@ -7180,7 +7301,6 @@ export async function getStaticPaths() {
 
 const { category } = Astro.params;
 
-// get posts by category
 const BLOG_FOLDER = "blog";
 const posts = await getSinglePage(BLOG_FOLDER);
 const filterByCategories = taxonomyFilter(posts, "categories", category!);
@@ -8462,6 +8582,11 @@ export type Button = {
 {
   "name": "Madrasah Tsanawiyah Negeri 1 Pandeglang",
   "short_name": "MTs Negeri 1 Pandeglang",
+  "author": {
+    "name": "Yahya Zulfikri",
+    "role": "Head of IT",
+    "phone": "62895351856267"
+  },
   "description": "Mandiri, Takwa, Peduli Lingkungan, Prestasi.",
   "start_url": "/",
   "scope": "/",
@@ -8499,18 +8624,11 @@ export type Button = {
     {
       "src": "/images/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "categories": ["education"],
-  "screenshots": [
-    {
-      "src": "/images/icons/screenshot-1.png",
-      "sizes": "540x720",
       "type": "image/png",
       "form_factor": "narrow"
     }
-  ]
+  ],
+  "categories": ["education"]
 }
 ```
 
@@ -8768,7 +8886,7 @@ export default defineConfig({
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}",
         ],
-        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
+        maximumFileSizeToCacheInBytes: 60 * 1024 * 1024,
         globIgnores: ["**/videos/artikel/plp-kkn/**"],
         runtimeCaching: [
           {
@@ -8834,7 +8952,7 @@ export default defineConfig({
   "name": "mtsn1pandeglang",
   "version": "0.0.1",
   "description": "Mandiri, Takwa, Peduli Lingkungan, Prestasi",
-  "author": "Yahya ZUlfikri",
+  "author": "Yahya Zulfikri",
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@1.22.22",
@@ -8849,13 +8967,13 @@ export default defineConfig({
     "remove-darkmode": "node scripts/removeDarkmode.js && yarn format"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.5",
-    "@astrojs/mdx": "4.3.10",
+    "@astrojs/check": "0.9.6",
+    "@astrojs/mdx": "4.3.13",
     "@astrojs/react": "4.4.2",
     "@astrojs/sitemap": "3.6.0",
     "@digi4care/astro-google-tagmanager": "^1.6.0",
     "@justinribeiro/lite-youtube": "^1.8.2",
-    "astro": "5.15.4",
+    "astro": "5.16.6",
     "astro-auto-import": "^0.4.5",
     "astro-font": "^1.1.0",
     "date-fns": "^4.1.0",
@@ -8892,6 +9010,19 @@ export default defineConfig({
     "workbox-window": "^7.3.0"
   }
 }
+```
+
+---
+
+### File: `./todo.md`
+
+```markdown
+# Content
+
+1. Kurikulum Berbasis Cinta
+2. Program Guru Tamu
+3. Prestasi Madrasah
+4. Publish kegiatan yang telah lalu.
 ```
 
 ---

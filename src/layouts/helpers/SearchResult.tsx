@@ -245,7 +245,8 @@ const SearchResult = ({
                 ></path>
               </svg>
               <p className="mt-4">
-                Tidak ada hasil untuk &quot;<strong>{searchString}</strong>&quot;
+                Tidak ada hasil untuk &quot;<strong>{searchString}</strong>
+                &quot;
               </p>
             </div>
           )}
