@@ -36,7 +36,7 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
       <div class="row gx-5">
         <!-- blog posts -->
         <div class="lg:col-8">
-          <div class="row">
+          <div class="row gsap-stagger-parent">
             {
               currentPosts.map((post) => (
                 <div class="mb-14 md:col-6">
@@ -53,11 +53,13 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
         </div>
 
         <!-- sidebar -->
-        <PostSidebar
-          categories={categories}
-          tags={tags}
-          allCategories={allCategories}
-        />
+        <div class="lg:col-4 gsap-fade-up">
+          <PostSidebar
+            categories={categories}
+            tags={tags}
+            allCategories={allCategories}
+          />
+        </div>
       </div>
     </div>
   </section>

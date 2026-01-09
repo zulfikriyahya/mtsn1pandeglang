@@ -234,5 +234,14 @@ const { title, meta_title, description, image, noindex, canonical } =
         }
       });
     </script>
+
+    <script>
+      import { initAnimations } from "@/scripts/gsap-animations";
+
+      // Jalankan saat halaman pertama kali load dan setiap kali navigasi berpindah
+      document.addEventListener("astro:page-load", () => {
+        initAnimations();
+      });
+    </script>
   </body>
 </html>
