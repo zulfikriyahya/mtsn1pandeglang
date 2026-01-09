@@ -4,10 +4,17 @@ import Share from "@/components/Share.astro";
 import Disqus from "@/helpers/Disqus";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
+import readingTime from "@/lib/utils/readingTime"; // <--- 1. Import readingTime
 import similarItems from "@/lib/utils/similarItems";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import { render } from "astro:content";
-import { FaRegClock, FaRegFolder, FaRegUserCircle } from "react-icons/fa";
+// 2. Tambah FaRegCalendarAlt di import icons
+import {
+  FaRegClock,
+  FaRegFolder,
+  FaRegUserCircle,
+  FaRegCalendarAlt,
+} from "react-icons/fa";
 import ImageMod from "./components/ImageMod.astro";
 
 const COLLECTION_FOLDER = "blog";
@@ -56,14 +63,21 @@ const { title, description, author, categories, image, date, tags } = post.data;
               ))
             }
           </li>
+          {/* 3. Update bagian Tanggal (Ganti ikon jadi Calendar) */}
+          <li class="mr-4 inline-block">
+            <FaRegCalendarAlt className={"mr-2 -mt-1 inline-block"} />
+            {dateFormat(date)}
+          </li>
+          {/* 4. Tambahkan bagian Reading Time (Pakai ikon Clock) */}
           <li class="mr-4 inline-block">
             <FaRegClock className={"mr-2 -mt-1 inline-block"} />
-            {dateFormat(date)}
+            {readingTime(post.body)}
           </li>
         </ul>
         <div class="content mb-10">
           <Content />
         </div>
+        {/* ... sisa kode tidak berubah ... */}
         <div class="row items-start justify-between">
           <div class="mb-10 flex items-center lg:col-5 lg:mb-0">
             <h5 class="mr-3">Tags :</h5>
