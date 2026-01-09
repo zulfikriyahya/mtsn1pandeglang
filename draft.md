@@ -29,7 +29,7 @@
 
   "params": {
     "contact_form_action": "#",
-    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br>Dibuat dan dikembangkan dengan ❤ oleh [**Yahya Zulfikri**](https://github.com/zulfikriyahya)"
+    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)"
   },
 
   "navigation_button": {
@@ -65,84 +65,68 @@
 {
   "main": [
     {
-      "name": "Profil",
+      "name": "Profil Madrasah",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Akreditasi",
+          "name": "Tentang Kami",
+          "url": "/about"
+        },
+        {
+          "name": "Sejarah & Visi Misi",
+          "url": "/visi-misi-tujuan"
+        },
+        {
+          "name": "Akreditasi & Prestasi",
           "url": "/akreditasi"
         },
+        {
+          "name": "Zona Integritas (WBK)",
+          "url": "/zona-integritas"
+        },
+        {
+          "name": "Tenaga Pendidik",
+          "url": "/guru"
+        },
+        {
+          "name": "Tenaga Kependidikan",
+          "url": "/staf"
+        }
+      ]
+    },
+    {
+      "name": "Akademik",
+      "url": "",
+      "hasChildren": true,
+      "children": [
         {
           "name": "Kurikulum",
           "url": "/kurikulum"
         },
         {
-          "name": "Program",
+          "name": "Program Unggulan",
           "url": "/program"
         },
         {
-          "name": "Zona Integritas",
-          "url": "/zona-integritas"
-        },
-        {
-          "name": "Pelayanan Terpadu Satu Pintu",
+          "name": "Layanan PTSP",
           "url": "/pelayanan"
         },
         {
-          "name": "Sejarah",
-          "url": "/sejarah"
-        },
-        {
-          "name": "Visi, Misi dan Tujuan",
-          "url": "/visi-misi-tujuan"
-        },
-        {
-          "name": "Guru",
-          "url": "/guru"
-        },
-        {
-          "name": "Staf",
-          "url": "/staf"
-        },
-        {
-          "name": "Siswa",
-          "url": "/siswa"
-        },
-        {
-          "name": "Alumni",
-          "url": "/alumni"
+          "name": "Kalender Pendidikan",
+          "url": "/kalender-pendidikan"
         }
       ]
     },
     {
-      "name": "Postingan",
+      "name": "Kesiswaan",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Artikel",
-          "url": "/blog"
+          "name": "Semua Ekstrakurikuler",
+          "url": "/ekstrakurikuler"
         },
-        {
-          "name": "Penulis",
-          "url": "/authors"
-        },
-        {
-          "name": "Kategori",
-          "url": "/categories"
-        },
-        {
-          "name": "Tagar",
-          "url": "/tags"
-        }
-      ]
-    },
-    {
-      "name": "Kegiatan Siswa",
-      "url": "",
-      "hasChildren": true,
-      "children": [
         {
           "name": "OSIM",
           "url": "/osim"
@@ -160,59 +144,70 @@
           "url": "/pmr"
         },
         {
-          "name": "Adiwiyata",
-          "url": "/adiwiyata"
-        },
-        {
-          "name": "Pecinta Alam",
+          "name": "Adiwiyata & SISPALA",
           "url": "/pecinta-alam"
         },
         {
-          "name": "Volleyball Club",
+          "name": "Olahraga Prestasi",
           "url": "/volleyball-club"
+        },
+        {
+          "name": "Jurnalistik",
+          "url": "/jurnalistik"
+        },
+        {
+          "name": "Data Alumni",
+          "url": "/alumni"
         }
       ]
     },
     {
-      "name": "Web Apps",
+      "name": "Informasi",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Pelayanan Terpadu Satu Pintu",
-          "url": "https://mtsn1pandeglang.sch.id/pelayanan"
+          "name": "Berita & Artikel",
+          "url": "/blog"
         },
         {
-          "name": "Pendaftaran",
+          "name": "Pengumuman",
+          "url": "/categories/pengumuman"
+        },
+        {
+          "name": "Galeri Foto",
+          "url": "/galeri"
+        },
+        {
+          "name": "Kontak Kami",
+          "url": "/contact"
+        }
+      ]
+    },
+    {
+      "name": "Aplikasi Digital",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "PPDB Online",
           "url": "https://daftar.mtsn1pandeglang.sch.id"
         },
         {
-          "name": "Bank Data",
-          "url": "https://drive.mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Rapor Digital Madrasah",
+          "name": "Rapor Digital (RDM)",
           "url": "https://rdm.mtsn1pandeglang.sch.id"
         },
         {
-          "name": "Presensi",
-          "url": "https://presensi.mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Pemutakhiran Data Mandiri",
-          "url": "https://mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Assesmen",
+          "name": "E-Learning / CBT",
           "url": "https://cbt.mtsn1pandeglang.sch.id"
         },
         {
-          "name": "Jurnal Kelas",
-          "url": "https://mtsn1pandeglang.sch.id"
+          "name": "Presensi Online",
+          "url": "https://presensi.mtsn1pandeglang.sch.id"
         },
         {
-          "name": "Perpustakaan",
-          "url": "https://mtsn1pandeglang.sch.id"
+          "name": "Perpustakaan Digital",
+          "url": "https://perpustakaan.mtsn1pandeglang.sch.id"
         }
       ]
     }
@@ -225,6 +220,10 @@
     {
       "name": "Tentang Kami",
       "url": "/about"
+    },
+    {
+      "name": "Hubungi Kami",
+      "url": "/contact"
     },
     {
       "name": "Kebijakan Privasi",
@@ -303,9 +302,9 @@
   },
   "fonts": {
     "font_family": {
-      "primary": "Lexend:wght@400;600",
+      "primary": "Lexend:wght@400;600;700",
       "primary_type": "sans-serif",
-      "secondary": "Lexend:wght@500;700",
+      "secondary": "Lexend:wght@400;500;700",
       "secondary_type": "sans-serif"
     },
     "font_size": {
@@ -485,14 +484,40 @@ export const collections = {
 
 ```markdown
 ---
-title: "MTs Negeri 1 Pandeglang"
-meta_title: "Tentang MTs Negeri 1 Pandeglang"
-description: "Tentang MTs Negeri 1 Pandeglang"
+title: "Tentang Kami"
+meta_title: "Profil MTs Negeri 1 Pandeglang"
+description: "MTs Negeri 1 Pandeglang: Inkubator generasi unggul dengan semangat Mandiri, Takwa, Peduli Lingkungan, dan Prestasi."
 image: "/images/logo.png"
 draft: false
 ---
 
-MTs Negeri 1 Pandeglang adalah Madrasah Tsanawiyah terkemuka di Kabupaten Pandeglang, Banten - Indonesia. Madrasah ini terkenal karena prestasi gemilang yang diraihnya dalam berbagai bidang, baik akademik maupun non-akademik. Para siswa di MTs Negeri 1 Pandeglang tidak hanya dibimbing untuk meraih kesuksesan akademik, tetapi juga diperkaya dengan nilai-nilai keagamaan yang mendalam, keterampilan sosial, dan berbagai kemampuan hidup lainnya. Dengan fasilitas yang lengkap dan tenaga pengajar yang berdedikasi tinggi, MTs Negeri 1 Pandeglang terus berkomitmen untuk mencetak generasi muda yang cerdas, beriman, dan berakhlak mulia. Semua ini menjadikannya sebagai Madrasah Tsanawiyah terbaik di Kabupaten Pandeglang.
+### MTs Negeri 1 Pandeglang
+
+**Inkubator Generasi Cendekia & Berkarakter**
+
+---
+
+Kami hadir bukan sekadar sebagai ruang kelas, melainkan sebagai ekosistem pendidikan holistik yang menyatukan tradisi keilmuan dengan kemuliaan adab. Di MTs Negeri 1 Pandeglang, kami merajut kecerdasan intelektual, kematangan spiritual, dan kepekaan sosial dalam satu sinergi yang harmonis.
+
+Identitas kami terukir kokoh dalam empat pilar nilai yang menjadi denyut nadi kehidupan madrasah:
+
+**MANDIRI**
+Membangun mentalitas tangguh dan karakter adaptif. Kami menempa siswa untuk memiliki agilitas dalam berpikir dan bertindak, siap menghadapi dinamika zaman dengan kepercayaan diri yang utuh.
+
+**TAKWA**
+Menjadikan integritas spiritual sebagai kompas kehidupan. Kami memastikan setiap langkah kemajuan akademik selalu selaras dengan nilai-nilai Ilahiah, mencetak intelektual yang tunduk dan patuh pada Rabb-nya.
+
+**PEDULI LINGKUNGAN**
+Sebagai garda terdepan Madrasah Adiwiyata, kami menanamkan kesadaran ekologis yang mendalam. Kami mendidik siswa untuk menjadi khalifah yang amanah, merawat harmoni alam demi keberlanjutan masa depan.
+
+**PRESTASI**
+Menciptakan budaya keunggulan tanpa henti. Kami memfasilitasi setiap potensi unik siswa untuk mekar sempurna, mengukir jejak sejarah melalui pencapaian gemilang di kancah nasional maupun global.
+
+---
+
+Melalui dedikasi tenaga pendidik profesional dan transformasi digital yang berkelanjutan, kami berkomitmen mencetak pemimpin masa depan yang paripurna.
+
+> _Mandiri, Takwa, Peduli Lingkungan, Prestasi_
 ```
 
 ---
@@ -502,9 +527,9 @@ MTs Negeri 1 Pandeglang adalah Madrasah Tsanawiyah terkemuka di Kabupaten Pandeg
 ```markdown
 ---
 title: Yahya Zulfikri
-email: zulfikriyahya@mtsn1pandeglang.sch.id
+email: dev@mtsn1pandeglang.sch.id
 image: "/images/authors/yahya-zulfikri.png"
-description: Penulis di MTs Negeri 1 Pandeglang
+description: Lead Developer & System Administrator
 social:
   - name: github
     icon: FaGithub
@@ -515,9 +540,13 @@ social:
     link: https://www.linkedin.com/in/zulfikriyahya?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app
 ---
 
-**_Full Stack Developer in Pandeglang, Banten - Indonesia! 😎_**
+**_Lead Developer & Digital System Architect based in Pandeglang._**
 
-With a passion for coding and a love for creating user-friendly applications, I strive to bridge the gap between front-end and back-end development. When I'm not buried in code, you'll find me exploring new technologies, sipping on my favorite coffee, or enjoying the vibrant culture of Pandeglang. Let's connect and build something amazing together!
+Dedicated to orchestrating digital transformation within the educational sector. With a robust command of modern web technologies, I strive to bridge the gap between complex back-end logic and elegant front-end experiences.
+
+Beyond the code, I am a problem solver committed to building efficient, scalable, and user-centric applications. When not architecting the next system update, you can find me exploring emerging tech trends or enjoying the serene atmosphere of Pandeglang.
+
+_Let's innovate and build the future of education together._
 ```
 
 ---
@@ -1050,8 +1079,14 @@ Website ini sudah sangat baik dan tidak perlu perubahan besar. Focus pada konten
 
 - **Laporan dibuat:** 10 Januari 2025
 - **Website:** mtsn1pandeglang.sch.id
-- **Teknologi:** Astro 5.14.4 + React 19.2.0 + TailwindCSS 4.1.14
+- **Teknologi:** Astro 5.16.6 + React 19.2.0 + TailwindCSS 4.1.14
 - **Status:** Optimal - No Action Required
+
+**Tim Redaksi:**
+
+- **Penulis:** Yahya Zulfikri
+- **Editor:** Tim Humas MTsN 1 Pandeglang
+- **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
 ````
 
 ---
@@ -1065,13 +1100,11 @@ meta_title: "Implementasi Program PLP Integratif Mahasiswa UIN Sultan Maulana Ha
 description: "Laporan komprehensif pelaksanaan Pengenalan Lapangan Persekolahan (PLP) - Kuliah Kerja Nyata (KKN) Integratif mahasiswa UIN Banten di MTs Negeri 1 Pandeglang periode Agustus - Oktober 2025"
 date: 2025-10-17T08:00:00Z
 image: "/images/artikel/plp-kkn/2025/uin-banten/kegiatan-2.png"
-categories: ["Kegiatan Mahasiswa"]
+categories: ["UIN Banten", "PLP", "KKN", "Kegiatan Mahasiswa"]
 author: "Yahya Zulfikri"
-tags: ["UIN Banten", "Kegiatan Mahasiswa", "PLP", "KKN"]
+tags: ["UINBanten", "KegiatanMahasiswa", "PLP", "KKN"]
 draft: false
 ---
-
-## Abstrak
 
 Pengenalan Lapangan Persekolahan (PLP) - Kuliah Kerja Nyata (KKN) Integratif merupakan komponen esensial dalam sistem pendidikan tinggi yang bertujuan mengintegrasikan teori dengan praktik lapangan. Artikel ini menguraikan implementasi program PLP Integratif mahasiswa Universitas Islam Negeri (UIN) Sultan Maulana Hasanuddin Banten di Madrasah Tsanawiyah Negeri (MTs N) 1 Pandeglang selama periode Agustus hingga Oktober 2025. Program ini melibatkan mahasiswa dari berbagai program studi yang melaksanakan kegiatan pembelajaran, pembinaan ekstrakurikuler, serta pengabdian kepada masyarakat madrasah. Hasil evaluasi menunjukkan bahwa kegiatan ini memberikan kontribusi signifikan terhadap pengembangan kompetensi mahasiswa sebagai calon pendidik profesional, sekaligus meningkatkan kualitas pembelajaran di lembaga mitra.
 
@@ -1439,6 +1472,12 @@ Semoga Allah SWT membalas semua kebaikan yang telah diberikan dengan pahala yang
   - **Website:** www.uinbanten.ac.id
 </Tab>
 </Tabs>
+
+**Tim Redaksi:**
+
+- **Penulis:** Yahya Zulfikri
+- **Editor:** Tim Humas MTsN 1 Pandeglang
+- **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
 ```
 
 ---
@@ -1507,6 +1546,12 @@ H. Amin Hidayat mengakui bahwa menyiapkan konsep zona integritas bukanlah hal ya
 H. Amin Hidayat menegaskan bahwa pencapaian zona integritas memerlukan konsistensi dan disiplin dari seluruh elemen. "Kalau sudah zona integritas maka jangan juga ada yang kesiangan. Ngajar jangan telat, semuanya harus benar-benar mengikuti komitmen bersama mewujudkan madrasah menuju Wilayah Bebas Korupsi (WBK) dan Wilayah Birokrasi Bersih Melayani (WBBM)," tandasnya.
 
 Peresmian gedung PTSP MTsN 1 Pandeglang ini diharapkan menjadi inspirasi dan contoh bagi madrasah serta sekolah lainnya di Kabupaten Pandeglang untuk terus meningkatkan kualitas pelayanan publik yang transparan, akuntabel, dan bebas dari praktik korupsi.
+
+**Tim Redaksi:**
+
+- **Penulis:** Yahya Zulfikri
+- **Editor:** Tim Humas MTsN 1 Pandeglang
+- **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
 ```
 
 ---
@@ -1545,116 +1590,102 @@ image: ""
 ---
 # Banner
 banner:
-  title: "Selamat Datang di MTs Negeri 1 Pandeglang"
-  content: "Temukan pengalaman belajar terbaik di MTs Negeri 1 Pandeglang. Bersama kami, raih prestasi gemilang dalam lingkungan yang inspiratif, suportif, dan penuh semangat untuk masa depan Anda."
+  title: "Mewujudkan Generasi Cendekia & Berkarakter Mulia"
+  content: "Selamat datang di MTs Negeri 1 Pandeglang. Kami memadukan keunggulan akademik, kematangan spiritual, dan teknologi modern untuk mempersiapkan putra-putri Anda menjadi pemimpin masa depan yang kompeten dan berakhlak."
   image: "/images/assets/banner.png"
   button:
     enable: true
-    label: "Daftar Sekarang!"
+    label: "Bergabung Bersama Kami"
     link: "https://daftar.mtsn1pandeglang.sch.id"
 
-# Fitur
+# Fitur (Optimized for Bento Grid Layout)
 features:
-  - title: "Akreditasi"
+  - title: "Akreditasi Unggul (A)"
     image: "/images/assets/akreditasi.png"
-    content: "MTs Negeri 1 Pandeglang telah diakui secara resmi oleh pemerintah dan berbagai lembaga akreditasi pendidikan. Akreditasi ini menunjukkan bahwa madrasah kami telah memenuhi standar kualitas pendidikan yang tinggi dan berkomitmen untuk terus meningkatkan mutu pendidikan yang diberikan kepada siswa-siswi."
+    content: "Bukti nyata komitmen kami terhadap mutu pendidikan. MTs Negeri 1 Pandeglang telah memenuhi standar nasional pendidikan tertinggi dengan predikat A (Unggul), menjamin kualitas pengajaran, manajemen, dan kelulusan yang kredibel."
     bulletpoints:
-      - "Kualitas Pendidikan"
-      - "Peringkat Akreditasi A"
-      - "Standar Nasional Pendidikan"
-      - "Peningkatan Mutu Berkelanjutan"
-      - "Evaluasi dan Penilaian Berkala"
-      - "Pengakuan Resmi"
+      - "Terakreditasi A (Unggul) oleh BAN-S/M"
+      - "Standar Manajemen ISO Pendidikan"
+      - "Tenaga Pendidik Tersertifikasi Profesional"
+      - "Jaminan Mutu Berkelanjutan"
     button:
       enable: true
-      label: "Akreditasi"
+      label: "Lihat Sertifikat"
       link: "/akreditasi"
 
-  - title: "Fasilitas Unggulan di MTs Negeri 1 Pandeglang"
+  - title: "Ekosistem Belajar Modern"
     image: "/images/assets/fasilitas.png"
-    content: "MTs Negeri 1 Pandeglang menawarkan berbagai fasilitas unggulan untuk mendukung kegiatan belajar mengajar."
+    content: "Kami menghadirkan lingkungan belajar yang menunjang eksplorasi dan inovasi siswa dengan infrastruktur terlengkap."
     bulletpoints:
-      - "Ruang Kelas Nyaman dengan Fasilitas Lengkap"
-      - "Laboratorium Sains dan Komputer"
-      - "Perpustakaan dengan Koleksi Buku Lengkap"
-      - "Lapangan Olahraga"
-      - "Program Ekstrakurikuler yang Beragam"
-      - "Lingkungan Sekolah yang Ramah Anak dan Aman"
+      - "Perpustakaan Digital (E-Library)"
+      - "Laboratorium Sains & Komputer"
+      - "Sarana Olahraga & Ibadah Representatif"
     button:
       enable: true
-      label: "Kunjungi Kami"
+      label: "Jelajahi Fasilitas"
       link: "https://maps.app.goo.gl/o7fvJLDUnTmxEiwT6"
 
-  - title: "Kurikulum dan Program Pendidikan"
+  - title: "Kurikulum Berbasis Cinta"
     image: "/images/assets/kurikulum.png"
-    content: "MTs Negeri 1 Pandeglang menerapkan kurikulum yang sesuai dengan standar nasional serta berbagai program pendidikan yang inovatif."
+    content: "Pendekatan pendidikan humanis yang menyentuh hati. Kami tidak hanya mengajar otak, tetapi juga mendidik jiwa dengan kasih sayang, menciptakan suasana belajar yang nyaman dan membahagiakan bagi setiap siswa."
     bulletpoints:
-      - "Kurikulum Merdeka dengan Pendekatan Saintifik"
-      - "Program Kelas Unggulan"
-      - "Program Tahfidz Al-Qur'an"
-      - "Kelas Bilingual untuk Meningkatkan Kemampuan Bahasa Asing"
-      - "Pelatihan Keterampilan Hidup"
-      - "Bimbingan Konseling untuk Pengembangan Diri"
+      - "Pendekatan Saintifik & STEAM"
+      - "Program Tahfidz Al-Qur'an Intensif"
+      - "Kelas Bilingual & Literasi Digital"
+      - "Penguatan Profil Pelajar Pancasila"
     button:
       enable: true
-      label: "Kurikulum"
+      label: "Pelajari Kurikulum"
       link: "/kurikulum"
 
-  - title: "Kenapa Memilih MTs Negeri 1 Pandeglang"
+  - title: "Mengapa Memilih Kami?"
     image: "/images/assets/program.png"
-    content: "Dengan memilih MTs Negeri 1 Pandeglang, Anda mendapatkan pendidikan berkualitas tinggi yang berfokus pada pengembangan akademik dan karakter."
+    content: "MTs Negeri 1 Pandeglang bukan sekadar madrasah, melainkan inkubator masa depan. Kami fokus pada pembentukan karakter (Character Building) yang kuat, kemandirian, dan prestasi. Lulusan kami terbukti mampu bersaing di jenjang pendidikan favorit dan memiliki pondasi agama yang kokoh."
     bulletpoints:
-      - "Pengajar Berpengalaman dan Profesional"
-      - "Pendekatan Pembelajaran yang Inovatif"
-      - "Dukungan Penuh untuk Potensi Akademik dan Non-Akademik"
-      - "Lingkungan yang Mendukung dan Bersahabat"
-      - "Fasilitas Pendidikan yang Modern"
+      - "Track Record Prestasi Akademik & Non-Akademik"
+      - "Budaya Sekolah yang Inklusif & Disiplin"
+      - "Program Pengembangan Bakat Terarah"
+      - "Sinergi Kuat antara Guru, Siswa, dan Orang Tua"
     button:
       enable: true
-      label: "Program Kami"
+      label: "Program Unggulan"
       link: "/program"
 
-  - title: "Zona Integritas"
+  - title: "Zona Integritas (ZI)"
     image: "/images/assets/zona-integritas.png"
-    content: "Zona Integritas di MTs Negeri 1 Pandeglang bertujuan untuk menciptakan lingkungan yang bersih dari korupsi dan membangun budaya kerja yang jujur dan transparan. Melalui program ini, madrasah kami berkomitmen untuk meningkatkan kualitas pelayanan publik dan menjaga kepercayaan masyarakat."
+    content: "Pelopor Wilayah Bebas Korupsi (WBK) di lingkungan madrasah. Kami menjunjung tinggi transparansi dan akuntabilitas."
     bulletpoints:
-      - "Manajemen Perubahan"
-      - "Penguatan Akuntabilitas"
-      - "Peningkatan Kualitas Pelayanan Publik"
-      - "Pendidikan Antikorupsi"
-      - "Pengawasan dan Pengendalian"
+      - "Budaya Anti-Korupsi & Gratifikasi"
+      - "Layanan Publik yang Transparan"
+      - "Birokrasi Bersih Melayani"
     button:
       enable: true
-      label: "Zona Integritas"
+      label: "Nilai Integritas"
       link: "/zona-integritas"
 
-  - title: "Pelayanan Terpadu Satu Pintu"
+  - title: "Layanan Digital (PTSP)"
     image: "/images/assets/ptsp.png"
-    content: "MTs Negeri 1 Pandeglang menawarkan layanan administratif dan informasi melalui Pelayanan Terpadu Satu Pintu untuk kemudahan dan kenyamanan siswa, orang tua, dan masyarakat."
+    content: "Kemudahan akses layanan administrasi satu pintu yang cepat, modern, dan dapat diakses secara digital."
     bulletpoints:
-      - "Layanan Akademik"
-      - "Layanan Non-Akademik"
-      - "Layanan Informasi"
-      - "Pelayanan Cepat dan Efisien"
-      - "Petugas Pelayanan yang Ramah dan Profesional"
-      - "Sistem Antrian Online"
+      - "Layanan Legalisir & Administrasi Cepat"
+      - "Ramah, Profesional, & Solutif"
+      - "Sistem Antrian & Tracking Online"
     button:
       enable: true
-      label: "Pelayanan"
+      label: "Akses Layanan"
       link: "/pelayanan"
 
-  - title: "Ekstrakurikuler Siswa"
+  - title: "Inkubator Talenta"
     image: "/images/assets/ekstrakurikuler.png"
-    content: "MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan ekstrakurikuler untuk mendukung pengembangan diri siswa."
+    content: "Wadah pengembangan minat dan bakat siswa melalui beragam ekstrakurikuler prestasi."
     bulletpoints:
-      - "Kegiatan Olahraga"
-      - "Seni dan Budaya"
-      - "Pramuka"
-      - "Klub Sains"
-      - "Kegiatan Sosial"
+      - "Pramuka, Paskibra & PMR"
+      - "Sains, Jurnalistik & Riset"
+      - "Olahraga & Seni Budaya"
+      - "Keagamaan & Adiwiyata"
     button:
       enable: true
-      label: "Ekstrakurikuler"
+      label: "Lihat Ekstrakurikuler"
       link: "/ekstrakurikuler"
 ---
 ```
@@ -1665,76 +1696,70 @@ features:
 
 ```markdown
 ---
-title: "Adiwiyata"
-meta_title: "Adiwiyata MTs Negeri 1 Pandeglang"
-description: "Adiwiyata MTs Negeri 1 Pandeglang"
+title: "Madrasah Adiwiyata"
+meta_title: "Program Adiwiyata MTs Negeri 1 Pandeglang - Green School"
+description: "Mewujudkan sekolah hijau yang berbudaya lingkungan. Gerakan konservasi, pengelolaan limbah, dan inovasi ramah lingkungan di MTs Negeri 1 Pandeglang."
 draft: false
 ---
 
-## Pengenalan
+### Madrasah Hijau, Masa Depan Berkelanjutan
 
-Adiwiyata adalah program yang bertujuan untuk menciptakan sekolah yang peduli dan berbudaya lingkungan. MTs Negeri 1 Pandeglang berkomitmen untuk mendukung program Adiwiyata dengan melibatkan seluruh warga sekolah dalam upaya pelestarian lingkungan dan pembangunan berkelanjutan.
-
-### Tujuan Adiwiyata
-
-Program Adiwiyata di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Meningkatkan kesadaran warga sekolah akan pentingnya menjaga kelestarian lingkungan.
-2. Membangun budaya lingkungan yang berkelanjutan di lingkungan sekolah.
-3. Mengembangkan keterampilan siswa dalam mengelola lingkungan hidup.
-4. Menciptakan lingkungan sekolah yang bersih, hijau, dan sehat.
-
-## Kegiatan Adiwiyata
-
-### Pengelolaan Sampah
-
-MTs Negeri 1 Pandeglang menerapkan pengelolaan sampah yang baik dan benar. Kegiatan ini meliputi:
-
-- Pemilahan sampah organik dan anorganik.
-- Daur ulang sampah menjadi produk yang bernilai.
-- Pengomposan sampah organik.
-
-### Penghijauan Sekolah
-
-Program penghijauan sekolah bertujuan untuk menciptakan lingkungan yang hijau dan asri. Kegiatan ini meliputi:
-
-- Penanaman pohon di sekitar lingkungan sekolah.
-- Pembuatan taman sekolah.
-- Perawatan tanaman dan kebun sekolah.
-
-### Pendidikan Lingkungan
-
-MTs Negeri 1 Pandeglang mengintegrasikan pendidikan lingkungan ke dalam kurikulum. Kegiatan ini meliputi:
-
-- Pembelajaran tentang lingkungan hidup dan pelestariannya.
-- Workshop dan seminar tentang isu-isu lingkungan.
-- Kunjungan studi ke tempat-tempat konservasi dan taman nasional.
-
-### Kegiatan Sosial Lingkungan
-
-Kegiatan sosial lingkungan bertujuan untuk melibatkan siswa dalam aksi nyata pelestarian lingkungan. Kegiatan ini meliputi:
-
-- Aksi bersih-bersih lingkungan.
-- Kampanye lingkungan dan edukasi masyarakat.
-- Bakti sosial terkait lingkungan hidup.
-
-## Fitur-Fitur Utama
-
-### Partisipasi Seluruh Warga Sekolah
-
-Program Adiwiyata di MTs Negeri 1 Pandeglang melibatkan seluruh warga sekolah, mulai dari siswa, guru, hingga staf sekolah. Partisipasi aktif dari semua pihak sangat penting untuk mencapai tujuan program ini.
-
-### Pembinaan oleh Pembina Profesional
-
-MTs Negeri 1 Pandeglang bekerja sama dengan pembina profesional dan lembaga lingkungan hidup untuk memberikan arahan dan dukungan dalam pelaksanaan program Adiwiyata.
-
-### Evaluasi dan Penghargaan
-
-MTs Negeri 1 Pandeglang melakukan evaluasi berkala terhadap pelaksanaan program Adiwiyata. Sekolah juga memberikan penghargaan kepada siswa dan kelas yang berprestasi dalam menjaga dan melestarikan lingkungan.
+**"Harmony with Nature, Harmony with Future"**
 
 ---
 
-> "Program Adiwiyata di MTs Negeri 1 Pandeglang adalah langkah nyata kami untuk menciptakan sekolah yang peduli dan berbudaya lingkungan. Kami berkomitmen untuk melibatkan seluruh warga sekolah dalam upaya pelestarian lingkungan dan pembangunan berkelanjutan." - Kepala Sekolah MTs Negeri 1 Pandeglang
+MTs Negeri 1 Pandeglang berkomitmen penuh untuk bertransformasi menjadi **Eco-Madrasah (Green School)**. Program Adiwiyata bagi kami bukan sekadar lomba atau predikat, melainkan sebuah gerakan kultural untuk menanamkan _mindset_ keberlanjutan (sustainability) kepada seluruh warga madrasah.
+
+Kami mengintegrasikan nilai-nilai ekologis ke dalam setiap aspek pembelajaran, menciptakan lingkungan yang asri, sehat, dan inspiratif untuk tumbuh kembang siswa.
+
+### Empat Pilar Gerakan Adiwiyata
+
+Strategi kami dalam mewujudkan madrasah berbudaya lingkungan bertumpu pada empat pilar aksi:
+
+#### 1. Kebijakan Berwawasan Lingkungan
+
+Madrasah menetapkan regulasi yang pro-lingkungan, seperti:
+
+- **Zona Bebas Plastik (Zero Plastic):** Larangan penggunaan kemasan plastik sekali pakai di kantin dan lingkungan sekolah.
+- **Paperless Policy:** Digitalisasi administrasi dan ujian untuk mengurangi penggunaan kertas.
+- **Anggaran Hijau:** Alokasi dana khusus untuk pemeliharaan taman dan inovasi lingkungan.
+
+#### 2. Pelaksanaan Kurikulum Berbasis Lingkungan
+
+Mengintegrasikan isu lingkungan ke dalam KBM (Kegiatan Belajar Mengajar) dan Projek Penguatan Profil Pelajar Pancasila (P5):
+
+- **Tema P5:** "Gaya Hidup Berkelanjutan" dan "Rekayasa Teknologi".
+- **Pembelajaran Kontekstual:** Menggunakan kebun sekolah, kolam, dan bank sampah sebagai laboratorium alam.
+
+#### 3. Kegiatan Lingkungan Partisipatif
+
+Melibatkan seluruh elemen (Guru, Siswa, Orang Tua, dan Masyarakat) dalam aksi nyata:
+
+- **Bank Sampah "Berhias":** Manajemen pengelolaan sampah terpadu dengan prinsip 3R (_Reduce, Reuse, Recycle_). Sampah organik diolah menjadi kompos, anorganik menjadi kerajinan atau tabungan emas.
+- **Jumat Bersih & Sehat:** Rutinitas mingguan untuk pembersihan massal dan senam bersama.
+- **Duta Lingkungan:** Pembentukan kader siswa yang menjadi _influencer_ kebersihan bagi teman sebayanya.
+
+#### 4. Pengelolaan Sarana Ramah Lingkungan
+
+- **Konservasi Energi & Air:** Pemanfaatan pencahayaan alami, penggunaan lampu hemat energi, dan sistem biopori untuk resapan air.
+- **Green House & Apotek Hidup:** Konservasi tanaman obat keluarga (TOGA) dan pembibitan tanaman hias.
+- **Sanitasi Sehat:** Penyediaan toilet bersih, wastafel di setiap kelas, dan drainase yang lancar.
+
+---
+
+### Inovasi Unggulan
+
+Kami terus mendorong siswa dan guru untuk melahirkan inovasi ramah lingkungan, antara lain:
+
+- **Eco-Enzyme:** Pemanfaatan limbah kulit buah menjadi cairan serbaguna (pembersih/pupuk).
+- **Vertical Garden:** Solusi penghijauan di lahan terbatas.
+- **Kompos Takakura:** Metode pengomposan praktis skala rumah tangga.
+
+---
+
+> "Bumi ini tidak kita warisi dari nenek moyang, melainkan kita pinjam dari anak cucu kita. Melalui Adiwiyata, MTs Negeri 1 Pandeglang menyiapkan generasi yang tidak hanya cerdas otaknya, tetapi juga hijau hatinya untuk merawat bumi."
+>
+> — **Tim Adiwiyata MTs Negeri 1 Pandeglang**
 ```
 
 ---
@@ -1748,8 +1773,6 @@ meta_title: "Akreditasi MTs Negeri 1 Pandeglang"
 description: "Akreditasi MTs Negeri 1 Pandeglang"
 draft: false
 ---
-
-## Pengenalan
 
 MTs Negeri 1 Pandeglang telah diakui secara resmi oleh pemerintah dan berbagai lembaga akreditasi pendidikan. Akreditasi ini menunjukkan bahwa madrasah kami telah memenuhi standar kualitas pendidikan yang tinggi dan berkomitmen untuk terus meningkatkan mutu pendidikan yang diberikan kepada siswa-siswi.
 
@@ -1820,8 +1843,6 @@ description: "Alumni MTs Negeri 1 Pandeglang"
 draft: false
 ---
 
-## Pengenalan
-
 MTs Negeri 1 Pandeglang bangga memiliki jaringan alumni yang luas dan sukses. Para alumni kami telah mencapai berbagai prestasi di berbagai bidang, baik di tingkat nasional maupun internasional. Halaman ini didedikasikan untuk menghubungkan kembali para alumni dengan almamater tercinta dan mempererat tali silaturahmi di antara sesama alumni.
 
 ### Tujuan Halaman Alumni
@@ -1891,84 +1912,260 @@ MTs Negeri 1 Pandeglang mendorong pembentukan komunitas alumni berdasarkan angka
 
 ---
 
+### File: `./src/content/pages/badminton-club.mdx`
+
+```markdown
+---
+title: "Klub Bulu Tangkis (MATSANEPA BC)"
+meta_title: "Badminton Club MTs Negeri 1 Pandeglang - Smash & Netting"
+description: "Mencetak atlet bulu tangkis yang lincah dan berteknik tinggi. Wadah pembinaan bakat tepok bulu siswa MTs Negeri 1 Pandeglang."
+draft: false
+---
+
+### Kecepatan, Refleks, Strategi
+
+**"Terbang Meraih Poin, Smash Meraih Juara"**
+
+---
+
+Klub Bulu Tangkis MTs Negeri 1 Pandeglang (Matsanepa BC) adalah rumah bagi para pecinta olahraga tepok bulu. Kami memfasilitasi siswa untuk mengembangkan bakat mereka dari sekadar hobi menjadi kemampuan atlet yang kompetitif.
+
+Bulu tangkis di sini bukan hanya soal memukul _shuttlecock_ sekeras mungkin, tapi tentang **kecerdasan membaca permainan, kelincahan kaki (_footwork_), dan kekuatan mental** di lapangan.
+
+### Fokus Latihan
+
+Kami menerapkan metode latihan yang seimbang antara fisik dan teknik:
+
+#### 1. Teknik Pukulan (Strokes)
+
+- **Servis:** Menguasai servis pendek tipis net dan servis panjang ke belakang.
+- **Lob & Drop Shot:** Pukulan melambung ke garis belakang dan tipuan halus ke depan net.
+- **Smash & Drive:** Pukulan serangan mematikan dan pukulan datar cepat.
+- **Netting:** Seni permainan jaring yang membutuhkan _feeling_ halus.
+
+#### 2. Pergerakan Kaki (Footwork)
+
+Kunci permainan bulu tangkis adalah kaki. Kami melatih langkah kaki yang efisien agar pemain dapat menjangkau seluruh sudut lapangan tanpa membuang tenaga berlebih (_shadow badminton_).
+
+#### 3. Fisik & Stamina
+
+- Latihan kelincahan (_agility_) dan reaksi cepat.
+- Latihan pergelangan tangan (_wrist work_) untuk pukulan yang tajam.
+
+---
+
+### Kategori & Kompetisi
+
+Kami membina pemain untuk sektor:
+
+- Tunggal Putra & Putri
+- Ganda Putra, Putri, & Campuran
+
+**Ajang yang Diikuti:**
+
+- **O2SN (Olimpiade Olahraga Siswa Nasional):** Target utama prestasi siswa.
+- **Kejurkab PBSI:** Kejuaraan tingkat kabupaten untuk menambah poin peringkat.
+- **Turnamen Antar Pelajar:** Kompetisi persahabatan antar sekolah.
+
+### Fasilitas
+
+- **GOR Bulu Tangkis:** Bekerjasama dengan GOR terdekat atau menggunakan aula serbaguna madrasah.
+- **Peralatan Latihan:** Raket latihan, _shuttlecock_ berkualitas, dan net standar BWF.
+
+---
+
+> "Bulu tangkis adalah olahraga catur fisik. Kamu harus berpikir dua langkah ke depan sebelum memukul kok. Di klub ini, kami melatih tubuhmu agar secepat pikiranmu."
+>
+> — **Pelatih Bulu Tangkis MTs Negeri 1 Pandeglang**
+```
+
+---
+
+### File: `./src/content/pages/basketball-club.mdx`
+
+```markdown
+---
+title: "Klub Bola Basket (MATSANEPA HOOPS)"
+meta_title: "Basketball Club MTs Negeri 1 Pandeglang - Dribble, Shoot, Score!"
+description: "Membentuk tim basket yang solid, lincah, dan bermental juara. Pelatihan fundamental basket modern untuk mencetak atlet pelajar potensial."
+draft: false
+---
+
+### Play Hard, Play Smart, Play Together
+
+**"Defense Wins Championships"**
+
+---
+
+Klub Bola Basket MTs Negeri 1 Pandeglang (Matsanepa Hoops) adalah komunitas bagi siswa yang mencintai kecepatan, akurasi, dan ketangkasan. Kami bukan sekadar melempar bola ke keranjang, tapi kami belajar tentang **disiplin waktu, strategi, dan respek**.
+
+Dengan gaya permainan cepat (_fast break_) dan pertahanan solid, kami berusaha menjadikan basket sebagai salah satu olahraga unggulan yang membawa nama harum madrasah di kancah kompetisi pelajar.
+
+### Filosofi Permainan
+
+Kami percaya bahwa pemain hebat tidak lahir dari bakat saja, tapi dari ribuan jam latihan (_repetition_).
+
+- **Fundamental First:** Mengutamakan penguasaan teknik dasar yang benar sebelum trik-trik rumit.
+- **Hustle:** Semangat juang tinggi, mengejar setiap bola liar, dan tidak malas bertahan.
+- **Brotherhood:** Rasa kekeluargaan yang kuat di dalam dan luar lapangan.
+
+---
+
+### Program Latihan (Drills)
+
+Kurikulum latihan kami mengadaptasi metode basket modern:
+
+#### 1. Fundamental Skills
+
+- **Dribbling:** Latihan _ball handling_ agar bola menyatu dengan tangan (Crossover, Behind the back).
+- **Shooting Form:** Memperbaiki mekanika tembakan (B.E.E.F - _Balance, Eyes, Elbow, Follow Through_) untuk akurasi tinggi.
+- **Passing:** Teknik umpan dada (_chest pass_) dan pantul (_bounce pass_) yang tajam.
+- **Lay-up:** Teknik mencetak angka dasar sambil berlari.
+
+#### 2. Taktik & Strategi
+
+- **Offense:** Pola penyerangan _Pick and Roll_, _Give and Go_, dan _Motion Offense_.
+- **Defense:** Sistem pertahanan _Man-to-Man_ dan _Zone Defense_ (2-3, 3-2).
+- **Rebounding:** Teknik _Box Out_ untuk mengamankan bola pantul.
+
+#### 3. Strength & Conditioning
+
+Latihan fisik khusus basket untuk meningkatkan lompatan (_vertical jump_), kecepatan (_sprint_), dan stamina.
+
+---
+
+### Ajang Kompetisi
+
+Kami rutin mengikuti berbagai turnamen untuk menguji mental bertanding:
+
+- **DBL Junior (Developmental Basketball League):** Kompetisi basket pelajar terbesar.
+- **Piala PERBASI:** Turnamen resmi tingkat kabupaten/kota.
+- **Invitasi Sekolah:** Pertandingan persahabatan antar SMP/MTs.
+
+### Fasilitas
+
+- **Lapangan Basket Outdoor:** Lapangan dengan ring standar dan garis lapangan yang jelas.
+- **Peralatan:** Bola basket Molten/Spalding ukuran 6 & 7, _cone_, dan _agility ladder_.
+
+---
+
+> "Basket mengajarkan kami bahwa ketika kami jatuh (foul), kami harus bangkit lagi untuk melakukan _free throw_. Kegagalan _shooting_ hari ini adalah alasan untuk berlatih lebih keras esok hari."
+>
+> — **Coach Basket MTs Negeri 1 Pandeglang**
+```
+
+---
+
 ### File: `./src/content/pages/ekstrakurikuler.mdx`
 
 ```markdown
 ---
 title: "Ekstrakurikuler"
-meta_title: "Ekstrakurikuler MTs Negeri 1 Pandeglang"
-description: "Ekstrakurikuler MTs Negeri 1 Pandeglang"
+meta_title: "Ekstrakurikuler MTs Negeri 1 Pandeglang - Wadah Kreasi & Prestasi"
+description: "Daftar lengkap kegiatan ekstrakurikuler di MTs Negeri 1 Pandeglang. Dari organisasi, olahraga, hingga pecinta alam. Temukan bakatmu di sini."
 draft: false
 ---
 
-## Pengenalan
+### Wadah Kreasi & Prestasi Siswa
 
-MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan ekstrakurikuler untuk mendukung pengembangan diri siswa di luar kegiatan akademik. Kegiatan-kegiatan ini dirancang untuk mengembangkan bakat dan minat siswa, serta membentuk karakter yang kuat dan berintegritas.
-
-### Tujuan Ekstrakurikuler
-
-Kegiatan ekstrakurikuler di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Mengembangkan keterampilan sosial dan kepercayaan diri siswa.
-2. Menumbuhkan rasa tanggung jawab dan disiplin.
-3. Meningkatkan keterampilan kepemimpinan dan kerjasama.
-4. Mengembangkan bakat dan minat siswa dalam berbagai bidang.
-
-## Jenis-Jenis Ekstrakurikuler
-
-### Kegiatan Olahraga
-
-MTs Negeri 1 Pandeglang menawarkan berbagai kegiatan olahraga untuk mengembangkan fisik dan kesehatan siswa. Beberapa kegiatan olahraga yang dapat diikuti antara lain:
-
-- Sepak Bola
-- Bola Basket
-- Bulu Tangkis
-- Pencak Silat
-- Atletik
-
-### Kegiatan Seni dan Budaya
-
-Kegiatan seni dan budaya di MTs Negeri 1 Pandeglang dirancang untuk mengembangkan kreativitas dan apresiasi siswa terhadap seni. Beberapa kegiatan seni dan budaya yang dapat diikuti antara lain:
-
-- Tari Tradisional
-- Musik dan Paduan Suara
-- Teater
-- Seni Rupa
-- Sastra
-
-### Kegiatan Pramuka
-
-Pramuka adalah kegiatan ekstrakurikuler yang bertujuan untuk membentuk karakter siswa yang mandiri, disiplin, dan memiliki jiwa kepemimpinan. Siswa diajak untuk belajar berbagai keterampilan kepramukaan serta mengikuti kegiatan-kegiatan yang menantang dan mendidik.
-
-### Klub Sains
-
-Klub Sains di MTs Negeri 1 Pandeglang menawarkan kesempatan bagi siswa yang memiliki minat dalam bidang sains untuk mengembangkan pengetahuan dan keterampilan mereka. Kegiatan klub sains meliputi eksperimen, penelitian, dan partisipasi dalam lomba-lomba sains.
-
-### Kegiatan Sosial
-
-MTs Negeri 1 Pandeglang juga menawarkan berbagai kegiatan sosial yang bertujuan untuk mengembangkan empati dan kepedulian siswa terhadap lingkungan sekitar. Beberapa kegiatan sosial yang dapat diikuti antara lain:
-
-- Bakti Sosial
-- Lingkungan Hidup
-- Kegiatan Relawan
-
-## Fitur-Fitur Utama
-
-### Pembelajaran Aktif dan Partisipatif
-
-Kegiatan ekstrakurikuler di MTs Negeri 1 Pandeglang bersifat aktif dan partisipatif. Siswa diajak untuk terlibat langsung dalam berbagai kegiatan yang menarik dan menantang.
-
-### Pembinaan oleh Pembimbing Profesional
-
-Setiap kegiatan ekstrakurikuler di MTs Negeri 1 Pandeglang dibimbing oleh pembimbing yang berpengalaman dan profesional dalam bidangnya masing-masing. Pembimbing memberikan arahan dan dukungan kepada siswa untuk mencapai potensi terbaik mereka.
-
-### Penilaian dan Penghargaan
-
-MTs Negeri 1 Pandeglang memberikan penilaian dan penghargaan kepada siswa yang aktif dan berprestasi dalam kegiatan ekstrakurikuler. Penilaian dilakukan berdasarkan partisipasi, keterampilan, dan kontribusi siswa dalam kegiatan yang diikuti.
+**"Temukan Bakatmu, Ukir Prestasimu"**
 
 ---
 
-> "Kegiatan ekstrakurikuler di MTs Negeri 1 Pandeglang memberikan kesempatan bagi siswa untuk mengembangkan bakat dan minat mereka di luar kegiatan akademik. Kami percaya bahwa kegiatan-kegiatan ini dapat membentuk karakter siswa yang kuat dan berintegritas." - Kepala MTs Negeri 1 Pandeglang
+Di MTs Negeri 1 Pandeglang, pembelajaran tidak berhenti saat bel pulang berbunyi. Kami percaya bahwa _soft skill_, kepemimpinan, dan karakter juara justru ditempa melalui kegiatan di luar kelas.
+
+Kami menyediakan beragam pilihan ekstrakurikuler yang dikelola secara profesional untuk menampung minat dan bakat siswa yang beragam. Berikut adalah kategori kegiatan yang dapat diikuti:
+
+---
+
+## 1. Organisasi & Kepemimpinan
+
+_Mencetak kader pemimpin masa depan yang disiplin, tangguh, dan peduli sesama._
+
+### OSIM (Organisasi Siswa Intra Madrasah)
+
+Induk organisasi siswa yang menjadi mitra madrasah dalam menggerakkan demokrasi dan kegiatan siswa.
+
+<Button label="Selengkapnya tentang OSIM" link="/osim" style="outline" />
+
+### Gerakan Pramuka
+
+Wadah pembinaan karakter kemandirian, survival, dan nasionalisme melalui metode kepanduan modern.
+
+<Button label="Jelajahi Pramuka" link="/pramuka" style="outline" />
+
+### Paskibra (Pasukan Pengibar Bendera)
+
+Pasukan elit pengibar bendera yang melatih kedisiplinan fisik, mental baja, dan tata upacara.
+
+<Button label="Profil Korps Paskibra" link="/paskibra" style="outline" />
+
+### PMR (Palang Merah Remaja)
+
+Relawan muda kesehatan yang sigap dalam pertolongan pertama dan aksi kemanusiaan.
+
+<Button label="Info PMR Madya" link="/pmr" style="outline" />
+
+---
+
+## 2. Olahraga Prestasi
+
+_Membangun sportivitas, fisik prima, dan mental juara._
+
+### Klub Bola Voli (Matsanepa VC)
+
+Tim voli kebanggaan madrasah dengan tradisi juara dan pelatihan teknik tingkat lanjut.
+
+<Button label="Lihat Klub Voli" link="/volleyball-club" style="outline" />
+
+### Klub Futsal (Matsanepa FC)
+
+Wadah bagi talenta sepak bola untuk mengasah _skill_ individu dan taktik permainan cepat.
+
+<Button label="Lihat Klub Futsal" link="/futsal-club" style="outline" />
+
+### Klub Basket (Matsanepa Hoops)
+
+Komunitas basket yang energik, fokus pada _dribble_, _shooting_, dan strategi modern.
+
+<Button label="Lihat Klub Basket" link="/basketball-club" style="outline" />
+
+### Klub Bulu Tangkis (Matsanepa BC)
+
+Pusat pelatihan teknik tepok bulu (_badminton_) yang fokus pada kelincahan dan strategi permainan.
+
+<Button label="Lihat Klub Badminton" link="/badminton-club" style="outline" />
+
+---
+
+## 3. Minat, Bakat & Lingkungan
+
+_Mengasah kreativitas, literasi, dan kepedulian terhadap alam._
+
+### SISPALA (Siswa Pecinta Alam)
+
+Garda terdepan konservasi lingkungan dan petualangan alam bebas yang mendukung program Adiwiyata.
+
+<Button label="Kegiatan Pecinta Alam" link="/pecinta-alam" style="outline" />
+
+### Jurnalistik Siswa
+
+Komunitas literasi bagi siswa yang gemar menulis, fotografi, dan meliput berita sekolah.
+
+<Button label="Karya Jurnalistik" link="/jurnalistik" style="outline" />
+
+---
+
+### Mengapa Harus Mengikuti Ekstrakurikuler?
+
+1.  **Pengembangan Karakter:** Melatih tanggung jawab, disiplin, dan manajemen waktu.
+2.  **Sosialisasi:** Memperluas pergaulan positif antar kelas dan angkatan.
+3.  **Jalur Prestasi:** Sertifikat kejuaraan ekskul sangat berguna untuk mendaftar ke jenjang pendidikan selanjutnya (PPDB Jalur Prestasi).
+4.  **Kesehatan Mental:** Menjadi sarana _refreshing_ yang positif dari rutinitas akademik.
+
+> "Jangan hanya menjadi siswa yang datang, duduk, dan pulang. Jadilah siswa yang aktif, berkarya, dan meninggalkan jejak prestasi. Pilih ekskulmu sekarang!"
+>
+> — **Wakil Kepala Madrasah Bidang Kesiswaan**
 ```
 
 ---
@@ -2233,6 +2430,86 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 ---
 
+### File: `./src/content/pages/footsal-club.mdx`
+
+```markdown
+---
+title: "Klub Futsal (MATSANEPA FC)"
+meta_title: "Futsal Club MTs Negeri 1 Pandeglang - Skill & Strategi"
+description: "Membentuk tim futsal yang solid, taktis, dan bermental juara. Wadah penyaluran bakat sepak bola siswa MTs Negeri 1 Pandeglang dengan pelatihan profesional."
+draft: false
+---
+
+### Lari Cepat, Umpan Akurat, Gol Dahsyat
+
+**"Fair Play di Hati, Prestasi di Nanti"**
+
+---
+
+Klub Futsal MTs Negeri 1 Pandeglang (MATSANEPA FC) adalah rumah bagi talenta-talenta muda berbakat di dunia sepak bola mini. Kami memadukan _skill_ individu dengan kecerdasan taktik untuk menciptakan permainan yang indah dan efektif.
+
+Bagi kami, futsal bukan sekadar menendang bola ke gawang. Ini adalah seni mengelola ruang sempit, mengambil keputusan sepersekian detik, dan menjaga kekompakan tim di bawah tekanan.
+
+### Visi Permainan
+
+Kami mengadopsi filosofi permainan futsal modern:
+
+1.  **Cepat & Dinamis:** Mengutamakan sirkulasi bola yang cepat dan pergerakan tanpa bola.
+2.  **Cerdas:** Bermain menggunakan otak, membaca celah pertahanan lawan.
+3.  **Respek:** Menjunjung tinggi sportivitas di dalam dan di luar lapangan.
+
+---
+
+### Kurikulum Latihan
+
+Program latihan dirancang sistematis untuk mencetak pemain yang komplet:
+
+#### 1. Teknik Dasar (Fundamentals)
+
+Penguasaan bola adalah kunci.
+
+- **Passing & Control:** Akurasi umpan pendek dan kontrol bola lengket.
+- **Dribbling:** Teknik melewati lawan dalam situasi 1 vs 1.
+- **Shooting:** Teknik tendangan keras dan terarah (ujung kaki/concong).
+
+#### 2. Taktik & Strategi (Game Play)
+
+Memahami cara bermain sebagai unit.
+
+- **Rotasi Pemain:** Pergerakan memutar untuk membongkar pertahanan.
+- **Set Piece:** Strategi bola mati (Kick-in, Corner kick, Free kick).
+- **Defense System:** Pola pertahanan _Man-to-Man_ dan _Zone Defense_.
+- **Power Play:** Strategi menyerang total saat tertinggal di menit akhir.
+
+#### 3. Fisik & Mental
+
+- Latihan kelincahan (_agility_) dan kecepatan (_speed_).
+- Simulasi pertandingan untuk melatih mental juara.
+
+---
+
+### Liga & Kompetisi
+
+Kami aktif berpartisipasi dalam berbagai jenjang kompetisi untuk menambah jam terbang:
+
+- **Liga Futsal Pelajar:** Kompetisi rutin antar sekolah se-Kabupaten.
+- **Classmeeting Cup:** Ajang pencarian bakat internal madrasah.
+- **Friendly Match:** Pertandingan persahabatan melawan sekolah tetangga setiap bulan.
+
+### Fasilitas
+
+- **Lapangan Multifungsi:** Area latihan yang aman dan representatif.
+- **Peralatan Latihan:** _Cone_, _marker_, rompi latihan, dan bola standar futsal.
+
+---
+
+> "Kemenangan sejati bukan hanya skor akhir di papan skor, tapi bagaimana cara kita bermain sebagai tim. Di sini, _skill_ individu memenangkan pertandingan, tapi kerjasama tim memenangkan kejuaraan."
+>
+> — **Pelatih Futsal MTs Negeri 1 Pandeglang**
+```
+
+---
+
 ### File: `./src/content/pages/guru.mdx`
 
 ```markdown
@@ -2242,8 +2519,6 @@ meta_title: "Guru MTs Negeri 1 Pandeglang"
 description: "Guru MTs Negeri 1 Pandeglang"
 draft: true
 ---
-
-## Pengenalan
 
 MTs Negeri 1 Pandeglang memiliki tenaga pengajar yang berdedikasi tinggi dan berkompeten di bidangnya masing-masing. Para guru di MTs Negeri 1 Pandeglang berkomitmen untuk memberikan pendidikan yang berkualitas dan mendukung perkembangan akademik serta personal siswa-siswi.
 
@@ -2309,6 +2584,79 @@ Halaman Guru MTs Negeri 1 Pandeglang bertujuan untuk:
 
 ---
 
+### File: `./src/content/pages/jurnalistik.mdx`
+
+```markdown
+---
+title: "Jurnalistik Siswa"
+meta_title: "Jurnalistik MTs Negeri 1 Pandeglang - Suara Kreativitas Siswa"
+description: "Wadah literasi dan kreativitas siswa. Melatih kemampuan menulis, fotografi, dan reportase untuk merekam jejak prestasi madrasah."
+draft: false
+---
+
+### Pena Tajam, Fakta Terkam
+
+**"Menulis untuk Mengabadi, Memotret untuk Mewarta"**
+
+---
+
+Ekstrakurikuler Jurnalistik MTs Negeri 1 Pandeglang (Siswa Pers Matsanepa) adalah komunitas literasi yang bergerak di bidang peliputan, penulisan, dan publikasi. Kami adalah **mata dan telinga** madrasah, merekam setiap momen berharga dan menyajikannya dalam bentuk karya yang inspiratif.
+
+Di era digital ini, kami bertransformasi menjadi _Content Creator_ yang cerdas, memerangi berita bohong (hoax) dengan fakta, dan menyebarkan kabar positif tentang prestasi madrasah ke dunia luar.
+
+### Divisi Kreatif
+
+Kami membagi peran agar setiap anggota dapat spesifik mengembangkan minatnya:
+
+#### 1. Divisi Redaksi (Penulis)
+
+Jantungnya jurnalistik.
+
+- **Reporter:** Melakukan wawancara dan reportase kegiatan sekolah.
+- **Penulis Artikel/Opini:** Menuangkan ide kritis tentang isu pendidikan dan remaja.
+- **Sastra:** Menulis cerpen, puisi, dan resensi buku untuk mading atau web sekolah.
+
+#### 2. Divisi Fotografi & Videografi
+
+Mata lensa yang menangkap momen.
+
+- **Fotografi Jurnalistik:** Teknik mengambil foto berita yang bercerita.
+- **Video Reportase:** Membuat liputan berita video (vlog) kegiatan sekolah.
+- **Editing:** Belajar _software_ editing foto dan video dasar.
+
+#### 3. Divisi Mading & Medsos
+
+Wajah publikasi karya.
+
+- **Mading Sekolah:** Mengelola papan majalah dinding dengan tata letak artistik.
+- **Admin Media Sosial:** Mengelola Instagram/Facebook madrasah dengan konten kreatif dan _caption_ menarik.
+
+---
+
+### Program Unggulan
+
+- **Penerbitan Buletin/Majalah Sekolah:** Karya kolektif semesteran yang berisi kumpulan berita, profil siswa berprestasi, dan karya sastra.
+- **Pelatihan Jurnalistik Dasar (PJTD):** Workshop mengundang wartawan profesional atau penulis tamu.
+- **Kunjungan Media:** _Study tour_ ke kantor redaksi koran atau stasiun TV lokal.
+- **Liputan Event Besar:** Menjadi tim dokumentasi resmi saat Porseni, Perpisahan, atau PHBI.
+
+---
+
+### Manfaat Bergabung
+
+1.  **Berpikir Kritis:** Melatih kemampuan menganalisis informasi dan melihat peristiwa dari berbagai sudut pandang.
+2.  **Percaya Diri:** Terbiasa mewawancarai guru, kepala sekolah, bahkan pejabat tamu.
+3.  **Jejak Digital Positif:** Karya tulisan dan foto yang dipublikasikan menjadi portofolio berharga untuk masa depan.
+
+---
+
+> "Jurnalisme adalah draf pertama dari sejarah. Di sini kami belajar bahwa kata-kata memiliki kekuatan untuk menginspirasi perubahan. Setiap goresan pena kami adalah dedikasi untuk almamater tercinta."
+>
+> — **Pemimpin Redaksi Siswa**
+```
+
+---
+
 ### File: `./src/content/pages/kebijakan-privasi.md`
 
 ```markdown
@@ -2347,69 +2695,84 @@ MTs Negeri 1 Pandeglang berkomitmen untuk melindungi informasi pribadi yang diku
 
 ```markdown
 ---
-title: "Kurikulum Merdeka Belajar"
-meta_title: "Kurikulum Merdeka Belajar MTs Negeri 1 Pandeglang"
-description: "Kurikulum Merdeka Belajar MTs Negeri 1 Pandeglang"
+title: "Kurikulum Berbasis Cinta"
+meta_title: "Kurikulum Berbasis Cinta & Merdeka Belajar MTs Negeri 1 Pandeglang"
+description: "Pendekatan pendidikan humanis di MTs Negeri 1 Pandeglang yang memadukan standar Kurikulum Merdeka dengan kasih sayang, kenyamanan, dan pembentukan karakter."
 draft: false
 ---
 
-## Pengenalan
+### Filosofi Pendidikan Humanis
 
-Kurikulum Merdeka Belajar adalah pendekatan pendidikan yang memungkinkan siswa untuk belajar dengan lebih fleksibel dan mendalam. Kurikulum ini dirancang untuk mengembangkan potensi individu siswa melalui pembelajaran yang berpusat pada siswa.
-
-### Konsep Kurikulum Merdeka Belajar
-
-Kurikulum Merdeka Belajar berfokus pada empat pilar utama:
-
-1. **Pembelajaran Berbasis Proyek:** Siswa diberikan kesempatan untuk mengerjakan proyek yang relevan dengan kehidupan nyata.
-2. **Pembelajaran Berbasis Masalah:** Siswa diajak untuk menyelesaikan masalah-masalah nyata yang memerlukan pemikiran kritis.
-3. **Pembelajaran Berbasis Inkuiri:** Siswa didorong untuk mencari tahu dan mengeksplorasi topik-topik yang menarik bagi mereka.
-4. **Pembelajaran Berbasis Kompetensi:** Siswa diukur berdasarkan kemampuan dan kompetensi yang mereka miliki, bukan hanya berdasarkan nilai ujian.
-
-## Struktur Kurikulum
-
-### Pendidikan Dasar
-
-Pada tingkat pendidikan dasar, Kurikulum Merdeka Belajar di MTs Negeri 1 Pandeglang meliputi mata pelajaran seperti:
-
-- Matematika
-- Ilmu Pengetahuan Alam
-- Ilmu Pengetahuan Sosial
-- Bahasa Indonesia
-- Pendidikan Agama
-- Seni dan Budaya
-- Pendidikan Jasmani
-
-### Pendidikan Menengah
-
-Pada tingkat pendidikan menengah, Kurikulum Merdeka Belajar meliputi:
-
-- Matematika Lanjut
-- Fisika
-- Kimia
-- Biologi
-- Sejarah
-- Bahasa Inggris
-- Teknologi Informasi dan Komunikasi
-- Ekonomi
-
-## Fitur-Fitur Utama
-
-### Pembelajaran Aktif dan Kolaboratif
-
-Dalam Kurikulum Merdeka Belajar, pembelajaran bersifat aktif dan kolaboratif. Siswa tidak hanya menjadi penerima informasi, tetapi juga menjadi pengambil keputusan dalam proses belajar mereka.
-
-### Penilaian yang Beragam
-
-Penilaian dalam Kurikulum Merdeka Belajar dilakukan melalui berbagai metode, seperti proyek, presentasi, dan portofolio, sehingga memberikan gambaran yang lebih komprehensif tentang kemampuan siswa.
-
-### Bimbingan dan Konseling
-
-MTs Negeri 1 Pandeglang menyediakan layanan bimbingan dan konseling untuk mendukung perkembangan akademik dan personal siswa. Siswa diberikan kesempatan untuk berdiskusi tentang minat dan bakat mereka serta merencanakan masa depan pendidikan mereka.
+**"Mendidik dengan Hati, Menginspirasi dengan Aksi"**
 
 ---
 
-> "Kurikulum Merdeka Belajar memberikan kebebasan kepada siswa untuk belajar sesuai dengan potensi dan minat mereka. Ini adalah langkah besar menuju pendidikan yang lebih humanis dan inklusif." - Wakil Kepala Bidang Kurikulum MTs Negeri 1 Pandeglang
+Di MTs Negeri 1 Pandeglang, kami menerjemahkan Kurikulum Merdeka lebih dari sekadar standar akademik nasional. Kami mengusung paradigma **Kurikulum Berbasis Cinta**.
+
+Ini adalah pendekatan revolusioner yang menempatkan kebahagiaan siswa, keamanan emosional, dan kasih sayang guru sebagai fondasi utama. Kami percaya bahwa ketika hati siswa tersentuh dan merasa dicintai, akal mereka akan terbuka lebar untuk menyerap ilmu pengetahuan terumit sekalipun.
+
+### Pilar Utama: C.I.N.T.A
+
+Implementasi kurikulum kami dibangun di atas lima nilai inti:
+
+**C - Cerdas & Critical Thinking**
+Pembelajaran yang merangsang nalar kritis (HOTS), bukan sekadar menghafal, melainkan memahami esensi dan solusi masalah.
+
+**I - Inovatif & Inklusif**
+Ruang belajar yang menerima keragaman potensi siswa. Setiap anak adalah bintang dengan cahayanya masing-masing.
+
+**N - Nyaman & Menyenangkan**
+Menciptakan _Joyful Learning_. Sekolah bukan tempat yang menakutkan, melainkan rumah kedua yang dirindukan.
+
+**T - Takwa & Beradab**
+Ilmu tanpa adab adalah kesia-siaan. Kami mengutamakan pembentukan karakter Islami sebelum penguasaan materi.
+
+**A - Adaptif Digital**
+Mengintegrasikan teknologi terkini agar siswa siap menghadapi tantangan masa depan tanpa kehilangan jati diri.
+
+---
+
+### Struktur Program Pembelajaran
+
+Kami menyusun arsitektur kurikulum yang seimbang antara kebutuhan duniawi dan ukhrawi:
+
+#### 1. Intrakurikuler (Akademik & Agama)
+
+_Penguatan fondasi keilmuan yang solid._
+
+- **Sains & Teknologi:** Matematika, IPA (Fisika/Biologi), Informatika.
+- **Sosial & Humaniora:** IPS, Bahasa Indonesia, Bahasa Inggris, PPKn.
+- **Ilmu Keislaman (Kemenag):** Al-Qur'an Hadits, Akidah Akhlak, Fikih, SKI, Bahasa Arab.
+
+#### 2. Kokurikuler (P5 & PPRA)
+
+_Proyek Penguatan Profil Pelajar Pancasila & Rahmatan Lil Alamin._
+
+Siswa diajak turun langsung ke lapangan untuk menyelesaikan masalah nyata (Project Based Learning), seperti kewirausahaan, gaya hidup berkelanjutan, dan kearifan lokal Banten.
+
+#### 3. Program Unggulan (Excellence)
+
+_Menu tambahan untuk percepatan potensi._
+
+- **Tahfidz Camp:** Program intensif menghafal Al-Qur'an.
+- **Bilingual Class:** Pembiasaan bahasa asing (Arab & Inggris) dalam keseharian.
+- **Klinik Sains:** Pendalaman materi untuk persiapan kompetisi/olimpiade.
+
+---
+
+### Pendekatan Personal (Personalized Learning)
+
+Dalam Kurikulum Berbasis Cinta, kami tidak membandingkan ikan dengan burung dalam hal kemampuan memanjat pohon.
+
+- **Asesmen Diagnostik:** Mengenali gaya belajar siswa di awal masuk (Visual, Auditori, atau Kinestetik).
+- **Teaching at the Right Level:** Memberikan materi sesuai dengan tingkat pemahaman siswa, bukan memaksakan target kurikulum semata.
+- **Sentuhan Parenting:** Guru berperan sebagai orang tua asuh yang siap mendengar keluh kesah siswa, tidak hanya soal pelajaran, tapi juga kehidupan.
+
+---
+
+> "Pendidikan tanpa cinta hanya akan menghasilkan kecerdasan tanpa hati nurani. Kurikulum kami dirancang untuk menyentuh akal dan jiwa sekaligus, memastikan siswa tumbuh menjadi pribadi yang bahagia dan prestatif."
+>
+> — **Wakil Kepala Bidang Kurikulum**
 ```
 
 ---
@@ -2418,74 +2781,90 @@ MTs Negeri 1 Pandeglang menyediakan layanan bimbingan dan konseling untuk menduk
 
 ```markdown
 ---
-title: "OSIM"
-meta_title: "OSIM MTs Negeri 1 Pandeglang"
-description: "OSIM MTs Negeri 1 Pandeglang"
+title: "OSIM (Organisasi Siswa Intra Madrasah)"
+meta_title: "OSIM MTs Negeri 1 Pandeglang - Inkubator Pemimpin Muda"
+description: "Pusat kepemimpinan siswa MTs Negeri 1 Pandeglang. Wadah aspirasi, kreasi, dan inovasi siswa dalam membangun madrasah yang unggul dan demokratis."
 draft: false
 ---
 
-## Pengenalan
+### Inkubator Pemimpin Masa Depan
 
-OSIM (Organisasi Siswa Intra Madrasah) di MTs Negeri 1 Pandeglang adalah organisasi siswa yang bertujuan untuk mengembangkan potensi kepemimpinan, tanggung jawab, dan kerjasama di antara siswa. Melalui kegiatan OSIM, siswa diajak untuk berpartisipasi aktif dalam mengelola dan mengorganisir berbagai kegiatan sekolah.
-
-### Tujuan OSIM
-
-OSIM di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Meningkatkan keterampilan kepemimpinan dan organisasi siswa.
-2. Menumbuhkan rasa tanggung jawab dan disiplin.
-3. Mengembangkan keterampilan komunikasi dan kerjasama.
-4. Menyediakan wadah untuk menyalurkan aspirasi dan kreativitas siswa.
-5. Meningkatkan partisipasi siswa dalam kegiatan sekolah dan masyarakat.
-
-## Kegiatan OSIM
-
-### Rapat Rutin
-
-OSIM mengadakan rapat rutin setiap minggu untuk membahas berbagai agenda dan kegiatan yang akan dilakukan. Rapat ini dihadiri oleh pengurus OSIM dan perwakilan kelas.
-
-### Kegiatan Ekstrakurikuler
-
-OSIM berperan aktif dalam mengorganisir dan mengelola berbagai kegiatan ekstrakurikuler di MTs Negeri 1 Pandeglang, seperti:
-
-- Lomba-lomba akademik dan non-akademik.
-- Kegiatan olahraga dan seni.
-- Kegiatan keagamaan dan sosial.
-- Seminar dan workshop.
-
-### Program Kerja OSIM
-
-OSIM menyusun program kerja tahunan yang mencakup berbagai kegiatan dan proyek yang bertujuan untuk meningkatkan kualitas pendidikan dan kehidupan sekolah. Program kerja ini disusun berdasarkan hasil rapat dan aspirasi dari siswa.
-
-### Pelatihan Kepemimpinan
-
-OSIM mengadakan pelatihan kepemimpinan untuk mengembangkan keterampilan kepemimpinan di kalangan siswa. Pelatihan ini meliputi:
-
-- Workshop kepemimpinan.
-- Simulasi kepemimpinan.
-- Diskusi dan sharing pengalaman.
-
-## Fitur-Fitur Utama
-
-### Pembinaan oleh Pembina Profesional
-
-OSIM di MTs Negeri 1 Pandeglang dibimbing oleh pembina profesional yang berpengalaman dalam bidang kepemimpinan dan organisasi. Pembina memberikan arahan dan dukungan kepada siswa dalam mengelola organisasi dan melaksanakan kegiatan.
-
-### Fasilitas Pendukung
-
-MTs Negeri 1 Pandeglang menyediakan fasilitas pendukung yang lengkap untuk kegiatan OSIM, antara lain:
-
-- Ruang rapat dan pertemuan.
-- Peralatan presentasi dan multimedia.
-- Akses ke sumber daya sekolah untuk mendukung pelaksanaan kegiatan.
-
-### Pembinaan Karakter
-
-Selain mengembangkan keterampilan kepemimpinan dan organisasi, OSIM di MTs Negeri 1 Pandeglang juga berfokus pada pembinaan karakter siswa. Siswa diajarkan nilai-nilai disiplin, tanggung jawab, kerjasama, dan integritas.
+**"Berpikir Kritis, Bertindak Demokratis, Mengabdi dengan Hati"**
 
 ---
 
-> "OSIM di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan keterampilan kepemimpinan dan organisasi. Melalui kegiatan OSIM, kami berharap dapat membentuk generasi yang tanggap, bertanggung jawab, dan mampu mengelola berbagai kegiatan dengan baik." - Pembina OSIM MTs Negeri 1 Pandeglang
+Organisasi Siswa Intra Madrasah (OSIM) MTs Negeri 1 Pandeglang adalah satu-satunya wadah organisasi siswa resmi yang diakui di lingkungan madrasah. Kami bukan sekadar pelaksana kegiatan, melainkan mitra strategis madrasah dalam membangun iklim akademik dan sosial yang positif.
+
+OSIM hadir sebagai laboratorium kepemimpinan nyata, tempat di mana siswa belajar berdemokrasi, menyusun kebijakan, mengeksekusi program, dan melayani kebutuhan seluruh siswa.
+
+### Visi & Misi Strategis
+
+**Visi:**
+Menjadikan OSIM sebagai organisasi yang aspiratif, inovatif, dan berintegritas dalam mewujudkan siswa madrasah yang berkarakter Pancasila dan berakhlakul karimah.
+
+**Misi Utama:**
+
+1.  Membangun budaya organisasi yang profesional dan kekeluargaan.
+2.  Menampung dan memperjuangkan aspirasi siswa secara santun.
+3.  Menyelenggarakan kegiatan yang meningkatkan _soft skill_ dan _hard skill_ siswa.
+
+---
+
+### Struktur & Program Unggulan
+
+OSIM bergerak dalam berbagai bidang (sekbid) yang mencakup seluruh aspek kehidupan siswa:
+
+#### 1. Legislasi & Aspirasi (MPK)
+
+_Majelis Perwakilan Kelas._
+Forum tertinggi siswa untuk menyuarakan ide dan evaluasi. Kami rutin mengadakan **Forum Aspirasi Siswa** untuk mendengar masukan langsung dari setiap kelas demi perbaikan madrasah.
+
+#### 2. Keagamaan & Budi Pekerti
+
+Menggerakkan syiar Islam di madrasah melalui program:
+
+- Peringatan Hari Besar Islam (PHBI) yang meriah dan bermakna.
+- Program infaq/sedekah Jumat.
+- Pengelolaan kegiatan Ramadhan (Pesantren Kilat).
+
+#### 3. Pengembangan Minat & Bakat (Event Organizer)
+
+Menjadi motor penggerak _event_ besar madrasah yang dinanti-nanti:
+
+- **CLASSMEETING:** Ajang kompetisi olahraga dan seni antar kelas.
+- **PORSENI:** Pekan Olahraga dan Seni Madrasah.
+- **Festival Bulan Bahasa:** Lomba literasi, pidato, dan karya tulis.
+
+#### 4. Kaderisasi & LDKS
+
+Menjamin regenerasi kepemimpinan yang berkualitas melalui **Latihan Dasar Kepemimpinan Siswa (LDKS)**. Program intensif ini menempa mental calon pengurus baru dengan materi manajemen organisasi, _public speaking_, dan _problem solving_.
+
+---
+
+### Keunggulan Bergabung dengan OSIM
+
+Menjadi pengurus OSIM MTs Negeri 1 Pandeglang memberikan privilese pengembangan diri yang luar biasa:
+
+- **Networking Luas:** Membangun relasi dengan guru, alumni, dan organisasi sekolah lain.
+- **Project Management:** Belajar mengelola _event_ berskala besar, mulai dari perencanaan proposal, pencarian dana (sponsorship), hingga eksekusi lapangan.
+- **Public Speaking:** Terlatih berbicara di depan umum, memimpin rapat, dan bernegosiasi.
+- **Problem Solving:** Terbiasa menghadapi masalah nyata dan mencari solusi cepat di bawah tekanan.
+
+---
+
+### Fasilitas & Dukungan
+
+Madrasah memberikan dukungan penuh bagi operasional OSIM:
+
+- **Sekretariat OSIM:** Ruang kerja khusus yang nyaman untuk rapat dan administrasi.
+- **Anggaran Kegiatan:** Dukungan dana madrasah untuk setiap program kerja yang disetujui.
+- **Mentoring Guru:** Bimbingan langsung dari Wakil Kepala Madrasah Bidang Kesiswaan dan Pembina OSIM yang kompeten.
+
+---
+
+> "Di OSIM, kami tidak belajar untuk menjadi 'bos', kami belajar untuk menjadi 'pemimpin' yang melayani. Karena kepemimpinan bukan tentang jabatan, melainkan tentang seberapa besar dampak positif yang bisa kita berikan untuk orang lain."
+>
+> — **Ketua OSIM MTs Negeri 1 Pandeglang**
 ```
 
 ---
@@ -2494,70 +2873,85 @@ Selain mengembangkan keterampilan kepemimpinan dan organisasi, OSIM di MTs Neger
 
 ```markdown
 ---
-title: "Paskibra"
+title: "Korps Paskibra"
 meta_title: "Paskibra MTs Negeri 1 Pandeglang"
-description: "Paskibra MTs Negeri 1 Pandeglang"
+description: "Membentuk kader pemimpin bangsa yang disiplin, tangguh, dan berkarakter Pancasila melalui pendidikan kepaskibrakaan di MTs Negeri 1 Pandeglang."
 draft: false
 ---
 
-## Pengenalan
+### Garda Terdepan Patriotisme
 
-Paskibra (Pasukan Pengibar Bendera) di MTs Negeri 1 Pandeglang adalah kegiatan ekstrakurikuler yang bertujuan untuk membentuk karakter siswa yang disiplin, tangguh, dan memiliki jiwa kepemimpinan. Melalui kegiatan Paskibra, siswa diajak untuk belajar tentang keterampilan baris-berbaris, upacara bendera, dan nilai-nilai kebangsaan.
-
-### Tujuan Paskibra
-
-Paskibra di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Meningkatkan keterampilan baris-berbaris dan pengibaran bendera.
-2. Menumbuhkan semangat kebangsaan dan cinta tanah air.
-3. Membentuk karakter siswa yang disiplin dan bertanggung jawab.
-4. Mengembangkan jiwa kepemimpinan dan kerjasama.
-5. Mempersiapkan siswa untuk berpartisipasi dalam upacara bendera di sekolah dan berbagai kegiatan resmi.
-
-## Kegiatan Paskibra
-
-### Latihan Rutin
-
-Paskibra di MTs Negeri 1 Pandeglang mengadakan latihan rutin setiap minggu. Latihan ini meliputi:
-
-- Teknik dasar baris-berbaris (PBB).
-- Latihan fisik untuk meningkatkan kebugaran.
-- Simulasi upacara bendera.
-- Evaluasi dan pembinaan keterampilan individu dan tim.
-
-### Upacara dan Kegiatan Resmi
-
-Paskibra aktif berpartisipasi dalam berbagai upacara dan kegiatan resmi di sekolah dan di luar sekolah. Siswa Paskibra dilatih untuk menjadi petugas pengibar bendera dalam upacara bendera setiap Senin dan upacara-upacara penting lainnya.
-
-### Kegiatan Persaudaraan
-
-Selain latihan dan upacara, Paskibra juga mengadakan kegiatan persaudaraan untuk mempererat hubungan antaranggota dan membangun rasa kebersamaan. Kegiatan ini meliputi:
-
-- Perkemahan Persaudaraan.
-- Latihan gabungan dengan Paskibra dari sekolah lain.
-- Kegiatan kebersamaan lainnya.
-
-## Fitur-Fitur Utama
-
-### Pembinaan oleh Pembina Profesional
-
-Paskibra di MTs Negeri 1 Pandeglang dibimbing oleh pembina profesional yang berpengalaman dalam bidang baris-berbaris dan kepemimpinan. Pembina memberikan arahan dan dukungan kepada siswa untuk mencapai potensi terbaik mereka.
-
-### Fasilitas Pendukung
-
-MTs Negeri 1 Pandeglang menyediakan fasilitas pendukung yang lengkap untuk kegiatan Paskibra, antara lain:
-
-- Lapangan baris-berbaris yang memadai.
-- Peralatan baris-berbaris dan upacara bendera yang lengkap.
-- Ruang pertemuan untuk diskusi dan pelatihan.
-
-### Pengembangan Karakter
-
-Selain mengembangkan keterampilan baris-berbaris, Paskibra di MTs Negeri 1 Pandeglang juga berfokus pada pembinaan karakter siswa. Siswa diajarkan nilai-nilai disiplin, tanggung jawab, kerjasama, dan kepemimpinan.
+**"Disiplin adalah Napasku, Kesetiaan adalah Kebanggaanku"**
 
 ---
 
-> "Paskibra di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan keterampilan baris-berbaris dan karakter yang kuat. Melalui kegiatan Paskibra, kami berharap dapat membentuk generasi yang disiplin, tangguh, dan memiliki jiwa kepemimpinan." - Pembina Paskibra MTs Negeri 1 Pandeglang
+Pasukan Pengibar Bendera (Paskibra) MTs Negeri 1 Pandeglang bukan sekadar kegiatan ekstrakurikuler baris-berbaris. Ini adalah **kawah candradimuka** bagi siswa-siswi terpilih untuk ditempa menjadi pribadi yang memiliki karakter baja, mental juara, dan jiwa nasionalisme yang tinggi.
+
+Sebagai salah satu ekstrakurikuler paling prestisius, Paskibra MTsN 1 Pandeglang (biasa dijuluki _Satria Pandeglang_) berkomitmen mencetak kader pemimpin yang siap tampil prima dalam tugas negara maupun kehidupan sehari-hari.
+
+### Filosofi Pembinaan: Tri Matra Paskibra
+
+Kami menerapkan tiga dimensi pembinaan utama:
+
+1.  **Fisik yang Prima:** Membangun ketahanan fisik melalui latihan terukur.
+2.  **Mental Baja:** Membentuk keberanian, ketenangan di bawah tekanan, dan tanggung jawab.
+3.  **Intelektual:** Memahami wawasan kebangsaan, tata upacara, dan kepemimpinan.
+
+---
+
+### Program & Kegiatan Unggulan
+
+Kurikulum pelatihan kami dirancang sistematis untuk menghasilkan pasukan yang presisi dan estetis:
+
+#### 1. Pendidikan Dasar & Latihan (Diklat)
+
+Fase awal pembentukan karakter. Anggota baru diperkenalkan dengan dasar-dasar kepaskibrakaan, PBB (Peraturan Baris Berbaris) dasar, dan penanaman etika kedisiplinan.
+
+#### 2. Spesialisasi PBB & Variasi Formasi
+
+Siswa dilatih tidak hanya baris-berbaris statis, tetapi juga:
+
+- **PBB Murni:** Ketepatan gerakan sesuai Perpang TNI.
+- **Variasi & Formasi:** Kreativitas manuver barisan yang indah dan dinamis untuk kompetisi.
+
+#### 3. Petugas Protokoler Upacara
+
+Menjadi pelaksana utama setiap Upacara Bendera hari Senin, Peringatan Hari Besar Nasional (HUT RI, Hari Santri, Hari Amal Bhakti), dan acara resmi madrasah lainnya dengan standar Tata Upacara Sipil/Militer yang ketat.
+
+#### 4. Kompetisi LKBB (Lomba Ketangkasan Baris Berbaris)
+
+Tim inti Paskibra rutin diterjunkan dalam berbagai ajang lomba LKBB tingkat Kabupaten, Provinsi, hingga Nasional untuk menguji mental dan meraih prestasi.
+
+#### 5. Malam Keakraban & Jiwa Korsa
+
+Membangun _Esprit de Corps_ (Jiwa Korsa) yang kuat. Kami menanamkan rasa persaudaraan bahwa sakit satu sakit semua, senang satu senang semua.
+
+---
+
+### Mengapa Bergabung dengan Paskibra?
+
+Bergabung dengan Paskibra MTs Negeri 1 Pandeglang memberikan nilai tambah yang signifikan bagi siswa:
+
+- **Mentoring Profesional:** Dilatih langsung oleh purna Paskibraka dan pelatih berpengalaman yang memiliki sertifikasi.
+- **Jalur Prestasi:** Kesempatan besar untuk masuk ke SMA/MA favorit melalui jalur prestasi non-akademik (sertifikat kejuaraan).
+- **Manajemen Waktu:** Siswa terlatih membagi waktu antara akademik dan organisasi dengan sangat baik.
+- **Postur & Kesehatan:** Latihan rutin memperbaiki postur tubuh menjadi tegap dan meningkatkan kesehatan fisik secara menyeluruh.
+
+---
+
+### Galeri Prestasi
+
+Paskibra MTs Negeri 1 Pandeglang telah mengukir berbagai tinta emas, di antaranya:
+
+- Juara Umum LKBB Tingkat Kabupaten Pandeglang.
+- Juara Danton Terbaik & Variasi Formasi Terbaik.
+- Pengirim perwakilan Paskibraka Tingkat Kabupaten setiap tahunnya.
+
+---
+
+> "Kami tidak hanya diajarkan untuk mengibarkan bendera, tapi kami diajarkan bagaimana cara menghormatinya dengan segenap jiwa dan raga. Paskibra adalah tempat di mana keringat berubah menjadi emas prestasi."
+>
+> — **Komandan Satuan Paskibra**
 ```
 
 ---
@@ -2566,82 +2960,85 @@ Selain mengembangkan keterampilan baris-berbaris, Paskibra di MTs Negeri 1 Pande
 
 ```markdown
 ---
-title: "Pecinta Alam"
-meta_title: "Pecinta Alam MTs Negeri 1 Pandeglang"
-description: "Pecinta Alam MTs Negeri 1 Pandeglang"
+title: "SISPALA (Siswa Pecinta Alam)"
+meta_title: "SISPALA MTs Negeri 1 Pandeglang - Penjaga Kelestarian Alam"
+description: "Membentuk generasi muda yang tangguh, peduli lingkungan, dan memiliki kemampuan survival. Garda terdepan program Adiwiyata MTs Negeri 1 Pandeglang."
 draft: false
 ---
 
-## Pengenalan
+### Sahabat Alam, Penjaga Kehidupan
 
-Pecinta Alam di MTs Negeri 1 Pandeglang adalah kegiatan ekstrakurikuler yang bertujuan untuk menumbuhkan kesadaran lingkungan dan kecintaan terhadap alam. Melalui kegiatan ini, siswa diajak untuk menjaga kelestarian alam dan belajar berbagai keterampilan yang berhubungan dengan alam bebas.
-
-### Tujuan Pecinta Alam
-
-Pecinta Alam di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Meningkatkan kesadaran lingkungan dan pelestarian alam.
-2. Mengembangkan keterampilan hidup di alam bebas.
-3. Menumbuhkan rasa tanggung jawab terhadap lingkungan.
-4. Meningkatkan kebugaran fisik dan mental siswa.
-5. Membangun karakter yang mandiri, disiplin, dan bertanggung jawab.
-
-## Kegiatan Pecinta Alam
-
-### Latihan dan Kegiatan Alam
-
-Pecinta Alam di MTs Negeri 1 Pandeglang mengadakan berbagai latihan dan kegiatan di alam, seperti:
-
-- Hiking dan camping.
-- Penjelajahan dan orientasi medan.
-- Kegiatan penanaman pohon dan pelestarian lingkungan.
-- Survival skills dan keterampilan bertahan hidup di alam bebas.
-
-### Pendidikan Lingkungan
-
-Selain kegiatan di alam, Pecinta Alam juga mengadakan pendidikan lingkungan untuk meningkatkan pemahaman siswa tentang pentingnya menjaga kelestarian alam. Kegiatan ini meliputi:
-
-- Workshop dan seminar tentang lingkungan.
-- Diskusi dan kajian tentang isu-isu lingkungan.
-- Kunjungan ke lokasi-lokasi konservasi dan taman nasional.
-
-### Kegiatan Sosial dan Lingkungan
-
-Pecinta Alam juga aktif dalam berbagai kegiatan sosial dan lingkungan, seperti:
-
-- Aksi bersih-bersih lingkungan.
-- Kampanye lingkungan dan edukasi masyarakat.
-- Kegiatan relawan dalam penanganan bencana alam.
-
-### Kompetisi dan Lomba
-
-Pecinta Alam di MTs Negeri 1 Pandeglang juga mengikuti berbagai kompetisi dan lomba yang berkaitan dengan kegiatan alam, seperti:
-
-- Lomba hiking dan orientasi medan.
-- Kompetisi keterampilan bertahan hidup.
-- Lomba penanaman pohon dan pelestarian lingkungan.
-
-## Fitur-Fitur Utama
-
-### Pembinaan oleh Pembina Profesional
-
-Pecinta Alam di MTs Negeri 1 Pandeglang dibimbing oleh pembina profesional yang berpengalaman dalam kegiatan alam. Pembina memberikan arahan dan dukungan kepada siswa untuk mengembangkan keterampilan dan karakter mereka.
-
-### Fasilitas Pendukung
-
-MTs Negeri 1 Pandeglang menyediakan fasilitas pendukung yang lengkap untuk kegiatan Pecinta Alam, antara lain:
-
-- Peralatan hiking dan camping yang lengkap.
-- Lokasi latihan yang memadai.
-- Ruang pertemuan untuk diskusi dan seminar.
-
-### Pembinaan Karakter
-
-Selain mengembangkan keterampilan hidup di alam bebas, Pecinta Alam di MTs Negeri 1 Pandeglang juga berfokus pada pembinaan karakter siswa. Siswa diajarkan nilai-nilai disiplin, tanggung jawab, kerjasama, dan kepemimpinan.
+**"Lestari Alamku, Lestari Madrasahku"**
 
 ---
 
-> "Pecinta Alam di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk menumbuhkan kecintaan terhadap alam dan kesadaran lingkungan. Melalui kegiatan Pecinta Alam, kami berharap dapat membentuk generasi yang peduli dan bertanggung jawab terhadap kelestarian alam." - Pembina Pecinta Alam MTs Negeri 1 Pandeglang
+SISPALA (Siswa Pecinta Alam) MTs Negeri 1 Pandeglang bukan sekadar komunitas penikmat alam, melainkan gerakan edukasi untuk mencetak kader konservasi yang militan dan cerdas. Kami adalah garda terdepan dalam menyukseskan program **Madrasah Adiwiyata**.
+
+Di sini, siswa tidak hanya diajarkan untuk mendaki gunung atau menjelajah hutan, tetapi dididik untuk memahami filosofi bahwa _"Alam bukan warisan nenek moyang, melainkan titipan anak cucu yang harus dijaga."_
+
+### Filosofi & Kode Etik
+
+Setiap anggota SISPALA memegang teguh Kode Etik Pecinta Alam:
+
+1.  **Tidak mengambil apa pun kecuali gambar.**
+2.  **Tidak meninggalkan apa pun kecuali jejak.**
+3.  **Tidak membunuh apa pun kecuali waktu.**
+
+---
+
+### Divisi & Fokus Kegiatan
+
+Kami membagi fokus kegiatan menjadi tiga pilar utama untuk memastikan pengembangan _skill_ yang menyeluruh:
+
+#### 1. Divisi Gunung Hutan (Mountaineering)
+
+Melatih ketahanan fisik dan mental melalui interaksi langsung dengan alam liar.
+
+- **Navigasi Darat:** Kemampuan membaca peta, kompas, dan orientasi medan.
+- **Manajemen Perjalanan:** Perencanaan logistik dan rute ekspedisi.
+- **Survival Dasar:** Teknik bertahan hidup di alam bebas (membuat bivak, mencari air/makanan, api).
+
+#### 2. Divisi Lingkungan Hidup (Konservasi)
+
+Fokus pada aksi nyata penyelamatan lingkungan di sekolah dan masyarakat.
+
+- **Bank Sampah & Daur Ulang:** Mengelola limbah sekolah menjadi barang bernilai guna.
+- **Green House & Apotek Hidup:** Perawatan tanaman obat dan pembibitan.
+- **Operasi Semut:** Gerakan bersih gunung dan bersih lingkungan madrasah.
+
+#### 3. Divisi SAR & Kemanusiaan (Search and Rescue)
+
+Membekali siswa dengan kemampuan pertolongan pertama dan tanggap bencana.
+
+- **PPGD:** Pertolongan Pertama Gawat Darurat di lapangan.
+- **Mitigasi Bencana:** Edukasi kesiapsiagaan menghadapi bencana alam.
+
+---
+
+### Mengapa Bergabung dengan SISPALA?
+
+Bergabung dengan SISPALA MTs Negeri 1 Pandeglang membentuk karakter yang unik dan kuat:
+
+- **Mentalitas Baja:** Terbiasa menghadapi kesulitan dan tantangan di alam membuat siswa tidak mudah menyerah dalam kehidupan nyata.
+- **Solidaritas Tanpa Batas:** Ikatan persaudaraan yang terbentuk saat susah-senang bersama di alam liar sangatlah kuat.
+- **Kecerdasan Ekologis:** Memahami isu lingkungan global dan menjadi agen perubahan di masyarakat.
+- **Kemandirian:** Terlatih memasak, mendirikan tenda, dan mengurus diri sendiri jauh dari kenyamanan rumah.
+
+---
+
+### Fasilitas & Ekspedisi
+
+Untuk menunjang kegiatan, kami didukung oleh:
+
+- **Peralatan Outdoor Standar:** Tenda dome, alat masak (nesting), kompas, dan alat navigasi.
+- **Mentor Berpengalaman:** Dibimbing oleh praktisi pecinta alam dan guru pendamping bersertifikat.
+- **Agenda Ekspedisi Tahunan:** Pendakian gunung (Gunung Karang, Pulosari) dan Kemah Konservasi.
+
+---
+
+> "Kami belajar dari alam bahwa hal terindah tidak didapat dengan instan. Puncak gunung tidak akan rendah bagi mereka yang terus melangkah. Jadilah tangguh seperti karang, dan menyejukkan seperti embun pagi."
+>
+> — **Ketua SISPALA MTs Negeri 1 Pandeglang**
 ```
 
 ---
@@ -2650,71 +3047,79 @@ Selain mengembangkan keterampilan hidup di alam bebas, Pecinta Alam di MTs Neger
 
 ```markdown
 ---
-title: "Pelayanan Terpadu Satu Pintu"
-meta_title: "Pelayanan Terpadu Satu Pintu MTs Negeri 1 Pandeglang"
-description: "Pelayanan Terpadu Satu Pintu MTs Negeri 1 Pandeglang"
+title: "Layanan Digital (PTSP)"
+meta_title: "PTSP MTs Negeri 1 Pandeglang - Pelayanan Cepat & Transparan"
+description: "Akses layanan administrasi pendidikan satu pintu yang modern, transparan, dan akuntabel. Melayani legalisir, surat keterangan, dan informasi akademik secara terpadu."
 draft: false
 ---
 
-## Pengenalan
+### Birokrasi Bersih, Melayani Sepenuh Hati
 
-Pelayanan Terpadu Satu Pintu (PTSP) di MTs Negeri 1 Pandeglang bertujuan untuk memberikan kemudahan dan kenyamanan dalam mengakses berbagai layanan administratif dan informasi. PTSP ini dirancang untuk meningkatkan efisiensi dan efektivitas layanan kepada siswa, orang tua, dan masyarakat.
-
-### Tujuan PTSP
-
-PTSP di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Meningkatkan kualitas pelayanan publik.
-2. Mempercepat proses pelayanan administratif.
-3. Memberikan akses informasi yang transparan dan akurat.
-4. Meningkatkan kepuasan masyarakat terhadap layanan yang diberikan.
-
-## Jenis-Jenis Pelayanan
-
-### Layanan Akademik
-
-PTSP menyediakan berbagai layanan akademik untuk mendukung proses belajar mengajar, antara lain:
-
-- Pendaftaran siswa baru.
-- Pengurusan ijazah dan transkrip nilai.
-- Informasi jadwal pelajaran dan ujian.
-- Bimbingan akademik dan konseling.
-
-### Layanan Non-Akademik
-
-Selain layanan akademik, PTSP juga menyediakan berbagai layanan non-akademik, antara lain:
-
-- Informasi kegiatan ekstrakurikuler.
-- Pengurusan administrasi keuangan.
-- Layanan perpustakaan.
-- Informasi beasiswa dan program bantuan.
-
-### Layanan Informasi
-
-PTSP memberikan akses informasi yang lengkap dan transparan kepada siswa, orang tua, dan masyarakat, antara lain:
-
-- Informasi tentang kurikulum dan program pendidikan.
-- Informasi kegiatan sekolah.
-- Pengumuman resmi dari sekolah.
-- Layanan pengaduan dan saran.
-
-## Fitur-Fitur Utama
-
-### Pelayanan Cepat dan Efisien
-
-PTSP di MTs Negeri 1 Pandeglang dirancang untuk memberikan pelayanan yang cepat dan efisien. Proses pelayanan dilakukan dengan sistem yang terintegrasi untuk memastikan pelayanan yang tepat waktu dan akurat.
-
-### Petugas Pelayanan yang Ramah dan Profesional
-
-Setiap petugas pelayanan di PTSP MTs Negeri 1 Pandeglang dilatih untuk memberikan pelayanan yang ramah dan profesional. Mereka siap membantu dan memberikan informasi yang dibutuhkan oleh siswa, orang tua, dan masyarakat.
-
-### Sistem Antrian Online
-
-PTSP menyediakan sistem antrian online untuk memudahkan pengaturan waktu kunjungan dan mengurangi waktu tunggu. Siswa dan orang tua dapat melakukan pendaftaran antrian melalui website atau aplikasi PTSP.
+**"Cepat, Tepat, Transparan, dan Akuntabel"**
 
 ---
 
-> "Pelayanan Terpadu Satu Pintu di MTs Negeri 1 Pandeglang adalah upaya kami untuk memberikan pelayanan terbaik kepada siswa, orang tua, dan masyarakat. Kami berkomitmen untuk terus meningkatkan kualitas pelayanan kami." - Kepala Tata Usaha MTs Negeri 1 Pandeglang
+Pelayanan Terpadu Satu Pintu (PTSP) MTs Negeri 1 Pandeglang adalah wujud reformasi birokrasi di lingkungan madrasah. Kami menghapus stigma pelayanan publik yang berbelit-belit menjadi layanan yang **simpel, pasti, dan ramah teknologi**.
+
+Sebagai bagian dari Zona Integritas, PTSP kami menjamin seluruh layanan administrasi **BEBAS BIAYA (Gratis)** dan **BEBAS PUNGLI**, memberikan kenyamanan dan kepastian bagi wali murid, alumni, dan masyarakat luas.
+
+### Standar Maklumat Pelayanan
+
+Kami berkomitmen menyelenggarakan pelayanan sesuai standar operasional prosedur (SOP) yang telah ditetapkan dan siap menerima sanksi apabila melanggar maklumat ini.
+
+1.  **Kepastian Waktu:** Setiap jenis layanan memiliki estimasi waktu penyelesaian yang jelas.
+2.  **Transparansi Persyaratan:** Tidak ada persyaratan "siluman", semua tercantum jelas di loket dan website.
+3.  **Kemudahan Akses:** Layanan dapat diakses secara _walk-in_ (datang langsung) maupun _online_.
+
+---
+
+### Katalog Layanan Unggulan
+
+Kami melayani berbagai kebutuhan administrasi kependidikan secara terpusat:
+
+#### 1. Layanan Kesiswaan & Akademik
+
+- Legalisir Ijazah & Raport (Selesai dalam 15 menit jika berkas lengkap).
+- Surat Keterangan Pindah Sekolah (Mutasi Masuk/Keluar).
+- Penerbitan Surat Keterangan Kesalahan Penulisan Ijazah.
+- Layanan NISN dan Verval PD.
+
+#### 2. Layanan Kepegawaian & Tata Usaha
+
+- Pengurusan Kenaikan Pangkat & Berkala Guru/Pegawai.
+- Surat Keterangan Aktif Melaksanakan Tugas.
+- Layanan Persuratan Dinas Masuk/Keluar.
+
+#### 3. Layanan Informasi & Pengaduan
+
+- Pusat Informasi PPDB (Penerimaan Peserta Didik Baru).
+- Layanan Pengaduan Masyarakat (_Whistleblowing System_).
+- Konsultasi Akademik Wali Murid.
+
+---
+
+### Inovasi Layanan Digital
+
+Untuk mempermudah akses di era digital, kami menghadirkan terobosan:
+
+- **E-Tamu:** Buku tamu digital untuk pencatatan pengunjung yang rapi dan aman.
+- **Tracking Berkas:** Pemohon dapat memantau status penyelesaian berkas melalui WhatsApp Gateway.
+- **Kotak Saran Digital:** Kanal aspirasi _real-time_ untuk evaluasi kepuasan pelayanan.
+
+### Fasilitas Ruang Pelayanan
+
+Kami mendesain ruang PTSP senyaman lobi perbankan untuk kenyamanan Anda:
+
+- Ruang tunggu ber-AC dengan kursi ergonomis.
+- Mesin antrian digital.
+- Fasilitas air minum gratis & _charging station_.
+- Akses ramah disabilitas (kursi roda & jalur landai).
+
+---
+
+> "Kepuasan Anda adalah kebanggaan kami. Kami hadir untuk memangkas birokrasi, bukan menambahnya. PTSP MTs Negeri 1 Pandeglang siap melayani dengan senyum, salam, dan sapa."
+>
+> — **Kepala Urusan Tata Usaha**
 ```
 
 ---
@@ -2723,75 +3128,79 @@ PTSP menyediakan sistem antrian online untuk memudahkan pengaturan waktu kunjung
 
 ```markdown
 ---
-title: "PMR"
-meta_title: "PMR MTs Negeri 1 Pandeglang"
-description: "PMR MTs Negeri 1 Pandeglang"
+title: "PMR (Palang Merah Remaja)"
+meta_title: "PMR MTs Negeri 1 Pandeglang - Relawan Muda Kemanusiaan"
+description: "Mencetak relawan muda yang sigap, tangguh, dan peduli. Wadah pembinaan pertolongan pertama, kesehatan remaja, dan aksi kemanusiaan di MTs Negeri 1 Pandeglang."
 draft: false
 ---
 
-## Pengenalan
+### Relawan Muda, Wira Kemanusiaan
 
-PMR (Palang Merah Remaja) di MTs Negeri 1 Pandeglang adalah salah satu kegiatan ekstrakurikuler yang bertujuan untuk mengajarkan nilai-nilai kemanusiaan dan keterampilan pertolongan pertama kepada siswa. Melalui kegiatan PMR, siswa diajak untuk menjadi relawan yang siap membantu sesama dalam situasi darurat dan bencana.
-
-### Tujuan PMR
-
-PMR di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Mengembangkan keterampilan pertolongan pertama pada siswa.
-2. Menumbuhkan rasa empati dan kepedulian terhadap sesama.
-3. Meningkatkan pengetahuan tentang kesehatan dan keselamatan.
-4. Membentuk karakter siswa yang tanggap dan bertanggung jawab.
-5. Mempersiapkan siswa untuk menjadi relawan yang siap membantu dalam situasi darurat.
-
-## Kegiatan PMR
-
-### Latihan Rutin
-
-PMR di MTs Negeri 1 Pandeglang mengadakan latihan rutin setiap minggu. Latihan ini meliputi:
-
-- Keterampilan pertolongan pertama (CPR, perawatan luka, penanganan patah tulang).
-- Simulasi penanganan bencana dan situasi darurat.
-- Pendidikan kesehatan dan sanitasi.
-- Latihan fisik untuk meningkatkan kebugaran.
-
-### Kegiatan Kemanusiaan
-
-PMR di MTs Negeri 1 Pandeglang aktif dalam berbagai kegiatan kemanusiaan dan sosial. Siswa diajak untuk berpartisipasi dalam kegiatan seperti:
-
-- Donor darah.
-- Kampanye kesehatan.
-- Kegiatan bakti sosial.
-- Penanganan bencana alam.
-
-### Kompetisi dan Lomba
-
-PMR juga mengadakan dan berpartisipasi dalam berbagai kompetisi dan lomba yang berkaitan dengan keterampilan pertolongan pertama dan kesehatan. Kegiatan ini bertujuan untuk mengasah keterampilan siswa dan meningkatkan semangat kompetisi yang sehat.
-
-### Kegiatan Pembinaan
-
-Selain kegiatan praktis, PMR juga fokus pada pembinaan karakter siswa. Siswa diajarkan nilai-nilai kemanusiaan, disiplin, tanggung jawab, dan kepemimpinan melalui berbagai kegiatan yang mendukung perkembangan karakter mereka.
-
-## Fitur-Fitur Utama
-
-### Pembinaan oleh Pembina Profesional
-
-PMR di MTs Negeri 1 Pandeglang dibimbing oleh pembina profesional yang berpengalaman dalam bidang pertolongan pertama dan kesehatan. Pembina memberikan arahan dan dukungan kepada siswa untuk mengembangkan keterampilan dan karakter mereka.
-
-### Fasilitas Pendukung
-
-MTs Negeri 1 Pandeglang menyediakan fasilitas pendukung yang lengkap untuk kegiatan PMR, antara lain:
-
-- Peralatan pertolongan pertama yang lengkap.
-- Ruang kesehatan yang memadai.
-- Ruang pertemuan untuk diskusi dan ceramah.
-
-### Pembinaan Karakter
-
-Selain mengembangkan keterampilan pertolongan pertama, PMR di MTs Negeri 1 Pandeglang juga berfokus pada pembinaan karakter siswa. Siswa diajarkan nilai-nilai empati, kepedulian, tanggung jawab, dan kepemimpinan.
+**"Siamo Tutti Fratelli - Kita Semua Bersaudara"**
 
 ---
 
-> "PMR di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk belajar dan mengembangkan keterampilan pertolongan pertama serta nilai-nilai kemanusiaan. Melalui kegiatan PMR, kami berharap dapat membentuk generasi yang tanggap, peduli, dan siap membantu sesama." - Pembina PMR MTs Negeri 1 Pandeglang
+Palang Merah Remaja (PMR) Unit MTs Negeri 1 Pandeglang adalah wadah pembinaan generasi muda yang bergerak di bidang kemanusiaan dan kesehatan. Kami mendidik siswa untuk menjadi **"Dokter Kecil"** yang sigap dalam pertolongan pertama, sekaligus menjadi **"Duta Kesehatan"** bagi teman sebayanya.
+
+Berlandaskan pada 7 Prinsip Dasar Gerakan Palang Merah dan Bulan Sabit Merah Internasional, PMR Madya (Tingkat SMP/MTs) kami fokus pada pembentukan karakter peduli (_care_), responsif, dan kerjasama.
+
+### Tri Bakti PMR
+
+Seluruh program kerja kami mengacu pada filosofi Tri Bakti PMR:
+
+1.  **Meningkatkan Keterampilan Hidup Sehat:** Menjadi contoh gaya hidup bersih dan sehat bagi lingkungan sekitar.
+2.  **Berkarya dan Berbakti di Masyarakat:** Terjun langsung membantu sesama yang membutuhkan.
+3.  **Mempererat Persahabatan Nasional dan Internasional:** Menjalin relasi positif tanpa memandang perbedaan.
+
+---
+
+### Kurikulum & Materi Pelatihan
+
+Anggota PMR dilatih secara intensif dengan kurikulum standar PMI (Palang Merah Indonesia):
+
+#### 1. Pertolongan Pertama (First Aid)
+
+Skill wajib bagi setiap anggota. Materi mencakup:
+
+- Penanganan luka pendarahan & patah tulang (pembidaian).
+- Resusitasi Jantung Paru (RJP/CPR).
+- Evakuasi korban & transportasi darurat.
+
+#### 2. Perawatan Keluarga (PK)
+
+Melatih kemandirian dalam merawat orang sakit di rumah, mulai dari mengganti sprei pasien hingga membantu mobilitas.
+
+#### 3. Pendidikan Remaja Sebaya (PRS)
+
+Memberdayakan anggota senior untuk menjadi konselor bagi teman-temannya terkait isu kesehatan remaja (NAPZA, HIV/AIDS, Kesehatan Reproduksi, & Kesehatan Mental).
+
+#### 4. Ayo Siaga Bencana
+
+Edukasi mitigasi bencana alam (gempa bumi, banjir, kebakaran) agar siswa tidak panik dan tahu prosedur penyelamatan diri.
+
+---
+
+### Peran di Madrasah
+
+PMR memegang peran vital dalam operasional harian madrasah:
+
+- **Tim Kesehatan Upacara:** Siaga penuh menangani siswa yang pingsan atau sakit saat upacara bendera.
+- **Piket UKS (Usaha Kesehatan Sekolah):** Mengelola ruang UKS, memberikan pertolongan ringan, dan pencatatan kesehatan siswa.
+- **Event Medic:** Menjadi tim medis resmi dalam kegiatan besar madrasah seperti Porseni, Kemah Pramuka, dan Study Tour.
+
+---
+
+### Kegiatan Penunjang
+
+- **Jumbara (Jumpa Bakti Gembira):** Ajang pertemuan dan lomba PMR tingkat Kabupaten/Provinsi.
+- **Donor Darah Sukarela:** Mengorganisir _event_ donor darah bagi guru dan masyarakat sekitar.
+- **Bakti Sosial:** Penyaluran bantuan logistik saat terjadi bencana alam di wilayah Banten.
+
+---
+
+> "Menjadi anggota PMR bukan tentang memakai seragam putih, tapi tentang memiliki hati yang siap melayani. Tangan kami dilatih untuk mengobati luka, tapi senyum kami didedikasikan untuk mengobati duka."
+>
+> — **Pembina PMR MTs Negeri 1 Pandeglang**
 ```
 
 ---
@@ -2800,76 +3209,83 @@ Selain mengembangkan keterampilan pertolongan pertama, PMR di MTs Negeri 1 Pande
 
 ```markdown
 ---
-title: "Pramuka"
-meta_title: "Pramuka MTs Negeri 1 Pandeglang"
-description: "Pramuka MTs Negeri 1 Pandeglang"
+title: "Gerakan Pramuka"
+meta_title: "Pramuka MTs Negeri 1 Pandeglang - Pasukan Penggalang"
+description: "Membentuk tunas bangsa yang berkarakter, mandiri, dan cinta tanah air. Gugus Depan MTs Negeri 1 Pandeglang, wadah pembinaan kepanduan modern."
 draft: false
 ---
 
-## Pengenalan
+### Satyaku Kudharmakan, Dharmaku Kubaktikan
 
-Pramuka di MTs Negeri 1 Pandeglang adalah salah satu kegiatan ekstrakurikuler yang bertujuan untuk membentuk karakter siswa yang mandiri, disiplin, dan berjiwa kepemimpinan. Melalui kegiatan Pramuka, siswa diajak untuk belajar berbagai keterampilan hidup dan nilai-nilai luhur yang dapat diterapkan dalam kehidupan sehari-hari.
-
-### Tujuan Pramuka
-
-Pramuka di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Membentuk karakter siswa yang mandiri dan bertanggung jawab.
-2. Meningkatkan keterampilan kepemimpinan dan kerjasama.
-3. Menumbuhkan rasa cinta tanah air dan kebangsaan.
-4. Mengembangkan keterampilan hidup yang berguna.
-5. Mempersiapkan siswa untuk menjadi warga negara yang berkarakter dan berintegritas.
-
-## Kegiatan Pramuka
-
-### Latihan Rutin
-
-Pramuka di MTs Negeri 1 Pandeglang mengadakan latihan rutin setiap minggu. Latihan ini meliputi:
-
-- Keterampilan kepramukaan (tali-temali, pionering, navigasi).
-- Latihan fisik dan olahraga.
-- Kegiatan alam terbuka (berkemah, hiking).
-- Diskusi dan ceramah kepramukaan.
-
-### Kegiatan Kemanusiaan
-
-Pramuka di MTs Negeri 1 Pandeglang aktif dalam berbagai kegiatan kemanusiaan dan bakti sosial. Siswa diajak untuk berpartisipati dalam kegiatan seperti:
-
-- Bakti sosial di masyarakat.
-- Donor darah.
-- Penanaman pohon dan pelestarian lingkungan.
-- Kegiatan relawan dalam situasi darurat.
-
-### Kegiatan Persaudaraan
-
-Pramuka juga mengadakan kegiatan persaudaraan untuk mempererat hubungan antaranggota dan membangun rasa kebersamaan. Kegiatan ini meliputi:
-
-- Perkemahan Persaudaraan.
-- Jambore Pramuka.
-- Lomba-lomba kepramukaan.
-- Kegiatan kebersamaan lainnya.
-
-## Fitur-Fitur Utama
-
-### Pembinaan oleh Pembina Profesional
-
-Pramuka di MTs Negeri 1 Pandeglang dibimbing oleh pembina profesional yang berpengalaman dalam bidang kepramukaan. Pembina memberikan arahan dan dukungan kepada siswa untuk mengembangkan keterampilan dan karakter mereka.
-
-### Fasilitas Pendukung
-
-MTs Negeri 1 Pandeglang menyediakan fasilitas pendukung yang lengkap untuk kegiatan Pramuka, antara lain:
-
-- Lapangan Pramuka yang memadai.
-- Peralatan kepramukaan yang lengkap.
-- Ruang pertemuan untuk diskusi dan ceramah.
-
-### Pengembangan Karakter
-
-Selain mengembangkan keterampilan kepramukaan, Pramuka di MTs Negeri 1 Pandeglang juga berfokus pada pembinaan karakter siswa. Siswa diajarkan nilai-nilai disiplin, tanggung jawab, kerjasama, dan kepemimpinan.
+**"Ikhlas Bakti Bina Bangsa, Berbudi Bawa Laksana"**
 
 ---
 
-> "Pramuka di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan keterampilan hidup dan karakter yang kuat. Melalui kegiatan Pramuka, kami berharap dapat membentuk generasi yang mandiri, disiplin, dan berjiwa kepemimpinan." - Pembina Pramuka MTs Negeri 1 Pandeglang
+Gerakan Pramuka Gugus Depan MTs Negeri 1 Pandeglang (Pasukan Penggalang) adalah ekstrakurikuler wajib yang menjadi pilar utama pendidikan karakter di madrasah. Kami bukan sekadar belajar tali-temali, tapi kami belajar tentang **kemandirian, kehormatan, dan pengabdian**.
+
+Pramuka di sini didesain sebagai laboratorium kehidupan. Tempat di mana teori kepemimpinan dipraktikkan langsung di lapangan, dan nilai-nilai Dasa Dharma ditanamkan hingga menjadi kebiasaan.
+
+### Visi Pembinaan
+
+Mencetak Pramuka Penggalang yang:
+
+1.  **Taqwa:** Memiliki spiritualitas yang kokoh sesuai sila pertama Pancasila.
+2.  **Tangguh:** Memiliki mental baja, tidak manja, dan mampu bertahan dalam segala kondisi (_Survival_).
+3.  **Terampil:** Menguasai _life skills_ yang berguna bagi diri sendiri dan masyarakat.
+
+---
+
+### Program & Kegiatan Unggulan
+
+Kami menerapkan metode kepanduan modern yang menyenangkan namun tetap disiplin (_Scouting with Joy_):
+
+#### 1. Teknik Kepramukaan (Tekpram)
+
+Penguasaan skill lapangan yang mumpuni:
+
+- **Pionering:** Seni bangunan darurat menggunakan tongkat dan tali (menara pandang, jembatan).
+- **Navigasi Darat:** Membaca peta, kompas, dan tanda jejak alam.
+- **Sandi & Morse:** Komunikasi rahasia dan isyarat bendera (Semaphore).
+
+#### 2. Perkemahan (Camping)
+
+Puncak dari pelatihan kemandirian.
+
+- **PERJUSA:** Perkemahan Jumat Sabtu untuk anggota baru.
+- **Lomba Tingkat (LT):** Kompetisi regu prestasi berjenjang dari madrasah hingga nasional.
+- **Jambore:** Pertemuan besar Pramuka Penggalang untuk menjalin persahabatan.
+
+#### 3. Gladian Pimpinan Regu (DIANPINRU)
+
+Pelatihan khusus bagi para Pratama (Ketua) dan Pimpinan Regu (Pinru). Mereka dilatih manajemen tim, pengambilan keputusan, dan psikologi kepemimpinan.
+
+#### 4. Pramuka Peduli
+
+Aksi sosial nyata seperti baksos bencana alam, pelestarian lingkungan (penanaman pohon), dan gerakan pungut sampah (GPS).
+
+---
+
+### Mengapa Harus Aktif Pramuka?
+
+Pramuka MTs Negeri 1 Pandeglang memberikan bekal masa depan yang tidak diajarkan di dalam kelas:
+
+- **Karakter Building:** Melatih kedisiplinan, tanggung jawab, dan jiwa korsa.
+- **Sertifikat Garuda:** Kesempatan mencapai tingkatan tertinggi (Pramuka Garuda) yang diakui sebagai jalur prestasi masuk SMA/MA Unggulan.
+- **Soft Skills:** Kemampuan komunikasi, kerjasama tim (_teamwork_), dan manajemen konflik.
+
+---
+
+### Fasilitas Gugus Depan
+
+- **Sanggar Pramuka:** Markas komando yang lengkap dengan perpustakaan mini kepanduan.
+- **Peralatan Lengkap:** Tenda dome, alat masak lapangan, kompas bidik, dan stok tongkat/tali yang memadai.
+- **Pembina Bersertifikat:** Dilatih oleh Pembina Mahir Lanjutan (KPL/KPD) yang kompeten.
+
+---
+
+> "Seorang Pramuka tidak pernah terkejut; dia tahu apa yang harus dilakukan ketika sesuatu yang tak terduga terjadi. Jadilah seperti kelapa: kuat akarnya, tinggi cita-citanya, dan berguna semua bagiannya."
+>
+> — **Ka. Mabigus MTs Negeri 1 Pandeglang**
 ```
 
 ---
@@ -2878,49 +3294,77 @@ Selain mengembangkan keterampilan kepramukaan, Pramuka di MTs Negeri 1 Pandeglan
 
 ```markdown
 ---
-title: "Program"
-meta_title: "Program MTs Negeri 1 Pandeglang"
-description: "Program MTs Negeri 1 Pandeglang"
+title: "Program Unggulan"
+meta_title: "Program Unggulan MTs Negeri 1 Pandeglang - Akselerasi Prestasi"
+description: "Inovasi program pendidikan MTs Negeri 1 Pandeglang: Kelas Unggulan, Tahfidz Qur'an, Bilingual, dan Digital Class. Mempersiapkan siswa bersaing di era global."
 draft: false
 ---
 
-## Pengenalan
+### Akselerator Potensi Siswa
 
-MTs Negeri 1 Pandeglang menawarkan berbagai program unggulan untuk mendukung perkembangan akademik dan personal siswa. Program-program ini dirancang untuk mengembangkan potensi siswa secara menyeluruh, baik dalam bidang akademik maupun non-akademik.
-
-### Program Kelas Unggulan
-
-Program Kelas Unggulan merupakan program khusus yang dirancang untuk siswa-siswi yang memiliki potensi akademik tinggi. Program ini menawarkan kurikulum yang lebih menantang dan mendalam untuk mengoptimalkan kemampuan akademik siswa.
-
-### Program Tahfidz Al-Qur'an
-
-Program Tahfidz Al-Qur'an bertujuan untuk membentuk generasi yang cinta Al-Qur'an. Siswa-siswi diajak untuk menghafal Al-Qur'an dengan metode yang efektif dan menyenangkan, serta memahami makna dan kandungannya.
-
-### Program Kelas Bilingual
-
-Program Kelas Bilingual dirancang untuk meningkatkan kemampuan bahasa asing siswa. Siswa diajak untuk belajar dalam dua bahasa, yaitu Bahasa Indonesia dan Bahasa Inggris, sehingga mereka siap menghadapi tantangan globalisasi.
-
-### Program Pengembangan Diri
-
-Program Pengembangan Diri fokus pada pengembangan keterampilan hidup dan karakter siswa. Siswa diberikan pelatihan dan bimbingan dalam berbagai aspek, seperti kepemimpinan, kerjasama, dan keterampilan komunikasi.
-
-## Fitur-Fitur Utama
-
-### Pembelajaran Aktif dan Inovatif
-
-Dalam program-program unggulan, pembelajaran bersifat aktif dan inovatif. Siswa diajak untuk berpartisipasi dalam berbagai proyek dan kegiatan yang relevan dengan kehidupan nyata.
-
-### Penilaian Berbasis Kompetensi
-
-Penilaian dilakukan berdasarkan kompetensi yang dimiliki oleh siswa. Metode penilaian yang beragam, seperti proyek, presentasi, dan portofolio, digunakan untuk memberikan gambaran yang lebih komprehensif tentang kemampuan siswa.
-
-### Bimbingan dan Konseling
-
-MTs Negeri 1 Pandeglang menyediakan layanan bimbingan dan konseling untuk mendukung perkembangan akademik dan personal siswa. Siswa diberikan kesempatan untuk berdiskusi tentang minat dan bakat mereka serta merencanakan masa depan pendidikan mereka.
+**"Menggali Potensi, Mengukir Prestasi, Membangun Generasi Rabbani"**
 
 ---
 
-> "Program-program unggulan di MTs Negeri 1 Pandeglang dirancang untuk mengembangkan potensi siswa secara menyeluruh. Kami percaya bahwa setiap siswa memiliki potensi yang luar biasa, dan tugas kami adalah membantu mereka mengembangkannya." - Kepala MTs Negeri 1 Pandeglang
+MTs Negeri 1 Pandeglang menyadari bahwa setiap siswa memiliki bakat unik yang membutuhkan wadah khusus untuk berkembang maksimal. Oleh karena itu, kami merancang **Program Unggulan (Excellence Programs)** yang melampaui standar kurikulum reguler.
+
+Program ini didesain untuk memberikan tantangan intelektual, pengayaan spiritual, dan _skill_ masa depan yang dibutuhkan siswa untuk bersaing di tingkat nasional maupun internasional.
+
+### 1. Kelas Unggulan Akademik (Sains & Riset)
+
+_Wadah bagi para calon saintis muda._
+
+Kelas ini diperuntukkan bagi siswa dengan kecerdasan kognitif di atas rata-rata.
+
+- **Kurikulum Diperkaya:** Pendalaman materi Olimpiade (KSN) Matematika, IPA, dan IPS.
+- **Klinik Riset:** Pembinaan intensif penulisan Karya Ilmiah Remaja (KIR) dan metode penelitian dasar.
+- **Target:** Menjuarai kompetisi akademik tingkat Provinsi dan Nasional.
+
+### 2. Program Tahfidz Al-Qur'an Intensif
+
+_Mencetak penjaga wahyu yang intelek._
+
+Program prioritas untuk membentuk generasi Qur'ani.
+
+- **Metode:** Menggunakan metode hafalan mutqin (kuat) dengan setoran harian (_ziyadah_) dan pengulangan (_murojaah_).
+- **Target:** Hafalan minimal 3 Juz (Juz 30, 29, 1) lulus dengan predikat _Jayyid Jiddan_ bersertifikat.
+- **Wisuda Tahfidz:** Apresiasi tahunan bagi para hafidz/hafidzah muda.
+
+### 3. Kelas Bilingual (Arab & Inggris)
+
+_Gerbang menuju wawasan global._
+
+Mempersiapkan siswa menjadi warga dunia (_global citizen_) tanpa kehilangan identitas keislaman.
+
+- **English/Arabic Day:** Wajib berbahasa asing pada hari tertentu.
+- **Native Speaker Exposure:** Mendatangkan pembicara tamu atau praktisi bahasa.
+- **Public Speaking:** Latihan pidato (_muhadharah_) dwibahasa untuk melatih kepercayaan diri.
+
+### 4. Kelas Digital (ICT & Multimedia)
+
+_Menjawab tantangan revolusi industri 4.0._
+
+Kelas berbasis teknologi di mana setiap siswa menggunakan tablet/laptop sebagai media utama pembelajaran.
+
+- **Coding Dasar:** Pengenalan logika pemrograman dan pembuatan web sederhana.
+- **Desain Grafis:** Pelatihan dasar Canva, Photoshop, dan Video Editing.
+- **Literasi Digital:** Etika bermedia sosial dan keamanan data (_cyber security_).
+
+---
+
+### Metode Pendampingan (Mentoring)
+
+Keberhasilan program ini didukung oleh sistem pendampingan yang ketat namun humanis:
+
+- **Wali Kelas Khusus:** Guru pilihan yang berdedikasi tinggi memantau perkembangan setiap siswa.
+- **Laporan Berkala:** _Progress report_ bulanan kepada orang tua via aplikasi digital.
+- **Konseling Karier:** Pemetaan minat bakat sejak dini untuk persiapan masuk SMA/MA Favorit.
+
+---
+
+> "Kami tidak hanya mengajarkan siswa untuk menjawab soal ujian, tetapi kami mempersiapkan mereka untuk menjawab tantangan masa depan. Program unggulan adalah jalan tol bagi mereka yang ingin berlari lebih cepat."
+>
+> — **Koordinator Program Unggulan**
 ```
 
 ---
@@ -3106,66 +3550,83 @@ Tujuan dari MTs Negeri 1 Pandeglang adalah sebagai berikut:
 
 ```markdown
 ---
-title: "Volleyball Club"
-meta_title: "Volleyball Club MTs Negeri 1 Pandeglang"
-description: "Volleyball Club MTs Negeri 1 Pandeglang"
+title: "Klub Bola Voli (MATSANEPA VC)"
+meta_title: "Volleyball Club MTs Negeri 1 Pandeglang - Pencetak Atlet Berprestasi"
+description: "Pusat pembinaan atlet voli muda berbakat. Menggabungkan teknik profesional, disiplin tinggi, dan semangat sportivitas untuk meraih prestasi."
 draft: false
 ---
 
-## Pengenalan
+### Smash Keras, Semangat Tuntas
 
-Volleyball Club di MTs Negeri 1 Pandeglang merupakan salah satu kegiatan ekstrakurikuler yang sangat diminati oleh siswa. Klub ini bertujuan untuk mengembangkan keterampilan bermain bola voli, meningkatkan kebugaran fisik, dan membentuk karakter yang sportif dan disiplin.
-
-### Tujuan Volleyball Club
-
-Volleyball Club di MTs Negeri 1 Pandeglang bertujuan untuk:
-
-1. Meningkatkan keterampilan teknik bermain bola voli.
-2. Menumbuhkan semangat sportifitas dan kerjasama tim.
-3. Meningkatkan kebugaran fisik dan kesehatan siswa.
-4. Membangun karakter yang disiplin dan bertanggung jawab.
-5. Mempersiapkan siswa untuk berkompetisi di berbagai ajang turnamen bola voli.
-
-## Kegiatan Volleyball Club
-
-### Latihan Rutin
-
-Volleyball Club di MTs Negeri 1 Pandeglang mengadakan latihan rutin setiap minggu. Latihan ini meliputi:
-
-- Teknik dasar bola voli (passing, serving, spiking, blocking).
-- Latihan fisik untuk meningkatkan kebugaran.
-- Simulasi pertandingan untuk meningkatkan pemahaman strategi permainan.
-- Evaluasi dan pembinaan keterampilan individu dan tim.
-
-### Kompetisi dan Turnamen
-
-Volleyball Club aktif mengikuti berbagai kompetisi dan turnamen baik di tingkat lokal maupun nasional. Siswa diberikan kesempatan untuk mengasah keterampilan mereka dan meraih prestasi dalam berbagai ajang kompetisi.
-
-### Kegiatan Persahabatan
-
-Selain latihan dan kompetisi, Volleyball Club juga mengadakan kegiatan persahabatan dengan sekolah-sekolah lain. Kegiatan ini bertujuan untuk memperluas jaringan pertemanan dan meningkatkan pengalaman bermain siswa.
-
-## Fitur-Fitur Utama
-
-### Pembinaan oleh Pelatih Profesional
-
-Volleyball Club di MTs Negeri 1 Pandeglang dibimbing oleh pelatih profesional yang berpengalaman dalam bidang bola voli. Pelatih memberikan arahan dan dukungan kepada siswa untuk mencapai potensi terbaik mereka.
-
-### Fasilitas Pendukung
-
-MTs Negeri 1 Pandeglang menyediakan fasilitas pendukung yang lengkap untuk kegiatan Volleyball Club, antara lain:
-
-- Lapangan bola voli yang memadai.
-- Peralatan bola voli yang lengkap.
-- Ruang ganti dan kamar mandi yang bersih dan nyaman.
-
-### Pembinaan Karakter
-
-Selain mengembangkan keterampilan bermain bola voli, Volleyball Club juga berfokus pada pembinaan karakter siswa. Siswa diajarkan nilai-nilai disiplin, tanggung jawab, kerjasama tim, dan sportifitas.
+**"Satu Tim, Satu Jiwa, Satu Tujuan: JUARA"**
 
 ---
 
-> "Volleyball Club di MTs Negeri 1 Pandeglang adalah wadah bagi siswa untuk mengembangkan bakat dan minat mereka dalam olahraga bola voli. Kami berkomitmen untuk membentuk siswa yang tidak hanya unggul dalam keterampilan bermain, tetapi juga memiliki karakter yang kuat dan sportif." - Pembina Volleyball Club MTs Negeri 1 Pandeglang
+Klub Bola Voli MTs Negeri 1 Pandeglang (MATSANEPA VC) adalah salah satu ekstrakurikuler olahraga paling populer dan berprestasi. Kami bukan sekadar bermain bola, tetapi kami membangun **kultur juara**.
+
+Di sini, bakat mentah siswa diasah menjadi atlet potensial melalui program latihan yang terstruktur, disiplin ketat, dan jam terbang kompetisi yang tinggi.
+
+### Filosofi Tim
+
+Kami menanamkan tiga nilai utama kepada setiap pemain:
+
+1.  **Disiplin:** Latihan adalah ibadah. Tidak ada tempat bagi kemalasan.
+2.  **Kerjasama (Teamwork):** Voli adalah olahraga tim, ego individu harus dikesampingkan demi kemenangan bersama.
+3.  **Sportivitas:** Menghormati lawan, wasit, dan aturan permainan adalah harga mati.
+
+---
+
+### Program Pembinaan Berjenjang
+
+Kami membagi skuat latihan berdasarkan kemampuan untuk memaksimalkan potensi:
+
+#### 1. Kelas Pemula (Basic Skills)
+
+Fokus pada penguasaan teknik dasar yang benar (_form_):
+
+- **Passing Bawah & Atas:** Fondasi pertahanan dan serangan.
+- **Service:** Teknik servis bawah dan servis atas (floating).
+- **Footwork:** Kelincahan pergerakan kaki di lapangan.
+
+#### 2. Kelas Lanjutan (Advanced Tactics)
+
+Persiapan tim inti sekolah untuk kompetisi:
+
+- **Spiking & Blocking:** Teknik serangan tajam dan bendungan pertahanan.
+- **Strategi Permainan:** Formasi serangan (4-2, 5-1) dan pola pertahanan.
+- **Fisik & Stamina:** Latihan beban tubuh, _sprint_, dan daya tahan (_endurance_).
+
+#### 3. Sparing Partner
+
+Uji coba rutin melawan tim dari sekolah lain (SMP/SMA) atau klub lokal untuk mengasah mental bertanding dan membaca strategi lawan.
+
+---
+
+### Fasilitas Latihan Standar PBVSI
+
+Madrasah menyediakan fasilitas terbaik untuk menunjang prestasi:
+
+- **Lapangan Voli Representatif:** Lapangan _outdoor_ dengan ukuran standar nasional.
+- **Peralatan Lengkap:** Bola Mikasa/Molten standar turnamen, net profesional, dan alat bantu latihan fisik.
+- **Jersey Tim:** Seragam kebanggaan yang didesain modern untuk meningkatkan kepercayaan diri pemain.
+
+---
+
+### Pelatih & Prestasi
+
+Tim dibimbing oleh pelatih berlisensi dan guru olahraga berpengalaman yang pernah menjadi atlet daerah.
+
+**Jejak Prestasi:**
+
+- Juara Turnamen Voli Pelajar Tingkat Kabupaten.
+- Juara Ajang KKM (Kelompok Kerja Madrasah).
+- Penyumbang atlet untuk tim POPDA (Pekan Olahraga Pelajar Daerah).
+
+---
+
+> "Di lapangan ini, kami belajar bahwa kemenangan bukan hanya soal siapa yang paling kuat memukul bola, tapi siapa yang paling kuat bangkit saat bola menyentuh tanah. Voli mengajarkan kami arti pantang menyerah."
+>
+> — **Kapten Tim Voli Putra**
 ```
 
 ---
@@ -3179,8 +3640,6 @@ meta_title: "Zona Integritas MTs Negeri 1 Pandeglang"
 description: "Zona Integritas MTs Negeri 1 Pandeglang"
 draft: false
 ---
-
-## Pengenalan
 
 Zona Integritas (ZI) adalah sebuah konsep yang diterapkan di MTs Negeri 1 Pandeglang untuk menciptakan lingkungan yang bersih dari korupsi dan membangun budaya kerja yang jujur dan transparan. Zona Integritas ini bertujuan untuk meningkatkan kepercayaan masyarakat terhadap lembaga pendidikan dan memastikan pelayanan yang berkualitas.
 
@@ -3245,12 +3704,12 @@ Pengawasan dan pengendalian dilakukan secara berkala untuk memastikan pelaksanaa
 ```markdown
 ---
 enable: true
-title: "Bergabunglah dengan MTs Negeri 1 Pandeglang"
+title: "Siap Menjadi Bagian dari Generasi Unggul?"
 image: "/images/call-to-action.png"
-description: "Segera daftarkan diri Anda di MTs Negeri 1 Pandeglang dan jadilah bagian dari lembaga pendidikan yang unggul dan berprestasi. Kami siap membimbing dan mendukung perkembangan akademik serta karakter Anda."
+description: "Jangan lewatkan kesempatan emas untuk bergabung dengan keluarga besar MTs Negeri 1 Pandeglang. Mari wujudkan mimpi akademik dan karakter mulia bersama madrasah berprestasi."
 button:
   enable: true
-  label: "Daftar Sekarang!"
+  label: "Daftar Sekarang"
   link: "https://daftar.mtsn1pandeglang.sch.id"
 ---
 ```
@@ -3572,7 +4031,6 @@ const { title, meta_title, description, image, noindex, canonical } =
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Tawk.to -->
-    <!--Start of Tawk.to Script-->
     <script type="text/javascript">
       var Tawk_API = Tawk_API || {},
         Tawk_LoadStart = new Date();
@@ -3586,7 +4044,6 @@ const { title, meta_title, description, image, noindex, canonical } =
         s0.parentNode.insertBefore(s1, s0);
       })();
     </script>
-    <!--End of Tawk.to Script-->
   </head>
   <body>
     {/* google tag manager noscript */}
@@ -3599,11 +4056,40 @@ const { title, meta_title, description, image, noindex, canonical } =
     <TwSizeIndicator />
     <Header />
     <SearchModal client:load />
-    <main id="main-content">
+    <main id="main-content" class="pt-28 lg:pt-32 min-h-screen">
       <slot />
     </main>
     <Footer />
     <InstallPrompt client:load />
+
+    <!-- Busuanzi Visitor Count Script -->
+    <script
+      async
+      src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <!-- Fix untuk Astro View Transitions agar counter update saat ganti halaman -->
+    <script>
+      document.addEventListener("astro:page-load", () => {
+        // @ts-ignore
+        if (window.bszCaller && window.bszTag) {
+          const script = document.createElement("script");
+          script.src =
+            "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js?t=" +
+            new Date().getTime();
+          script.async = true;
+          document.body.appendChild(script);
+        }
+      });
+    </script>
+
+    <script>
+      import { initAnimations } from "@/scripts/gsap-animations";
+
+      // Jalankan saat halaman pertama kali load dan setiap kali navigasi berpindah
+      document.addEventListener("astro:page-load", () => {
+        initAnimations();
+      });
+    </script>
   </body>
 </html>
 ```
@@ -3619,10 +4105,18 @@ import Share from "@/components/Share.astro";
 import Disqus from "@/helpers/Disqus";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
+import readingTime from "@/lib/utils/readingTime"; // Import Reading Time
 import similarItems from "@/lib/utils/similarItems";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import { render } from "astro:content";
-import { FaRegClock, FaRegFolder, FaRegUserCircle } from "react-icons/fa";
+// Tambah Icons: FaRegCalendarAlt, FaRegClock, FaRegEye
+import {
+  FaRegFolder,
+  FaRegUserCircle,
+  FaRegCalendarAlt,
+  FaRegClock,
+  FaRegEye,
+} from "react-icons/fa";
 import ImageMod from "./components/ImageMod.astro";
 
 const COLLECTION_FOLDER = "blog";
@@ -3640,7 +4134,7 @@ const { title, description, author, categories, image, date, tags } = post.data;
       <article class="lg:col-10">
         {
           image && (
-            <div class="mb-10">
+            <div class="mb-10 gsap-hero-image">
               <ImageMod
                 src={image}
                 height={500}
@@ -3652,31 +4146,49 @@ const { title, description, author, categories, image, date, tags } = post.data;
             </div>
           )
         }
-        <h1 set:html={markdownify(title)} class="h2 mb-4" />
-        <ul class="mb-4">
-          <li class="mr-4 inline-block">
-            <a href={`/authors/${slugify(author)}`}>
-              <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
-              {humanize(author)}
-            </a>
-          </li>
-          <li class="mr-4 inline-block">
-            <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
-            {
-              categories.map((category: string, index: number) => (
-                <a href={`/categories/${slugify(category)}`}>
-                  {humanize(category)}
-                  {index !== categories.length - 1 && ","}
-                </a>
-              ))
-            }
-          </li>
-          <li class="mr-4 inline-block">
-            <FaRegClock className={"mr-2 -mt-1 inline-block"} />
-            {dateFormat(date)}
-          </li>
-        </ul>
-        <div class="content mb-10">
+        <div class="gsap-fade-up">
+          <h1 set:html={markdownify(title)} class="h2 mb-4" />
+          <ul class="mb-4">
+            <li class="mr-4 inline-block">
+              <a href={`/authors/${slugify(author)}`}>
+                <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
+                {humanize(author)}
+              </a>
+            </li>
+            <li class="mr-4 inline-block">
+              <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
+              {
+                categories.map((category: string, index: number) => (
+                  <a href={`/categories/${slugify(category)}`}>
+                    {humanize(category)}
+                    {index !== categories.length - 1 && ","}
+                  </a>
+                ))
+              }
+            </li>
+
+            {/* Tanggal */}
+            <li class="mr-4 inline-block">
+              <FaRegCalendarAlt className={"mr-2 -mt-1 inline-block"} />
+              {dateFormat(date)}
+            </li>
+
+            {/* Waktu Baca */}
+            <li class="mr-4 inline-block">
+              <FaRegClock className={"mr-2 -mt-1 inline-block"} />
+              {readingTime(post.body)}
+            </li>
+
+            {/* Jumlah Dilihat (Busuanzi) */}
+            <li class="mr-4 inline-block">
+              <FaRegEye className={"mr-2 -mt-1 inline-block"} />
+              <span id="busuanzi_container_page_pv" style="display: none;">
+                <span id="busuanzi_value_page_pv">...</span> Dibaca
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="content mb-10 gsap-fade-up">
           <Content />
         </div>
         <div class="row items-start justify-between">
@@ -3773,8 +4285,9 @@ const { title, image, social } = data.data;
 ---
 import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
+import readingTime from "@/lib/utils/readingTime"; // Import Reading Time
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
-import { FaRegFolder, FaRegUserCircle } from "react-icons/fa";
+import { FaRegFolder, FaRegUserCircle, FaRegClock } from "react-icons/fa"; // Tambah FaRegClock
 import ImageMod from "./ImageMod.astro";
 
 const {
@@ -3821,6 +4334,13 @@ const { title, image, date, author, categories } = data.data;
         ))
       }
     </li>
+
+    {/* Penambahan Waktu Baca */}
+    <li class="mr-4 inline-block">
+      <FaRegClock className={"mr-2 -mt-1 inline-block"} />
+      {readingTime(data.body)}
+    </li>
+
     {date && <li class="inline-block">{dateFormat(date)}</li>}
   </ul>
   <p class="mb-6">{plainify(data.body?.slice(0, Number(summary_length)))}</p>
@@ -5155,7 +5675,7 @@ const SearchModal = () => {
 
   // get search result
   const startTime = performance.now();
-  const searchResult = doSearch(searchData);
+  const searchResult = doSearch(searchData as ISearchItem[]);
   const endTime = performance.now();
   const totalTime = ((endTime - startTime) / 1000).toFixed(3);
 
@@ -5169,21 +5689,28 @@ const SearchModal = () => {
       "[data-search-trigger]",
     );
 
-    // search modal open
-    searchModalTriggers.forEach((button) => {
-      button.addEventListener("click", function () {
-        const searchModal = document.getElementById("searchModal");
-        searchModal!.classList.add("show");
-        searchInput!.focus();
-      });
-    });
+    // Fungsi Helper untuk Buka/Tutup Modal
+    const openModal = () => {
+      searchModal!.classList.add("show");
+      document.body.classList.add("overflow-hidden"); // KUNCI: Matikan scroll body
+      searchInput!.focus();
+    };
 
-    // search modal close
-    searchModalOverlay!.addEventListener("click", function () {
+    const closeModal = () => {
       searchModal!.classList.remove("show");
+      document.body.classList.remove("overflow-hidden"); // KUNCI: Nyalakan scroll body
+      setSearchString(""); // Opsional: Reset pencarian saat tutup
+    };
+
+    // 1. Trigger Click (Tombol Kaca Pembesar)
+    searchModalTriggers.forEach((button) => {
+      button.addEventListener("click", openModal);
     });
 
-    // keyboard navigation
+    // 2. Overlay Click (Tutup saat klik di luar)
+    searchModalOverlay!.addEventListener("click", closeModal);
+
+    // 3. Keyboard Navigation
     let selectedIndex = -1;
 
     const updateSelection = () => {
@@ -5201,39 +5728,56 @@ const SearchModal = () => {
       });
     };
 
-    document.addEventListener("keydown", function (event) {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Shortcut CTRL+K / CMD+K untuk Buka
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        searchModal!.classList.add("show");
-        searchInput!.focus();
+        event.preventDefault(); // Mencegah browser focus bar
+        openModal();
         updateSelection();
       }
 
-      if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        event.preventDefault();
-      }
-
-      if (event.key === "Escape") {
-        searchModal!.classList.remove("show");
-      }
-
-      if (event.key === "ArrowUp" && selectedIndex > 0) {
-        selectedIndex--;
-      } else if (
-        event.key === "ArrowDown" &&
-        selectedIndex < searchResultItems.length - 1
-      ) {
-        selectedIndex++;
-      } else if (event.key === "Enter") {
-        const activeLink = document.querySelector(
-          ".search-result-item-active a",
-        ) as HTMLAnchorElement;
-        if (activeLink) {
-          activeLink?.click();
+      // Navigasi Arrow
+      if (searchModal!.classList.contains("show")) {
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+          event.preventDefault();
         }
-      }
 
-      updateSelection();
-    });
+        if (event.key === "Escape") {
+          closeModal();
+        }
+
+        if (event.key === "ArrowUp" && selectedIndex > 0) {
+          selectedIndex--;
+        } else if (
+          event.key === "ArrowDown" &&
+          selectedIndex < searchResultItems.length - 1
+        ) {
+          selectedIndex++;
+        } else if (event.key === "Enter") {
+          const activeLink = document.querySelector(
+            ".search-result-item-active a",
+          ) as HTMLAnchorElement;
+          if (activeLink) {
+            activeLink?.click();
+            // Kita tidak perlu panggil closeModal() di sini karena navigasi akan merefresh halaman
+            // Tapi untuk SPA, kita harus remove overflow
+            document.body.classList.remove("overflow-hidden");
+          }
+        }
+        updateSelection();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup Event Listeners saat unmount
+    return () => {
+      searchModalTriggers.forEach((button) => {
+        button.removeEventListener("click", openModal);
+      });
+      searchModalOverlay!.removeEventListener("click", closeModal);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [searchString]);
 
   return (
@@ -5277,7 +5821,7 @@ const SearchModal = () => {
           </label>
           <input
             id="searchInput"
-            placeholder="Search..."
+            placeholder="Cari artikel, halaman, atau pengumuman..."
             className="search-wrapper-header-input"
             type="input"
             name="search"
@@ -5709,6 +6253,17 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
       class="container text-center text-text-light dark:text-darkmode-text-light"
     >
       <p set:html={markdownify(config.params.copyright)} />
+
+      <!-- Statistik Pengunjung Global -->
+      <div class="mt-2 text-xs opacity-70 flex justify-center gap-4">
+        <span id="busuanzi_container_site_pv" style="display:none">
+          Total Hits: <span id="busuanzi_value_site_pv" class="font-bold"
+          ></span>
+        </span>
+        <span id="busuanzi_container_site_uv" style="display:none">
+          Visitor: <span id="busuanzi_value_site_uv" class="font-bold"></span>
+        </span>
+      </div>
     </div>
   </div>
 </footer>
@@ -5724,7 +6279,8 @@ import Logo from "@/components/Logo.astro";
 import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
-import { IoSearch } from "react-icons/io5";
+// 1. Tambahkan FaSearch pada import
+import { FaChevronDown, FaBars, FaTimes, FaSearch } from "react-icons/fa";
 
 export interface ChildNavigationLink {
   name: string;
@@ -5739,137 +6295,385 @@ export interface NavigationLink {
 }
 
 const { main }: { main: NavigationLink[] } = menu;
-const { navigation_button, settings } = config;
+const { navigation_button } = config;
 const { pathname } = Astro.url;
 ---
 
-<header class={`header z-30 ${settings.sticky_header && "sticky top-0"}`}>
-  <nav class="navbar container">
-    <!-- logo -->
-    <div class="order-0">
-      <Logo />
-    </div>
-    <!-- navbar toggler -->
-    <input id="nav-toggle" type="checkbox" class="hidden" />
-    <label
-      for="nav-toggle"
-      class="order-3 cursor-pointer flex items-center lg:hidden text-text-dark dark:text-white lg:order-1"
+<header
+  class="fixed top-4 inset-x-0 z-50 px-4 print:hidden transition-all duration-300"
+>
+  <nav class="mx-auto max-w-7xl">
+    <!-- THE PILL (KAPSUL) -->
+    <div
+      class="relative flex items-center justify-between rounded-full bg-white/80 px-5 py-2.5 shadow-lg shadow-gray-200/20 backdrop-blur-md border border-gray-200/50 transition-colors dark:bg-[#13151a]/80 dark:border-white/10 dark:shadow-black/20"
     >
-      <svg id="show-button" class="h-6 fill-current block" viewBox="0 0 20 20">
-        <title>Menu Open</title>
-        <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
-      </svg>
-      <svg id="hide-button" class="h-6 fill-current hidden" viewBox="0 0 20 20">
-        <title>Menu Close</title>
-        <polygon
-          points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
-          transform="rotate(45 10 10)"></polygon>
-      </svg>
-    </label>
-    <!-- /navbar toggler -->
-    <ul
-      id="nav-menu"
-      class="navbar-nav order-3 hidden w-full pb-6 lg:order-1 lg:flex lg:w-auto lg:space-x-2 lg:pb-0 xl:space-x-8"
-    >
-      {
-        main.map((menu) => (
-          <>
-            {menu.hasChildren ? (
-              <li class="nav-item nav-dropdown group relative">
-                <input
-                  type="checkbox"
-                  id={`submenu-${menu.name}`}
-                  class="peer hidden lg:hidden"
-                />
-                <label
-                  for={`submenu-${menu.name}`}
-                  class={`nav-link inline-flex items-center ${
-                    menu.children?.map(({ url }) => url).includes(pathname) ||
-                    menu.children
-                      ?.map(({ url }) => `${url}/`)
-                      .includes(pathname)
-                      ? "active"
-                      : ""
-                  }`}
-                >
-                  {menu.name}
-                  <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </label>
-                <ul class="nav-dropdown-list hidden peer-checked:block lg:invisible lg:absolute lg:block lg:opacity-0 lg:group-hover:visible lg:group-hover:opacity-100">
-                  {menu.children?.map((child) => (
-                    <li class="nav-dropdown-item">
-                      <a
-                        href={child.url}
-                        aria-label={child.name}
-                        class={`nav-dropdown-link block ${
-                          (pathname === `${child.url}/` ||
-                            pathname === child.url) &&
-                          "active"
-                        }`}
-                      >
-                        {child.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <li class="nav-item">
+      <!-- 1. LOGO -->
+      <div class="flex shrink-0 items-center">
+        <Logo />
+      </div>
+
+      <!-- 2. DESKTOP MENU -->
+      <ul class="hidden lg:flex items-center gap-1 xl:gap-2">
+        {
+          main.map((menu) => (
+            <li class="relative group">
+              {menu.hasChildren ? (
+                <>
+                  <button
+                    class={`flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium transition-all hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5 dark:hover:text-primary ${
+                      menu.children?.map(({ url }) => url).includes(pathname) ||
+                      menu.children
+                        ?.map(({ url }) => `${url}/`)
+                        .includes(pathname)
+                        ? "text-primary bg-primary/10 dark:bg-primary/20"
+                        : "text-gray-600 dark:text-gray-300"
+                    }`}
+                  >
+                    {menu.name}
+                    <FaChevronDown className="text-[10px] opacity-50 group-hover:rotate-180 transition-transform duration-300" />
+                  </button>
+
+                  <div class="absolute left-1/2 top-full mt-2 w-48 -translate-x-1/2 pt-2 opacity-0 invisible transform translate-y-2 transition-all duration-300 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0">
+                    <ul class="rounded-xl border border-gray-100 bg-white/90 p-1.5 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-[#1a1d24]/95">
+                      {menu.children?.map((child) => (
+                        <li>
+                          <a
+                            href={child.url}
+                            class={`block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-gray-50 hover:text-primary dark:hover:bg-white/5 dark:hover:text-primary ${
+                              pathname === `${child.url}/` ||
+                              pathname === child.url
+                                ? "text-primary bg-primary/5 dark:bg-primary/10"
+                                : "text-gray-600 dark:text-gray-300"
+                            }`}
+                          >
+                            {child.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              ) : (
                 <a
                   href={menu.url}
-                  class={`nav-link block ${
-                    (pathname === `${menu.url}/` || pathname === menu.url) &&
-                    "active"
+                  class={`block rounded-full px-3 py-1.5 text-sm font-medium transition-all hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5 dark:hover:text-primary ${
+                    pathname === `${menu.url}/` || pathname === menu.url
+                      ? "text-primary bg-primary/10 dark:bg-primary/20"
+                      : "text-gray-600 dark:text-gray-300"
                   }`}
                 >
                   {menu.name}
                 </a>
-              </li>
-            )}
-          </>
-        ))
-      }
-      {
-        navigation_button.enable && (
-          <li class="mt-4 inline-block lg:hidden">
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- 3. ACTIONS -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 2. TOMBOL PENCARIAN -->
+        <!-- Menggunakan data-search-trigger agar terhubung dengan SearchModal.tsx -->
+        <button
+          aria-label="Search"
+          data-search-trigger
+          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-gray-100 hover:text-primary dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
+        >
+          <FaSearch className="h-4 w-4" />
+        </button>
+
+        <ThemeSwitcher className="mr-1" />
+
+        <div class="hidden h-5 w-px bg-gray-200 dark:bg-white/10 lg:block">
+        </div>
+
+        {
+          navigation_button.enable && (
             <a
-              class="btn btn-outline-primary btn-sm"
               href={navigation_button.link}
+              class="hidden rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-primary/50 hover:-translate-y-0.5 lg:block dark:text-black"
             >
               {navigation_button.label}
             </a>
-          </li>
-        )
-      }
-    </ul>
-    <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
-      {
-        settings.search && (
-          <button
-            class="border-border text-text-dark hover:text-primary dark:border-darkmode-border mr-5 inline-block border-r pr-5 text-xl dark:text-white dark:hover:text-darkmode-primary"
-            aria-label="search"
-            data-search-trigger
-          >
-            <IoSearch />
-          </button>
-        )
-      }
-      <ThemeSwitcher className="mr-5" />
-      {
-        navigation_button.enable && (
-          <a
-            class="btn btn-outline-primary btn-sm hidden lg:inline-block"
-            href={navigation_button.link}
-          >
-            {navigation_button.label}
-          </a>
-        )
-      }
+          )
+        }
+
+        <!-- Mobile Toggle Button -->
+        <button
+          id="mobile-menu-toggle"
+          aria-label="Toggle Menu"
+          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-black lg:hidden dark:bg-white/5 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white"
+        >
+          <FaBars className="icon-bars" />
+          <FaTimes className="icon-times hidden" />
+        </button>
+      </div>
+    </div>
+
+    <!-- MOBILE MENU DROPDOWN -->
+    <div
+      id="mobile-menu"
+      class="hidden mt-3 origin-top rounded-3xl border border-gray-200 bg-white/90 p-4 shadow-xl backdrop-blur-xl lg:hidden dark:border-white/10 dark:bg-[#13151a]/95"
+    >
+      <ul class="flex flex-col gap-1">
+        {
+          main.map((menu) => (
+            <li>
+              {menu.hasChildren ? (
+                <details class="group">
+                  <summary class="flex cursor-pointer items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5">
+                    {menu.name}
+                    <FaChevronDown class="text-xs transition-transform group-open:rotate-180" />
+                  </summary>
+                  <ul class="mt-1 flex flex-col gap-1 rounded-xl bg-gray-50 p-2 dark:bg-black/20">
+                    {menu.children?.map((child) => (
+                      <li>
+                        <a
+                          href={child.url}
+                          class={`block rounded-lg px-4 py-2 text-sm transition-colors hover:text-primary dark:hover:text-primary ${
+                            pathname === `${child.url}/` ||
+                            pathname === child.url
+                              ? "text-primary font-semibold"
+                              : "text-gray-500 dark:text-gray-400"
+                          }`}
+                        >
+                          {child.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <a
+                  href={menu.url}
+                  class={`block rounded-xl px-4 py-3 text-sm font-medium hover:bg-gray-50 dark:hover:bg-white/5 ${
+                    pathname === `${menu.url}/` || pathname === menu.url
+                      ? "text-primary bg-primary/5 dark:bg-primary/10"
+                      : "text-gray-700 dark:text-gray-200"
+                  }`}
+                >
+                  {menu.name}
+                </a>
+              )}
+            </li>
+          ))
+        }
+
+        {
+          navigation_button.enable && (
+            <li class="mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+              <a
+                href={navigation_button.link}
+                class="flex w-full items-center justify-center rounded-xl bg-primary py-3 text-sm font-bold text-white shadow-lg shadow-primary/20 dark:text-black"
+              >
+                {navigation_button.label}
+              </a>
+            </li>
+          )
+        }
+      </ul>
     </div>
   </nav>
 </header>
+
+<script>
+  function initMobileMenu() {
+    const toggleBtn = document.getElementById("mobile-menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const iconBars = document.querySelector(".icon-bars");
+    const iconTimes = document.querySelector(".icon-times");
+
+    if (toggleBtn && mobileMenu) {
+      const newBtn = toggleBtn.cloneNode(true);
+      toggleBtn.parentNode?.replaceChild(newBtn, toggleBtn);
+
+      newBtn.addEventListener("click", () => {
+        const isHidden = mobileMenu.classList.contains("hidden");
+
+        if (isHidden) {
+          mobileMenu.classList.remove("hidden");
+          mobileMenu.classList.add("animate-menu-slide-down");
+          iconBars?.classList.add("hidden");
+          iconTimes?.classList.remove("hidden");
+        } else {
+          mobileMenu.classList.add("hidden");
+          mobileMenu.classList.remove("animate-menu-slide-down");
+          iconBars?.classList.remove("hidden");
+          iconTimes?.classList.add("hidden");
+        }
+      });
+    }
+  }
+
+  document.addEventListener("astro:page-load", initMobileMenu);
+</script>
+
+<style>
+  .animate-menu-slide-down {
+    animation: menuSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes menuSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>
+```
+
+---
+
+### File: `./src/layouts/partials/LatestPostsSlider.astro`
+
+```astro
+---
+import ImageMod from "@/components/ImageMod.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import dateFormat from "@/lib/utils/dateFormat";
+import readingTime from "@/lib/utils/readingTime";
+import { humanize } from "@/lib/utils/textConverter";
+import { FaRegClock, FaRegCalendarAlt, FaArrowRight } from "react-icons/fa";
+
+// 1. Ambil data blog
+const posts = await getSinglePage("blog");
+// 2. Urutkan dari yang terbaru
+const sortedPosts = sortByDate(posts);
+// 3. Ambil 6 postingan terbaru saja
+const latestPosts = sortedPosts.slice(0, 6);
+---
+
+<section class="section bg-light dark:bg-darkmode-light overflow-hidden">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="mb-12 text-center">
+      <h2 class="h2 gsap-fade-up">Berita & Artikel Terbaru</h2>
+      <p
+        class="mt-4 text-text-light dark:text-darkmode-text-light gsap-fade-up"
+      >
+        Ikuti perkembangan informasi terkini dan kegiatan seru di MTs Negeri 1
+        Pandeglang.
+      </p>
+    </div>
+
+    <!-- Swiper Container -->
+    <div class="gsap-fade-up relative">
+      <div class="swiper latest-posts-slider !pb-12">
+        <div class="swiper-wrapper">
+          {
+            latestPosts.map((post) => (
+              <div class="swiper-slide h-auto">
+                <div class="group h-full flex flex-col overflow-hidden rounded-2xl border border-border bg-body transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-darkmode-border dark:bg-darkmode-body">
+                  {/* Image Thumbnail */}
+                  <div class="relative h-56 overflow-hidden">
+                    {post.data.image ? (
+                      <ImageMod
+                        src={post.data.image}
+                        height={300}
+                        width={600}
+                        alt={post.data.title}
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        format="webp"
+                      />
+                    ) : (
+                      <div class="flex h-full w-full items-center justify-center bg-gray-200 text-gray-400">
+                        No Image
+                      </div>
+                    )}
+
+                    {/* Badge Kategori */}
+                    <div class="absolute left-4 top-4">
+                      <span class="rounded-md bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary shadow-sm backdrop-blur-sm dark:bg-black/80 dark:text-white">
+                        {humanize(post.data.categories[0])}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div class="flex flex-1 flex-col p-6">
+                    {/* Meta Data */}
+                    <div class="mb-3 flex items-center gap-4 text-xs text-text-light dark:text-darkmode-text-light">
+                      <div class="flex items-center gap-1">
+                        <FaRegCalendarAlt />
+                        {dateFormat(post.data.date)}
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <FaRegClock />
+                        {readingTime(post.body)}
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 class="h5 mb-3 flex-1 font-bold leading-snug">
+                      <a
+                        href={`/blog/${post.id}`}
+                        class="transition-colors hover:text-primary hover:underline decoration-2 underline-offset-4"
+                      >
+                        {post.data.title}
+                      </a>
+                    </h3>
+
+                    {/* Link Read More */}
+                    <div class="mt-4 pt-4 border-t border-border dark:border-darkmode-border">
+                      <a
+                        href={`/blog/${post.id}`}
+                        class="group/link flex items-center text-sm font-semibold text-primary transition-colors hover:text-dark dark:hover:text-white"
+                      >
+                        Baca Selengkapnya
+                        <FaArrowRight className="ml-2 transition-transform duration-300 group-hover/link:translate-x-1" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        {/* Pagination Dots Container */}
+        <div class="latest-posts-pagination mt-8 flex justify-center gap-2">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { Swiper } from "swiper";
+  import "swiper/css";
+  import "swiper/css/pagination";
+  import { Autoplay, Pagination } from "swiper/modules";
+
+  const initLatestPostsSlider = () => {
+    new Swiper(".latest-posts-slider", {
+      modules: [Pagination, Autoplay],
+      spaceBetween: 24,
+      loop: true,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true,
+      },
+      pagination: {
+        el: ".latest-posts-pagination",
+        type: "bullets",
+        clickable: true,
+      },
+      breakpoints: {
+        0: { slidesPerView: 1 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      },
+    });
+  };
+
+  document.addEventListener("astro:page-load", initLatestPostsSlider);
+</script>
 ```
 
 ---
@@ -5887,7 +6691,7 @@ const { title = "" }: { title?: string } = Astro.props;
 <section>
   <div class="container text-center">
     <div
-      class="rounded-2xl bg-gradient-to-b from-body to-light px-8 py-14 dark:from-darkmode-body dark:to-darkmode-light"
+      class="rounded-2xl bg-gradient-to-b from-body to-light px-8 pb-14 pt-8 dark:from-darkmode-body dark:to-darkmode-light"
     >
       <h1 set:text={humanize(title)} />
       <Breadcrumbs className="mt-6" />
@@ -7069,7 +7873,7 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
       <div class="row gx-5">
         <!-- blog posts -->
         <div class="lg:col-8">
-          <div class="row">
+          <div class="row gsap-stagger-parent">
             {
               currentPosts.map((post) => (
                 <div class="mb-14 md:col-6">
@@ -7416,6 +8220,7 @@ import { getListPage } from "@/lib/contentParser.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import CallToAction from "@/partials/CallToAction.astro";
 import Testimonial from "@/partials/Testimonial.astro";
+import LatestPostsSlider from "@/partials/LatestPostsSlider.astro";
 import { FaCheck } from "react-icons/fa";
 
 const homepage = await getListPage("homepage", "-index");
@@ -7430,7 +8235,7 @@ const { banner, features } = homepage.data;
   <section class="section pt-14">
     <div class="container">
       <div class="row justify-center">
-        <div class="lg:col-7 md:col-9 mb-8 text-center">
+        <div class="lg:col-7 md:col-9 mb-8 text-center gsap-fade-up">
           <h1
             set:html={markdownify(banner.title)}
             class="mb-4 text-h3 lg:text-h1"
@@ -7453,7 +8258,7 @@ const { banner, features } = homepage.data;
         </div>
         {
           banner.image && (
-            <div class="col-12">
+            <div class="col-12 gsap-hero-image">
               <ImageMod
                 src={banner.image}
                 height={380}
@@ -7470,11 +8275,11 @@ const { banner, features } = homepage.data;
   <!-- /Banner -->
 
   <!-- Features -->
-  {
+  <!-- {
     features.map((feature, index: number) => (
       <section class={`section-sm ${index % 2 === 0 && "bg-gradient"}`}>
         <div class="container">
-          <div class="row items-center justify-between">
+          <div class="row items-center justify-between gsap-fade-up">
             <div
               class={`mb:md-0 mb-6 md:col-5 ${index % 2 !== 0 && "md:order-2"}`}
             >
@@ -7489,7 +8294,7 @@ const { banner, features } = homepage.data;
             <div class={`md:col-7 lg:col-6 ${index % 2 !== 0 && "md:order-1"}`}>
               <h2 set:html={markdownify(feature.title)} class="mb-4" />
               <p set:html={markdownify(feature.content)} class="mb-8 text-lg" />
-              <ul>
+              <ul class="gsap-stagger-parent">
                 {feature.bulletpoints.map((bullet: string) => (
                   <li class="relative mb-4 pl-6">
                     <FaCheck className={"absolute left-0 top-1.5"} />
@@ -7507,11 +8312,129 @@ const { banner, features } = homepage.data;
         </div>
       </section>
     ))
-  }
+  } -->
   <!-- /Features -->
 
+  <!-- Bento Grid Features -->
+  <section class="section">
+    <div class="container">
+      <div class="mb-12 text-center">
+        <h2 class="h2 gsap-fade-up">Keunggulan Kami</h2>
+        <p
+          class="mt-4 text-text-light dark:text-darkmode-text-light gsap-fade-up"
+        >
+          Mengapa MTs Negeri 1 Pandeglang adalah pilihan terbaik untuk masa
+          depan putra-putri Anda.
+        </p>
+      </div>
+
+      <!-- Grid Container -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 gsap-stagger-parent">
+        {
+          features.map((feature, index) => {
+            // Logika Bento: Item ke-0 (pertama) dan ke-3 (keempat) akan lebar (span-2)
+            const isWide = index === 0 || index === 3;
+
+            return (
+              <div
+                class={`
+                  group relative overflow-hidden rounded-3xl border border-border bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-darkmode-border dark:bg-darkmode-light
+                  ${isWide ? "md:col-span-2" : "md:col-span-1"}
+                `}
+              >
+                <div
+                  class={`flex h-full flex-col ${isWide ? "lg:flex-row lg:items-center lg:gap-8" : "gap-6"}`}
+                >
+                  {/* Image Section */}
+                  <div
+                    class={`
+                    relative shrink-0 overflow-hidden rounded-2xl bg-light dark:bg-darkmode-body
+                    ${isWide ? "lg:w-1/2 h-64 lg:h-full" : "h-48 w-full"}
+                  `}
+                  >
+                    <ImageMod
+                      src={feature.image}
+                      height={400}
+                      width={600}
+                      alt={feature.title}
+                      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      format="webp"
+                    />
+                  </div>
+
+                  {/* Content Section */}
+                  <div class="flex flex-1 flex-col justify-between">
+                    <div>
+                      <h3 class="h4 mb-3 font-bold">{feature.title}</h3>
+                      <p
+                        class="mb-4 text-text-light dark:text-darkmode-text-light line-clamp-3"
+                        set:html={markdownify(feature.content)}
+                      />
+
+                      {/* Bulletpoints (Hanya tampilkan 3 pertama agar rapi) */}
+                      {feature.bulletpoints && (
+                        <ul class="mb-6 space-y-2">
+                          {feature.bulletpoints
+                            .slice(0, isWide ? 4 : 2)
+                            .map((bullet: string) => (
+                              <li class="flex items-start text-sm">
+                                <span class="mr-2 mt-1 text-primary">
+                                  <FaCheck />
+                                </span>
+                                <span>{bullet}</span>
+                              </li>
+                            ))}
+                          {feature.bulletpoints.length > (isWide ? 4 : 2) && (
+                            <li class="text-xs text-text-light italic">
+                              + {feature.bulletpoints.length - (isWide ? 4 : 2)}{" "}
+                              poin lainnya
+                            </li>
+                          )}
+                        </ul>
+                      )}
+                    </div>
+
+                    {feature.button.enable && (
+                      <div class="mt-auto pt-4">
+                        <a
+                          href={feature.button.link}
+                          class="inline-flex items-center font-semibold text-primary transition-colors hover:text-dark dark:hover:text-white"
+                        >
+                          {feature.button.label}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            />
+                          </svg>
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+  <!-- /Bento Grid Features -->
+
+  <LatestPostsSlider />
+
   <Testimonial testimonial={testimonial} />
-  <CallToAction call_to_action={call_to_action} />
+  <div class="gsap-fade-up">
+    <CallToAction call_to_action={call_to_action} />
+  </div>
 </Base>
 ```
 
@@ -7667,6 +8590,105 @@ const { Content } = await render(page);
 
 ---
 
+### File: `./src/scripts/gsap-animations.js`
+
+```javascript
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+
+// Daftarkan plugin
+gsap.registerPlugin(ScrollTrigger);
+
+export function initAnimations() {
+  // 1. Animasi Fade Up (Muncul dari bawah ke atas)
+  // Gunakan class="gsap-fade-up" pada elemen HTML
+  const lenis = new Lenis({
+    duration: 1.2, // Durasi scroll (semakin besar semakin "berat/halus")
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: "vertical",
+    gestureDirection: "vertical",
+    smoothWheel: true,
+  });
+
+  // Sambungkan Lenis ke GSAP ScrollTrigger
+  lenis.on("scroll", ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+
+  gsap.ticker.lagSmoothing(0);
+
+  const fadeUpElements = document.querySelectorAll(".gsap-fade-up");
+
+  fadeUpElements.forEach((elem) => {
+    gsap.fromTo(
+      elem,
+      {
+        y: 50,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: elem,
+          start: "top 85%", // Mulai animasi saat elemen berada di 85% viewport
+          toggleActions: "play none none reverse", // Mainkan saat masuk, reverse saat keluar
+        },
+      },
+    );
+  });
+
+  // 2. Animasi Stagger (Muncul berurutan untuk list/grid)
+  // Gunakan class="gsap-stagger-parent" pada container (ul/div pembungkus)
+  // Elemen anaknya akan otomatis di-animasikan
+  const staggerContainers = document.querySelectorAll(".gsap-stagger-parent");
+
+  staggerContainers.forEach((container) => {
+    const children = container.children;
+
+    gsap.fromTo(
+      children,
+      {
+        y: 30,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15, // Jeda antar elemen 0.15 detik
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: container,
+          start: "top 85%",
+        },
+      },
+    );
+  });
+
+  // 3. Animasi Hero Image (Zoom in halus saat load)
+  // Gunakan class="gsap-hero-image"
+  const heroImages = document.querySelectorAll(".gsap-hero-image");
+  if (heroImages.length > 0) {
+    gsap.fromTo(
+      heroImages,
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 1.5, ease: "power2.out" },
+    );
+  }
+
+  // Refresh ScrollTrigger agar akurat setelah loading konten
+  ScrollTrigger.refresh();
+}
+```
+
+---
+
 ### File: `./src/styles/base.css`
 
 ```css
@@ -7741,7 +8763,7 @@ button {
 
 ```css
 .btn {
-  @apply inline-block rounded border border-transparent px-5 py-2 font-semibold capitalize transition;
+  @apply inline-block rounded border border-transparent px-5 py-2 font-semibold capitalize transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg active:translate-y-0;
 }
 
 .btn-sm {
@@ -8040,26 +9062,21 @@ button {
 ### File: `./src/styles/safe.css`
 
 ```css
-/* navbar toggler */
 input#nav-toggle:checked + label #show-button {
   @apply hidden;
 }
-
 input#nav-toggle:checked + label #hide-button {
   @apply block;
 }
-
 input#nav-toggle:checked ~ #nav-menu {
   @apply block;
 }
-
-/* swiper pagination */
 .swiper-pagination-bullet {
-  @apply !h-2.5 !w-2.5 !bg-light !opacity-100 dark:!bg-darkmode-light;
+  @apply !h-2.5 !w-2.5 !rounded-full !bg-gray-300 !opacity-100 transition-all duration-300 ease-in-out dark:!bg-gray-700;
+  margin: 0 6px !important;
 }
-
 .swiper-pagination-bullet-active {
-  @apply !h-4 !w-4 !bg-primary dark:!bg-darkmode-primary;
+  @apply !w-8 !bg-primary dark:!bg-primary;
 }
 ```
 
@@ -8980,6 +9997,8 @@ export default defineConfig({
     "disqus-react": "^1.1.7",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
+    "gsap": "^3.14.2",
+    "lenis": "^1.3.17",
     "marked": "^16.4.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.0",
@@ -9023,6 +10042,10 @@ export default defineConfig({
 2. Program Guru Tamu
 3. Prestasi Madrasah
 4. Publish kegiatan yang telah lalu.
+
+# Styling
+
+1. Gunakan Layout "Bento Grid" untuk Fitur
 ```
 
 ---
