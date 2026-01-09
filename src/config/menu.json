@@ -10,7 +10,11 @@
           "url": "/about"
         },
         {
-          "name": "Sejarah & Visi Misi",
+          "name": "Sejarah",
+          "url": "/sejarah"
+        },
+        {
+          "name": "Visi Misi",
           "url": "/visi-misi-tujuan"
         },
         {
@@ -50,7 +54,7 @@
         },
         {
           "name": "Kalender Pendidikan",
-          "url": "/kalender-pendidikan"
+          "url": "#"
         }
       ]
     },
@@ -107,16 +111,12 @@
           "url": "/blog"
         },
         {
-          "name": "Pengumuman",
-          "url": "/categories/pengumuman"
+          "name": "Penulis",
+          "url": "/authors/yahya-zulfikri"
         },
         {
           "name": "Galeri Foto",
-          "url": "/galeri"
-        },
-        {
-          "name": "Kontak Kami",
-          "url": "/contact"
+          "url": "https://www.instagram.com/mtsn1_pandeglang/?hl=id"
         }
       ]
     },
@@ -144,6 +144,10 @@
         {
           "name": "Perpustakaan Digital",
           "url": "https://perpustakaan.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Bank Data",
+          "url": "https://drive.mtsn1pandeglang.sch.id"
         }
       ]
     }
