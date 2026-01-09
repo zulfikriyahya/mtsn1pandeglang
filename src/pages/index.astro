@@ -59,7 +59,7 @@ const { banner, features } = homepage.data;
   <!-- /Banner -->
 
   <!-- Features -->
-  {
+  <!-- {
     features.map((feature, index: number) => (
       <section class={`section-sm ${index % 2 === 0 && "bg-gradient"}`}>
         <div class="container">
@@ -96,8 +96,122 @@ const { banner, features } = homepage.data;
         </div>
       </section>
     ))
-  }
+  } -->
   <!-- /Features -->
+
+  <!-- Bento Grid Features -->
+  <section class="section">
+    <div class="container">
+      <div class="mb-12 text-center">
+        <h2 class="h2 gsap-fade-up">Keunggulan Kami</h2>
+        <p
+          class="mt-4 text-text-light dark:text-darkmode-text-light gsap-fade-up"
+        >
+          Mengapa MTs Negeri 1 Pandeglang adalah pilihan terbaik untuk masa
+          depan putra-putri Anda.
+        </p>
+      </div>
+
+      <!-- Grid Container -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 gsap-stagger-parent">
+        {
+          features.map((feature, index) => {
+            // Logika Bento: Item ke-0 (pertama) dan ke-3 (keempat) akan lebar (span-2)
+            const isWide = index === 0 || index === 3;
+
+            return (
+              <div
+                class={`
+                  group relative overflow-hidden rounded-3xl border border-border bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-darkmode-border dark:bg-darkmode-light
+                  ${isWide ? "md:col-span-2" : "md:col-span-1"}
+                `}
+              >
+                <div
+                  class={`flex h-full flex-col ${isWide ? "lg:flex-row lg:items-center lg:gap-8" : "gap-6"}`}
+                >
+                  {/* Image Section */}
+                  <div
+                    class={`
+                    relative shrink-0 overflow-hidden rounded-2xl bg-light dark:bg-darkmode-body
+                    ${isWide ? "lg:w-1/2 h-64 lg:h-full" : "h-48 w-full"}
+                  `}
+                  >
+                    <ImageMod
+                      src={feature.image}
+                      height={400}
+                      width={600}
+                      alt={feature.title}
+                      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      format="webp"
+                    />
+                  </div>
+
+                  {/* Content Section */}
+                  <div class="flex flex-1 flex-col justify-between">
+                    <div>
+                      <h3 class="h4 mb-3 font-bold">{feature.title}</h3>
+                      <p
+                        class="mb-4 text-text-light dark:text-darkmode-text-light line-clamp-3"
+                        set:html={markdownify(feature.content)}
+                      />
+
+                      {/* Bulletpoints (Hanya tampilkan 3 pertama agar rapi) */}
+                      {feature.bulletpoints && (
+                        <ul class="mb-6 space-y-2">
+                          {feature.bulletpoints
+                            .slice(0, isWide ? 4 : 2)
+                            .map((bullet: string) => (
+                              <li class="flex items-start text-sm">
+                                <span class="mr-2 mt-1 text-primary">
+                                  <FaCheck />
+                                </span>
+                                <span>{bullet}</span>
+                              </li>
+                            ))}
+                          {feature.bulletpoints.length > (isWide ? 4 : 2) && (
+                            <li class="text-xs text-text-light italic">
+                              + {feature.bulletpoints.length - (isWide ? 4 : 2)}{" "}
+                              poin lainnya
+                            </li>
+                          )}
+                        </ul>
+                      )}
+                    </div>
+
+                    {feature.button.enable && (
+                      <div class="mt-auto pt-4">
+                        <a
+                          href={feature.button.link}
+                          class="inline-flex items-center font-semibold text-primary transition-colors hover:text-dark dark:hover:text-white"
+                        >
+                          {feature.button.label}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            />
+                          </svg>
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+  <!-- /Bento Grid Features -->
 
   <Testimonial testimonial={testimonial} />
   <div class="gsap-fade-up">

@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 
 // Daftarkan plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -7,6 +8,23 @@ gsap.registerPlugin(ScrollTrigger);
 export function initAnimations() {
   // 1. Animasi Fade Up (Muncul dari bawah ke atas)
   // Gunakan class="gsap-fade-up" pada elemen HTML
+  const lenis = new Lenis({
+    duration: 1.2, // Durasi scroll (semakin besar semakin "berat/halus")
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: "vertical",
+    gestureDirection: "vertical",
+    smoothWheel: true,
+  });
+
+  // Sambungkan Lenis ke GSAP ScrollTrigger
+  lenis.on("scroll", ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+
+  gsap.ticker.lagSmoothing(0);
+
   const fadeUpElements = document.querySelectorAll(".gsap-fade-up");
 
   fadeUpElements.forEach((elem) => {
