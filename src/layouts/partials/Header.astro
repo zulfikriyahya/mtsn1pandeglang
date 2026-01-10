@@ -3,7 +3,8 @@ import Logo from "@/components/Logo.astro";
 import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
-import { IoSearch } from "react-icons/io5";
+// 1. Tambahkan FaSearch pada import
+import { FaChevronDown, FaBars, FaTimes, FaSearch } from "react-icons/fa";
 
 export interface ChildNavigationLink {
   name: string;
@@ -18,134 +19,232 @@ export interface NavigationLink {
 }
 
 const { main }: { main: NavigationLink[] } = menu;
-const { navigation_button, settings } = config;
+const { navigation_button } = config;
 const { pathname } = Astro.url;
 ---
 
-<header class={`header z-30 ${settings.sticky_header && "sticky top-0"}`}>
-  <nav class="navbar container">
-    <!-- logo -->
-    <div class="order-0">
-      <Logo />
-    </div>
-    <!-- navbar toggler -->
-    <input id="nav-toggle" type="checkbox" class="hidden" />
-    <label
-      for="nav-toggle"
-      class="order-3 cursor-pointer flex items-center lg:hidden text-text-dark dark:text-white lg:order-1"
+<header
+  class="fixed top-4 inset-x-0 z-50 px-4 print:hidden transition-all duration-300"
+>
+  <nav class="mx-auto max-w-7xl">
+    <!-- THE PILL (KAPSUL) -->
+    <div
+      class="relative flex items-center justify-between rounded-full bg-white/80 px-5 py-2.5 shadow-lg shadow-gray-200/20 backdrop-blur-md border border-gray-200/50 transition-colors dark:bg-[#13151a]/80 dark:border-white/10 dark:shadow-black/20"
     >
-      <svg id="show-button" class="h-6 fill-current block" viewBox="0 0 20 20">
-        <title>Menu Open</title>
-        <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
-      </svg>
-      <svg id="hide-button" class="h-6 fill-current hidden" viewBox="0 0 20 20">
-        <title>Menu Close</title>
-        <polygon
-          points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
-          transform="rotate(45 10 10)"></polygon>
-      </svg>
-    </label>
-    <!-- /navbar toggler -->
-    <ul
-      id="nav-menu"
-      class="navbar-nav order-3 hidden w-full pb-6 lg:order-1 lg:flex lg:w-auto lg:space-x-2 lg:pb-0 xl:space-x-8"
-    >
-      {
-        main.map((menu) => (
-          <>
-            {menu.hasChildren ? (
-              <li class="nav-item nav-dropdown group relative">
-                <input
-                  type="checkbox"
-                  id={`submenu-${menu.name}`}
-                  class="peer hidden lg:hidden"
-                />
-                <label
-                  for={`submenu-${menu.name}`}
-                  class={`nav-link inline-flex items-center ${
-                    menu.children?.map(({ url }) => url).includes(pathname) ||
-                    menu.children
-                      ?.map(({ url }) => `${url}/`)
-                      .includes(pathname)
-                      ? "active"
-                      : ""
-                  }`}
-                >
-                  {menu.name}
-                  <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </label>
-                <ul class="nav-dropdown-list hidden peer-checked:block lg:invisible lg:absolute lg:block lg:opacity-0 lg:group-hover:visible lg:group-hover:opacity-100">
-                  {menu.children?.map((child) => (
-                    <li class="nav-dropdown-item">
-                      <a
-                        href={child.url}
-                        aria-label={child.name}
-                        class={`nav-dropdown-link block ${
-                          (pathname === `${child.url}/` ||
-                            pathname === child.url) &&
-                          "active"
-                        }`}
-                      >
-                        {child.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <li class="nav-item">
+      <!-- 1. LOGO -->
+      <div class="flex shrink-0 items-center">
+        <Logo />
+      </div>
+
+      <!-- 2. DESKTOP MENU -->
+      <ul class="hidden lg:flex items-center gap-1 xl:gap-2">
+        {
+          main.map((menu) => (
+            <li class="relative group">
+              {menu.hasChildren ? (
+                <>
+                  <button
+                    class={`flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium transition-all hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5 dark:hover:text-primary ${
+                      menu.children?.map(({ url }) => url).includes(pathname) ||
+                      menu.children
+                        ?.map(({ url }) => `${url}/`)
+                        .includes(pathname)
+                        ? "text-primary bg-primary/10 dark:bg-primary/20"
+                        : "text-gray-600 dark:text-gray-300"
+                    }`}
+                  >
+                    {menu.name}
+                    <FaChevronDown className="text-[10px] opacity-50 group-hover:rotate-180 transition-transform duration-300" />
+                  </button>
+
+                  <div class="absolute left-1/2 top-full mt-2 w-48 -translate-x-1/2 pt-2 opacity-0 invisible transform translate-y-2 transition-all duration-300 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0">
+                    <ul class="rounded-xl border border-gray-100 bg-white/90 p-1.5 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-[#1a1d24]/95">
+                      {menu.children?.map((child) => (
+                        <li>
+                          <a
+                            href={child.url}
+                            class={`block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-gray-50 hover:text-primary dark:hover:bg-white/5 dark:hover:text-primary ${
+                              pathname === `${child.url}/` ||
+                              pathname === child.url
+                                ? "text-primary bg-primary/5 dark:bg-primary/10"
+                                : "text-gray-600 dark:text-gray-300"
+                            }`}
+                          >
+                            {child.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              ) : (
                 <a
                   href={menu.url}
-                  class={`nav-link block ${
-                    (pathname === `${menu.url}/` || pathname === menu.url) &&
-                    "active"
+                  class={`block rounded-full px-3 py-1.5 text-sm font-medium transition-all hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5 dark:hover:text-primary ${
+                    pathname === `${menu.url}/` || pathname === menu.url
+                      ? "text-primary bg-primary/10 dark:bg-primary/20"
+                      : "text-gray-600 dark:text-gray-300"
                   }`}
                 >
                   {menu.name}
                 </a>
-              </li>
-            )}
-          </>
-        ))
-      }
-      {
-        navigation_button.enable && (
-          <li class="mt-4 inline-block lg:hidden">
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- 3. ACTIONS -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 2. TOMBOL PENCARIAN -->
+        <!-- Menggunakan data-search-trigger agar terhubung dengan SearchModal.tsx -->
+        <button
+          aria-label="Search"
+          data-search-trigger
+          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-gray-100 hover:text-primary dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
+        >
+          <FaSearch className="h-4 w-4" />
+        </button>
+
+        <ThemeSwitcher className="mr-1" />
+
+        <div class="hidden h-5 w-px bg-gray-200 dark:bg-white/10 lg:block">
+        </div>
+
+        {
+          navigation_button.enable && (
             <a
-              class="btn btn-outline-primary btn-sm"
               href={navigation_button.link}
+              class="hidden rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-primary/50 hover:-translate-y-0.5 lg:block dark:text-black"
             >
               {navigation_button.label}
             </a>
-          </li>
-        )
-      }
-    </ul>
-    <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
-      {
-        settings.search && (
-          <button
-            class="border-border text-text-dark hover:text-primary dark:border-darkmode-border mr-5 inline-block border-r pr-5 text-xl dark:text-white dark:hover:text-darkmode-primary"
-            aria-label="search"
-            data-search-trigger
-          >
-            <IoSearch />
-          </button>
-        )
-      }
-      <ThemeSwitcher className="mr-5" />
-      {
-        navigation_button.enable && (
-          <a
-            class="btn btn-outline-primary btn-sm hidden lg:inline-block"
-            href={navigation_button.link}
-          >
-            {navigation_button.label}
-          </a>
-        )
-      }
+          )
+        }
+
+        <!-- Mobile Toggle Button -->
+        <button
+          id="mobile-menu-toggle"
+          aria-label="Toggle Menu"
+          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-black lg:hidden dark:bg-white/5 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white"
+        >
+          <FaBars className="icon-bars" />
+          <FaTimes className="icon-times hidden" />
+        </button>
+      </div>
+    </div>
+
+    <!-- MOBILE MENU DROPDOWN -->
+    <div
+      id="mobile-menu"
+      class="hidden mt-3 origin-top rounded-3xl border border-gray-200 bg-white/90 p-4 shadow-xl backdrop-blur-xl lg:hidden dark:border-white/10 dark:bg-[#13151a]/95"
+    >
+      <ul class="flex flex-col gap-1">
+        {
+          main.map((menu) => (
+            <li>
+              {menu.hasChildren ? (
+                <details class="group">
+                  <summary class="flex cursor-pointer items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5">
+                    {menu.name}
+                    <FaChevronDown class="text-xs transition-transform group-open:rotate-180" />
+                  </summary>
+                  <ul class="mt-1 flex flex-col gap-1 rounded-xl bg-gray-50 p-2 dark:bg-black/20">
+                    {menu.children?.map((child) => (
+                      <li>
+                        <a
+                          href={child.url}
+                          class={`block rounded-lg px-4 py-2 text-sm transition-colors hover:text-primary dark:hover:text-primary ${
+                            pathname === `${child.url}/` ||
+                            pathname === child.url
+                              ? "text-primary font-semibold"
+                              : "text-gray-500 dark:text-gray-400"
+                          }`}
+                        >
+                          {child.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <a
+                  href={menu.url}
+                  class={`block rounded-xl px-4 py-3 text-sm font-medium hover:bg-gray-50 dark:hover:bg-white/5 ${
+                    pathname === `${menu.url}/` || pathname === menu.url
+                      ? "text-primary bg-primary/5 dark:bg-primary/10"
+                      : "text-gray-700 dark:text-gray-200"
+                  }`}
+                >
+                  {menu.name}
+                </a>
+              )}
+            </li>
+          ))
+        }
+
+        {
+          navigation_button.enable && (
+            <li class="mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+              <a
+                href={navigation_button.link}
+                class="flex w-full items-center justify-center rounded-xl bg-primary py-3 text-sm font-bold text-white shadow-lg shadow-primary/20 dark:text-black"
+              >
+                {navigation_button.label}
+              </a>
+            </li>
+          )
+        }
+      </ul>
     </div>
   </nav>
 </header>
+
+<script>
+  function initMobileMenu() {
+    const toggleBtn = document.getElementById("mobile-menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const iconBars = document.querySelector(".icon-bars");
+    const iconTimes = document.querySelector(".icon-times");
+
+    if (toggleBtn && mobileMenu) {
+      const newBtn = toggleBtn.cloneNode(true);
+      toggleBtn.parentNode?.replaceChild(newBtn, toggleBtn);
+
+      newBtn.addEventListener("click", () => {
+        const isHidden = mobileMenu.classList.contains("hidden");
+
+        if (isHidden) {
+          mobileMenu.classList.remove("hidden");
+          mobileMenu.classList.add("animate-menu-slide-down");
+          iconBars?.classList.add("hidden");
+          iconTimes?.classList.remove("hidden");
+        } else {
+          mobileMenu.classList.add("hidden");
+          mobileMenu.classList.remove("animate-menu-slide-down");
+          iconBars?.classList.remove("hidden");
+          iconTimes?.classList.add("hidden");
+        }
+      });
+    }
+  }
+
+  document.addEventListener("astro:page-load", initMobileMenu);
+</script>
+
+<style>
+  .animate-menu-slide-down {
+    animation: menuSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes menuSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>

@@ -1,8 +1,8 @@
 ---
 title: Yahya Zulfikri
-email: zulfikriyahya@mtsn1pandeglang.sch.id
+email: dev@mtsn1pandeglang.sch.id
 image: "/images/authors/yahya-zulfikri.png"
-description: Penulis di MTs Negeri 1 Pandeglang
+description: Lead Developer & System Administrator
 social:
   - name: github
     icon: FaGithub
@@ -13,6 +13,10 @@ social:
     link: https://www.linkedin.com/in/zulfikriyahya?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app
 ---
 
-**_Full Stack Developer in Pandeglang, Banten - Indonesia! 😎_**
+**_Lead Developer & Digital System Architect based in Pandeglang._**
 
-With a passion for coding and a love for creating user-friendly applications, I strive to bridge the gap between front-end and back-end development. When I'm not buried in code, you'll find me exploring new technologies, sipping on my favorite coffee, or enjoying the vibrant culture of Pandeglang. Let's connect and build something amazing together!
+Dedicated to orchestrating digital transformation within the educational sector. With a robust command of modern web technologies, I strive to bridge the gap between complex back-end logic and elegant front-end experiences.
+
+Beyond the code, I am a problem solver committed to building efficient, scalable, and user-centric applications. When not architecting the next system update, you can find me exploring emerging tech trends or enjoying the serene atmosphere of Pandeglang.
+
+_Let's innovate and build the future of education together._

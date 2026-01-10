@@ -94,5 +94,4 @@ testimonials:
     designation: "Alumni 2021"
     avatar: "/images/avatar-sm.png"
     content: "MTs Negeri 1 Pandeglang punya semangat inovatif. Banyak teknologi pembelajaran diterapkan secara menarik."
-
 ---

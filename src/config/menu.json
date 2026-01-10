@@ -1,88 +1,72 @@
 {
   "main": [
     {
-      "name": "Profil",
+      "name": "Profil Madrasah",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Akreditasi",
-          "url": "/akreditasi"
-        },
-        {
-          "name": "Kurikulum",
-          "url": "/kurikulum"
-        },
-        {
-          "name": "Program",
-          "url": "/program"
-        },
-        {
-          "name": "Zona Integritas",
-          "url": "/zona-integritas"
-        },
-        {
-          "name": "Pelayanan Terpadu Satu Pintu",
-          "url": "/pelayanan"
+          "name": "Tentang Kami",
+          "url": "/about"
         },
         {
           "name": "Sejarah",
           "url": "/sejarah"
         },
         {
-          "name": "Visi, Misi dan Tujuan",
+          "name": "Visi Misi",
           "url": "/visi-misi-tujuan"
         },
         {
-          "name": "Guru",
+          "name": "Akreditasi & Prestasi",
+          "url": "/akreditasi"
+        },
+        {
+          "name": "Zona Integritas (WBK)",
+          "url": "/zona-integritas"
+        },
+        {
+          "name": "Tenaga Pendidik",
           "url": "/guru"
         },
         {
-          "name": "Staf",
+          "name": "Tenaga Kependidikan",
           "url": "/staf"
-        },
-        {
-          "name": "Siswa",
-          "url": "/siswa"
-        },
-        {
-          "name": "Alumni",
-          "url": "/alumni"
         }
       ]
     },
     {
-      "name": "Postingan",
+      "name": "Akademik",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Artikel",
-          "url": "/blog"
+          "name": "Kurikulum",
+          "url": "/kurikulum"
         },
         {
-          "name": "Penulis",
-          "url": "/authors"
+          "name": "Program Unggulan",
+          "url": "/program"
         },
         {
-          "name": "Kategori",
-          "url": "/categories"
+          "name": "Layanan PTSP",
+          "url": "/pelayanan"
         },
         {
-          "name": "Tagar",
-          "url": "/tags"
-        },
-        {
-          "name": "Kontak",
-          "url": "/contact"
+          "name": "Kalender Pendidikan",
+          "url": "#"
         }
       ]
     },
     {
-      "name": "Kegiatan Siswa",
+      "name": "Kesiswaan",
       "url": "",
       "hasChildren": true,
       "children": [
+        {
+          "name": "Semua Ekstrakurikuler",
+          "url": "/ekstrakurikuler"
+        },
         {
           "name": "OSIM",
           "url": "/osim"
@@ -100,59 +84,70 @@
           "url": "/pmr"
         },
         {
-          "name": "Adiwiyata",
-          "url": "/adiwiyata"
-        },
-        {
-          "name": "Pecinta Alam",
+          "name": "Adiwiyata & SISPALA",
           "url": "/pecinta-alam"
         },
         {
-          "name": "Volleyball Club",
+          "name": "Olahraga Prestasi",
           "url": "/volleyball-club"
+        },
+        {
+          "name": "Jurnalistik",
+          "url": "/jurnalistik"
+        },
+        {
+          "name": "Data Alumni",
+          "url": "/alumni"
         }
       ]
     },
     {
-      "name": "Web Apps",
+      "name": "Informasi",
       "url": "",
       "hasChildren": true,
       "children": [
         {
-          "name": "Pelayanan Terpadu Satu Pintu",
-          "url": "https://mtsn1pandeglang.sch.id/pelayanan"
+          "name": "Berita & Artikel",
+          "url": "/blog"
         },
         {
-          "name": "Pendaftaran",
+          "name": "Penulis",
+          "url": "/authors/yahya-zulfikri"
+        },
+        {
+          "name": "Galeri Foto",
+          "url": "https://www.instagram.com/mtsn1_pandeglang/?hl=id"
+        }
+      ]
+    },
+    {
+      "name": "Aplikasi Digital",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "PPDB Online",
           "url": "https://daftar.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Rapor Digital (RDM)",
+          "url": "https://rdm.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "E-Learning / CBT",
+          "url": "https://cbt.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Presensi Online",
+          "url": "https://presensi.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Perpustakaan Digital",
+          "url": "https://perpustakaan.mtsn1pandeglang.sch.id"
         },
         {
           "name": "Bank Data",
           "url": "https://drive.mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Rapor Digital Madrasah",
-          "url": "https://rdm.mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Presensi",
-          "url": "https://presensi.mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Pemutakhiran Data Mandiri",
-          "url": "https://mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Assesmen",
-          "url": "https://cbt.mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Jurnal Kelas",
-          "url": "https://mtsn1pandeglang.sch.id"
-        },
-        {
-          "name": "Perpustakaan",
-          "url": "https://mtsn1pandeglang.sch.id"
         }
       ]
     }
@@ -165,6 +160,10 @@
     {
       "name": "Tentang Kami",
       "url": "/about"
+    },
+    {
+      "name": "Hubungi Kami",
+      "url": "/contact"
     },
     {
       "name": "Kebijakan Privasi",

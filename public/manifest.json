@@ -1,6 +1,11 @@
 {
   "name": "Madrasah Tsanawiyah Negeri 1 Pandeglang",
   "short_name": "MTs Negeri 1 Pandeglang",
+  "author": {
+    "name": "Yahya Zulfikri",
+    "role": "Head of IT",
+    "phone": "62895351856267"
+  },
   "description": "Mandiri, Takwa, Peduli Lingkungan, Prestasi.",
   "start_url": "/",
   "scope": "/",
@@ -38,16 +43,9 @@
     {
       "src": "/images/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "categories": ["education"],
-  "screenshots": [
-    {
-      "src": "/images/icons/screenshot-1.png",
-      "sizes": "540x720",
       "type": "image/png",
       "form_factor": "narrow"
     }
-  ]
+  ],
+  "categories": ["education"]
 }

@@ -64,7 +64,7 @@ export default defineConfig({
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}",
         ],
-        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
+        maximumFileSizeToCacheInBytes: 60 * 1024 * 1024,
         globIgnores: ["**/videos/artikel/plp-kkn/**"],
         runtimeCaching: [
           {

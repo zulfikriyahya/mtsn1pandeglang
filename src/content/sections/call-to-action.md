@@ -1,10 +1,10 @@
 ---
 enable: true
-title: "Bergabunglah dengan MTs Negeri 1 Pandeglang"
+title: "Siap Menjadi Bagian dari Generasi Unggul?"
 image: "/images/call-to-action.png"
-description: "Segera daftarkan diri Anda di MTs Negeri 1 Pandeglang dan jadilah bagian dari lembaga pendidikan yang unggul dan berprestasi. Kami siap membimbing dan mendukung perkembangan akademik serta karakter Anda."
+description: "Jangan lewatkan kesempatan emas untuk bergabung dengan keluarga besar MTs Negeri 1 Pandeglang. Mari wujudkan mimpi akademik dan karakter mulia bersama madrasah berprestasi."
 button:
   enable: true
-  label: "Daftar Sekarang!"
+  label: "Daftar Sekarang"
   link: "https://daftar.mtsn1pandeglang.sch.id"
 ---

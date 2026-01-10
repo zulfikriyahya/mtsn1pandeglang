@@ -4,10 +4,18 @@ import Share from "@/components/Share.astro";
 import Disqus from "@/helpers/Disqus";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
+import readingTime from "@/lib/utils/readingTime"; // Import Reading Time
 import similarItems from "@/lib/utils/similarItems";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import { render } from "astro:content";
-import { FaRegClock, FaRegFolder, FaRegUserCircle } from "react-icons/fa";
+// Tambah Icons: FaRegCalendarAlt, FaRegClock, FaRegEye
+import {
+  FaRegFolder,
+  FaRegUserCircle,
+  FaRegCalendarAlt,
+  FaRegClock,
+  FaRegEye,
+} from "react-icons/fa";
 import ImageMod from "./components/ImageMod.astro";
 
 const COLLECTION_FOLDER = "blog";
@@ -25,7 +33,7 @@ const { title, description, author, categories, image, date, tags } = post.data;
       <article class="lg:col-10">
         {
           image && (
-            <div class="mb-10">
+            <div class="mb-10 gsap-hero-image">
               <ImageMod
                 src={image}
                 height={500}
@@ -37,31 +45,49 @@ const { title, description, author, categories, image, date, tags } = post.data;
             </div>
           )
         }
-        <h1 set:html={markdownify(title)} class="h2 mb-4" />
-        <ul class="mb-4">
-          <li class="mr-4 inline-block">
-            <a href={`/authors/${slugify(author)}`}>
-              <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
-              {humanize(author)}
-            </a>
-          </li>
-          <li class="mr-4 inline-block">
-            <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
-            {
-              categories.map((category: string, index: number) => (
-                <a href={`/categories/${slugify(category)}`}>
-                  {humanize(category)}
-                  {index !== categories.length - 1 && ","}
-                </a>
-              ))
-            }
-          </li>
-          <li class="mr-4 inline-block">
-            <FaRegClock className={"mr-2 -mt-1 inline-block"} />
-            {dateFormat(date)}
-          </li>
-        </ul>
-        <div class="content mb-10">
+        <div class="gsap-fade-up">
+          <h1 set:html={markdownify(title)} class="h2 mb-4" />
+          <ul class="mb-4">
+            <li class="mr-4 inline-block">
+              <a href={`/authors/${slugify(author)}`}>
+                <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
+                {humanize(author)}
+              </a>
+            </li>
+            <li class="mr-4 inline-block">
+              <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
+              {
+                categories.map((category: string, index: number) => (
+                  <a href={`/categories/${slugify(category)}`}>
+                    {humanize(category)}
+                    {index !== categories.length - 1 && ","}
+                  </a>
+                ))
+              }
+            </li>
+
+            {/* Tanggal */}
+            <li class="mr-4 inline-block">
+              <FaRegCalendarAlt className={"mr-2 -mt-1 inline-block"} />
+              {dateFormat(date)}
+            </li>
+
+            {/* Waktu Baca */}
+            <li class="mr-4 inline-block">
+              <FaRegClock className={"mr-2 -mt-1 inline-block"} />
+              {readingTime(post.body)}
+            </li>
+
+            {/* Jumlah Dilihat (Busuanzi) */}
+            <li class="mr-4 inline-block">
+              <FaRegEye className={"mr-2 -mt-1 inline-block"} />
+              <span id="busuanzi_container_page_pv" style="display: none;">
+                <span id="busuanzi_value_page_pv">...</span> Dibaca
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="content mb-10 gsap-fade-up">
           <Content />
         </div>
         <div class="row items-start justify-between">
