@@ -74,7 +74,11 @@
           "url": "/about"
         },
         {
-          "name": "Sejarah & Visi Misi",
+          "name": "Sejarah",
+          "url": "/sejarah"
+        },
+        {
+          "name": "Visi Misi",
           "url": "/visi-misi-tujuan"
         },
         {
@@ -114,7 +118,7 @@
         },
         {
           "name": "Kalender Pendidikan",
-          "url": "/kalender-pendidikan"
+          "url": "#"
         }
       ]
     },
@@ -171,16 +175,16 @@
           "url": "/blog"
         },
         {
-          "name": "Pengumuman",
-          "url": "/categories/pengumuman"
+          "name": "Penulis",
+          "url": "/authors/yahya-zulfikri"
         },
         {
           "name": "Galeri Foto",
-          "url": "/galeri"
+          "url": "https://www.instagram.com/mtsn1_pandeglang/?hl=id"
         },
         {
-          "name": "Kontak Kami",
-          "url": "/contact"
+          "name": "Galeri Video",
+          "url": "https://www.youtube.com/@mtsn1pandeglangofficial"
         }
       ]
     },
@@ -202,12 +206,20 @@
           "url": "https://cbt.mtsn1pandeglang.sch.id"
         },
         {
-          "name": "Presensi Online",
+          "name": "Presensi Online (POL)",
           "url": "https://presensi.mtsn1pandeglang.sch.id"
         },
         {
           "name": "Perpustakaan Digital",
           "url": "https://perpustakaan.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Bank Data",
+          "url": "https://drive.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Pemutakhiran Data Mandiri (PDM)",
+          "url": "https://pdm.mtsn1pandeglang.sch.id"
         }
       ]
     }
@@ -1218,7 +1230,7 @@ Mahasiswa juga memberikan kontribusi dalam kegiatan administrasi madrasah, seper
 
 Berikut adalah daftar mahasiswa UIN Sultan Maulana Hasanuddin Banten yang melaksanakan kegiatan PLP Integratif di MTs Negeri 1 Pandeglang periode Agustus - Oktober 2025:
 
-import ProfilMahasiswaPLP from "../../layouts/helpers/ProfilMahasiswaPLP.tsx";
+import ProfilMahasiswaPLP from "@/helpers/ProfilMahasiswaPLP";
 
 <ProfilMahasiswaPLP client:load />
 
@@ -3489,7 +3501,7 @@ Siswa-siswi yang telah meraih prestasi akan mendapatkan penghargaan dan sertifik
 title: "Staf"
 meta_title: "Staf MTs Negeri 1 Pandeglang"
 description: "Staf MTs Negeri 1 Pandeglang"
-draft: false
+draft: true
 ---
 
 ## Pengenalan
@@ -8252,6 +8264,7 @@ const { banner, features } = homepage.data;
                 rel="noopener"
               >
                 {banner.button.label}
+                {/* TODO: Tambahkan Tombol yang menampilkan modal popup untuk memutar video /videos/selayang-pandang.mp4  */}
               </a>
             )
           }
@@ -9962,6 +9975,23 @@ export default defineConfig({
 
 ---
 
+### File: `./deploy.sh`
+
+```bash
+#!/bin/bash
+
+sudo chown -R $USER:$USER /var/www/mtsn1pandeglang.sch.id/
+git config --global --add safe.directory /var/www/mtsn1pandeglang.sch.id
+git pull origin static
+yarn
+yarn build
+sudo chown -R www-data:www-data /var/www/mtsn1pandeglang.sch.id/
+
+
+```
+
+---
+
 ### File: `./package.json`
 
 ```json
@@ -10042,10 +10072,6 @@ export default defineConfig({
 2. Program Guru Tamu
 3. Prestasi Madrasah
 4. Publish kegiatan yang telah lalu.
-
-# Styling
-
-1. Gunakan Layout "Bento Grid" untuk Fitur
 ```
 
 ---
