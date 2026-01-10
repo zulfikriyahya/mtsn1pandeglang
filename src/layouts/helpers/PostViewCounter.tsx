@@ -2,33 +2,38 @@ import React, { useEffect, useState } from "react";
 import { FaRegEye } from "react-icons/fa";
 
 const PostViewCounter = () => {
-  const [isError, setIsError] = useState(false);
+  const [views, setViews] = useState<string>("...");
 
   useEffect(() => {
-    const existingScript = document.getElementById("busuanzi-post");
-    if (existingScript) existingScript.remove();
+    const NAMESPACE = "mtsn1pandeglang.sch.id";
 
-    const script = document.createElement("script");
-    script.id = "busuanzi-post";
-    script.src = `//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js?t=${new Date().getTime()}`;
-    script.async = true;
-    script.referrerPolicy = "unsafe-url";
+    // Ambil path URL saat ini sebagai ID unik (misal: "blog-judul-artikel")
+    // Kita bersihkan karakter slash agar valid di API
+    const currentPath = window.location.pathname
+      .replace(/^\/|\/$/g, "")
+      .replace(/\//g, "_");
+    const KEY = currentPath || "home";
 
-    script.onerror = () => setIsError(true);
-
-    document.body.appendChild(script);
+    // Hitung view
+    fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setViews(data.value.toLocaleString("id-ID"));
+      })
+      .catch(() => {
+        // Fallback: Jika gagal hit, coba ambil data saja (read-only)
+        fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`)
+          .then((res) => res.json())
+          .then((data) => setViews(data.value.toLocaleString("id-ID")))
+          .catch(() => setViews("-"));
+      });
   }, []);
-
-  if (isError) return null;
 
   return (
     <span className="flex items-center gap-2" title="Jumlah Pembaca">
       <FaRegEye className="text-gray-500 dark:text-gray-400" />
-      <span id="busuanzi_container_page_pv" style={{ display: "none" }}>
-        <span id="busuanzi_value_page_pv" className="font-semibold">
-          ...
-        </span>
-      </span>
+      <span className="font-semibold">{views}</span>
+      <span className="text-xs">x dibaca</span>
     </span>
   );
 };

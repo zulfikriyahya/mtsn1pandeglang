@@ -1,53 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { FaUsers, FaEye } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 
 const VisitorCounter = () => {
-  // State untuk menangani jika script diblokir browser
-  const [isError, setIsError] = useState(false);
+  const [visits, setVisits] = useState<string>("...");
 
   useEffect(() => {
-    // Bersihkan script lama
-    const existingScript = document.getElementById("busuanzi-main");
-    if (existingScript) existingScript.remove();
+    // Gunakan namespace unik, misal domain sekolah Anda
+    const NAMESPACE = "mtsn1pandeglang.sch.id";
+    const KEY = "total_visits"; // Key untuk total kunjungan situs
 
-    // Buat script baru
-    const script = document.createElement("script");
-    script.id = "busuanzi-main";
-    // Tambahkan timestamp agar tidak di-cache oleh browser (?t=...)
-    script.src = `//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js?t=${new Date().getTime()}`;
-    script.async = true;
-    script.referrerPolicy = "unsafe-url"; // Paksa policy di level script juga
-
-    // Jika gagal memuat (kena AdBlock)
-    script.onerror = () => {
-      console.warn("Busuanzi blocked by browser/AdBlock");
-      setIsError(true);
-    };
-
-    document.body.appendChild(script);
+    // Panggil API (hit = tambah 1 kunjungan)
+    fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setVisits(data.value.toLocaleString("id-ID")); // Format angka ribuan (1.234)
+      })
+      .catch((err) => {
+        console.error("CounterAPI Error:", err);
+        // Fallback jika error (misal jaringan down), ambil info saja tanpa nambah
+        fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`)
+          .then((res) => res.json())
+          .then((data) => setVisits(data.value.toLocaleString("id-ID")))
+          .catch(() => setVisits("Err"));
+      });
   }, []);
 
-  if (isError) return null; // Sembunyikan jika error/diblokir
-
   return (
-    <div className="mt-4 flex justify-center gap-6 text-xs text-text-light dark:text-darkmode-text-light opacity-80">
-      <div className="flex items-center gap-2">
-        <FaUsers className="text-primary" />
-        <span id="busuanzi_container_site_uv" style={{ display: "none" }}>
-          <span id="busuanzi_value_site_uv" className="font-bold">
-            ...
-          </span>{" "}
-          Visitor
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
+    <div className="mt-4 flex justify-center text-xs text-text-light dark:text-darkmode-text-light opacity-80">
+      <div className="flex items-center gap-2" title="Total Kunjungan Website">
         <FaEye className="text-blue-500" />
-        <span id="busuanzi_container_site_pv" style={{ display: "none" }}>
-          <span id="busuanzi_value_site_pv" className="font-bold">
-            ...
-          </span>{" "}
-          Views
-        </span>
+        <span className="font-bold">{visits}</span>
+        <span>Total Kunjungan</span>
       </div>
     </div>
   );
