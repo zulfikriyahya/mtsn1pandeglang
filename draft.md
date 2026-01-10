@@ -181,6 +181,10 @@
         {
           "name": "Galeri Foto",
           "url": "https://www.instagram.com/mtsn1_pandeglang/?hl=id"
+        },
+        {
+          "name": "Galeri Video",
+          "url": "https://www.youtube.com/@mtsn1pandeglangofficial"
         }
       ]
     },
@@ -202,7 +206,7 @@
           "url": "https://cbt.mtsn1pandeglang.sch.id"
         },
         {
-          "name": "Presensi Online",
+          "name": "Presensi Online (POL)",
           "url": "https://presensi.mtsn1pandeglang.sch.id"
         },
         {
@@ -212,6 +216,10 @@
         {
           "name": "Bank Data",
           "url": "https://drive.mtsn1pandeglang.sch.id"
+        },
+        {
+          "name": "Pemutakhiran Data Mandiri (PDM)",
+          "url": "https://pdm.mtsn1pandeglang.sch.id"
         }
       ]
     }
@@ -8256,6 +8264,7 @@ const { banner, features } = homepage.data;
                 rel="noopener"
               >
                 {banner.button.label}
+                {/* TODO: Tambahkan Tombol yang menampilkan modal popup untuk memutar video /videos/selayang-pandang.mp4  */}
               </a>
             )
           }
