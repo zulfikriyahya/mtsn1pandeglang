@@ -1,15 +1,64 @@
+/* Base Button Style */
 .btn {
-  @apply inline-block rounded border border-transparent px-5 py-2 font-semibold capitalize transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg active:translate-y-0;
+  @apply relative inline-flex items-center justify-center overflow-hidden rounded border border-transparent px-6 py-2.5 font-semibold capitalize transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:scale-95;
+
+  /* Posisi awal sorotan di tengah */
+  --x: 50%;
+  --y: 50%;
+  z-index: 1;
 }
 
 .btn-sm {
   @apply rounded-sm px-4 py-1.5 text-sm;
 }
 
-.btn-primary {
-  @apply border-primary bg-primary dark:border-darkmode-primary dark:text-text-dark text-white dark:bg-darkmode-primary;
+/* Layer Spotlight (Efek Sorot) */
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1; /* Di belakang teks */
+
+  /* Gradasi Radial: Pusatnya dinamis mengikuti --x dan --y */
+  background: radial-gradient(
+    circle at var(--x) var(--y),
+    var(--spotlight-color, var(--color-primary)) 0%,
+    transparent 50%
+  );
+
+  /* Animasi muncul/hilang */
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
+/* Tampilkan spotlight saat hover */
+.btn:hover::before {
+  opacity: 1;
+}
+
+/* --- Variasi Tombol Solid (Primary) --- */
+.btn-primary {
+  @apply border-primary bg-primary text-white dark:border-darkmode-primary dark:bg-darkmode-primary dark:text-text-dark;
+
+  /* Warna sorotan: Putih transparan (kilau) */
+  --spotlight-color: rgba(255, 255, 255, 0.4);
+}
+
+/* --- Variasi Tombol Outline --- */
 .btn-outline-primary {
-  @apply border-dark text-text-dark hover:bg-dark dark:hover:text-text-dark bg-transparent hover:text-white dark:border-darkmode-primary dark:text-white dark:hover:bg-darkmode-primary;
+  @apply border-primary bg-transparent text-primary dark:border-darkmode-primary dark:text-darkmode-primary;
+
+  /* Saat hover, teks berubah warna agar kontras */
+  @apply hover:text-white dark:hover:text-black;
+
+  /* Warna sorotan: Mengambil warna tema (Hijau) */
+  --spotlight-color: var(--color-primary);
+}
+
+/* Fix untuk dark mode pada tombol outline */
+.dark .btn-outline-primary {
+  --spotlight-color: var(--color-darkmode-primary);
 }

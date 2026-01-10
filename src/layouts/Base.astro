@@ -215,32 +215,24 @@ const { title, meta_title, description, image, noindex, canonical } =
     <Footer />
     <InstallPrompt client:load />
 
-    <!-- Busuanzi Visitor Count Script -->
-    <script
-      async
-      src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-    <!-- Fix untuk Astro View Transitions agar counter update saat ganti halaman -->
-    <script>
-      document.addEventListener("astro:page-load", () => {
-        // @ts-ignore
-        if (window.bszCaller && window.bszTag) {
-          const script = document.createElement("script");
-          script.src =
-            "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js?t=" +
-            new Date().getTime();
-          script.async = true;
-          document.body.appendChild(script);
-        }
-      });
-    </script>
-
     <script>
       import { initAnimations } from "@/scripts/gsap-animations";
 
       // Jalankan saat halaman pertama kali load dan setiap kali navigasi berpindah
       document.addEventListener("astro:page-load", () => {
         initAnimations();
+      });
+    </script>
+
+    <script>
+      import { initAnimations } from "@/scripts/gsap-animations";
+      // Import script spotlight yang baru dibuat
+      import { initSpotlightButtons } from "@/scripts/spotlight";
+
+      document.addEventListener("astro:page-load", () => {
+        initAnimations();
+        // Jalankan inisialisasi spotlight
+        initSpotlightButtons();
       });
     </script>
   </body>

@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FaPlay, FaTimes } from "react-icons/fa";
 
 interface VideoModalProps {
-  videoId?: string; // ID Video Youtube (Contoh: C0DPdy98e4c)
-  src?: string; // Fallback untuk video lokal (jika masih ingin support)
+  videoId?: string;
+  src?: string;
   label?: string;
 }
 
@@ -35,7 +35,7 @@ const VideoModal = ({
 
     if (isMounted) {
       document.addEventListener("keydown", handleEsc);
-      document.body.style.overflow = "hidden"; // Matikan scroll website
+      document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
@@ -48,24 +48,27 @@ const VideoModal = ({
 
   return (
     <>
-      {/* Tombol Pemicu */}
+      {/* 
+        KITA KEMBALI KE CLASS STANDAR 
+        Efek animasi & spotlight sekarang ditangani oleh global CSS & JS
+      */}
       <button
         onClick={openModal}
-        className="btn btn-outline-primary mb-4 inline-flex items-center gap-2 transition-transform hover:scale-105 active:scale-95"
+        className="btn btn-outline-primary mb-4 ml-0 md:ml-4 gap-2"
         type="button"
       >
         <FaPlay className="text-xs" />
         {label}
       </button>
 
-      {/* Render Modal */}
+      {/* Render Modal Fullscreen */}
       {isMounted && (
         <div
           className={`fixed inset-0 z-[9999] bg-black transition-opacity duration-300 ease-in-out ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
         >
-          {/* Tombol Close (Fixed di pojok kanan atas) */}
+          {/* Tombol Close */}
           <button
             onClick={closeModal}
             className={`absolute right-6 top-6 z-50 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition-all duration-500 hover:bg-white hover:text-black hover:rotate-90 ${
@@ -78,10 +81,9 @@ const VideoModal = ({
             <FaTimes size={24} />
           </button>
 
-          {/* Video Container Full Screen */}
+          {/* Container Video */}
           <div className="absolute inset-0 flex h-full w-full items-center justify-center">
             {videoId ? (
-              // Player YouTube
               <iframe
                 className="h-full w-full"
                 src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
@@ -90,7 +92,6 @@ const VideoModal = ({
                 allowFullScreen
               ></iframe>
             ) : (
-              // Player Lokal (Fallback)
               <video
                 src={src}
                 className="h-full w-full object-contain"

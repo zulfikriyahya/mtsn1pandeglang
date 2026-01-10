@@ -5,6 +5,7 @@ import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import social from "@/config/social.json";
 import { markdownify } from "@/lib/utils/textConverter";
+import VisitorCounter from "@/layouts/helpers/VisitorCounter";
 
 const { footer }: { footer: { name: string; url: string }[] } = menu;
 ---
@@ -36,7 +37,7 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
       class="container text-center text-text-light dark:text-darkmode-text-light"
     >
       <p set:html={markdownify(config.params.copyright)} />
-
+      <VisitorCounter client:only="react" />
       <!-- Statistik Pengunjung Global -->
       <div class="mt-2 text-xs opacity-70 flex justify-center gap-4">
         <span id="busuanzi_container_site_pv" style="display:none">
