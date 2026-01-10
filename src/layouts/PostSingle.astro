@@ -1,8 +1,8 @@
 ---
 import BlogCard from "@/components/BlogCard.astro";
 import Share from "@/components/Share.astro";
-// import Disqus from "@/helpers/Disqus";
-// import GiscusComment from "@/helpers/GiscusComment";
+import Disqus from "@/helpers/Disqus";
+import GiscusComment from "@/helpers/GiscusComment";
 import CusdisComment from "@/layouts/helpers/CusdisComment";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
@@ -119,9 +119,8 @@ const { title, description, author, categories, image, date, tags } = post.data;
           </div>
         </div>
         <!-- <Disqus className="mt-20" client:load /> -->
-        {/* Gunakan Giscus */}
-        <!-- <GiscusComment client:visible /> -->
-        <CusdisComment client:only="react" />
+        <GiscusComment client:visible />
+        <!-- <CusdisComment client:only="react" /> -->
       </article>
     </div>
 
