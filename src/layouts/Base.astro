@@ -14,6 +14,7 @@ import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
 import SearchModal from "./helpers/SearchModal";
 import InstallPrompt from "@/layouts/helpers/InstallPrompt";
+import CookieConsent from "@/layouts/helpers/CookieConsent";
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -213,6 +214,7 @@ const { title, meta_title, description, image, noindex, canonical } =
     </main>
     <Footer />
     <InstallPrompt client:load />
+    <CookieConsent client:only="react" />
 
     <script>
       import { initAnimations } from "@/scripts/gsap-animations";
