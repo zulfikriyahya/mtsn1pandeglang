@@ -18,22 +18,22 @@ const PostViewCounter = () => {
 
     const fetchCounter = async () => {
       try {
-        // Gunakan countapi.xyz
+        // Gunakan countapi.dev
         // /hit = Menambah angka (Increment)
         const res = await fetch(
-          `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`,
+          `https://api.countapi.dev/hit/${NAMESPACE}/${KEY}`,
         );
 
         if (!res.ok) throw new Error("Failed");
 
         const data = await res.json();
-        // countapi.xyz mengembalikan properti 'value', bukan 'count'
+        // countapi.dev mengembalikan properti 'value', bukan 'count'
         setViews(data.value.toLocaleString("id-ID"));
       } catch (error) {
         // Fallback: Baca Saja (/get)
         try {
           const resRead = await fetch(
-            `https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`,
+            `https://api.countapi.dev/get/${NAMESPACE}/${KEY}`,
           );
           if (!resRead.ok) throw new Error("Read Failed");
           const dataRead = await resRead.json();

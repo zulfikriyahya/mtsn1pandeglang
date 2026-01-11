@@ -13,7 +13,7 @@ const VisitorCounter = () => {
       try {
         // /hit = Tambah kunjungan
         const res = await fetch(
-          `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`,
+          `https://api.countapi.dev/hit/${NAMESPACE}/${KEY}`,
         );
         if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
@@ -22,7 +22,7 @@ const VisitorCounter = () => {
         try {
           // /get = Baca saja jika hit gagal
           const resRead = await fetch(
-            `https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`,
+            `https://api.countapi.dev/get/${NAMESPACE}/${KEY}`,
           );
           if (!resRead.ok) throw new Error("Read failed");
           const dataRead = await resRead.json();
