@@ -48,14 +48,42 @@ interface User {
   picture: string;
 }
 
+// --- HELPER: FORMAT TANGGAL INDONESIA ---
+const formatDateIndo = (dateString: string) => {
+  if (!dateString) return "-";
+  try {
+    // Tambahkan 'Z' agar dibaca sebagai UTC, lalu konversi ke WIB
+    const date = new Date(
+      dateString.includes("Z")
+        ? dateString
+        : dateString.replace(" ", "T") + "Z",
+    );
+
+    return new Intl.DateTimeFormat("id-ID", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Jakarta",
+      timeZoneName: "short",
+    })
+      .format(date)
+      .replace("pukul", "");
+  } catch (e) {
+    return dateString;
+  }
+};
+
 const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null); // State Error
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // --- GOOGLE AUTH & FETCH ---
+  // --- GOOGLE AUTH & INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -85,9 +113,8 @@ const AdminDashboard = () => {
 
         if (authData.status === "authenticated") {
           setUser(authData.user);
-          fetchStats(); // Fetch data setelah login terkonfirmasi
+          fetchStats();
         } else {
-          // Load Google Script
           if (!document.getElementById("google-client-script")) {
             const script = document.createElement("script");
             script.src = "https://accounts.google.com/gsi/client";
@@ -132,19 +159,12 @@ const AdminDashboard = () => {
     setErrorMsg(null);
     try {
       const res = await fetch("/api/admin.php?action=stats");
-      if (!res.ok) {
-        throw new Error(`Server Error: ${res.status} ${res.statusText}`);
-      }
+      if (!res.ok) throw new Error(`Server Error: ${res.status}`);
       const json = await res.json();
-
-      if (json.status === "error") {
-        throw new Error(json.message);
-      }
-
+      if (json.status === "error") throw new Error(json.message);
       setData(json);
     } catch (e: any) {
-      console.error(e);
-      setErrorMsg(e.message || "Gagal memuat data statistik.");
+      setErrorMsg(e.message || "Gagal memuat data.");
     }
   };
 
@@ -168,7 +188,6 @@ const AdminDashboard = () => {
       </div>
     );
 
-  // --- LOGIN SCREEN ---
   if (!user) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
@@ -187,10 +206,9 @@ const AdminDashboard = () => {
     );
   }
 
-  // --- DASHBOARD SCREEN ---
   return (
     <div className="min-h-screen pb-12">
-      {/* 1. Header Card */}
+      {/* Header Card */}
       <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
         <div className="flex items-center gap-4">
           <img
@@ -219,7 +237,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* ERROR MESSAGE DISPLAY */}
       {errorMsg && (
         <div className="mb-8 rounded-xl bg-red-50 p-4 border border-red-200 text-red-700 flex items-center gap-3">
           <FaExclamationTriangle className="text-xl" />
@@ -236,10 +253,9 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* DATA CONTENT */}
       {data && (
         <div className="animate-fade-in">
-          {/* 2. Stats Overview */}
+          {/* Overview Stats */}
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
@@ -271,7 +287,7 @@ const AdminDashboard = () => {
             />
           </div>
 
-          {/* 3. Tabs */}
+          {/* Navigation Tabs */}
           <div className="mb-8 border-b border-border dark:border-darkmode-border">
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
@@ -295,12 +311,9 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* 4. Tab Contents */}
-
-          {/* OVERVIEW */}
+          {/* Tab Contents */}
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Line Chart */}
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6">Tren Aktivitas (30 Hari Terakhir)</h3>
                 <div className="h-72">
@@ -331,7 +344,6 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Pie Chart */}
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">
                   Distribusi Rating Bintang
@@ -361,7 +373,6 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Bar Chart */}
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
                 <div className="h-64">
@@ -392,7 +403,6 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* TABLES */}
           {activeTab === "posts" && (
             <DataTable
               title="Statistik Artikel Populer"
@@ -421,9 +431,10 @@ const AdminDashboard = () => {
               columns={[
                 {
                   key: "created_at",
-                  label: "Tanggal",
+                  label: "Waktu",
                   sortable: true,
-                  className: "w-32 text-sm text-gray-500",
+                  className: "w-48 text-sm text-gray-500",
+                  render: (val: string) => formatDateIndo(val),
                 },
                 {
                   key: "name",
@@ -448,7 +459,7 @@ const AdminDashboard = () => {
                 },
                 {
                   key: "ip_address",
-                  label: "IP Address",
+                  label: "IP",
                   className: "text-xs text-gray-400 font-mono",
                 },
               ]}
@@ -464,9 +475,10 @@ const AdminDashboard = () => {
               columns={[
                 {
                   key: "created_at",
-                  label: "Tanggal",
+                  label: "Waktu",
                   sortable: true,
-                  className: "w-32 text-sm text-gray-500",
+                  className: "w-48 text-sm text-gray-500",
+                  render: (val: string) => formatDateIndo(val),
                 },
                 {
                   key: "respondent_name",
@@ -515,8 +527,7 @@ const AdminDashboard = () => {
   );
 };
 
-// --- SUB COMPONENTS ---
-
+// --- SUB COMPONENTS (SAMA SEPERTI SEBELUMNYA) ---
 const StatCard = ({ label, value, icon, color, bg }: any) => (
   <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
     <div>
@@ -577,10 +588,11 @@ const DataTable = ({
   const sortedData = useMemo(() => {
     if (!sortConfig) return filteredData;
     return [...filteredData].sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key])
-        return sortConfig.direction === "asc" ? -1 : 1;
-      if (a[sortConfig.key] > b[sortConfig.key])
-        return sortConfig.direction === "asc" ? 1 : -1;
+      let aVal = a[sortConfig.key];
+      let bVal = b[sortConfig.key];
+      // Basic comparison
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
       return 0;
     });
   }, [filteredData, sortConfig]);

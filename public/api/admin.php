@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Jakarta'); // Set Timezone Server ke Jakarta
 
 // Proteksi
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -18,26 +19,59 @@ try {
     $db = new SQLite3($dbPath);
     $action = $_GET['action'] ?? 'stats';
 
-    // === HELPER: AMAN DARI ERROR SQLITE VERSION ===
+    // === HELPER: Format Tanggal Indonesia ===
+    function formatTanggalIndo($timestamp)
+    {
+        // Asumsi timestamp dari DB adalah UTC, kita konversi ke Jakarta
+        try {
+            $dt = new DateTime($timestamp, new DateTimeZone('UTC'));
+            $dt->setTimezone(new DateTimeZone('Asia/Jakarta'));
+
+            $bulan = [
+                1 => 'Januari',
+                'Februari',
+                'Maret',
+                'April',
+                'Mei',
+                'Juni',
+                'Juli',
+                'Agustus',
+                'September',
+                'Oktober',
+                'November',
+                'Desember'
+            ];
+
+            $tgl = $dt->format('d');
+            $bln = $bulan[(int)$dt->format('m')];
+            $thn = $dt->format('Y');
+            $jam = $dt->format('H:i');
+
+            return "$tgl $bln $thn, $jam WIB";
+        } catch (Exception $e) {
+            return $timestamp;
+        }
+    }
+
+    // === HELPER: Grafik Harian (Waktu Jakarta) ===
     function getSafeDailyActivity($db, $table, $days = 30)
     {
         $data = [];
-        // 1. Buat array tanggal kosong via PHP (Lebih aman)
+        // Generate tanggal 30 hari terakhir (Waktu Jakarta)
         for ($i = $days - 1; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-$i days"));
             $data[$date] = 0;
         }
 
-        // 2. Query simpel
         try {
-            // Cek dulu apakah tabel ada
             $check = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$table'");
             if (!$check) return $data;
 
-            // Query data
-            $query = "SELECT substr(created_at, 1, 10) as date, COUNT(*) as count 
+            // Query dengan penyesuaian Timezone (+7 Jam untuk WIB)
+            // datetime(created_at, '+7 hours') mengubah UTC ke WIB sebelum di-group
+            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count 
                       FROM $table 
-                      WHERE created_at >= date('now', '-$days days') 
+                      WHERE created_at >= date('now', '-$days days', '-7 hours') 
                       GROUP BY date";
 
             $res = $db->query($query);
@@ -49,7 +83,6 @@ try {
                 }
             }
         } catch (Exception $e) {
-            // Ignore error di chart agar dashboard tetap jalan
         }
         return $data;
     }
@@ -57,7 +90,7 @@ try {
     if ($action === 'stats') {
         header('Content-Type: application/json');
 
-        // 1. Overview Count (Pakai try catch per item biar aman)
+        // 1. Overview Count
         $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
 
         $total_posts = 0;
@@ -69,7 +102,6 @@ try {
         $stars = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
         if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='feedback'")) {
             $total_feedback = $db->querySingle("SELECT COUNT(*) FROM feedback") ?: 0;
-            // Stars
             $resStar = $db->query("SELECT rating, COUNT(*) as count FROM feedback GROUP BY rating");
             while ($row = $resStar->fetchArray(SQLITE3_ASSOC)) {
                 $stars[$row['rating']] = $row['count'];
@@ -80,7 +112,6 @@ try {
         $survey_avg = ['zi' => 0, 'service' => 0, 'academic' => 0];
         if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'")) {
             $total_survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses") ?: 0;
-            // Avg
             $avgQuery = $db->querySingle("SELECT AVG(score_zi) as zi, AVG(score_service) as service, AVG(score_academic) as academic FROM survey_responses", true);
             if ($avgQuery) {
                 $survey_avg['zi'] = round($avgQuery['zi'] ?? 0, 2);
@@ -93,7 +124,7 @@ try {
         $activity_feedback = getSafeDailyActivity($db, 'feedback');
         $activity_survey = getSafeDailyActivity($db, 'survey_responses');
 
-        // 5. Raw Data
+        // 5. Raw Data (Dikirim Mentah UTC, diformat di Frontend)
         $posts = [];
         if ($total_posts > 0) {
             $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
@@ -136,24 +167,34 @@ try {
         ]);
     }
 
-    // === EXPORT LOGIC ===
+    // === EXPORT LOGIC (FORMAT INDONESIA) ===
     elseif ($action === 'export') {
         $type = $_GET['type'] ?? '';
-        $filename = "laporan_{$type}_" . date('Y-m-d') . ".csv";
-        header('Content-Type: text/csv');
+        $filename = "laporan_{$type}_" . date('Y-m-d_His') . ".csv";
+
+        header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
+
         $output = fopen('php://output', 'w');
+        // Tambahkan BOM untuk Excel agar bisa baca karakter UTF-8 dengan benar
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         if ($type === 'feedback') {
-            fputcsv($output, ['ID', 'Nama', 'Rating', 'Pesan', 'IP Address', 'Tanggal']);
-            $res = $db->query("SELECT id, name, rating, message, ip_address, created_at FROM feedback ORDER BY created_at DESC");
-            while ($row = $res->fetchArray(SQLITE3_ASSOC)) fputcsv($output, $row);
+            fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Rating', 'Pesan', 'IP Address']);
+            $res = $db->query("SELECT id, created_at, name, rating, message, ip_address FROM feedback ORDER BY created_at DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $row['created_at'] = formatTanggalIndo($row['created_at']);
+                fputcsv($output, $row);
+            }
         } elseif ($type === 'survey') {
-            fputcsv($output, ['ID', 'Nama', 'Peran', 'Skor ZI', 'Skor Pelayanan', 'Skor Akademik', 'Masukan', 'IP Address', 'Tanggal']);
-            $res = $db->query("SELECT id, respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, ip_address, created_at FROM survey_responses ORDER BY created_at DESC");
-            while ($row = $res->fetchArray(SQLITE3_ASSOC)) fputcsv($output, $row);
+            fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Peran', 'Skor ZI', 'Skor Pelayanan', 'Skor Akademik', 'Masukan', 'IP Address']);
+            $res = $db->query("SELECT id, created_at, respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, ip_address FROM survey_responses ORDER BY created_at DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $row['created_at'] = formatTanggalIndo($row['created_at']);
+                fputcsv($output, $row);
+            }
         } elseif ($type === 'posts') {
-            fputcsv($output, ['Slug Artikel', 'Jumlah Pembaca']);
+            fputcsv($output, ['Judul Artikel / Slug', 'Jumlah Pembaca']);
             $res = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
             while ($row = $res->fetchArray(SQLITE3_ASSOC)) fputcsv($output, $row);
         }
