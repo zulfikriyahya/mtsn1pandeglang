@@ -4,11 +4,8 @@ DELAY=5
 PROJECT_DIR="/var/www/mtsn1pandeglang.sch.id"
 echo "=== MEMULAI DEPLOYMENT ==="
 sudo chown -R $USER:$USER $PROJECT_DIR
-echo "--- Updating Yarn ---"
 sudo npm install -g yarn
-echo "--- Pulling latest code ---"
 git config --global --add safe.directory $PROJECT_DIR
-git reset --hard
 git pull origin static
 echo "--- Installing Project Dependencies ---"
 yarn install --check-files
@@ -19,20 +16,20 @@ while [ $ATTEMPT -le $MAX_RETRIES ]; do
     echo "--- Build Attempt $ATTEMPT of $MAX_RETRIES ---"
     yarn build
     if [ $? -eq 0 ]; then
-        echo "✅ Build Sukses!"
+        echo "Build Sukses!"
         SUCCESS=1
         break
     else
-        echo "❌ Build Gagal pada percobaan ke-$ATTEMPT"
+        echo "Build Gagal pada percobaan ke-$ATTEMPT"
         if [ $ATTEMPT -lt $MAX_RETRIES ]; then
-            echo "⏳ Menunggu $DELAY detik sebelum mencoba lagi..."
+            echo "Menunggu $DELAY detik sebelum mencoba lagi..."
             sleep $DELAY
         fi
         ATTEMPT=$((ATTEMPT + 1))
     fi
 done
 if [ $SUCCESS -eq 0 ]; then
-    echo "⛔ DEPLOYMENT GAGAL SETELAH $MAX_RETRIES PERCOBAAN."
+    echo "DEPLOYMENT GAGAL SETELAH $MAX_RETRIES PERCOBAAN."
     exit 1
 fi
 echo "--- Setting up Database ---"
