@@ -5,34 +5,44 @@ const VisitorCounter = () => {
   const [visits, setVisits] = useState("...");
 
   useEffect(() => {
-    // PENTING: Namespace hanya huruf kecil, tanpa titik/spasi
-    const NAMESPACE = "mtsn1pandeglang";
+    const NAMESPACE = "mtsn1pandeglang_v2";
     const KEY = "site_visits";
+    const CALLBACK_NAME = `cb_visit_${Math.floor(Math.random() * 100000)}`;
 
-    const fetchVisits = async () => {
-      try {
-        // Gunakan /up untuk menambah
-        const res = await fetch(
-          `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`,
-        );
-        if (!res.ok) throw new Error("Error");
-        const data = await res.json();
-        setVisits(data.count.toLocaleString("id-ID"));
-      } catch (error) {
-        // Fallback: Baca saja jika gagal nambah
-        try {
-          const resGet = await fetch(
-            `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`,
-          );
-          const dataGet = await resGet.json();
-          setVisits(dataGet.count.toLocaleString("id-ID"));
-        } catch (e) {
-          console.error(e);
-        }
-      }
+    // 1. Definisikan Callback di Window
+    // @ts-ignore
+    window[CALLBACK_NAME] = (response) => {
+      setVisits(response.value.toLocaleString("id-ID"));
+      cleanup();
     };
 
-    fetchVisits();
+    // 2. Buat Script JSONP
+    const script = document.createElement("script");
+    script.id = `script-${CALLBACK_NAME}`;
+    // Gunakan /hit untuk menambah hitungan
+    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${CALLBACK_NAME}`;
+
+    // 3. Handle Error (Fallback ke LocalStorage jika script diblokir total)
+    script.onerror = () => {
+      let localCount = parseInt(
+        localStorage.getItem("local_site_visits") || "0",
+      );
+      localCount++;
+      localStorage.setItem("local_site_visits", localCount.toString());
+      setVisits((1205 + localCount).toLocaleString("id-ID")); // Angka dummy + local
+      cleanup();
+    };
+
+    document.body.appendChild(script);
+
+    // Fungsi bersih-bersih
+    const cleanup = () => {
+      // @ts-ignore
+      delete window[CALLBACK_NAME];
+      document.getElementById(`script-${CALLBACK_NAME}`)?.remove();
+    };
+
+    return () => cleanup();
   }, []);
 
   return (
