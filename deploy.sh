@@ -2,7 +2,7 @@
 
 sudo chown -R $USER:$USER /var/www/mtsn1pandeglang.sch.id/
 git config --global --add safe.directory /var/www/mtsn1pandeglang.sch.id
-git pull origin static --force
+git pull origin static
 yarn
 yarn build
 
