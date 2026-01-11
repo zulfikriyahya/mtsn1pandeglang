@@ -6,35 +6,38 @@ const PostViewCounter = () => {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    // 1. Namespace Bersih (Tanpa titik/underscore)
+    // Gunakan namespace tanpa titik agar aman
     const NAMESPACE = "mtsn1pandeglang";
 
-    // 2. Ambil Slug dari URL terakhir saja
-    // Contoh: /blog/judul-artikel -> judul-artikel
+    // Ambil Slug dari URL terakhir
     const pathSegments = window.location.pathname.split("/").filter(Boolean);
     const slug = pathSegments[pathSegments.length - 1] || "home";
 
-    // 3. Key Format: post-{slug}
+    // Key Format: post-{slug}
     const KEY = `post-${slug}`;
 
     const fetchCounter = async () => {
       try {
-        // Hitungan Naik (Up)
+        // Gunakan countapi.xyz
+        // /hit = Menambah angka (Increment)
         const res = await fetch(
-          `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`,
+          `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`,
         );
+
         if (!res.ok) throw new Error("Failed");
+
         const data = await res.json();
-        setViews(data.count.toLocaleString("id-ID"));
+        // countapi.xyz mengembalikan properti 'value', bukan 'count'
+        setViews(data.value.toLocaleString("id-ID"));
       } catch (error) {
-        // Fallback: Baca Saja (Down/Get)
+        // Fallback: Baca Saja (/get)
         try {
           const resRead = await fetch(
-            `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`,
+            `https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`,
           );
           if (!resRead.ok) throw new Error("Read Failed");
           const dataRead = await resRead.json();
-          setViews(dataRead.count.toLocaleString("id-ID"));
+          setViews(dataRead.value.toLocaleString("id-ID"));
         } catch (err) {
           setIsHidden(true);
         }

@@ -6,36 +6,28 @@ const VisitorCounter = () => {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    // Ganti titik dengan underscore agar aman untuk ID
     const NAMESPACE = "mtsn1pandeglang";
     const KEY = "site-visits";
 
     const fetchCounter = async () => {
       try {
-        // Coba increment (tambah 1)
+        // /hit = Tambah kunjungan
         const res = await fetch(
-          `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`,
+          `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`,
         );
-
         if (!res.ok) throw new Error("Network response was not ok");
-
         const data = await res.json();
-        setVisits(data.count.toLocaleString("id-ID"));
+        setVisits(data.value.toLocaleString("id-ID"));
       } catch (error) {
-        console.warn(
-          "Counter blocked/error, switching to read-only or hiding.",
-        );
-
-        // Jika gagal nambah (mungkin karena refresh cepat), coba baca saja
         try {
+          // /get = Baca saja jika hit gagal
           const resRead = await fetch(
-            `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`,
+            `https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`,
           );
           if (!resRead.ok) throw new Error("Read failed");
           const dataRead = await resRead.json();
-          setVisits(dataRead.count.toLocaleString("id-ID"));
+          setVisits(dataRead.value.toLocaleString("id-ID"));
         } catch (err) {
-          // Jika masih gagal (kena AdBlock parah), sembunyikan komponen
           setIsHidden(true);
         }
       }
