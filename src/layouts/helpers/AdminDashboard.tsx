@@ -19,36 +19,61 @@ const AdminDashboard = () => {
   const [data, setData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // 1. Cek Login & Fetch Data
+  // Fungsi Inisialisasi Google Button
+  const initializeGoogleButton = () => {
+    // Pastikan div googleBtn ada
+    const btnContainer = document.getElementById("googleBtn");
+    if (!btnContainer) return;
+
+    // Cek apakah script google sudah load
+    /* @ts-ignore */
+    if (window.google && window.google.accounts) {
+      /* @ts-ignore */
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+        auto_select: false, // PENTING: Matikan auto popup biar gak kena blokir browser
+        cancel_on_tap_outside: true,
+        ui_mode: "popup",
+      });
+
+      /* @ts-ignore */
+      window.google.accounts.id.renderButton(btnContainer, {
+        theme: "outline",
+        size: "large",
+        width: 250,
+        shape: "rectangular",
+      });
+    }
+  };
+
   useEffect(() => {
     const init = async () => {
-      // Load Google Script
-      const script = document.createElement("script");
-      script.src = "https://accounts.google.com/gsi/client";
-      script.async = true;
-      document.body.appendChild(script);
+      // 1. Cek Session PHP
+      try {
+        const authRes = await fetch("/api/auth.php?action=check");
+        const authData = await authRes.json();
 
-      // Cek Session PHP
-      const authRes = await fetch("/api/auth.php?action=check");
-      const authData = await authRes.json();
-
-      if (authData.status === "authenticated") {
-        setUser(authData.user);
-        fetchStats();
-      } else {
-        // Render Google Button jika belum login
-        script.onload = () => {
-          /* @ts-ignore */
-          window.google.accounts.id.initialize({
-            client_id: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
-            callback: handleCredentialResponse,
-          });
-          /* @ts-ignore */
-          window.google.accounts.id.renderButton(
-            document.getElementById("googleBtn"),
-            { theme: "outline", size: "large", width: 250 },
-          );
-        };
+        if (authData.status === "authenticated") {
+          setUser(authData.user);
+          fetchStats();
+        } else {
+          // 2. Jika belum login, Load Script Google
+          if (!document.getElementById("google-client-script")) {
+            const script = document.createElement("script");
+            script.src = "https://accounts.google.com/gsi/client";
+            script.async = true;
+            script.defer = true;
+            script.id = "google-client-script";
+            script.onload = initializeGoogleButton;
+            document.body.appendChild(script);
+          } else {
+            // Jika script sudah ada (misal dari navigasi sebelumnya), langsung render
+            setTimeout(initializeGoogleButton, 500);
+          }
+        }
+      } catch (e) {
+        console.error("Auth check failed", e);
       }
       setLoading(false);
     };
@@ -57,30 +82,41 @@ const AdminDashboard = () => {
 
   const handleCredentialResponse = async (response: any) => {
     setLoading(true);
-    const res = await fetch("/api/auth.php?action=login", {
-      method: "POST",
-      body: JSON.stringify({ credential: response.credential }),
-    });
-    const result = await res.json();
-    if (result.status === "success") {
-      setUser(result.user);
-      fetchStats();
-    } else {
-      alert(result.message);
+    try {
+      const res = await fetch("/api/auth.php?action=login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      const result = await res.json();
+      if (result.status === "success") {
+        setUser(result.user);
+        fetchStats();
+      } else {
+        alert(result.message || "Login gagal");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan koneksi");
     }
     setLoading(false);
   };
 
   const fetchStats = async () => {
-    const res = await fetch("/api/admin.php?action=stats");
-    if (res.ok) {
-      const json = await res.json();
-      setData(json);
+    try {
+      const res = await fetch("/api/admin.php?action=stats");
+      if (res.ok) {
+        const json = await res.json();
+        setData(json);
+      }
+    } catch (e) {
+      console.error("Failed to fetch stats");
     }
   };
 
   const handleLogout = async () => {
     await fetch("/api/auth.php?action=logout");
+    /* @ts-ignore */
+    if (window.google) window.google.accounts.id.disableAutoSelect(); // Reset google state
     setUser(null);
     window.location.reload();
   };
@@ -93,7 +129,12 @@ const AdminDashboard = () => {
     window.print();
   };
 
-  if (loading) return <div className="text-center p-10">Memuat Sistem...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-[50vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
 
   // --- TAMPILAN LOGIN ---
   if (!user) {
@@ -107,14 +148,17 @@ const AdminDashboard = () => {
           />
           <h2 className="h4 mb-2">Login Admin</h2>
           <p className="mb-8 text-sm text-text-light">
-            Khusus untuk email:{" "}
-            <b>
-              {import.meta.env.ADMIN_EMAIL || "dev.mtsn1pandeglang@gmail.com"}
-            </b>
+            Silakan login menggunakan akun Google resmi MTsN 1 Pandeglang.
           </p>
-          <div className="flex justify-center">
+
+          <div className="flex justify-center min-h-[50px]">
+            {/* Container Tombol Google */}
             <div id="googleBtn"></div>
           </div>
+
+          <p className="mt-6 text-xs text-gray-400">
+            Jika tombol tidak muncul, pastikan AdBlock dimatikan.
+          </p>
         </div>
       </div>
     );
@@ -195,12 +239,12 @@ const AdminDashboard = () => {
 
       {/* Tabs Navigation */}
       <div className="mb-6 border-b border-border dark:border-darkmode-border print:hidden">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-8 overflow-x-auto">
           {["overview", "posts", "ratings", "surveys"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`border-b-2 py-4 px-1 text-sm font-medium capitalize ${
+              className={`border-b-2 py-4 px-1 text-sm font-medium capitalize whitespace-nowrap ${
                 activeTab === tab
                   ? "border-primary text-primary"
                   : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
