@@ -49,10 +49,6 @@
           "url": "/program"
         },
         {
-          "name": "Layanan PTSP",
-          "url": "/pelayanan"
-        },
-        {
           "name": "Kalender Pendidikan",
           "url": "#"
         }
@@ -115,6 +111,18 @@
           "url": "/authors/yahya-zulfikri"
         },
         {
+          "name": "Layanan PTSP",
+          "url": "/pelayanan"
+        },
+        {
+          "name": "Survei Kepuasan",
+          "url": "/survei-kepuasan"
+        },
+        {
+          "name": "Pertanyaan Umum (FAQ)",
+          "url": "/faq"
+        },
+        {
           "name": "Galeri Foto",
           "url": "https://www.instagram.com/mtsn1_pandeglang/?hl=id"
         },
@@ -170,12 +178,12 @@
       "url": "/about"
     },
     {
-      "name": "Hubungi Kami",
-      "url": "/contact"
-    },
-    {
       "name": "Kebijakan Privasi",
       "url": "/kebijakan-privasi"
+    },
+    {
+      "name": "Pertanyaan Umum (FAQ)",
+      "url": "/faq"
     }
   ]
 }

@@ -1,0 +1,32 @@
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import SurveyWizard from "@/layouts/helpers/SurveyWizard";
+
+const title = "Survei Kepuasan Masyarakat";
+const description =
+  "Bantu kami meningkatkan kualitas layanan MTs Negeri 1 Pandeglang dengan mengisi survei kepuasan pelanggan secara online.";
+---
+
+<Base title={title} meta_title={title} description={description}>
+  <PageHeader title={title} />
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="lg:col-10">
+          <div class="mb-10 text-center">
+            <p class="text-lg">
+              Survei ini bertujuan untuk mengukur tingkat kepuasan masyarakat
+              terhadap penyelenggaraan pelayanan publik di <strong
+                >MTs Negeri 1 Pandeglang</strong
+              >. Identitas dan jawaban Anda dijamin kerahasiaannya.
+            </p>
+          </div>
+
+          <SurveyWizard client:only="react" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
