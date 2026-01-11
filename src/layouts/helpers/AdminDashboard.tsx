@@ -57,7 +57,6 @@ interface User {
   picture: string;
 }
 
-// --- HELPER: FORMAT TANGGAL ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -84,7 +83,6 @@ const formatDateIndo = (dateString: string) => {
 };
 
 const AdminDashboard = () => {
-  // --- STATE HOOKS ---
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
@@ -103,15 +101,12 @@ const AdminDashboard = () => {
     count: number;
   }>({ isOpen: false, ids: [], type: "feedback", count: 0 });
   const [importModalOpen, setImportModalOpen] = useState(false);
-
-  // State Modal Detail Statistik (BARU)
   const [statDetailModal, setStatDetailModal] = useState<{
     isOpen: boolean;
     type: "visits" | "posts" | "feedback" | "survey" | null;
     title: string;
   }>({ isOpen: false, type: null, title: "" });
 
-  // State Filter PDF
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
   );
@@ -119,7 +114,6 @@ const AdminDashboard = () => {
     new Date().getFullYear(),
   );
 
-  // --- GOOGLE AUTH INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -236,7 +230,6 @@ const AdminDashboard = () => {
     setModalType(null);
   };
 
-  // --- LOGIKA HAPUS DATA ---
   const requestDelete = (ids: number[], type: "feedback" | "survey") => {
     setConfirmModal({ isOpen: true, ids, type, count: ids.length });
   };
@@ -276,7 +269,6 @@ const AdminDashboard = () => {
     setImportModalOpen(false);
   };
 
-  // --- RENDER LOGIC ---
   if (loading)
     return (
       <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-darkmode-body">
@@ -321,7 +313,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Action Controls */}
         <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
           <select
             value={selectedMonth}
@@ -400,7 +391,7 @@ const AdminDashboard = () => {
 
       {data && (
         <div className="animate-fade-in space-y-8">
-          {/* Enhanced Overview Cards */}
+          {/* Glassmorphism Cards */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
@@ -460,7 +451,6 @@ const AdminDashboard = () => {
             />
           </div>
 
-          {/* Navigation Tabs */}
           <div className="border-b border-border dark:border-darkmode-border">
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
@@ -480,7 +470,6 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* TAB CONTENTS */}
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
@@ -833,7 +822,6 @@ const AdminDashboard = () => {
               </div>
               {modalType === "survey" && (
                 <div className="grid grid-cols-3 gap-4 mt-6">
-                  {/* Score boxes ... */}
                   <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
                     <div className="text-xs text-blue-600 font-bold uppercase">
                       ZI
@@ -882,7 +870,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* STAT DETAIL MODAL (NEW FEATURE) */}
+      {/* STAT DETAIL MODAL (NEW FEATURE - REAL DATA) */}
       <StatDetailModal
         isOpen={statDetailModal.isOpen}
         onClose={() =>
@@ -890,25 +878,22 @@ const AdminDashboard = () => {
         }
         title={statDetailModal.title}
         type={statDetailModal.type}
-        data={data} // Pass full data object
+        data={data}
       />
     </div>
   );
 };
 
-// --- KOMPONEN BARU & YANG DIPERBARUI ---
+// --- SUB COMPONENTS ---
 
-// 1. STAT CARD (Glassmorphism & Animated)
 const StatCard = ({ label, value, icon, color, gradient, onClick }: any) => (
   <div
     onClick={onClick}
     className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 dark:bg-white/5 backdrop-blur-lg p-6 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/20 cursor-pointer"
   >
-    {/* Background Glow */}
     <div
       className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} blur-2xl opacity-20 transition-all duration-500 group-hover:scale-150 group-hover:opacity-30`}
     ></div>
-
     <div className="relative z-10 flex items-start justify-between">
       <div>
         <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
@@ -917,38 +902,43 @@ const StatCard = ({ label, value, icon, color, gradient, onClick }: any) => (
         <h3 className="mt-2 text-3xl font-bold text-gray-800 dark:text-white transition-all group-hover:scale-105 origin-left">
           {value}
         </h3>
-
-        {/* Fake Trend Indicator (Visual Only) */}
         <div className="mt-2 flex items-center gap-1 text-xs font-medium text-green-500 bg-green-500/10 w-fit px-2 py-0.5 rounded-full">
           <FaArrowUp className="text-[10px]" />
           <span>Active</span>
         </div>
       </div>
-
       <div
         className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-xl ${color} shadow-inner transition-transform duration-300 group-hover:rotate-12`}
       >
         {icon}
       </div>
     </div>
-
-    {/* Bottom Shine */}
     <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100"></div>
-
     <div className="absolute bottom-4 right-4 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2">
       <FaArrowRight className="text-gray-400 text-sm" />
     </div>
   </div>
 );
 
-// 2. STAT DETAIL MODAL (Popup Detail Data)
 const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
   if (!isOpen || !data) return null;
+
+  // Helper untuk visit stats
+  const getVisitStats = () => {
+    const visits = data.charts.activity.visits || [];
+    const today = visits[visits.length - 1] || 0;
+    const totalPeriod = visits.reduce((a: number, b: number) => a + b, 0);
+    const average =
+      visits.length > 0 ? Math.round(totalPeriod / visits.length) : 0;
+    return { today, average, visits };
+  };
+
+  const visitStats =
+    type === "visits" ? getVisitStats() : { today: 0, average: 0, visits: [] };
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fade-in">
       <div className="bg-white dark:bg-[#1a1d24] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/10 flex flex-col max-h-[85vh]">
-        {/* Header */}
         <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
           <h3 className="text-lg font-bold text-gray-800 dark:text-white">
             {title}
@@ -960,8 +950,6 @@ const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
             <FaTimes />
           </button>
         </div>
-
-        {/* Content Body */}
         <div className="p-6 overflow-y-auto custom-scrollbar">
           {type === "visits" && (
             <div>
@@ -971,14 +959,27 @@ const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
                     labels: data.charts.activity.labels,
                     datasets: [
                       {
-                        label: "Kunjungan Harian (Estimasi)",
-                        data: data.charts.activity.labels.map(
-                          () => Math.floor(Math.random() * 50) + 10,
-                        ), // Dummy visual data as true visits logic is complex
+                        label: "Kunjungan Harian (Realtime)",
+                        data: visitStats.visits,
                         borderColor: "#3b82f6",
-                        backgroundColor: "rgba(59, 130, 246, 0.1)",
+                        backgroundColor: (context: any) => {
+                          const ctx = context.chart.ctx;
+                          const gradient = ctx.createLinearGradient(
+                            0,
+                            0,
+                            0,
+                            200,
+                          );
+                          gradient.addColorStop(0, "rgba(59, 130, 246, 0.5)");
+                          gradient.addColorStop(1, "rgba(59, 130, 246, 0.0)");
+                          return gradient;
+                        },
                         fill: true,
                         tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: "#3b82f6",
+                        pointBorderWidth: 2,
                       },
                     ],
                   }}
@@ -986,25 +987,34 @@ const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        grid: { color: "rgba(0,0,0,0.05)" },
+                      },
+                      x: { grid: { display: false } },
+                    },
                   }}
                 />
-                <p className="text-center text-xs text-gray-400 mt-2">
-                  *Grafik estimasi aktivitas
-                </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center">
-                  <p className="text-sm text-gray-500">Total Hari Ini</p>
-                  <p className="text-2xl font-bold text-blue-500">~</p>
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center border border-gray-100 dark:border-white/10">
+                  <p className="text-sm text-gray-500 mb-1">
+                    Kunjungan Hari Ini
+                  </p>
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {visitStats.today.toLocaleString()}
+                  </p>
                 </div>
-                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center">
-                  <p className="text-sm text-gray-500">Rata-rata / Hari</p>
-                  <p className="text-2xl font-bold text-blue-500">~</p>
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center border border-gray-100 dark:border-white/10">
+                  <p className="text-sm text-gray-500 mb-1">Rata-rata / Hari</p>
+                  <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                    {visitStats.average.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </div>
           )}
-
           {type === "posts" && (
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-gray-500 uppercase">
@@ -1032,7 +1042,6 @@ const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
               ))}
             </div>
           )}
-
           {type === "feedback" && (
             <div className="space-y-4">
               <h4 className="text-sm font-semibold text-gray-500 uppercase">
@@ -1075,7 +1084,6 @@ const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
               ))}
             </div>
           )}
-
           {type === "survey" && (
             <div>
               <div className="h-60 mb-6">
@@ -1125,7 +1133,6 @@ const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
             </div>
           )}
         </div>
-
         <div className="p-4 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5 text-right">
           <button onClick={onClose} className="btn btn-primary btn-sm">
             Tutup
@@ -1136,12 +1143,7 @@ const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
   );
 };
 
-// ... (Komponen ImportModal, ConfirmationModal, DataTable tetap sama seperti sebelumnya) ...
-// (Untuk menghemat ruang, saya tidak menulis ulang ImportModal, ConfirmationModal, dan DataTable karena tidak ada perubahan di sana)
-// Pastikan Anda tetap menyertakan komponen-komponen tersebut di bagian bawah file ini.
-
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
-  /* ... Kode ImportModal (Sama seperti sebelumnya) ... */
   const [importType, setImportType] = useState<"feedback" | "survey">(
     "feedback",
   );
@@ -1324,7 +1326,6 @@ const DataTable = ({
   enableSelection = false,
   onBulkDelete,
 }: any) => {
-  /* ... Kode DataTable (Sama persis seperti sebelumnya) ... */
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: string;
