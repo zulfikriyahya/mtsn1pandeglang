@@ -50,8 +50,7 @@ interface User {
   email: string;
   picture: string;
 }
-const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
 // --- HELPER: FORMAT TANGGAL ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
@@ -79,19 +78,28 @@ const formatDateIndo = (dateString: string) => {
 };
 
 const AdminDashboard = () => {
+  // --- STATE HOOKS (HARUS DI PALING ATAS) ---
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // STATE UNTUK MODAL POPUP
+  // State Modal
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
     null,
   );
 
-  // --- GOOGLE AUTH & INIT ---
+  // State Filter PDF
+  const [selectedMonth, setSelectedMonth] = useState(
+    () => new Date().getMonth() + 1,
+  );
+  const [selectedYear, setSelectedYear] = useState(() =>
+    new Date().getFullYear(),
+  );
+
+  // --- GOOGLE AUTH INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -112,34 +120,6 @@ const AdminDashboard = () => {
       });
     }
   };
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const authRes = await fetch("/api/auth.php?action=check");
-        const authData = await authRes.json();
-        if (authData.status === "authenticated") {
-          setUser(authData.user);
-          fetchStats();
-        } else {
-          if (!document.getElementById("google-client-script")) {
-            const script = document.createElement("script");
-            script.src = "https://accounts.google.com/gsi/client";
-            script.async = true;
-            script.id = "google-client-script";
-            script.onload = initializeGoogleButton;
-            document.body.appendChild(script);
-          } else {
-            setTimeout(initializeGoogleButton, 500);
-          }
-        }
-      } catch (e) {
-        setErrorMsg("Gagal menghubungi server autentikasi.");
-      }
-      setLoading(false);
-    };
-    init();
-  }, []);
 
   const handleCredentialResponse = async (response: any) => {
     setLoading(true);
@@ -174,6 +154,41 @@ const AdminDashboard = () => {
     }
   };
 
+  useEffect(() => {
+    let isMounted = true;
+    const init = async () => {
+      try {
+        const authRes = await fetch("/api/auth.php?action=check");
+        const authData = await authRes.json();
+        if (isMounted) {
+          if (authData.status === "authenticated") {
+            setUser(authData.user);
+            fetchStats();
+          } else {
+            if (!document.getElementById("google-client-script")) {
+              const script = document.createElement("script");
+              script.src = "https://accounts.google.com/gsi/client";
+              script.async = true;
+              script.id = "google-client-script";
+              script.onload = initializeGoogleButton;
+              document.body.appendChild(script);
+            } else {
+              setTimeout(initializeGoogleButton, 500);
+            }
+          }
+          setLoading(false);
+        }
+      } catch (e) {
+        if (isMounted) setErrorMsg("Gagal menghubungi server autentikasi.");
+        setLoading(false);
+      }
+    };
+    init();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleLogout = async () => {
     await fetch("/api/auth.php?action=logout");
     setUser(null);
@@ -191,7 +206,6 @@ const AdminDashboard = () => {
     );
   };
 
-  // --- FUNGSI BUKA MODAL ---
   const openDetail = (item: any, type: "feedback" | "survey") => {
     setSelectedItem(item);
     setModalType(type);
@@ -202,6 +216,7 @@ const AdminDashboard = () => {
     setModalType(null);
   };
 
+  // --- RENDER LOGIC ---
   if (loading)
     return (
       <div className="text-center p-12">
@@ -231,8 +246,8 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen pb-12 relative">
       {/* Header */}
-      <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
-        <div className="flex items-center gap-4">
+      <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+        <div className="flex items-center gap-4 w-full md:w-auto">
           <img
             src={user.picture}
             alt={user.name}
@@ -243,26 +258,13 @@ const AdminDashboard = () => {
             <p className="text-sm text-text-light">{user.email}</p>
           </div>
         </div>
-        {/* <div className="flex gap-2">
-          <button
-            onClick={printPDF}
-            className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden"
-          >
-            <FaDownload /> PDF
-          </button>
-          <button
-            onClick={handleLogout}
-            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden"
-          >
-            <FaSignOutAlt /> Keluar
-          </button>
-        </div> */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Dropdown Bulan */}
+
+        {/* PDF Controls */}
+        <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm dark:bg-darkmode-body dark:border-darkmode-border"
+            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
           >
             {[
               "Januari",
@@ -284,11 +286,10 @@ const AdminDashboard = () => {
             ))}
           </select>
 
-          {/* Dropdown Tahun */}
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm dark:bg-darkmode-body dark:border-darkmode-border"
+            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
           >
             {[2024, 2025, 2026].map((y) => (
               <option key={y} value={y}>
@@ -299,13 +300,13 @@ const AdminDashboard = () => {
 
           <button
             onClick={printPDF}
-            className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden"
+            className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden whitespace-nowrap"
           >
             <FaDownload /> PDF
           </button>
           <button
             onClick={handleLogout}
-            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden"
+            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap"
           >
             <FaSignOutAlt /> Keluar
           </button>
@@ -736,7 +737,7 @@ const AdminDashboard = () => {
   );
 };
 
-// --- SUB COMPONENTS (SAMA SEPERTI SEBELUMNYA) ---
+// --- SUB COMPONENTS ---
 const StatCard = ({ label, value, icon, color, bg }: any) => (
   <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
     <div>
