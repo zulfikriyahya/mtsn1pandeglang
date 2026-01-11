@@ -280,7 +280,7 @@ try {
     $pdf->Ln(5);
 
     // ==========================================
-    // TABEL 2: KUALITAS PELAYANAN (5 Baris)
+    // TABEL 2: KUALITAS PELAYANAN (DIPISAH: 6 Baris Total)
     // ==========================================
 
     // Baris 1: Header
@@ -291,29 +291,29 @@ try {
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
 
-    $wL = 50;
-    $wV = 45;
+    // Lebar Kolom
+    $wLabelFull = 70;
+    $wValueFull = 120;
 
-    // Baris 2: Jumlah Responden & Jumlah Ulasan
-    $pdf->Cell($wL, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 0, 'L');
-    $pdf->Cell($wL, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
+    // Baris 2: Jumlah Responden (Sendiri)
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
 
-    // Baris 3: 3 Index Sekaligus (Split 3 Kolom)
-    // 190 / 3 = 63.33 per kolom
+    // Baris 3: Jumlah Ulasan (Sendiri)
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
+
+    // Baris 4: Rincian Indeks (Split 3 Kolom)
     $wSub = 190 / 3;
     $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
 
-    // Baris 4: Rata-rata Rating Ulasan
-    $wLabelFull = 70;
-    $wValueFull = 120;
+    // Baris 5: Rata-rata Rating Ulasan
     $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
 
-    // Baris 5: Indeks Kepuasan Masy (IKM)
+    // Baris 6: Indeks Kepuasan Masy (IKM)
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(240, 240, 240); // Highlight background
     $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
