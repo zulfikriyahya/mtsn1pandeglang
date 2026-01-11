@@ -13,6 +13,9 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaExclamationTriangle,
+  FaTimes,
+  FaExternalLinkAlt,
+  FaQuoteLeft,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -48,17 +51,15 @@ interface User {
   picture: string;
 }
 
-// --- HELPER: FORMAT TANGGAL INDONESIA ---
+// --- HELPER: FORMAT TANGGAL ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
-    // Tambahkan 'Z' agar dibaca sebagai UTC, lalu konversi ke WIB
     const date = new Date(
       dateString.includes("Z")
         ? dateString
         : dateString.replace(" ", "T") + "Z",
     );
-
     return new Intl.DateTimeFormat("id-ID", {
       weekday: "long",
       day: "numeric",
@@ -82,6 +83,12 @@ const AdminDashboard = () => {
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+
+  // STATE UNTUK MODAL POPUP
+  const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
+    null,
+  );
 
   // --- GOOGLE AUTH & INIT ---
   const initializeGoogleButton = () => {
@@ -110,7 +117,6 @@ const AdminDashboard = () => {
       try {
         const authRes = await fetch("/api/auth.php?action=check");
         const authData = await authRes.json();
-
         if (authData.status === "authenticated") {
           setUser(authData.user);
           fetchStats();
@@ -127,7 +133,6 @@ const AdminDashboard = () => {
           }
         }
       } catch (e) {
-        console.error(e);
         setErrorMsg("Gagal menghubungi server autentikasi.");
       }
       setLoading(false);
@@ -180,6 +185,17 @@ const AdminDashboard = () => {
 
   const printPDF = () => window.print();
 
+  // --- FUNGSI BUKA MODAL ---
+  const openDetail = (item: any, type: "feedback" | "survey") => {
+    setSelectedItem(item);
+    setModalType(type);
+  };
+
+  const closeDetail = () => {
+    setSelectedItem(null);
+    setModalType(null);
+  };
+
   if (loading)
     return (
       <div className="text-center p-12">
@@ -207,8 +223,8 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen pb-12">
-      {/* Header Card */}
+    <div className="min-h-screen pb-12 relative">
+      {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
         <div className="flex items-center gap-4">
           <img
@@ -255,7 +271,7 @@ const AdminDashboard = () => {
 
       {data && (
         <div className="animate-fade-in">
-          {/* Overview Stats */}
+          {/* Overview Cards */}
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
@@ -299,11 +315,7 @@ const AdminDashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors ${
-                    activeTab === tab.id
-                      ? "border-primary text-primary"
-                      : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400"
-                  }`}
+                  className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-gray-500 hover:border-gray-300 dark:text-gray-400"}`}
                 >
                   {tab.label}
                 </button>
@@ -311,7 +323,7 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* Tab Contents */}
+          {/* TAB CONTENTS */}
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
@@ -343,7 +355,6 @@ const AdminDashboard = () => {
                   />
                 </div>
               </div>
-
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">
                   Distribusi Rating Bintang
@@ -372,7 +383,6 @@ const AdminDashboard = () => {
                   />
                 </div>
               </div>
-
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
                 <div className="h-64">
@@ -407,6 +417,7 @@ const AdminDashboard = () => {
             <DataTable
               title="Statistik Artikel Populer"
               data={data.tables.posts}
+              onDownload={() => downloadReport("posts")}
               columns={[
                 {
                   key: "slug",
@@ -420,7 +431,6 @@ const AdminDashboard = () => {
                   className: "text-right font-bold",
                 },
               ]}
-              onDownload={() => downloadReport("posts")}
             />
           )}
 
@@ -428,6 +438,8 @@ const AdminDashboard = () => {
             <DataTable
               title="Data Ulasan Masuk"
               data={data.tables.feedbacks}
+              searchKeys={["name", "message"]}
+              onDownload={() => downloadReport("feedback")}
               columns={[
                 {
                   key: "created_at",
@@ -440,12 +452,13 @@ const AdminDashboard = () => {
                   key: "name",
                   label: "Nama Pengirim",
                   sortable: true,
-                  className: "font-medium",
+                  className: "font-medium w-48",
                 },
                 {
                   key: "rating",
                   label: "Rating",
                   sortable: true,
+                  className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
                       {val} ★
@@ -455,16 +468,24 @@ const AdminDashboard = () => {
                 {
                   key: "message",
                   label: "Pesan / Kritik",
-                  className: "italic text-gray-600 dark:text-gray-400",
-                },
-                {
-                  key: "ip_address",
-                  label: "IP",
-                  className: "text-xs text-gray-400 font-mono",
+                  render: (val: string, row: any) => (
+                    <div className="group relative">
+                      <p className="italic text-gray-600 dark:text-gray-400 line-clamp-1 max-w-xs">
+                        {val || "-"}
+                      </p>
+                      {val && val.length > 50 && (
+                        <button
+                          onClick={() => openDetail(row, "feedback")}
+                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                        >
+                          Lihat Detail{" "}
+                          <FaExternalLinkAlt className="text-[10px]" />
+                        </button>
+                      )}
+                    </div>
+                  ),
                 },
               ]}
-              searchKeys={["name", "message"]}
-              onDownload={() => downloadReport("feedback")}
             />
           )}
 
@@ -472,6 +493,8 @@ const AdminDashboard = () => {
             <DataTable
               title="Data Survei Kepuasan"
               data={data.tables.surveys}
+              searchKeys={["respondent_name", "feedback"]}
+              onDownload={() => downloadReport("survey")}
               columns={[
                 {
                   key: "created_at",
@@ -484,6 +507,7 @@ const AdminDashboard = () => {
                   key: "respondent_name",
                   label: "Responden",
                   sortable: true,
+                  className: "w-48",
                   render: (_: any, row: any) => (
                     <div>
                       <div className="font-bold">{row.respondent_name}</div>
@@ -497,30 +521,156 @@ const AdminDashboard = () => {
                   key: "score_zi",
                   label: "ZI",
                   sortable: true,
-                  className: "text-center font-semibold text-blue-600",
+                  className: "text-center font-semibold text-blue-600 w-16",
                 },
                 {
                   key: "score_service",
                   label: "Layanan",
                   sortable: true,
-                  className: "text-center font-semibold text-green-600",
+                  className: "text-center font-semibold text-green-600 w-16",
                 },
                 {
                   key: "score_academic",
                   label: "Akademik",
                   sortable: true,
-                  className: "text-center font-semibold text-purple-600",
+                  className: "text-center font-semibold text-purple-600 w-16",
                 },
                 {
                   key: "feedback",
                   label: "Masukan",
-                  className: "italic text-gray-500 text-sm",
+                  render: (val: string, row: any) => (
+                    <div>
+                      <p className="italic text-gray-500 text-sm line-clamp-1 max-w-xs">
+                        {val || "-"}
+                      </p>
+                      {val && val.length > 50 && (
+                        <button
+                          onClick={() => openDetail(row, "survey")}
+                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                        >
+                          Lihat Detail{" "}
+                          <FaExternalLinkAlt className="text-[10px]" />
+                        </button>
+                      )}
+                    </div>
+                  ),
                 },
               ]}
-              searchKeys={["respondent_name", "feedback"]}
-              onDownload={() => downloadReport("survey")}
             />
           )}
+        </div>
+      )}
+
+      {/* DETAIL MODAL POPUP */}
+      {selectedItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+                  Detail{" "}
+                  {modalType === "feedback" ? "Ulasan" : "Masukan Survei"}
+                </h3>
+                <p className="text-xs text-gray-500 mt-1">
+                  {formatDateIndo(selectedItem.created_at)}
+                </p>
+              </div>
+              <button
+                onClick={closeDetail}
+                className="text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="h-12 w-12 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
+                  {(selectedItem.name || selectedItem.respondent_name || "A")
+                    .charAt(0)
+                    .toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-bold text-lg text-gray-800 dark:text-white">
+                    {selectedItem.name || selectedItem.respondent_name}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {selectedItem.respondent_role || "Pengunjung / Wali Murid"}
+                  </p>
+
+                  {modalType === "feedback" && (
+                    <div className="mt-2 flex gap-1">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <FaStar
+                          key={s}
+                          className={
+                            s <= selectedItem.rating
+                              ? "text-yellow-400"
+                              : "text-gray-200"
+                          }
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Message Box */}
+              <div className="relative rounded-xl bg-gray-50 dark:bg-white/5 p-6 border border-gray-100 dark:border-darkmode-border">
+                <FaQuoteLeft className="absolute top-4 left-4 text-gray-200 dark:text-gray-600 text-2xl" />
+                <div className="relative z-10">
+                  <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                    Isi Pesan:
+                  </p>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                    {modalType === "feedback"
+                      ? selectedItem.message
+                      : selectedItem.feedback}
+                  </p>
+                </div>
+              </div>
+
+              {/* Stats for Survey */}
+              {modalType === "survey" && (
+                <div className="grid grid-cols-3 gap-4 mt-6">
+                  <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
+                    <div className="text-xs text-blue-600 font-bold uppercase">
+                      ZI
+                    </div>
+                    <div className="text-xl font-bold text-blue-700">
+                      {selectedItem.score_zi}
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg dark:bg-green-900/20">
+                    <div className="text-xs text-green-600 font-bold uppercase">
+                      Layanan
+                    </div>
+                    <div className="text-xl font-bold text-green-700">
+                      {selectedItem.score_service}
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-purple-50 rounded-lg dark:bg-purple-900/20">
+                    <div className="text-xs text-purple-600 font-bold uppercase">
+                      Akademik
+                    </div>
+                    <div className="text-xl font-bold text-purple-700">
+                      {selectedItem.score_academic}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-between items-center text-xs text-gray-400 border-t border-gray-100 dark:border-darkmode-border">
+              <span>IP: {selectedItem.ip_address}</span>
+              <button onClick={closeDetail} className="btn btn-primary btn-sm">
+                Tutup
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -590,7 +740,6 @@ const DataTable = ({
     return [...filteredData].sort((a, b) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
-      // Basic comparison
       if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
       if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
       return 0;
@@ -602,17 +751,14 @@ const DataTable = ({
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage,
   );
-
   const requestSort = (key: string) => {
-    let direction: "asc" | "desc" = "asc";
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === "asc"
-    ) {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
+    setSortConfig({
+      key,
+      direction:
+        sortConfig?.key === key && sortConfig.direction === "asc"
+          ? "desc"
+          : "asc",
+    });
   };
 
   return (
@@ -640,7 +786,6 @@ const DataTable = ({
           </button>
         </div>
       </div>
-
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
@@ -709,7 +854,6 @@ const DataTable = ({
           </tbody>
         </table>
       </div>
-
       <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-gray-50 p-4 dark:bg-white/5 dark:border-darkmode-border sm:flex-row">
         <div className="text-xs text-gray-500">
           Menampilkan{" "}
@@ -726,7 +870,6 @@ const DataTable = ({
           </span>{" "}
           data
         </div>
-
         <div className="flex items-center gap-2">
           <select
             className="rounded border border-border bg-white px-2 py-1 text-xs outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
@@ -741,7 +884,6 @@ const DataTable = ({
             <option value={20}>20</option>
             <option value={50}>50</option>
           </select>
-
           <div className="flex rounded border border-border bg-white dark:bg-darkmode-body dark:border-darkmode-border">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
