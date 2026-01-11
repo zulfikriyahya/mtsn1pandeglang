@@ -16,6 +16,7 @@ import {
   FaTimes,
   FaExternalLinkAlt,
   FaQuoteLeft,
+  FaTrash,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -84,6 +85,39 @@ const AdminDashboard = () => {
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+
+  // --- TAMBAHKAN FUNGSI INI DI DALAM COMPONENT AdminDashboard ---
+  const handleDelete = async (id: number, type: "feedback" | "survey") => {
+    if (
+      !confirm(
+        "Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.",
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/crud.php?action=delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, type }),
+      });
+      const json = await res.json();
+
+      if (json.status === "success") {
+        // Refresh data setelah hapus berhasil
+        fetchStats();
+        // Jika sedang membuka detail item yang dihapus, tutup modalnya
+        if (selectedItem && selectedItem.id === id) {
+          closeDetail();
+        }
+      } else {
+        alert(json.message || "Gagal menghapus data.");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan.");
+    }
+  };
 
   // State Modal
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
@@ -545,6 +579,21 @@ const AdminDashboard = () => {
                     </div>
                   ),
                 },
+                // --- KOLOM AKSI BARU ---
+                {
+                  key: "actions",
+                  label: "Aksi",
+                  className: "text-center w-20",
+                  render: (_: any, row: any) => (
+                    <button
+                      onClick={() => handleDelete(row.id, "feedback")}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                      title="Hapus Data"
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  ),
+                },
               ]}
             />
           )}
@@ -613,6 +662,21 @@ const AdminDashboard = () => {
                         </button>
                       )}
                     </div>
+                  ),
+                },
+                // --- KOLOM AKSI BARU ---
+                {
+                  key: "actions",
+                  label: "Aksi",
+                  className: "text-center w-20",
+                  render: (_: any, row: any) => (
+                    <button
+                      onClick={() => handleDelete(row.id, "survey")}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                      title="Hapus Data"
+                    >
+                      <FaTrash size={14} />
+                    </button>
                   ),
                 },
               ]}
@@ -726,9 +790,20 @@ const AdminDashboard = () => {
             {/* Modal Footer */}
             <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-between items-center text-xs text-gray-400 border-t border-gray-100 dark:border-darkmode-border">
               <span>IP: {selectedItem.ip_address}</span>
-              <button onClick={closeDetail} className="btn btn-primary btn-sm">
-                Tutup
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleDelete(selectedItem.id, modalType!)}
+                  className="btn bg-red-100 text-red-600 hover:bg-red-200 border-transparent btn-sm flex items-center gap-2"
+                >
+                  <FaTrash /> Hapus
+                </button>
+                <button
+                  onClick={closeDetail}
+                  className="btn btn-primary btn-sm"
+                >
+                  Tutup
+                </button>
+              </div>
             </div>
           </div>
         </div>
