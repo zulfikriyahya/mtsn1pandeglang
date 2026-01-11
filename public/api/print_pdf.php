@@ -200,23 +200,41 @@ try {
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
     $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
-
-    // UPDATE: Ambil Data Artikel Dibaca (Cumulative)
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
-    // --- HITUNG IKM ---
-    $ikmRaw = $db->querySingle("SELECT AVG((score_zi + score_service + score_academic) / 3) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
-    $ikmValue = $ikmRaw ? round($ikmRaw, 2) : 0;
+    // --- HITUNG INDEKS DETAIL ---
+    // Mengambil rata-rata per kategori
+    $indices = $db->querySingle("SELECT 
+        AVG(score_zi) as zi, 
+        AVG(score_service) as service, 
+        AVG(score_academic) as academic 
+        FROM survey_responses 
+        WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
+
+    $idxZI = $indices ? round($indices['zi'] ?? 0, 2) : 0;
+    $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
+    $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
+
+    // Hitung IKM Total (Rata-rata dari 3 komponen)
+    $ikmValue = 0;
+    if ($survey > 0) {
+        $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
+    }
 
     // Predikat Mutu
-    $mutu = "-";
-    if ($ikmValue > 0) {
-        if ($ikmValue >= 4.5) $mutu = "Sangat Baik (A)";
-        elseif ($ikmValue >= 4.0) $mutu = "Baik (B)";
-        elseif ($ikmValue >= 3.0) $mutu = "Cukup (C)";
-        else $mutu = "Kurang (D)";
+    function getPredikat($val)
+    {
+        if ($val >= 4.5) return "Sangat Baik (A)";
+        if ($val >= 4.0) return "Baik (B)";
+        if ($val >= 3.0) return "Cukup (C)";
+        if ($val > 0) return "Kurang (D)";
+        return "-";
     }
-    $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 ($mutu)" : "-";
+
+    $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 (" . getPredikat($ikmValue) . ")" : "-";
+    $textZI = ($idxZI > 0) ? "$idxZI / 5.00" : "-";
+    $textService = ($idxService > 0) ? "$idxService / 5.00" : "-";
+    $textAcademic = ($idxAcademic > 0) ? "$idxAcademic / 5.00" : "-";
 
     // === JUDUL LAPORAN ===
     $pdf->SetFont('Arial', 'B', 12);
@@ -225,7 +243,7 @@ try {
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
     $pdf->Ln(8);
 
-    // === TABEL RINGKASAN (Update: 6 Baris) ===
+    // === TABEL RINGKASAN (Update: 9 Baris) ===
     $startX = 10;
     $startY = $pdf->GetY();
 
@@ -233,52 +251,63 @@ try {
     $wLabel = 70;
     $wValue = 85;
     $wQR = 35;
-    // Total 6 baris sekarang
-    $totalBoxHeight = $rowH * 6;
+    $totalBoxHeight = $rowH * 9; // 9 Baris total
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(245, 245, 245);
 
-    // 1. Gambar Kotak QR (Gabung 6 Baris)
+    // 1. Gambar Kotak QR (Gabung 9 Baris)
     $pdf->SetXY($startX + $wLabel + $wValue, $startY);
     $pdf->Cell($wQR, $totalBoxHeight, '', 1, 0, 'C');
 
-    // Update Content QR (Tambah Data Article Views: A:...)
-    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$survey}|IKM:{$ikmValue}|F:{$feedback}|VALID");
+    // Update Content QR (Tambah Detail Index)
+    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|ZI:{$idxZI}|LYN:{$idxService}|AKD:{$idxAcademic}|IKM:{$ikmValue}|VALID");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
 
-    // Center Vertically di box 6 baris
+    // Center Vertically di box 9 baris
     $qrY = $startY + ($totalBoxHeight - 24) / 2;
     $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $qrY, 24, 24);
 
     // 2. Gambar Baris Data
-    // Baris 1: Bulan
     $pdf->SetXY($startX, $startY);
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
 
-    // Baris 2: Kunjungan
     $pdf->SetXY($startX, $startY + $rowH);
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
 
-    // Baris 3: Artikel Dibaca (BARU)
     $pdf->SetXY($startX, $startY + ($rowH * 2));
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca (Akumulasi)', 1, 0, 'L');
 
-    // Baris 4: Responden
     $pdf->SetXY($startX, $startY + ($rowH * 3));
     $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
 
-    // Baris 5: IKM
+    // Indeks ZI (Zona Integritas)
     $pdf->SetXY($startX, $startY + ($rowH * 4));
-    $pdf->Cell($wLabel, $rowH, ' Indeks Kepuasan Masyarakat', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $ikmText, 1, 0, 'L');
+    $pdf->Cell($wLabel, $rowH, ' Indeks Zona Integritas', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $textZI, 1, 0, 'L');
 
-    // Baris 6: Ulasan
+    // Indeks Pelayanan
     $pdf->SetXY($startX, $startY + ($rowH * 5));
+    $pdf->Cell($wLabel, $rowH, ' Indeks Pelayanan Publik', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $textService, 1, 0, 'L');
+
+    // Indeks Akademik
+    $pdf->SetXY($startX, $startY + ($rowH * 6));
+    $pdf->Cell($wLabel, $rowH, ' Indeks Kualitas Akademik', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $textAcademic, 1, 0, 'L');
+
+    // IKM Total (Tebal)
+    $pdf->SetXY($startX, $startY + ($rowH * 7));
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->Cell($wLabel, $rowH, ' Indeks Kepuasan Masy. (Total)', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $ikmText, 1, 0, 'L');
+    $pdf->SetFont('Arial', '', 9);
+
+    $pdf->SetXY($startX, $startY + ($rowH * 8));
     $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
 
