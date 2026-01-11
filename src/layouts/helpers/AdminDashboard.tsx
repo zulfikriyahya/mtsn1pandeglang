@@ -183,7 +183,9 @@ const AdminDashboard = () => {
     window.open(`/api/admin.php?action=export&type=${type}`, "_blank");
   };
 
-  const printPDF = () => window.print();
+  const printPDF = () => {
+    window.open("/api/print_pdf.php", "_blank");
+  };
 
   // --- FUNGSI BUKA MODAL ---
   const openDetail = (item: any, type: "feedback" | "survey") => {
