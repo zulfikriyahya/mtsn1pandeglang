@@ -24,7 +24,7 @@ try {
     $db->exec("CREATE TABLE IF NOT EXISTS post_stats (slug TEXT PRIMARY KEY, views INTEGER DEFAULT 0)");
 
     // Inisialisasi visitor awal
-    $db->exec("INSERT OR IGNORE INTO global_stats (key, value) VALUES ('site_visits', 1205)");
+    $db->exec("INSERT OR IGNORE INTO global_stats (key, value) VALUES ('site_visits', 0)");
 
     // Ambil parameter
     $action = $_GET['action'] ?? ''; // 'visit' atau 'view'
