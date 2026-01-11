@@ -89,7 +89,7 @@ class PDF extends FPDF
     function Header()
     {
         $path = '../images/instansi/';
-        $logoSize = 24; // Ukuran logo dari step sebelumnya
+        $logoSize = 24;
 
         if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 10, 10, $logoSize);
         if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
@@ -109,14 +109,11 @@ class PDF extends FPDF
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
 
-        // UPDATE: Posisi garis dinaikkan agar lebih mepet dengan teks
-        // Dari Y=43 & 44 menjadi Y=39 & 40
         $this->SetLineWidth(0.5);
         $this->Line(10, 39, 200, 39);
         $this->SetLineWidth(0.2);
         $this->Line(10, 40, 200, 40);
 
-        // Jarak ke konten di bawahnya disesuaikan
         $this->Ln(6);
     }
 
@@ -199,20 +196,36 @@ try {
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
     $y = $year;
 
+    // Data Utama
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
     $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+
+    // --- HITUNG IKM (Indeks Kepuasan Masyarakat) ---
+    // Mengambil rata-rata dari 3 komponen (ZI, Service, Academic)
+    $ikmRaw = $db->querySingle("SELECT AVG((score_zi + score_service + score_academic) / 3) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
+    $ikmValue = $ikmRaw ? round($ikmRaw, 2) : 0;
+
+    // Tentukan Predikat Mutu
+    $mutu = "-";
+    if ($ikmValue > 0) {
+        if ($ikmValue >= 4.5) $mutu = "Sangat Baik (A)";
+        elseif ($ikmValue >= 4.0) $mutu = "Baik (B)";
+        elseif ($ikmValue >= 3.0) $mutu = "Cukup (C)";
+        else $mutu = "Kurang (D)";
+    }
+    $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 ($mutu)" : "-";
+    // ------------------------------------------------
 
     // === JUDUL LAPORAN ===
     $pdf->SetFont('Arial', 'B', 12);
     $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL', 0, 1, 'C');
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
-    $pdf->Ln(4); // Beri jarak sebelum tabel ringkasan
+    $pdf->Ln(8);
 
-    // === TABEL RINGKASAN (Compact & Fix Overlap) ===
+    // === TABEL RINGKASAN (Update: 5 Baris) ===
     $startX = 10;
-    // PENTING: Ambil Y saat ini agar tabel mulai di tempat yang benar
     $startY = $pdf->GetY();
 
     $rowH = 7;
@@ -220,46 +233,55 @@ try {
     $wValue = 85;
     $wQR = 35;
 
+    // Hitung Total Tinggi Kotak (5 Baris)
+    $totalBoxHeight = $rowH * 5;
+
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(245, 245, 245);
 
-    // 1. Gambar Kotak QR Dulu (Gabung 4 Baris)
+    // 1. Gambar Kotak QR (Gabung 5 Baris)
     $pdf->SetXY($startX + $wLabel + $wValue, $startY);
-    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
+    $pdf->Cell($wQR, $totalBoxHeight, '', 1, 0, 'C');
 
     // Isi QR Code (Tengah Kotak)
-    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|F:{$feedback}|VALID");
+    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|IKM:{$ikmValue}|F:{$feedback}|VALID");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
-    // Padding manual agar di tengah: (35-24)/2 = 5.5 (X), (28-24)/2 = 2 (Y)
-    $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $startY + 2, 24, 24);
 
-    // 2. Gambar Baris Data (Label & Value)
-    // Baris 1
+    // Center Vertically di box 5 baris: ($totalBoxHeight - 24) / 2
+    $qrY = $startY + ($totalBoxHeight - 24) / 2;
+    $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $qrY, 24, 24);
+
+    // 2. Gambar Baris Data
+    // Baris 1: Bulan
     $pdf->SetXY($startX, $startY);
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
 
-    // Baris 2
+    // Baris 2: Kunjungan
     $pdf->SetXY($startX, $startY + $rowH);
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
 
-    // Baris 3
+    // Baris 3: Responden
     $pdf->SetXY($startX, $startY + ($rowH * 2));
     $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
 
-    // Baris 4
+    // Baris 4: IKM (BARU)
     $pdf->SetXY($startX, $startY + ($rowH * 3));
+    $pdf->Cell($wLabel, $rowH, ' Indeks Kepuasan Masyarakat', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $ikmText, 1, 0, 'L');
+
+    // Baris 5: Ulasan
+    $pdf->SetXY($startX, $startY + ($rowH * 4));
     $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
 
-    // === PENTING: RESET POSISI Y ===
-    // Pindahkan kursor ke bawah tabel ringkasan agar tabel berikutnya tidak menabrak
-    // Y Start + Tinggi Tabel (4*7=28) + Spasi (10)
-    $pdf->SetY($startY + ($rowH * 4) + 10);
+    // === RESET POSISI Y ===
+    // Pindahkan kursor ke bawah tabel ringkasan (5 Baris + Spasi)
+    $pdf->SetY($startY + $totalBoxHeight + 10);
 
-    // === BAGIAN A: DATA SURVEI (Hijau) ===
+    // === BAGIAN A: DATA SURVEI ===
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA SURVEI KEPUASAN MASYARAKAT', 0, 1, 'L');
 
@@ -289,7 +311,7 @@ try {
     if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
 
-    // === BAGIAN B: DATA ULASAN (Kuning) ===
+    // === BAGIAN B: DATA ULASAN ===
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'B. DATA ULASAN & RATING PELAYANAN', 0, 1, 'L');
 
