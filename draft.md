@@ -29,7 +29,7 @@
 
   "params": {
     "contact_form_action": "#",
-    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)"
+    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br/>Dikelola & dikembangkan oleh [**Tim Teknis**](https://github.com/zulfikriyahya)"
   },
 
   "navigation_button": {
@@ -40,11 +40,11 @@
 
   "google_tag_manager": {
     "enable": true,
-    "gtm_id": "GTM-NSG7FJC5"
+    "gtm_id": "G-31LVR4XF5F"
   },
 
   "disqus": {
-    "enable": true,
+    "enable": false,
     "shortname": "themefisher-template",
     "settings": {}
   },
@@ -3873,6 +3873,7 @@ import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
 import SearchModal from "./helpers/SearchModal";
 import InstallPrompt from "@/layouts/helpers/InstallPrompt";
+import CookieConsent from "@/layouts/helpers/CookieConsent";
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -3933,7 +3934,6 @@ const { title, meta_title, description, image, noindex, canonical } =
     />
     <meta name="generator" content={Astro.generator} />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
     <!-- google font css -->
     <AstroFont
       config={[
@@ -4041,21 +4041,6 @@ const { title, meta_title, description, image, noindex, canonical } =
       }`}
     />
     <meta name="twitter:card" content="summary_large_image" />
-
-    <!-- Tawk.to -->
-    <script type="text/javascript">
-      var Tawk_API = Tawk_API || {},
-        Tawk_LoadStart = new Date();
-      (function () {
-        var s1 = document.createElement("script"),
-          s0 = document.getElementsByTagName("script")[0];
-        s1.async = true;
-        s1.src = "https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj";
-        s1.charset = "UTF-8";
-        s1.setAttribute("crossorigin", "*");
-        s0.parentNode.insertBefore(s1, s0);
-      })();
-    </script>
   </head>
   <body>
     {/* google tag manager noscript */}
@@ -4073,26 +4058,7 @@ const { title, meta_title, description, image, noindex, canonical } =
     </main>
     <Footer />
     <InstallPrompt client:load />
-
-    <!-- Busuanzi Visitor Count Script -->
-    <script
-      async
-      src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-    <!-- Fix untuk Astro View Transitions agar counter update saat ganti halaman -->
-    <script>
-      document.addEventListener("astro:page-load", () => {
-        // @ts-ignore
-        if (window.bszCaller && window.bszTag) {
-          const script = document.createElement("script");
-          script.src =
-            "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js?t=" +
-            new Date().getTime();
-          script.async = true;
-          document.body.appendChild(script);
-        }
-      });
-    </script>
+    <CookieConsent client:only="react" />
 
     <script>
       import { initAnimations } from "@/scripts/gsap-animations";
@@ -4100,6 +4066,18 @@ const { title, meta_title, description, image, noindex, canonical } =
       // Jalankan saat halaman pertama kali load dan setiap kali navigasi berpindah
       document.addEventListener("astro:page-load", () => {
         initAnimations();
+      });
+    </script>
+
+    <script>
+      import { initAnimations } from "@/scripts/gsap-animations";
+      // Import script spotlight yang baru dibuat
+      import { initSpotlightButtons } from "@/scripts/spotlight";
+
+      document.addEventListener("astro:page-load", () => {
+        initAnimations();
+        // Jalankan inisialisasi spotlight
+        initSpotlightButtons();
       });
     </script>
   </body>
@@ -4115,6 +4093,8 @@ const { title, meta_title, description, image, noindex, canonical } =
 import BlogCard from "@/components/BlogCard.astro";
 import Share from "@/components/Share.astro";
 import Disqus from "@/helpers/Disqus";
+import GiscusComment from "@/helpers/GiscusComment";
+import CusdisComment from "@/layouts/helpers/CusdisComment";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
 import readingTime from "@/lib/utils/readingTime"; // Import Reading Time
@@ -4130,6 +4110,7 @@ import {
   FaRegEye,
 } from "react-icons/fa";
 import ImageMod from "./components/ImageMod.astro";
+import PostViewCounter from "@/layouts/helpers/PostViewCounter";
 
 const COLLECTION_FOLDER = "blog";
 const { post } = Astro.props;
@@ -4191,12 +4172,9 @@ const { title, description, author, categories, image, date, tags } = post.data;
               {readingTime(post.body)}
             </li>
 
-            {/* Jumlah Dilihat (Busuanzi) */}
+            {/* Jumlah Dilihat */}
             <li class="mr-4 inline-block">
-              <FaRegEye className={"mr-2 -mt-1 inline-block"} />
-              <span id="busuanzi_container_page_pv" style="display: none;">
-                <span id="busuanzi_value_page_pv">...</span> Dibaca
-              </span>
+              <PostViewCounter client:only="react" />
             </li>
           </ul>
         </div>
@@ -4231,7 +4209,9 @@ const { title, description, author, categories, image, date, tags } = post.data;
             />
           </div>
         </div>
-        <Disqus className="mt-20" client:load />
+        <!-- <Disqus className="mt-20" client:load /> -->
+        <GiscusComment client:visible />
+        <!-- <CusdisComment client:only="react" /> -->
       </article>
     </div>
 
@@ -4909,6 +4889,251 @@ const { className }: { className?: string } = Astro.props;
 
 ---
 
+### File: `./src/layouts/helpers/CardViewCounter.tsx`
+
+```tsx
+import React, { useEffect, useState } from "react";
+import { FaRegEye } from "react-icons/fa";
+
+interface Props {
+  slug: string;
+}
+
+const CardViewCounter = ({ slug }: Props) => {
+  const [views, setViews] = useState("0");
+
+  useEffect(() => {
+    const NAMESPACE = "mtsn1pandeglang_v2";
+    const safeSlug = slug.replace(/[^a-zA-Z0-9]/g, "_");
+    const KEY = `post_${safeSlug}`;
+
+    // Buat nama callback unik
+    const callbackName = `cb_card_${safeSlug}_${Math.floor(Math.random() * 1000)}`;
+
+    // 1. Definisikan Callback
+    // @ts-ignore
+    window[callbackName] = (response) => {
+      setViews(response.value.toLocaleString("id-ID"));
+      // Bersih-bersih
+      // @ts-ignore
+      delete window[callbackName];
+      document.getElementById(`script-${callbackName}`)?.remove();
+    };
+
+    // 2. Inject Script JSONP (Gunakan /info agar tidak nambah hitungan)
+    const script = document.createElement("script");
+    script.id = `script-${callbackName}`;
+    script.src = `https://api.countapi.xyz/info/${NAMESPACE}/${KEY}?callback=${callbackName}`;
+
+    // Handle Error Script (Jika diblokir AdBlock)
+    script.onerror = () => {
+      // Silent fail atau fallback ke local storage
+      const localKey = `local_view_${KEY}`;
+      const localData = localStorage.getItem(localKey);
+      if (localData) setViews(parseInt(localData).toLocaleString("id-ID"));
+    };
+
+    document.body.appendChild(script);
+
+    // Cleanup jika komponen unmount cepat
+    return () => {
+      // @ts-ignore
+      if (window[callbackName]) {
+        // @ts-ignore
+        delete window[callbackName];
+        document.getElementById(`script-${callbackName}`)?.remove();
+      }
+    };
+  }, [slug]);
+
+  return (
+    <div className="flex items-center gap-1" title={`${views} kali dibaca`}>
+      <FaRegEye className="text-gray-500" />
+      <span>{views} kali dibaca</span>
+    </div>
+  );
+};
+
+export default CardViewCounter;
+```
+
+---
+
+### File: `./src/layouts/helpers/CookieConsent.tsx`
+
+```tsx
+import React, { useEffect, useState } from "react";
+import { FaCookieBite, FaTimes } from "react-icons/fa";
+
+// Definisi TypeScript agar tidak error saat akses window.dataLayer
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
+
+const CookieConsent = () => {
+  const [show, setShow] = useState(false);
+
+  // Fungsi untuk mengirim sinyal ke GTM
+  const grantConsent = () => {
+    // Pastikan dataLayer ada
+    window.dataLayer = window.dataLayer || [];
+
+    // Push event 'consent_granted' ke GTM
+    window.dataLayer.push({
+      event: "consent_granted",
+      consent_status: "granted",
+    });
+
+    console.log("GTM Consent: Granted");
+  };
+
+  useEffect(() => {
+    const consent = localStorage.getItem("cookie-consent");
+
+    if (consent === "accepted") {
+      // Jika sudah pernah setuju, langsung aktifkan GTM tracking
+      grantConsent();
+    } else if (consent === "declined") {
+      // Jika ditolak, jangan lakukan apa-apa (Tracking mati)
+    } else {
+      // Jika belum memilih, tampilkan popup
+      const timer = setTimeout(() => setShow(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem("cookie-consent", "accepted");
+    grantConsent(); // Aktifkan tracking sekarang
+    setShow(false);
+  };
+
+  const handleDecline = () => {
+    localStorage.setItem("cookie-consent", "declined");
+    // Kita tidak push event apa-apa, jadi tag GTM tidak akan jalan
+    setShow(false);
+  };
+
+  if (!show) return null;
+
+  return (
+    <div className="fixed bottom-4 right-4 z-[9999] w-[90%] max-w-sm animate-slide-up rounded-xl border border-border bg-white p-6 shadow-2xl dark:border-darkmode-border dark:bg-[#1a1d24]">
+      <div className="mb-4 flex items-start gap-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/20">
+          <FaCookieBite className="text-xl" />
+        </div>
+        <div>
+          <h3 className="mb-1 text-lg font-bold text-dark dark:text-white">
+            Persetujuan Cookie 🍪
+          </h3>
+          <p className="text-sm leading-relaxed text-text-light dark:text-darkmode-text-light">
+            Kami menggunakan cookie untuk meningkatkan pengalaman Anda dan
+            menganalisis trafik website.
+          </p>
+        </div>
+
+        <button
+          onClick={handleDecline}
+          className="absolute right-2 top-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          aria-label="Tutup"
+        >
+          <FaTimes />
+        </button>
+      </div>
+
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <button
+          onClick={handleDecline}
+          className="w-full rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-semibold text-text-light transition-colors hover:bg-gray-100 hover:text-dark dark:border-darkmode-border dark:text-darkmode-text-light dark:hover:bg-white/5 dark:hover:text-white"
+        >
+          Tolak
+        </button>
+        <button
+          onClick={handleAccept}
+          className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 hover:shadow-primary/40 dark:text-black"
+        >
+          Terima Semua
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default CookieConsent;
+```
+
+---
+
+### File: `./src/layouts/helpers/CusdisComment.tsx`
+
+```tsx
+import React, { useEffect, useState } from "react";
+
+const CusdisComment = () => {
+  // Masukkan App ID Anda dari cusdis.com di sini
+  const CUSDIS_APP_ID = "ea71071e-0fc3-4d5d-896d-347ab601774f";
+
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    // 1. Deteksi Dark Mode
+    const updateTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "dark" : "light");
+    };
+    updateTheme();
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    // 2. Load Script Cusdis
+    const script = document.createElement("script");
+    script.src = "https://cusdis.com/js/cusdis.es.js";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    return () => {
+      observer.disconnect();
+      // Cleanup script jika perlu
+      const existingScript = document.querySelector(
+        'script[src="https://cusdis.com/js/cusdis.es.js"]',
+      );
+      if (existingScript) existingScript.remove();
+    };
+  }, []);
+
+  return (
+    <div className="mt-14 pt-10 border-t border-border dark:border-darkmode-border">
+      <h3 className="h5 mb-6">Komentar</h3>
+      <div
+        id="cusdis_thread"
+        data-host="https://cusdis.com"
+        data-app-id={CUSDIS_APP_ID}
+        data-page-id={
+          typeof window !== "undefined" ? window.location.pathname : ""
+        }
+        data-page-url={
+          typeof window !== "undefined" ? window.location.href : ""
+        }
+        data-page-title={typeof document !== "undefined" ? document.title : ""}
+        data-theme={theme}
+        data-lang="id" // Bahasa Indonesia
+      ></div>
+    </div>
+  );
+};
+
+export default CusdisComment;
+```
+
+---
+
 ### File: `./src/layouts/helpers/Disqus.tsx`
 
 ```tsx
@@ -4978,6 +5203,77 @@ const getIconLibrary = (icon: string): IconMap | undefined => {
 };
 
 export default DynamicIcon;
+```
+
+---
+
+### File: `./src/layouts/helpers/GiscusComment.tsx`
+
+```tsx
+import React, { useEffect, useState } from "react";
+import Giscus from "@giscus/react";
+
+const GiscusComment = () => {
+  // State untuk menyimpan tema Giscus
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    // Fungsi untuk menentukan tema berdasarkan class 'dark' di <html>
+    const updateGiscusTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+
+      // Pilih tema Giscus yang sesuai
+      // 'transparent_dark' biasanya lebih menyatu daripada 'dark' biasa
+      setTheme(isDark ? "transparent_dark" : "light");
+    };
+
+    // 1. Jalankan sekali saat komponen dimuat
+    updateGiscusTheme();
+
+    // 2. Pasang 'Mata-mata' (Observer) untuk memantau perubahan class di <html>
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "class"
+        ) {
+          updateGiscusTheme();
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"], // Hanya pantau perubahan atribut class
+    });
+
+    // Cleanup saat komponen dilepas
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="mt-14 pt-10 border-t border-border dark:border-darkmode-border">
+      <h3 className="h5 mb-6">Komentar</h3>
+      <Giscus
+        id="comments"
+        repo="zulfikriyahya/mtsn1pandeglang"
+        repoId="R_kgDOOC18-g"
+        category="General"
+        categoryId="DIC_kwDOOC18-s4C0zja"
+        mapping="pathname"
+        term="Komentar di MTsN 1 Pandeglang"
+        reactionsEnabled="1"
+        emitMetadata="0"
+        inputPosition="top"
+        theme={theme} // <--- Tema dinamis dari state
+        lang="id"
+        loading="lazy"
+      />
+    </div>
+  );
+};
+
+export default GiscusComment;
 ```
 
 ---
@@ -5149,6 +5445,76 @@ const InstallPrompt = () => {
 };
 
 export default InstallPrompt;
+```
+
+---
+
+### File: `./src/layouts/helpers/PostViewCounter.tsx`
+
+```tsx
+import React, { useEffect, useState } from "react";
+import { FaRegEye } from "react-icons/fa";
+
+const PostViewCounter = () => {
+  const [views, setViews] = useState("...");
+
+  useEffect(() => {
+    const NAMESPACE = "mtsn1pandeglang_v2";
+
+    // Logika Key: Ambil bagian terakhir URL, ganti karakter aneh dengan underscore
+    const pathSegments = window.location.pathname.split("/").filter(Boolean);
+    const slug = pathSegments[pathSegments.length - 1] || "home";
+    const safeSlug = slug.replace(/[^a-zA-Z0-9]/g, "_");
+
+    const KEY = `post_${safeSlug}`;
+    const CALLBACK_NAME = `cb_post_${safeSlug}_${Math.floor(Math.random() * 100000)}`;
+
+    // 1. Definisikan Callback
+    // @ts-ignore
+    window[CALLBACK_NAME] = (response) => {
+      setViews(response.value.toLocaleString("id-ID"));
+      // Simpan ke local storage agar CardView punya backup data jika API error
+      localStorage.setItem(`local_view_${KEY}`, response.value);
+      cleanup();
+    };
+
+    // 2. Buat Script JSONP
+    const script = document.createElement("script");
+    script.id = `script-${CALLBACK_NAME}`;
+    // Gunakan /hit karena ini halaman baca (nambah view)
+    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${CALLBACK_NAME}`;
+
+    // 3. Fallback Error
+    script.onerror = () => {
+      const localKey = `local_view_${KEY}`;
+      let localCount = parseInt(localStorage.getItem(localKey) || "0");
+      localCount++;
+      localStorage.setItem(localKey, localCount.toString());
+      setViews(localCount > 0 ? localCount.toLocaleString("id-ID") : "1");
+      cleanup();
+    };
+
+    document.body.appendChild(script);
+
+    const cleanup = () => {
+      // @ts-ignore
+      delete window[CALLBACK_NAME];
+      document.getElementById(`script-${CALLBACK_NAME}`)?.remove();
+    };
+
+    return () => cleanup();
+  }, []);
+
+  return (
+    <span className="flex items-center gap-2" title="Jumlah Pembaca">
+      <FaRegEye className="text-gray-500 dark:text-gray-400" />
+      <span className="font-regular">{views}</span>
+      <span className="text-md">kali dibaca</span>
+    </span>
+  );
+};
+
+export default PostViewCounter;
 ```
 
 ---
@@ -6171,6 +6537,292 @@ export default SearchResult;
 
 ---
 
+### File: `./src/layouts/helpers/TawkChat.tsx`
+
+```tsx
+import React, { useEffect, useRef } from "react";
+
+// Menambahkan definisi tipe untuk window agar TypeScript tidak error
+declare global {
+  interface Window {
+    Tawk_API: any;
+    Tawk_LoadStart: Date;
+  }
+}
+
+const TawkChat = () => {
+  // Ref untuk menyimpan ID interval agar bisa dibersihkan
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isWidgetVisible = useRef(false);
+
+  useEffect(() => {
+    // 1. Cek Apakah di Homepage?
+    if (window.location.pathname !== "/") return;
+
+    // Cek jika script sudah ada agar tidak double
+    if (document.getElementById("tawk-script")) return;
+
+    // 2. Setup Variable Tawk
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_LoadStart = new Date();
+
+    // 3. Inject Script
+    const s1 = document.createElement("script");
+    s1.id = "tawk-script";
+    s1.async = true;
+    s1.src = "https://embed.tawk.to/6703648b37379df10df31533/1i9ik1guj";
+    s1.charset = "UTF-8";
+    s1.setAttribute("crossorigin", "*");
+
+    // 4. Logika setelah script selesai dimuat dari server Tawk
+    s1.onload = () => {
+      // Callback saat Tawk benar-benar siap
+      window.Tawk_API.onLoad = function () {
+        // A. Sembunyikan dulu di awal (biar Cookie Popup tampil duluan)
+        window.Tawk_API.hideWidget();
+        isWidgetVisible.current = false;
+
+        // B. Tunggu 5 detik, baru mulai animasi loop
+        setTimeout(() => {
+          startAnimationLoop();
+        }, 5000);
+      };
+    };
+
+    document.head.appendChild(s1);
+
+    // Cleanup saat pindah halaman
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      // Opsional: Sembunyikan widget saat pindah dari homepage
+      if (window.Tawk_API && window.Tawk_API.hideWidget) {
+        window.Tawk_API.hideWidget();
+      }
+    };
+  }, []);
+
+  const startAnimationLoop = () => {
+    // Jalankan pertama kali (Munculkan)
+    toggleWidget();
+
+    // Ulangi setiap 10 detik
+    intervalRef.current = setInterval(() => {
+      toggleWidget();
+    }, 10000);
+  };
+
+  const toggleWidget = () => {
+    if (!window.Tawk_API) return;
+
+    // PENTING: Jangan sembunyikan jika user sedang membuka chat (isChatMaximized)
+    if (window.Tawk_API.isChatMaximized()) {
+      return;
+    }
+
+    if (isWidgetVisible.current) {
+      // Jika sedang tampil -> Sembunyikan
+      window.Tawk_API.hideWidget();
+      isWidgetVisible.current = false;
+    } else {
+      // Jika sedang sembunyi -> Tampilkan
+      window.Tawk_API.showWidget();
+      isWidgetVisible.current = true;
+    }
+  };
+
+  return null; // Tidak merender UI apa-apa, hanya logic
+};
+
+export default TawkChat;
+```
+
+---
+
+### File: `./src/layouts/helpers/VideoModal.tsx`
+
+```tsx
+import React, { useState, useEffect, useCallback } from "react";
+import { FaPlay, FaTimes } from "react-icons/fa";
+
+interface VideoModalProps {
+  videoId?: string;
+  src?: string;
+  label?: string;
+}
+
+const VideoModal = ({
+  videoId,
+  src,
+  label = "Tonton Video",
+}: VideoModalProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const openModal = () => {
+    setIsMounted(true);
+    setTimeout(() => setIsVisible(true), 10);
+  };
+
+  const closeModal = useCallback(() => {
+    setIsVisible(false);
+    setTimeout(() => {
+      setIsMounted(false);
+    }, 300);
+  }, []);
+
+  // Handle ESC key
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+
+    if (isMounted) {
+      document.addEventListener("keydown", handleEsc);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "unset";
+    };
+  }, [isMounted, closeModal]);
+
+  return (
+    <>
+      {/* 
+        KITA KEMBALI KE CLASS STANDAR 
+        Efek animasi & spotlight sekarang ditangani oleh global CSS & JS
+      */}
+      <button
+        onClick={openModal}
+        className="btn btn-outline-primary mb-4 ml-0 md:ml-4 gap-2"
+        type="button"
+      >
+        <FaPlay className="text-xs" />
+        {label}
+      </button>
+
+      {/* Render Modal Fullscreen */}
+      {isMounted && (
+        <div
+          className={`fixed inset-0 z-[9999] bg-black transition-opacity duration-300 ease-in-out ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {/* Tombol Close */}
+          <button
+            onClick={closeModal}
+            className={`absolute right-6 top-6 z-50 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition-all duration-500 hover:bg-white hover:text-black hover:rotate-90 ${
+              isVisible
+                ? "translate-y-0 opacity-100"
+                : "-translate-y-10 opacity-0"
+            }`}
+            aria-label="Tutup Video"
+          >
+            <FaTimes size={24} />
+          </button>
+
+          {/* Container Video */}
+          <div className="absolute inset-0 flex h-full w-full items-center justify-center">
+            {videoId ? (
+              <iframe
+                className="h-full w-full"
+                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <video
+                src={src}
+                className="h-full w-full object-contain"
+                controls
+                autoPlay
+                playsInline
+              >
+                Browser Anda tidak mendukung tag video.
+              </video>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default VideoModal;
+```
+
+---
+
+### File: `./src/layouts/helpers/VisitorCounter.tsx`
+
+```tsx
+import React, { useEffect, useState } from "react";
+import { FaEye } from "react-icons/fa";
+
+const VisitorCounter = () => {
+  const [visits, setVisits] = useState("...");
+
+  useEffect(() => {
+    const NAMESPACE = "mtsn1pandeglang_v2";
+    const KEY = "site_visits";
+    const CALLBACK_NAME = `cb_visit_${Math.floor(Math.random() * 100000)}`;
+
+    // 1. Definisikan Callback di Window
+    // @ts-ignore
+    window[CALLBACK_NAME] = (response) => {
+      setVisits(response.value.toLocaleString("id-ID"));
+      cleanup();
+    };
+
+    // 2. Buat Script JSONP
+    const script = document.createElement("script");
+    script.id = `script-${CALLBACK_NAME}`;
+    // Gunakan /hit untuk menambah hitungan
+    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${CALLBACK_NAME}`;
+
+    // 3. Handle Error (Fallback ke LocalStorage jika script diblokir total)
+    script.onerror = () => {
+      let localCount = parseInt(
+        localStorage.getItem("local_site_visits") || "0",
+      );
+      localCount++;
+      localStorage.setItem("local_site_visits", localCount.toString());
+      setVisits((1205 + localCount).toLocaleString("id-ID")); // Angka dummy + local
+      cleanup();
+    };
+
+    document.body.appendChild(script);
+
+    // Fungsi bersih-bersih
+    const cleanup = () => {
+      // @ts-ignore
+      delete window[CALLBACK_NAME];
+      document.getElementById(`script-${CALLBACK_NAME}`)?.remove();
+    };
+
+    return () => cleanup();
+  }, []);
+
+  return (
+    <div className="mt-4 flex justify-center text-xs text-text-light dark:text-darkmode-text-light opacity-80">
+      <div className="flex items-center gap-2" title="Total Kunjungan">
+        <FaEye className="text-blue-500" />
+        <span className="font-bold">{visits}</span>
+        <span>Total Kunjungan</span>
+      </div>
+    </div>
+  );
+};
+
+export default VisitorCounter;
+```
+
+---
+
 ### File: `./src/layouts/partials/CallToAction.astro`
 
 ```astro
@@ -6234,6 +6886,7 @@ import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import social from "@/config/social.json";
 import { markdownify } from "@/lib/utils/textConverter";
+import VisitorCounter from "@/layouts/helpers/VisitorCounter";
 
 const { footer }: { footer: { name: string; url: string }[] } = menu;
 ---
@@ -6266,16 +6919,8 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
     >
       <p set:html={markdownify(config.params.copyright)} />
 
-      <!-- Statistik Pengunjung Global -->
-      <div class="mt-2 text-xs opacity-70 flex justify-center gap-4">
-        <span id="busuanzi_container_site_pv" style="display:none">
-          Total Hits: <span id="busuanzi_value_site_pv" class="font-bold"
-          ></span>
-        </span>
-        <span id="busuanzi_container_site_uv" style="display:none">
-          Visitor: <span id="busuanzi_value_site_uv" class="font-bold"></span>
-        </span>
-      </div>
+      {/* Cukup panggil komponen ini saja */}
+      <VisitorCounter client:only="react" />
     </div>
   </div>
 </footer>
@@ -6549,8 +7194,14 @@ import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import dateFormat from "@/lib/utils/dateFormat";
 import readingTime from "@/lib/utils/readingTime";
+import CardViewCounter from "@/layouts/helpers/CardViewCounter";
 import { humanize } from "@/lib/utils/textConverter";
-import { FaRegClock, FaRegCalendarAlt, FaArrowRight } from "react-icons/fa";
+import {
+  FaRegClock,
+  FaRegCalendarAlt,
+  FaArrowRight,
+  FaRegEye,
+} from "react-icons/fa";
 
 // 1. Ambil data blog
 const posts = await getSinglePage("blog");
@@ -6617,6 +7268,9 @@ const latestPosts = sortedPosts.slice(0, 6);
                       <div class="flex items-center gap-1">
                         <FaRegClock />
                         {readingTime(post.body)}
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <CardViewCounter client:visible slug={post.id} />
                       </div>
                     </div>
 
@@ -8234,6 +8888,8 @@ import CallToAction from "@/partials/CallToAction.astro";
 import Testimonial from "@/partials/Testimonial.astro";
 import LatestPostsSlider from "@/partials/LatestPostsSlider.astro";
 import { FaCheck } from "react-icons/fa";
+import VideoModal from "@/layouts/helpers/VideoModal";
+import TawkChat from "@/layouts/helpers/TawkChat";
 
 const homepage = await getListPage("homepage", "-index");
 const call_to_action = await getListPage("ctaSection", "call-to-action");
@@ -8255,17 +8911,27 @@ const { banner, features } = homepage.data;
           <p set:html={markdownify(banner.content)} class="mb-8" />
           {
             banner.button.enable && (
-              <a
-                class="btn btn-primary"
-                href={banner.button.link}
-                target={
-                  banner.button.link.startsWith("http") ? "_blank" : "_self"
-                }
-                rel="noopener"
-              >
-                {banner.button.label}
-                {/* TODO: Tambahkan Tombol yang menampilkan modal popup untuk memutar video /videos/selayang-pandang.mp4  */}
-              </a>
+              /* Gunakan Flexbox untuk memisahkan 2 tombol */
+              <div class="flex flex-wrap justify-center gap-4">
+                {/* Tombol 1: Daftar Sekarang (Link) */}
+                <a
+                  class="btn btn-primary mb-4"
+                  href={banner.button.link}
+                  target={
+                    banner.button.link.startsWith("http") ? "_blank" : "_self"
+                  }
+                  rel="noopener"
+                >
+                  {banner.button.label}
+                </a>
+
+                {/* Tombol 2: Video Modal (Popup) */}
+                <VideoModal
+                  client:load
+                  videoId="q5ECbq5EuuE"
+                  label="Selayang Pandang"
+                />
+              </div>
             )
           }
         </div>
@@ -8448,6 +9114,9 @@ const { banner, features } = homepage.data;
   <div class="gsap-fade-up">
     <CallToAction call_to_action={call_to_action} />
   </div>
+
+  {/* Widget Chat Khusus Homepage */}
+  <TawkChat client:only="react" />
 </Base>
 ```
 
@@ -8702,6 +9371,37 @@ export function initAnimations() {
 
 ---
 
+### File: `./src/scripts/spotlight.js`
+
+```javascript
+// Handler fungsi dipisah agar bisa dihapus/dipasang ulang saat navigasi halaman
+function handleMouseMove(e) {
+  // Cek apakah element yang di-hover (atau induknya) memiliki class ".btn"
+  const btn = e.target.closest(".btn");
+
+  // Jika ya, hitung posisi mouse relatif terhadap tombol tersebut
+  if (btn) {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Update variabel CSS hanya pada tombol yang sedang disentuh
+    btn.style.setProperty("--x", `${x}px`);
+    btn.style.setProperty("--y", `${y}px`);
+  }
+}
+
+export function initSpotlightButtons() {
+  // 1. Hapus listener lama (PENTING untuk Astro View Transitions agar tidak menumpuk)
+  document.removeEventListener("mousemove", handleMouseMove);
+
+  // 2. Pasang listener global ke dokumen
+  document.addEventListener("mousemove", handleMouseMove);
+}
+```
+
+---
+
 ### File: `./src/styles/base.css`
 
 ```css
@@ -8775,20 +9475,69 @@ button {
 ### File: `./src/styles/buttons.css`
 
 ```css
+/* Base Button Style */
 .btn {
-  @apply inline-block rounded border border-transparent px-5 py-2 font-semibold capitalize transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg active:translate-y-0;
+  @apply relative inline-flex items-center justify-center overflow-hidden rounded border border-transparent px-6 py-2.5 font-semibold capitalize transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:scale-95;
+
+  /* Posisi awal sorotan di tengah */
+  --x: 50%;
+  --y: 50%;
+  z-index: 1;
 }
 
 .btn-sm {
   @apply rounded-sm px-4 py-1.5 text-sm;
 }
 
-.btn-primary {
-  @apply border-primary bg-primary dark:border-darkmode-primary dark:text-text-dark text-white dark:bg-darkmode-primary;
+/* Layer Spotlight (Efek Sorot) */
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1; /* Di belakang teks */
+
+  /* Gradasi Radial: Pusatnya dinamis mengikuti --x dan --y */
+  background: radial-gradient(
+    circle at var(--x) var(--y),
+    var(--spotlight-color, var(--color-primary)) 0%,
+    transparent 50%
+  );
+
+  /* Animasi muncul/hilang */
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
+/* Tampilkan spotlight saat hover */
+.btn:hover::before {
+  opacity: 1;
+}
+
+/* --- Variasi Tombol Solid (Primary) --- */
+.btn-primary {
+  @apply border-primary bg-primary text-white dark:border-darkmode-primary dark:bg-darkmode-primary dark:text-text-dark;
+
+  /* Warna sorotan: Putih transparan (kilau) */
+  --spotlight-color: rgba(255, 255, 255, 0.4);
+}
+
+/* --- Variasi Tombol Outline --- */
 .btn-outline-primary {
-  @apply border-dark text-text-dark hover:bg-dark dark:hover:text-text-dark bg-transparent hover:text-white dark:border-darkmode-primary dark:text-white dark:hover:bg-darkmode-primary;
+  @apply border-primary bg-transparent text-primary dark:border-darkmode-primary dark:text-darkmode-primary;
+
+  /* Saat hover, teks berubah warna agar kontras */
+  @apply hover:text-white dark:hover:text-black;
+
+  /* Warna sorotan: Mengambil warna tema (Hijau) */
+  --spotlight-color: var(--color-primary);
+}
+
+/* Fix untuk dark mode pada tombol outline */
+.dark .btn-outline-primary {
+  --spotlight-color: var(--color-darkmode-primary);
 }
 ```
 
@@ -10019,6 +10768,7 @@ sudo chown -R www-data:www-data /var/www/mtsn1pandeglang.sch.id/
     "@astrojs/react": "4.4.2",
     "@astrojs/sitemap": "3.6.0",
     "@digi4care/astro-google-tagmanager": "^1.6.0",
+    "@giscus/react": "^3.1.0",
     "@justinribeiro/lite-youtube": "^1.8.2",
     "astro": "5.16.6",
     "astro-auto-import": "^0.4.5",
