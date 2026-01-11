@@ -3,6 +3,7 @@
 sudo chown -R $USER:$USER /var/www/mtsn1pandeglang.sch.id/
 sudo apt-get install php8.4-sqlite3 -y
 git config --global --add safe.directory /var/www/mtsn1pandeglang.sch.id
+git reset --hard origin/static
 git pull origin static
 yarn
 yarn build
