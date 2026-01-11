@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import {
   FaDownload,
   FaSignOutAlt,
@@ -18,6 +18,8 @@ import {
   FaQuoteLeft,
   FaTrash, // Ikon Hapus
   FaExclamationCircle, // Ikon Konfirmasi
+  FaFileUpload, // Ikon Import (BARU)
+  FaFileCsv,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -93,13 +95,16 @@ const AdminDashboard = () => {
     null,
   );
 
-  // --- STATE MODAL KONFIRMASI DELETE ---
+  // State Modal Konfirmasi Delete
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     ids: number[];
     type: "feedback" | "survey";
     count: number;
   }>({ isOpen: false, ids: [], type: "feedback", count: 0 });
+
+  // State Modal Import (BARU)
+  const [importModalOpen, setImportModalOpen] = useState(false);
 
   // State Filter PDF
   const [selectedMonth, setSelectedMonth] = useState(
@@ -268,6 +273,12 @@ const AdminDashboard = () => {
     }
   };
 
+  // --- LOGIKA IMPORT DATA (BARU) ---
+  const handleImportSuccess = () => {
+    fetchStats();
+    setImportModalOpen(false);
+  };
+
   // --- RENDER LOGIC ---
   if (loading)
     return (
@@ -311,7 +322,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* PDF Controls */}
+        {/* Action Controls */}
         <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
           <select
             value={selectedMonth}
@@ -349,6 +360,13 @@ const AdminDashboard = () => {
               </option>
             ))}
           </select>
+
+          <button
+            onClick={() => setImportModalOpen(true)}
+            className="btn btn-sm flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white border-orange-500 whitespace-nowrap"
+          >
+            <FaFileUpload /> Import
+          </button>
 
           <button
             onClick={printPDF}
@@ -706,6 +724,13 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* MODAL IMPORT DATA (BARU) */}
+      <ImportModal
+        isOpen={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        onSuccess={handleImportSuccess}
+      />
+
       {/* CUSTOM CONFIRMATION MODAL */}
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
@@ -844,6 +869,147 @@ const AdminDashboard = () => {
 
 // --- SUB COMPONENTS ---
 
+// 1. IMPORT MODAL
+const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
+  const [importType, setImportType] = useState<"feedback" | "survey">(
+    "feedback",
+  );
+  const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  if (!isOpen) return null;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) return alert("Pilih file CSV terlebih dahulu.");
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", importType);
+
+    try {
+      const res = await fetch("/api/import.php?action=import", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+
+      if (json.status === "success") {
+        alert(json.message);
+        onSuccess();
+      } else {
+        alert(json.message || "Gagal mengupload file.");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan.");
+    } finally {
+      setIsUploading(false);
+      setFile(null);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-bold">Import Data CSV</h3>
+          <button onClick={onClose}>
+            <FaTimes className="text-gray-400 hover:text-red-500" />
+          </button>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">
+            Pilih Tipe Data
+          </label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="importType"
+                value="feedback"
+                checked={importType === "feedback"}
+                onChange={() => setImportType("feedback")}
+              />
+              Data Ulasan
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="importType"
+                value="survey"
+                checked={importType === "survey"}
+                onChange={() => setImportType("survey")}
+              />
+              Data Survei
+            </label>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-2">Upload File</label>
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              type="file"
+              accept=".csv"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            {file ? (
+              <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
+                <FaFileCsv size={24} />
+                {file.name}
+              </div>
+            ) : (
+              <div className="text-gray-500">
+                <FaFileUpload className="mx-auto mb-2 text-2xl" />
+                <p>Klik untuk memilih file CSV</p>
+              </div>
+            )}
+          </div>
+          <div className="mt-2 text-right">
+            <a
+              href={`/api/import.php?action=template&type=${importType}`}
+              className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
+            >
+              <FaDownload /> Download Template CSV
+            </a>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="btn btn-outline-primary btn-sm"
+            disabled={isUploading}
+          >
+            Batal
+          </button>
+          <button
+            onClick={handleUpload}
+            className="btn btn-primary btn-sm"
+            disabled={!file || isUploading}
+          >
+            {isUploading ? "Mengupload..." : "Mulai Import"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 2. CONFIRMATION MODAL
 const ConfirmationModal = ({
   isOpen,
   title,
@@ -886,6 +1052,7 @@ const ConfirmationModal = ({
   );
 };
 
+// 3. STAT CARD
 const StatCard = ({ label, value, icon, color, bg }: any) => (
   <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
     <div>
@@ -902,7 +1069,7 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
   </div>
 );
 
-// --- DATA TABLE WITH SELECTION ---
+// 4. DATA TABLE (Dengan Fitur Selection)
 interface Column {
   key: string;
   label: string;
@@ -937,7 +1104,7 @@ const DataTable = ({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  // Reset selection when data changes or pagination
+  // Reset selection when data changes
   useEffect(() => {
     setSelectedIds([]);
   }, [data, currentPage, search]);
