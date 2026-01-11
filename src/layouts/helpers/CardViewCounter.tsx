@@ -69,9 +69,9 @@ const CardViewCounter = ({ slug }: Props) => {
   }, [slug]);
 
   return (
-    <div className="flex items-center gap-1" title={`${views} kali dibaca`}>
+    <div className="flex items-center gap-1" title={`${views} Kali dibaca`}>
       <FaRegEye className="text-gray-500" />
-      <span>{views} kali dibaca</span>
+      <span>{views} Kali dibaca</span>
     </div>
   );
 };

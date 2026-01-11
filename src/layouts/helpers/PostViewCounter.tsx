@@ -82,7 +82,7 @@ const PostViewCounter = () => {
     <span className="flex items-center gap-2" title="Jumlah Pembaca">
       <FaRegEye className="text-gray-500 dark:text-gray-400" />
       <span className="font-regular">{views}</span>
-      <span className="text-md">kali dibaca</span>
+      <span className="text-md">Kali dibaca</span>
     </span>
   );
 };
