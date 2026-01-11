@@ -56,21 +56,24 @@ class PDF extends FPDF
     // --- KOP SURAT RESMI ---
     function Header()
     {
-        // Path Relative (Naik satu folder dari 'api' ke 'public/images')
+        // Path Relative
         $path = '../images/instansi/';
 
-        // 1. LOGO KIRI (Kemenag / Institusi)
-        // Cek file
+        // Ukuran Logo
+        $logoSize = 21;
+
+        // 1. LOGO KIRI (Kemenag) - X=12, Y=10
         if (file_exists($path . 'logo-institusi.png')) {
-            $this->Image($path . 'logo-institusi.png', 10, 10, 23);
+            $this->Image($path . 'logo-institusi.png', 12, 10, $logoSize);
         }
 
-        // 2. LOGO KANAN (MTs / Instansi)
+        // 2. LOGO KANAN (MTs) - X=177 (A4 210 - Margin - Size)
         if (file_exists($path . 'logo-instansi.png')) {
-            $this->Image($path . 'logo-instansi.png', 177, 10, 23);
+            $this->Image($path . 'logo-instansi.png', 177, 10, $logoSize);
         }
 
-        // Teks Kop
+        // Teks Kop (Geser Y sedikit ke bawah agar center dengan Logo)
+        $this->SetY(11);
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
 
@@ -86,10 +89,10 @@ class PDF extends FPDF
 
         // Garis Pembatas
         $this->SetLineWidth(0.5);
-        $this->Line(10, 42, 200, 42);
-        $this->SetLineWidth(0.2);
         $this->Line(10, 43, 200, 43);
-        $this->Ln(10);
+        $this->SetLineWidth(0.2);
+        $this->Line(10, 44, 200, 44);
+        $this->Ln(12);
     }
 
     function Footer()
@@ -201,6 +204,7 @@ $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(0, 150, 100);
 $pdf->SetTextColor(255);
 
+// Header Table
 $pdf->Cell(8, 8, 'No', 1, 0, 'C', true);
 $pdf->Cell(35, 8, 'Waktu', 1, 0, 'C', true);
 $pdf->Cell(40, 8, 'Responden', 1, 0, 'L', true);
@@ -262,9 +266,11 @@ while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) {
 $pdf->AddPage();
 $pdf->Ln(10);
 
-// Path Relative untuk Tanda Tangan
 $path = '../images/instansi/';
 $tglCetak = getIndonesianDate();
+
+// Ukuran TTE (QR Code) diperkecil
+$qrSize = 22;
 
 $yStart = $pdf->GetY();
 
@@ -287,36 +293,41 @@ $pdf->Cell(70, 5, 'Koordinator Tim Pusdatin,', 0, 1, 'C');
 // --- GAMBAR TTE (BARIS 1) ---
 $yImage = $pdf->GetY() + 2;
 
-// TTE KTU (Kiri)
+// TTE Kiri (KTU) - Posisi Tengah dari Kolom Kiri
+// Kolom Start: 20, Width: 70. Center = 20 + 35 = 55.
+// Image X = 55 - (22/2) = 44
 if (file_exists($path . 'tte-kepala-tata-usaha.png')) {
-    $pdf->Image($path . 'tte-kepala-tata-usaha.png', 40, $yImage, 30);
+    $pdf->Image($path . 'tte-kepala-tata-usaha.png', 44, $yImage, $qrSize);
 }
 
-// TTE Pusdatin (Kanan)
+// TTE Kanan (Pusdatin) - Posisi Tengah dari Kolom Kanan
+// Kolom Start: 120, Width: 70. Center = 120 + 35 = 155.
+// Image X = 155 - (22/2) = 144
 if (file_exists($path . 'tte-koordinator-tim-pusdatin.png')) {
-    $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 140, $yImage, 30);
+    $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 144, $yImage, $qrSize);
 }
 
-$pdf->Ln(35);
+// Space tanda tangan (dikurangi karena gambar kecil)
+$pdf->Ln(28);
 
 // --- NAMA & NIP (BARIS 1) ---
 $pdf->SetFont('Arial', 'B', 11);
 
-// KIRI (KTU)
+// KIRI
 $pdf->SetX(20);
 $pdf->Cell(70, 5, "UMAR MU'TAMAR, S.Ag.", 0, 0, 'C');
 
-// KANAN (Pusdatin)
+// KANAN
 $pdf->SetX(120);
 $pdf->Cell(70, 5, 'YAHYA ZULFIKRI, S.Kom.', 0, 1, 'C');
 
 // NIP
 $pdf->SetFont('Arial', '', 10);
-// KIRI (KTU)
+// KIRI
 $pdf->SetX(20);
 $pdf->Cell(70, 5, 'NIP. 196903061998031004', 0, 0, 'C');
 
-// KANAN (Pusdatin)
+// KANAN
 $pdf->SetX(120);
 $pdf->Cell(70, 5, 'NIP. 200001142025211016', 0, 1, 'C');
 
@@ -331,10 +342,11 @@ $pdf->Cell(0, 5, 'Kepala Madrasah,', 0, 1, 'C');
 // Image Kamad (Tengah)
 $yImageKamad = $pdf->GetY() + 2;
 if (file_exists($path . 'tte-kepala-madrasah.png')) {
-    $pdf->Image($path . 'tte-kepala-madrasah.png', 90, $yImageKamad, 30);
+    // Center Page: 210/2 = 105. Image X = 105 - 11 = 94
+    $pdf->Image($path . 'tte-kepala-madrasah.png', 94, $yImageKamad, $qrSize);
 }
 
-$pdf->Ln(35);
+$pdf->Ln(28);
 
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(0, 5, 'H. EMAN SULAIMAN, S.Ag., M.Pd.', 0, 1, 'C');
