@@ -42,5 +42,5 @@ echo "--- Finalizing Permissions ---"
 sudo chown www-data:www-data "$DB_FILE"
 sudo chmod 664 "$DB_FILE"
 sudo chown -R www-data:www-data $PROJECT_DIR
-sudo chown -R $USER:$USER $PROJECT_DIR/generate.sh
+sudo chown -R $USER:$USER $PROJECT_DIR/deploy.sh
 echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
