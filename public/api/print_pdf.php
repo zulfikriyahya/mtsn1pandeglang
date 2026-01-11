@@ -248,47 +248,42 @@ try {
     $startY = $pdf->GetY();
     $rowH = 7;
     $wQR = 35;
-    $wTable1 = 155; // 190 - 35
+    $wTable1 = 155;
 
-    // Label Header Tabel 1
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell($wTable1, $rowH, ' I. RINGKASAN TRAFIK WEBSITE', 1, 0, 'L', true);
-    // Kotak QR
-    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
 
-    // Isi QR Code
-    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}|RTG:{$avgRatingVal}");
+    // QR Code Container
+    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
+    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
     $pdf->ImageRemote($qrUrl, ($startX + $wTable1) + 5.5, $startY + 2, 24, 24);
 
     $pdf->Ln($rowH);
 
-    // Isi Data Tabel 1
+    // Data Tabel 1
     $wLabel = 65;
     $wValue = 90;
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
 
-    // Baris 1: Bulan
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 1, 'L');
 
-    // Baris 2: Kunjungan
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung', 1, 1, 'L');
 
-    // Baris 3: Artikel
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
 
     $pdf->Ln(5);
 
     // ==========================================
-    // TABEL 2: KUALITAS PELAYANAN (5 BARIS PAS)
+    // TABEL 2: KUALITAS PELAYANAN (5 Baris)
     // ==========================================
 
-    // Header
+    // Baris 1: Header
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
@@ -296,45 +291,45 @@ try {
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
 
-    // Config Lebar Split
     $wL = 50;
     $wV = 45;
 
-    // BARIS 2: Partisipasi (Split)
+    // Baris 2: Jumlah Responden & Jumlah Ulasan
     $pdf->Cell($wL, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
     $pdf->Cell($wV, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 0, 'L');
     $pdf->Cell($wL, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wV, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
 
-    // BARIS 3: Indeks Detail 1 (Split)
-    $pdf->Cell($wL, $rowH, ' Indeks Zona Integritas (ZI)', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . ($idxZI > 0 ? $idxZI : '-') . ' / 5.00', 1, 0, 'L');
-    $pdf->Cell($wL, $rowH, ' Indeks Pelayanan Publik', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . ($idxService > 0 ? $idxService : '-') . ' / 5.00', 1, 1, 'L');
+    // Baris 3: 3 Index Sekaligus (Split 3 Kolom)
+    // 190 / 3 = 63.33 per kolom
+    $wSub = 190 / 3;
+    $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
 
-    // BARIS 4: Indeks Detail 2 (Split)
-    $pdf->Cell($wL, $rowH, ' Indeks Kualitas Akademik', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . ($idxAcademic > 0 ? $idxAcademic : '-') . ' / 5.00', 1, 0, 'L');
-    $pdf->Cell($wL, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
+    // Baris 4: Rata-rata Rating Ulasan
+    $wLabelFull = 70;
+    $wValueFull = 120;
+    $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
 
-    // BARIS 5: IKM TOTAL (Full highlight)
+    // Baris 5: Indeks Kepuasan Masy (IKM)
     $pdf->SetFont('Arial', 'B', 9);
-    $pdf->SetFillColor(240, 240, 240);
-    $pdf->Cell($wL, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
-    $pdf->Cell($wV + $wL + $wV, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
+    $pdf->SetFillColor(240, 240, 240); // Highlight background
+    $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
 
     $pdf->Ln(8);
 
-    // === BAGIAN A: DATA SURVEI ===
+    // === BAGIAN A & B (Tabel Detail) Tetap Sama ===
+
+    // A. DATA SURVEI
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
 
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(0, 150, 100);
     $pdf->SetTextColor(255);
-
-    // Header Tabel
     $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
     $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
     $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
@@ -355,22 +350,12 @@ try {
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
         $found1 = true;
         $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
-
-        $pdf->Row([
-            $no++,
-            formatFullTime($row['created_at']),
-            $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")",
-            $row['score_zi'],
-            $row['score_service'],
-            $row['score_academic'],
-            $idxIndividual,
-            $row['feedback'] ?: '-'
-        ]);
+        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
     }
     if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
 
-    // === BAGIAN B: DATA ULASAN ===
+    // B. DATA ULASAN
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
 
