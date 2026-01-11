@@ -50,7 +50,8 @@ interface User {
   email: string;
   picture: string;
 }
-
+const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 // --- HELPER: FORMAT TANGGAL ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
@@ -184,7 +185,10 @@ const AdminDashboard = () => {
   };
 
   const printPDF = () => {
-    window.open("/api/print_pdf.php", "_blank");
+    window.open(
+      `/api/print_pdf.php?month=${selectedMonth}&year=${selectedYear}`,
+      "_blank",
+    );
   };
 
   // --- FUNGSI BUKA MODAL ---
@@ -239,7 +243,60 @@ const AdminDashboard = () => {
             <p className="text-sm text-text-light">{user.email}</p>
           </div>
         </div>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
+          <button
+            onClick={printPDF}
+            className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden"
+          >
+            <FaDownload /> PDF
+          </button>
+          <button
+            onClick={handleLogout}
+            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden"
+          >
+            <FaSignOutAlt /> Keluar
+          </button>
+        </div> */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Dropdown Bulan */}
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(Number(e.target.value))}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm dark:bg-darkmode-body dark:border-darkmode-border"
+          >
+            {[
+              "Januari",
+              "Februari",
+              "Maret",
+              "April",
+              "Mei",
+              "Juni",
+              "Juli",
+              "Agustus",
+              "September",
+              "Oktober",
+              "November",
+              "Desember",
+            ].map((m, i) => (
+              <option key={i} value={i + 1}>
+                {m}
+              </option>
+            ))}
+          </select>
+
+          {/* Dropdown Tahun */}
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm dark:bg-darkmode-body dark:border-darkmode-border"
+          >
+            {[2024, 2025, 2026].map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+
           <button
             onClick={printPDF}
             className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden"
