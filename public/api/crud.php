@@ -2,7 +2,7 @@
 session_start();
 header('Content-Type: application/json');
 
-// 1. Cek Login Admin (Wajib)
+// 1. Cek Login Admin
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     http_response_code(403);
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
@@ -18,19 +18,25 @@ try {
 
     $db = new SQLite3($dbPath);
 
-    // Ambil Data JSON
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
     $action = $_GET['action'] ?? '';
 
-    // === HAPUS DATA ===
     if ($action === 'delete') {
-        $type = $data['type'] ?? ''; // 'feedback' atau 'survey'
-        $id = (int)($data['id'] ?? 0);
+        $type = $data['type'] ?? '';
 
-        if ($id <= 0) throw new Exception("ID tidak valid.");
+        // UPDATE: Mendukung single ID atau multiple IDs
+        $ids = [];
+        if (isset($data['ids']) && is_array($data['ids'])) {
+            $ids = $data['ids'];
+        } elseif (isset($data['id'])) {
+            $ids = [$data['id']];
+        }
 
+        if (empty($ids)) throw new Exception("Tidak ada data yang dipilih.");
+
+        // Validasi Tipe Tabel
         $table = '';
         if ($type === 'feedback') {
             $table = 'feedback';
@@ -40,16 +46,19 @@ try {
             throw new Exception("Tipe data tidak dikenal.");
         }
 
-        // Eksekusi Hapus
-        $stmt = $db->prepare("DELETE FROM $table WHERE id = :id");
-        $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
-        $stmt->execute();
+        // Sanitasi ID menjadi integer semua
+        $sanitized_ids = array_map('intval', $ids);
+        $ids_string = implode(',', $sanitized_ids);
 
-        // Cek apakah ada baris yang terhapus
-        if ($db->changes() > 0) {
-            echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus.']);
+        // Eksekusi Bulk Delete
+        // Query: DELETE FROM table WHERE id IN (1, 2, 3)
+        $query = "DELETE FROM $table WHERE id IN ($ids_string)";
+
+        if ($db->exec($query)) {
+            $count = $db->changes();
+            echo json_encode(['status' => 'success', 'message' => "$count data berhasil dihapus."]);
         } else {
-            throw new Exception("Gagal menghapus atau data tidak ditemukan.");
+            throw new Exception("Gagal menghapus data.");
         }
     } else {
         throw new Exception("Action tidak valid.");

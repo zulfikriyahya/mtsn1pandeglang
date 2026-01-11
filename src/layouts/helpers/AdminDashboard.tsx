@@ -16,7 +16,8 @@ import {
   FaTimes,
   FaExternalLinkAlt,
   FaQuoteLeft,
-  FaTrash,
+  FaTrash, // Ikon Hapus
+  FaExclamationCircle, // Ikon Konfirmasi
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -79,51 +80,26 @@ const formatDateIndo = (dateString: string) => {
 };
 
 const AdminDashboard = () => {
-  // --- STATE HOOKS (HARUS DI PALING ATAS) ---
+  // --- STATE HOOKS ---
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // --- TAMBAHKAN FUNGSI INI DI DALAM COMPONENT AdminDashboard ---
-  const handleDelete = async (id: number, type: "feedback" | "survey") => {
-    if (
-      !confirm(
-        "Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.",
-      )
-    ) {
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/crud.php?action=delete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, type }),
-      });
-      const json = await res.json();
-
-      if (json.status === "success") {
-        // Refresh data setelah hapus berhasil
-        fetchStats();
-        // Jika sedang membuka detail item yang dihapus, tutup modalnya
-        if (selectedItem && selectedItem.id === id) {
-          closeDetail();
-        }
-      } else {
-        alert(json.message || "Gagal menghapus data.");
-      }
-    } catch (e) {
-      alert("Terjadi kesalahan jaringan.");
-    }
-  };
-
-  // State Modal
+  // State Modal Detail
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
     null,
   );
+
+  // --- STATE MODAL KONFIRMASI DELETE ---
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    ids: number[];
+    type: "feedback" | "survey";
+    count: number;
+  }>({ isOpen: false, ids: [], type: "feedback", count: 0 });
 
   // State Filter PDF
   const [selectedMonth, setSelectedMonth] = useState(
@@ -248,6 +224,48 @@ const AdminDashboard = () => {
   const closeDetail = () => {
     setSelectedItem(null);
     setModalType(null);
+  };
+
+  // --- LOGIKA HAPUS DATA (SINGLE & BULK) ---
+  const requestDelete = (ids: number[], type: "feedback" | "survey") => {
+    setConfirmModal({
+      isOpen: true,
+      ids,
+      type,
+      count: ids.length,
+    });
+  };
+
+  const executeDelete = async () => {
+    try {
+      const res = await fetch("/api/crud.php?action=delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ids: confirmModal.ids,
+          type: confirmModal.type,
+        }),
+      });
+      const json = await res.json();
+
+      if (json.status === "success") {
+        fetchStats(); // Refresh data
+        // Tutup modal detail jika item yang dihapus sedang dibuka
+        if (
+          selectedItem &&
+          confirmModal.ids.includes(selectedItem.id) &&
+          modalType === confirmModal.type
+        ) {
+          closeDetail();
+        }
+      } else {
+        alert(json.message || "Gagal menghapus data.");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan.");
+    } finally {
+      setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    }
   };
 
   // --- RENDER LOGIC ---
@@ -511,6 +529,7 @@ const AdminDashboard = () => {
             <DataTable
               title="Statistik Artikel Populer"
               data={data.tables.posts}
+              enableSelection={false}
               onDownload={() => downloadReport("posts")}
               columns={[
                 {
@@ -533,6 +552,8 @@ const AdminDashboard = () => {
               title="Data Ulasan Masuk"
               data={data.tables.feedbacks}
               searchKeys={["name", "message"]}
+              enableSelection={true}
+              onBulkDelete={(ids) => requestDelete(ids, "feedback")}
               onDownload={() => downloadReport("feedback")}
               columns={[
                 {
@@ -579,15 +600,14 @@ const AdminDashboard = () => {
                     </div>
                   ),
                 },
-                // --- KOLOM AKSI BARU ---
                 {
                   key: "actions",
                   label: "Aksi",
-                  className: "text-center w-20",
+                  className: "text-center w-16",
                   render: (_: any, row: any) => (
                     <button
-                      onClick={() => handleDelete(row.id, "feedback")}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                      onClick={() => requestDelete([row.id], "feedback")}
+                      className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
                       title="Hapus Data"
                     >
                       <FaTrash size={14} />
@@ -603,6 +623,8 @@ const AdminDashboard = () => {
               title="Data Survei Kepuasan"
               data={data.tables.surveys}
               searchKeys={["respondent_name", "feedback"]}
+              enableSelection={true}
+              onBulkDelete={(ids) => requestDelete(ids, "survey")}
               onDownload={() => downloadReport("survey")}
               columns={[
                 {
@@ -664,15 +686,14 @@ const AdminDashboard = () => {
                     </div>
                   ),
                 },
-                // --- KOLOM AKSI BARU ---
                 {
                   key: "actions",
                   label: "Aksi",
-                  className: "text-center w-20",
+                  className: "text-center w-16",
                   render: (_: any, row: any) => (
                     <button
-                      onClick={() => handleDelete(row.id, "survey")}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                      onClick={() => requestDelete([row.id], "survey")}
+                      className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
                       title="Hapus Data"
                     >
                       <FaTrash size={14} />
@@ -684,6 +705,15 @@ const AdminDashboard = () => {
           )}
         </div>
       )}
+
+      {/* CUSTOM CONFIRMATION MODAL */}
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        title="Konfirmasi Penghapusan"
+        message={`Apakah Anda yakin ingin menghapus ${confirmModal.count} data terpilih? Tindakan ini permanen dan tidak dapat dibatalkan.`}
+        onConfirm={executeDelete}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+      />
 
       {/* DETAIL MODAL POPUP */}
       {selectedItem && (
@@ -792,7 +822,7 @@ const AdminDashboard = () => {
               <span>IP: {selectedItem.ip_address}</span>
               <div className="flex gap-2">
                 <button
-                  onClick={() => handleDelete(selectedItem.id, modalType!)}
+                  onClick={() => requestDelete([selectedItem.id], modalType!)}
                   className="btn bg-red-100 text-red-600 hover:bg-red-200 border-transparent btn-sm flex items-center gap-2"
                 >
                   <FaTrash /> Hapus
@@ -813,6 +843,49 @@ const AdminDashboard = () => {
 };
 
 // --- SUB COMPONENTS ---
+
+const ConfirmationModal = ({
+  isOpen,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+}: any) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 mb-4">
+            <FaExclamationCircle className="text-3xl text-red-600" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            {message}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20"
+            >
+              Batal
+            </button>
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium shadow-md shadow-red-200 transition-colors"
+            >
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const StatCard = ({ label, value, icon, color, bg }: any) => (
   <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
     <div>
@@ -829,7 +902,7 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
   </div>
 );
 
-// --- DATA TABLE ---
+// --- DATA TABLE WITH SELECTION ---
 interface Column {
   key: string;
   label: string;
@@ -844,12 +917,16 @@ const DataTable = ({
   columns,
   searchKeys = ["slug"],
   onDownload,
+  enableSelection = false,
+  onBulkDelete,
 }: {
   title: string;
   data: any[];
   columns: Column[];
   searchKeys?: string[];
   onDownload: () => void;
+  enableSelection?: boolean;
+  onBulkDelete?: (ids: number[]) => void;
 }) => {
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{
@@ -858,6 +935,12 @@ const DataTable = ({
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  // Reset selection when data changes or pagination
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [data, currentPage, search]);
 
   const filteredData = useMemo(() => {
     if (!search) return data;
@@ -886,6 +969,7 @@ const DataTable = ({
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage,
   );
+
   const requestSort = (key: string) => {
     setSortConfig({
       key,
@@ -896,10 +980,40 @@ const DataTable = ({
     });
   };
 
+  // Selection Logic
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const currentIds = paginatedData.map((row) => row.id);
+      setSelectedIds(currentIds);
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectRow = (id: number) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((sid) => sid !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  };
+
   return (
     <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden dark:bg-darkmode-light dark:border-darkmode-border">
       <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between border-b border-border dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
-        <h3 className="text-lg font-bold">{title}</h3>
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-bold">{title}</h3>
+          {/* BULK DELETE BUTTON */}
+          {enableSelection && selectedIds.length > 0 && (
+            <button
+              onClick={() => onBulkDelete && onBulkDelete(selectedIds)}
+              className="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 rounded text-xs font-bold flex items-center gap-2 animate-fade-in transition-all"
+            >
+              <FaTrash /> Hapus ({selectedIds.length})
+            </button>
+          )}
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -925,6 +1039,24 @@ const DataTable = ({
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
             <tr>
+              {/* CHECKBOX HEADER */}
+              {enableSelection && (
+                <th className="px-4 py-3 w-10 text-center">
+                  <div className="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                      onChange={handleSelectAll}
+                      checked={
+                        paginatedData.length > 0 &&
+                        paginatedData.every((row) =>
+                          selectedIds.includes(row.id),
+                        )
+                      }
+                    />
+                  </div>
+                </th>
+              )}
               <th className="px-6 py-3 w-10 text-center">#</th>
               {columns.map((col) => (
                 <th
@@ -959,8 +1091,21 @@ const DataTable = ({
               paginatedData.map((row, i) => (
                 <tr
                   key={i}
-                  className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                  className={`transition-colors ${selectedIds.includes(row.id) ? "bg-blue-50 dark:bg-blue-900/20" : "hover:bg-gray-50 dark:hover:bg-white/5"}`}
                 >
+                  {/* CHECKBOX ROW */}
+                  {enableSelection && (
+                    <td className="px-4 py-4 text-center">
+                      <div className="flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                          checked={selectedIds.includes(row.id)}
+                          onChange={() => handleSelectRow(row.id)}
+                        />
+                      </div>
+                    </td>
+                  )}
                   <td className="px-6 py-4 text-center text-gray-400">
                     {(currentPage - 1) * rowsPerPage + i + 1}
                   </td>
@@ -979,7 +1124,7 @@ const DataTable = ({
             ) : (
               <tr>
                 <td
-                  colSpan={columns.length + 1}
+                  colSpan={columns.length + (enableSelection ? 2 : 1)}
                   className="px-6 py-10 text-center text-gray-500"
                 >
                   Tidak ada data ditemukan.
