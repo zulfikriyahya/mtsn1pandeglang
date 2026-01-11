@@ -57,7 +57,7 @@ class PDF extends FPDF
     function Header()
     {
         // Path Gambar Absolut
-        $path = __DIR__ . '/../../images/instansi/';
+        $path = __DIR__ . '../../../images/instansi/';
 
         // 1. LOGO KIRI (Kemenag / Institusi) - Hirarki lebih tinggi di kiri
         if (file_exists($path . 'logo-institusi.png')) {
