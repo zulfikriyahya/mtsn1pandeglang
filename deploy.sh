@@ -5,7 +5,8 @@ PROJECT_DIR="/var/www/mtsn1pandeglang.sch.id"
 echo "=== MEMULAI DEPLOYMENT ==="
 sudo chown -R $USER:$USER $PROJECT_DIR
 git config --global --add safe.directory $PROJECT_DIR
-git pull origin static
+git stash
+git pull origin static --force
 echo "--- Installing Project Dependencies ---"
 yarn install --check-files
 rm -rf dist/
@@ -41,4 +42,5 @@ echo "--- Finalizing Permissions ---"
 sudo chown www-data:www-data "$DB_FILE"
 sudo chmod 664 "$DB_FILE"
 sudo chown -R www-data:www-data $PROJECT_DIR
+sudo chown -R $USER:$USER $PROJECT_DIR/generate.sh
 echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
