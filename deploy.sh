@@ -4,7 +4,6 @@ DELAY=5
 PROJECT_DIR="/var/www/mtsn1pandeglang.sch.id"
 echo "=== MEMULAI DEPLOYMENT ==="
 sudo chown -R $USER:$USER $PROJECT_DIR
-sudo npm install -g yarn
 git config --global --add safe.directory $PROJECT_DIR
 git pull origin static
 echo "--- Installing Project Dependencies ---"
