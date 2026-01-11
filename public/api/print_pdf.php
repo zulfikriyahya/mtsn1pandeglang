@@ -1,5 +1,5 @@
 <?php
-// Matikan display error agar tidak merusak output PDF
+// Matikan display error agar tidak merusak binary PDF
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
@@ -86,29 +86,40 @@ class PDF extends FPDF
         }
     }
 
+    // --- PERBAIKAN HEADER (COMPACT) ---
     function Header()
     {
         $path = '../images/instansi/';
         $logoSize = 18;
+
+        // Logo
         if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 12, 10, $logoSize);
         if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 180, 10, $logoSize);
 
-        $this->SetY(11);
+        // Teks Kop (Line Height disesuaikan agar padat)
+        $this->SetY(10);
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
+
         $this->SetFont('Arial', 'B', 14);
         $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
+
         $this->SetFont('Arial', 'B', 16);
-        $this->Cell(0, 7, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
+        $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
+
         $this->SetFont('Arial', '', 9);
-        $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Kadulisung, Pandeglang - Banten 42251', 0, 1, 'C');
+        $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42251', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
 
+        // Garis Pembatas (Dinaikkan ke posisi 38 & 39)
         $this->SetLineWidth(0.5);
-        $this->Line(10, 43, 200, 43);
+        $this->Line(10, 38, 200, 38);
+
         $this->SetLineWidth(0.2);
-        $this->Line(10, 44, 200, 44);
-        $this->Ln(12);
+        $this->Line(10, 39, 200, 39);
+
+        // Jarak ke konten di bawahnya dikurangi
+        $this->Ln(7);
     }
 
     function Footer()
@@ -179,12 +190,19 @@ class PDF extends FPDF
     }
 }
 
-// --- MAIN SCRIPT ---
+// MAIN
 try {
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->SetMargins(10, 10, 10);
     $pdf->AddPage();
+
+    // Judul
+    $pdf->SetFont('Arial', 'B', 12);
+    $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL & SURVEI KEPUASAN', 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
+    $pdf->Ln(5); // Jarak dikurangi
 
     // Queries
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
@@ -194,69 +212,55 @@ try {
     $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
 
-    // === JUDUL UTAMA ===
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL', 0, 1, 'C');
-    $pdf->Ln(4);
+    // === TABEL RINGKASAN PROPORSIONAL ===
+    $xTable = 10;
+    $yTable = $pdf->GetY();
+    $colLabelW = 70;
+    $colValueW = 85;
+    $colQRW = 35;
+    $rowH = 7; // Tinggi baris dikurangi jadi 7mm
 
-    // === TABEL RINGKASAN (Fixed Layout) ===
-    $startX = 10;
-    $startY = $pdf->GetY();
-    $rowH = 7;
-
-    // Lebar Kolom
-    $wLabel = 70;
-    $wValue = 85;
-    $wQR = 35; // Kolom Kanan (QR)
-
-    // Setup Font & Warna Abu-abu
     $pdf->SetFont('Arial', '', 9);
-    $pdf->SetFillColor(245, 245, 245);
+    $pdf->SetFillColor(245, 245, 245); // Abu-abu terang
 
-    // -- BARIS 1: Periode --
-    $pdf->SetXY($startX, $startY);
-    $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
+    // Baris 1
+    $pdf->Cell($colLabelW, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
+    $pdf->Cell($colValueW, $rowH, '  ' . $periodeText, 1, 0, 'L');
 
-    // -- BARIS 2: Kunjungan --
-    $pdf->SetXY($startX, $startY + $rowH);
-    $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
+    // QR Box (Tinggi 4 x 7 = 28mm)
+    $xQR = $pdf->GetX();
+    $yQR = $pdf->GetY();
+    $pdf->Cell($colQRW, $rowH * 4, '', 1, 1, 'C');
 
-    // -- BARIS 3: Responden --
-    $pdf->SetXY($startX, $startY + ($rowH * 2));
-    $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
-
-    // -- BARIS 4: Ulasan --
-    $pdf->SetXY($startX, $startY + ($rowH * 3));
-    $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
-
-    // -- KOLOM QR CODE (Merge Row 1-4) --
-    // Total tinggi = 4 baris * 7mm = 28mm
-    $pdf->SetXY($startX + $wLabel + $wValue, $startY);
-    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C'); // Border Kotak QR
-
-    // Generate QR Image
+    // Generate & Place QR Code (Compact 24mm)
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|F:{$feedback}|VALID");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
+    $pdf->ImageRemote($qrUrl, $xQR + 5.5, $yQR + 2, 24, 24);
 
-    // Posisi Gambar di tengah kotak QR
-    // X = Start + 70 + 85 + (Padding agar center)
-    // Y = StartY + (Padding agar center)
-    $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 4.5, $startY + 1, 26, 26);
+    // Baris 2
+    $pdf->SetXY($xTable, $yTable + $rowH);
+    $pdf->Cell($colLabelW, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
+    $pdf->Cell($colValueW, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
 
-    // Geser Kursor ke Bawah Tabel Ringkasan
-    $pdf->SetY($startY + ($rowH * 4) + 10);
+    // Baris 3
+    $pdf->SetXY($xTable, $yTable + ($rowH * 2));
+    $pdf->Cell($colLabelW, $rowH, ' Total Responden Survei', 1, 0, 'L', true);
+    $pdf->Cell($colValueW, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
+
+    // Baris 4
+    $pdf->SetXY($xTable, $yTable + ($rowH * 3));
+    $pdf->Cell($colLabelW, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
+    $pdf->Cell($colValueW, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
+
+    // Geser ke bawah
+    $pdf->SetY($yStart + ($rowH * 4) + 8);
 
     // === DATA SURVEY (HIJAU) ===
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA SURVEI KEPUASAN MASYARAKAT', 0, 1, 'L');
     $pdf->SetFont('Arial', 'B', 8);
-    $pdf->SetFillColor(0, 150, 100); // Hijau
-    $pdf->SetTextColor(255); // Putih
-
+    $pdf->SetFillColor(0, 150, 100);
+    $pdf->SetTextColor(255);
     $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
     $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
     $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
@@ -264,7 +268,6 @@ try {
     $pdf->Cell(15, 7, 'LYN', 1, 0, 'C', true);
     $pdf->Cell(15, 7, 'AKD', 1, 0, 'C', true);
     $pdf->Cell(62, 7, 'Masukan', 1, 1, 'L', true);
-
     $pdf->SetTextColor(0);
     $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 40, 15, 15, 15, 62]);
@@ -277,24 +280,20 @@ try {
         $found1 = true;
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $row['feedback'] ?: '-']);
     }
-    if (!$found1) {
-        $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
-    }
-    $pdf->Ln(6);
+    if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
+    $pdf->Ln(4);
 
     // === DATA FEEDBACK (KUNING) ===
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'B. DATA ULASAN & RATING PELAYANAN', 0, 1, 'L');
     $pdf->SetFont('Arial', 'B', 8);
-    $pdf->SetFillColor(255, 193, 7); // Kuning
-    $pdf->SetTextColor(0); // Hitam
-
+    $pdf->SetFillColor(255, 193, 7);
+    $pdf->SetTextColor(0);
     $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
     $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
     $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
     $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
     $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
-
     $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 45, 20, 82]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
@@ -306,11 +305,9 @@ try {
         $found2 = true;
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['name'] ?: 'Anonim', $row['rating'] . ' / 5', $row['message'] ?: '-']);
     }
-    if (!$found2) {
-        $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
-    }
+    if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
 
-    // === TANDA TANGAN ===
+    // TANDA TANGAN
     $pdf->AddPage();
     $pdf->Ln(5);
     $path = '../images/instansi/';
@@ -360,7 +357,7 @@ try {
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(0, 4, 'NIP. 197006032000031002', 0, 1, 'C');
 
-    $pdf->Output('I', 'Laporan_' . $month . '_' . $year . '.pdf');
+    $pdf->Output('I', 'Laporan_Statistik_Website_' . $month . '_' . $year . '.pdf');
 } catch (Exception $e) {
     die("PDF Error: " . $e->getMessage());
 }
