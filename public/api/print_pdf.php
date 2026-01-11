@@ -203,7 +203,6 @@ try {
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
     // --- HITUNG INDEKS DETAIL ---
-    // Mengambil rata-rata per kategori
     $indices = $db->querySingle("SELECT 
         AVG(score_zi) as zi, 
         AVG(score_service) as service, 
@@ -215,7 +214,7 @@ try {
     $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
     $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
 
-    // Hitung IKM Total (Rata-rata dari 3 komponen)
+    // Hitung IKM Total
     $ikmValue = 0;
     if ($survey > 0) {
         $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
@@ -232,9 +231,6 @@ try {
     }
 
     $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 (" . getPredikat($ikmValue) . ")" : "-";
-    $textZI = ($idxZI > 0) ? "$idxZI / 5.00" : "-";
-    $textService = ($idxService > 0) ? "$idxService / 5.00" : "-";
-    $textAcademic = ($idxAcademic > 0) ? "$idxAcademic / 5.00" : "-";
 
     // === JUDUL LAPORAN ===
     $pdf->SetFont('Arial', 'B', 12);
@@ -243,7 +239,7 @@ try {
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
     $pdf->Ln(8);
 
-    // === TABEL RINGKASAN (Update: 9 Baris) ===
+    // === TABEL RINGKASAN (Compact Mode: 7 Baris) ===
     $startX = 10;
     $startY = $pdf->GetY();
 
@@ -251,63 +247,64 @@ try {
     $wLabel = 70;
     $wValue = 85;
     $wQR = 35;
-    $totalBoxHeight = $rowH * 9; // 9 Baris total
+
+    // Total 7 Baris
+    $totalBoxHeight = $rowH * 7;
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(245, 245, 245);
 
-    // 1. Gambar Kotak QR (Gabung 9 Baris)
+    // 1. Gambar Kotak QR (Gabung 7 Baris)
     $pdf->SetXY($startX + $wLabel + $wValue, $startY);
     $pdf->Cell($wQR, $totalBoxHeight, '', 1, 0, 'C');
 
-    // Update Content QR (Tambah Detail Index)
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|ZI:{$idxZI}|LYN:{$idxService}|AKD:{$idxAcademic}|IKM:{$ikmValue}|VALID");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
-
-    // Center Vertically di box 9 baris
     $qrY = $startY + ($totalBoxHeight - 24) / 2;
     $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $qrY, 24, 24);
 
     // 2. Gambar Baris Data
+    // Baris 1: Bulan
     $pdf->SetXY($startX, $startY);
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
 
+    // Baris 2: Kunjungan
     $pdf->SetXY($startX, $startY + $rowH);
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
 
+    // Baris 3: Artikel
     $pdf->SetXY($startX, $startY + ($rowH * 2));
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca (Akumulasi)', 1, 0, 'L');
 
+    // Baris 4: Responden
     $pdf->SetXY($startX, $startY + ($rowH * 3));
     $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
 
-    // Indeks ZI (Zona Integritas)
+    // === BARIS 5: DETAIL INDEKS COMPACT (3 Kolom dalam 1 Baris) ===
     $pdf->SetXY($startX, $startY + ($rowH * 4));
-    $pdf->Cell($wLabel, $rowH, ' Indeks Zona Integritas', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $textZI, 1, 0, 'L');
+    $pdf->Cell($wLabel, $rowH, ' Rincian Indeks (ZI / LYN / AKD)', 1, 0, 'L', true);
 
-    // Indeks Pelayanan
+    // Pecah Kolom Value menjadi 3
+    $wSub = $wValue / 3;
+    $pdf->SetFont('Arial', '', 8); // Kecilkan font sedikit agar muat
+    $pdf->Cell($wSub, $rowH, 'ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C');
+    $pdf->Cell($wSub, $rowH, 'Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C');
+    $pdf->Cell($wSub, $rowH, 'Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 0, 'C');
+    $pdf->SetFont('Arial', '', 9); // Kembalikan font
+
+    // Baris 6: IKM Total (Tebal)
     $pdf->SetXY($startX, $startY + ($rowH * 5));
-    $pdf->Cell($wLabel, $rowH, ' Indeks Pelayanan Publik', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $textService, 1, 0, 'L');
-
-    // Indeks Akademik
-    $pdf->SetXY($startX, $startY + ($rowH * 6));
-    $pdf->Cell($wLabel, $rowH, ' Indeks Kualitas Akademik', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $textAcademic, 1, 0, 'L');
-
-    // IKM Total (Tebal)
-    $pdf->SetXY($startX, $startY + ($rowH * 7));
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->Cell($wLabel, $rowH, ' Indeks Kepuasan Masy. (Total)', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $ikmText, 1, 0, 'L');
     $pdf->SetFont('Arial', '', 9);
 
-    $pdf->SetXY($startX, $startY + ($rowH * 8));
+    // Baris 7: Ulasan
+    $pdf->SetXY($startX, $startY + ($rowH * 6));
     $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
 
