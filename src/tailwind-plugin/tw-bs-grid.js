@@ -16,7 +16,6 @@ module.exports = plugin.withOptions(() => {
     const columns = Array.from({ length: gridColumns }, (_, i) => i + 1);
     const rowColsSteps = columns.slice(0, Math.floor(gridColumns / 2));
 
-    // row
     addComponents(
       {
         ".row": {
@@ -41,7 +40,6 @@ module.exports = plugin.withOptions(() => {
       { respectImportant },
     );
 
-    // columns
     addComponents(
       [
         {
@@ -64,7 +62,6 @@ module.exports = plugin.withOptions(() => {
       { respectImportant },
     );
 
-    // offset
     addComponents(
       [0, ...columns.slice(0, -1)].map((num) => ({
         [`.offset-${num}`]: { marginLeft: `${(100 / gridColumns) * num}%` },
@@ -72,7 +69,6 @@ module.exports = plugin.withOptions(() => {
       { respectImportant },
     );
 
-    // gutters
     if (Object.keys(gridGutters).length) {
       const gutterComponents = Object.entries(gridGutters).reduce(
         (acc, [key, value]) => {
@@ -86,7 +82,6 @@ module.exports = plugin.withOptions(() => {
       addComponents(gutterComponents, { respectImportant });
     }
 
-    // order
     addComponents(
       [
         {

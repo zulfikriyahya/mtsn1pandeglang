@@ -10,7 +10,6 @@ const commonFields = {
   draft: z.boolean(),
 };
 
-// Post collection schema
 const blogCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/blog" }),
   schema: z.object({
@@ -26,7 +25,6 @@ const blogCollection = defineCollection({
   }),
 });
 
-// Author collection schema
 const authorsCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/authors" }),
   schema: z.object({
@@ -46,7 +44,6 @@ const authorsCollection = defineCollection({
   }),
 });
 
-// Pages collection schema
 const pagesCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/pages" }),
   schema: z.object({
@@ -54,7 +51,6 @@ const pagesCollection = defineCollection({
   }),
 });
 
-// about collection schema
 const aboutCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/about" }),
   schema: z.object({
@@ -62,7 +58,6 @@ const aboutCollection = defineCollection({
   }),
 });
 
-// contact collection schema
 const contactCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/contact" }),
   schema: z.object({
@@ -70,7 +65,6 @@ const contactCollection = defineCollection({
   }),
 });
 
-// Homepage collection schema
 const homepageCollection = defineCollection({
   loader: glob({ pattern: "**/-*.{md,mdx}", base: "src/content/homepage" }),
   schema: z.object({
@@ -100,7 +94,6 @@ const homepageCollection = defineCollection({
   }),
 });
 
-// Call to Action collection schema
 const ctaSectionCollection = defineCollection({
   loader: glob({
     pattern: "call-to-action.{md,mdx}",
@@ -119,7 +112,6 @@ const ctaSectionCollection = defineCollection({
   }),
 });
 
-// Testimonials Section collection schema
 const testimonialSectionCollection = defineCollection({
   loader: glob({
     pattern: "testimonial.{md,mdx}",
@@ -140,17 +132,13 @@ const testimonialSectionCollection = defineCollection({
   }),
 });
 
-// Export collections
 export const collections = {
-  // Pages
   homepage: homepageCollection,
   blog: blogCollection,
   authors: authorsCollection,
   pages: pagesCollection,
   about: aboutCollection,
   contact: contactCollection,
-
-  // sections
   ctaSection: ctaSectionCollection,
   testimonialSection: testimonialSectionCollection,
 };

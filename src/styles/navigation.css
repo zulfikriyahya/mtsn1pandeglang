@@ -2,7 +2,6 @@
   @apply bg-body dark:bg-darkmode-body py-6;
 }
 
-/* navbar items */
 .navbar {
   @apply relative flex flex-wrap items-center justify-between;
 }
@@ -42,7 +41,6 @@
   @apply text-text-dark hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary block py-1 font-semibold transition;
 }
 
-/* theme-switcher */
 .theme-switcher {
   @apply inline-flex;
 

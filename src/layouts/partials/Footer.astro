@@ -37,17 +37,8 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
       class="container text-center text-text-light dark:text-darkmode-text-light"
     >
       <p set:html={markdownify(config.params.copyright)} />
+
       <VisitorCounter client:only="react" />
-      <!-- Statistik Pengunjung Global -->
-      <div class="mt-2 text-xs opacity-70 flex justify-center gap-4">
-        <span id="busuanzi_container_site_pv" style="display:none">
-          Total Hits: <span id="busuanzi_value_site_pv" class="font-bold"
-          ></span>
-        </span>
-        <span id="busuanzi_container_site_uv" style="display:none">
-          Visitor: <span id="busuanzi_value_site_uv" class="font-bold"></span>
-        </span>
-      </div>
     </div>
   </div>
 </footer>

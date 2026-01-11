@@ -24,7 +24,7 @@
 
   "params": {
     "contact_form_action": "#",
-    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)"
+    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br/>Dikelola & dikembangkan oleh [**Tim Teknis**](https://github.com/zulfikriyahya)"
   },
 
   "navigation_button": {
@@ -35,7 +35,7 @@
 
   "google_tag_manager": {
     "enable": true,
-    "gtm_id": "GTM-NSG7FJC5"
+    "gtm_id": "G-31LVR4XF5F"
   },
 
   "disqus": {

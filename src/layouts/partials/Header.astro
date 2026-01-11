@@ -3,7 +3,6 @@ import Logo from "@/components/Logo.astro";
 import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
-// 1. Tambahkan FaSearch pada import
 import { FaChevronDown, FaBars, FaTimes, FaSearch } from "react-icons/fa";
 
 export interface ChildNavigationLink {
@@ -27,16 +26,13 @@ const { pathname } = Astro.url;
   class="fixed top-4 inset-x-0 z-50 px-4 print:hidden transition-all duration-300"
 >
   <nav class="mx-auto max-w-7xl">
-    <!-- THE PILL (KAPSUL) -->
     <div
       class="relative flex items-center justify-between rounded-full bg-white/80 px-5 py-2.5 shadow-lg shadow-gray-200/20 backdrop-blur-md border border-gray-200/50 transition-colors dark:bg-[#13151a]/80 dark:border-white/10 dark:shadow-black/20"
     >
-      <!-- 1. LOGO -->
       <div class="flex shrink-0 items-center">
         <Logo />
       </div>
 
-      <!-- 2. DESKTOP MENU -->
       <ul class="hidden lg:flex items-center gap-1 xl:gap-2">
         {
           main.map((menu) => (
@@ -94,10 +90,7 @@ const { pathname } = Astro.url;
         }
       </ul>
 
-      <!-- 3. ACTIONS -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- 2. TOMBOL PENCARIAN -->
-        <!-- Menggunakan data-search-trigger agar terhubung dengan SearchModal.tsx -->
         <button
           aria-label="Search"
           data-search-trigger
@@ -121,8 +114,6 @@ const { pathname } = Astro.url;
             </a>
           )
         }
-
-        <!-- Mobile Toggle Button -->
         <button
           id="mobile-menu-toggle"
           aria-label="Toggle Menu"
@@ -133,8 +124,6 @@ const { pathname } = Astro.url;
         </button>
       </div>
     </div>
-
-    <!-- MOBILE MENU DROPDOWN -->
     <div
       id="mobile-menu"
       class="hidden mt-3 origin-top rounded-3xl border border-gray-200 bg-white/90 p-4 shadow-xl backdrop-blur-xl lg:hidden dark:border-white/10 dark:bg-[#13151a]/95"

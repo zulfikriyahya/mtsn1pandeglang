@@ -1,20 +1,18 @@
 ---
 import BlogCard from "@/components/BlogCard.astro";
 import Share from "@/components/Share.astro";
-import Disqus from "@/helpers/Disqus";
+import GiscusComment from "@/helpers/GiscusComment";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
 import readingTime from "@/lib/utils/readingTime"; // Import Reading Time
 import similarItems from "@/lib/utils/similarItems";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import { render } from "astro:content";
-// Tambah Icons: FaRegCalendarAlt, FaRegClock, FaRegEye
 import {
   FaRegFolder,
   FaRegUserCircle,
   FaRegCalendarAlt,
   FaRegClock,
-  FaRegEye,
 } from "react-icons/fa";
 import ImageMod from "./components/ImageMod.astro";
 import PostViewCounter from "@/layouts/helpers/PostViewCounter";
@@ -67,19 +65,16 @@ const { title, description, author, categories, image, date, tags } = post.data;
               }
             </li>
 
-            {/* Tanggal */}
             <li class="mr-4 inline-block">
               <FaRegCalendarAlt className={"mr-2 -mt-1 inline-block"} />
               {dateFormat(date)}
             </li>
 
-            {/* Waktu Baca */}
             <li class="mr-4 inline-block">
               <FaRegClock className={"mr-2 -mt-1 inline-block"} />
               {readingTime(post.body)}
             </li>
 
-            {/* Jumlah Dilihat (Busuanzi) */}
             <li class="mr-4 inline-block">
               <PostViewCounter client:only="react" />
             </li>
@@ -116,11 +111,10 @@ const { title, description, author, categories, image, date, tags } = post.data;
             />
           </div>
         </div>
-        <Disqus className="mt-20" client:load />
+        <GiscusComment client:visible />
       </article>
     </div>
 
-    <!-- Related posts -->
     <div class="section pb-0">
       <h2 class="h3 mb-12 text-center">Related Posts</h2>
       <div class="row justify-center">

@@ -1,12 +1,7 @@
-# build output
 dist/
 .output/
 .json/
-
-# dependencies
 node_modules/
-
-# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -14,17 +9,9 @@ pnpm-debug.log*
 yarn.lock
 bun.lock
 package-lock.json
-
-
-# environment variables
 .env
 .env.production
-
-# macOS-specific files
 .DS_Store
-
-# ignore .astro directory
 .astro
-
-# ide
 .idea/
+stats.db

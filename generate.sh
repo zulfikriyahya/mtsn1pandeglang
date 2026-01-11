@@ -40,6 +40,7 @@ EXCLUDE_PATTERNS=(
   "*.png" "*.jpg" "*.jpeg" "*.webp" "*.ico" "*.gif" "*.svg" "*.avif"
   "*.woff" "*.woff2" "*.ttf" "*.otf" "*.eot"
   "*.mp3" "*.mp4" "*.wav" "*.avi"
+  "*.db"
 )
 
 # Fungsi untuk menentukan bahasa berdasarkan ekstensi file
@@ -217,6 +218,6 @@ for top in $(printf '%s\n' "${!groups[@]}" | sort -V); do
   done
 done
 
-echo "✅ Selesai! File '$OUT' telah dibuat (Mode: Astro Project)"
-echo "📁 Direktori yang diproses: ${#groups[@]}"
-echo "📄 Total file: ${#files[@]}"
+echo "Selesai! File '$OUT' telah dibuat (Mode: Astro Project)"
+echo "Direktori yang diproses: ${#groups[@]}"
+echo "Total file: ${#files[@]}"

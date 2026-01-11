@@ -34,7 +34,6 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
   <section class="section">
     <div class="container">
       <div class="row gx-5">
-        <!-- blog posts -->
         <div class="lg:col-8">
           <div class="row gsap-stagger-parent">
             {
@@ -51,8 +50,6 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
             totalPages={totalPages}
           />
         </div>
-
-        <!-- sidebar -->
         <PostSidebar
           categories={categories}
           tags={tags}

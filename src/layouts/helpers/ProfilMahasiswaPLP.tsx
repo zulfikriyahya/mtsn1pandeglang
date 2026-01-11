@@ -165,169 +165,10 @@ export default function ProfilMahasiswaPLP() {
   const currentMahasiswa = mahasiswaData[currentIndex];
 
   return (
-    // <div className="w-full my-12">
-    //   {/* Main Card */}
-    //   <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-500">
-    //     <div className="relative">
-    //       {/* Content Grid */}
-    //       <div className="grid lg:grid-cols-5 gap-6 p-6 lg:p-8">
-    //         {/* Photo Section */}
-    //         <div className="lg:col-span-2 flex items-center justify-center">
-    //           <div className="relative w-full max-w-sm">
-    //             <div className="aspect-square rounded-2xl overflow-hidden shadow-lg border-4 border-blue-50 bg-gradient-to-br from-blue-50 to-indigo-50">
-    //               <img
-    //                 src={currentMahasiswa.foto}
-    //                 alt={currentMahasiswa.nama}
-    //                 className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-    //                 onError={(e) => {
-    //                   e.target.src = "/images/avatar.png";
-    //                 }}
-    //               />
-    //             </div>
-
-    //             {/* Number Badge */}
-    //             <div className="absolute -bottom-3 -right-3 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">
-    //               {currentIndex + 1}
-    //             </div>
-    //           </div>
-    //         </div>
-
-    //         {/* Info Section */}
-    //         <div className="lg:col-span-3 flex flex-col justify-center space-y-6">
-    //           {/* Name */}
-    //           <div>
-    //             <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-    //               {currentMahasiswa.nama}
-    //             </h3>
-    //             <div className="h-1 w-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></div>
-    //           </div>
-
-    //           {/* Info Cards */}
-    //           <div className="grid gap-4">
-    //             {/* NIM */}
-    //             <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-    //               <div className="bg-blue-100 p-2.5 rounded-lg flex-shrink-0">
-    //                 <FaUser className="text-xl text-blue-600" />
-    //               </div>
-    //               <div className="min-w-0 flex-1">
-    //                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-    //                   Nomor Induk Mahasiswa
-    //                 </p>
-    //                 <p className="text-lg font-bold text-gray-900">
-    //                   {currentMahasiswa.nim}
-    //                 </p>
-    //               </div>
-    //             </div>
-
-    //             {/* Jurusan */}
-    //             <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-    //               <div className="bg-indigo-100 p-2.5 rounded-lg flex-shrink-0">
-    //                 <FaGraduationCap className="text-xl text-indigo-600" />
-    //               </div>
-    //               <div className="min-w-0 flex-1">
-    //                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-    //                   Program Studi
-    //                 </p>
-    //                 <p className="text-lg font-bold text-gray-900">
-    //                   {currentMahasiswa.jurusan}
-    //                 </p>
-    //               </div>
-    //             </div>
-
-    //             {/* Guru Pamong */}
-    //             <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-    //               <div className="bg-purple-100 p-2.5 rounded-lg flex-shrink-0">
-    //                 <FaBook className="text-xl text-purple-600" />
-    //               </div>
-    //               <div className="min-w-0 flex-1">
-    //                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-    //                   Guru Pembimbing
-    //                 </p>
-    //                 <p className="text-lg font-bold text-gray-900">
-    //                   {currentMahasiswa.guruPamong}
-    //                 </p>
-    //               </div>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </div>
-
-    //       {/* Navigation Arrows */}
-    //       <button
-    //         onClick={prevSlide}
-    //         className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white p-2.5 rounded-full shadow-lg transition-all hover:scale-110 hover:shadow-xl z-10"
-    //         aria-label="Previous"
-    //       >
-    //         <FaChevronLeft className="text-xl text-gray-700" />
-    //       </button>
-    //       <button
-    //         onClick={nextSlide}
-    //         className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white p-2.5 rounded-full shadow-lg transition-all hover:scale-110 hover:shadow-xl z-10"
-    //         aria-label="Next"
-    //       >
-    //         <FaChevronRight className="text-xl text-gray-700" />
-    //       </button>
-    //     </div>
-
-    //     {/* Dots Navigation */}
-    //     <div className="flex justify-center items-center gap-2 py-6 px-4 bg-gradient-to-b from-white to-gray-50 overflow-x-auto">
-    //       {mahasiswaData.map((_, index) => (
-    //         <button
-    //           key={index}
-    //           onClick={() => goToSlide(index)}
-    //           className={`transition-all rounded-full flex-shrink-0 ${
-    //             index === currentIndex
-    //               ? "w-8 h-2.5 bg-gradient-to-r from-blue-600 to-indigo-600"
-    //               : "w-2.5 h-2.5 bg-gray-300 hover:bg-gray-400"
-    //           }`}
-    //           aria-label={`Go to slide ${index + 1}`}
-    //           title={mahasiswaData[index].nama}
-    //         />
-    //       ))}
-    //     </div>
-
-    //     {/* Footer Info */}
-    //     <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-    //       <div className="flex items-center justify-between text-sm">
-    //         <span className="text-gray-600">
-    //           Mahasiswa{" "}
-    //           <span className="font-bold text-gray-900">
-    //             {currentIndex + 1}
-    //           </span>{" "}
-    //           dari{" "}
-    //           <span className="font-bold text-gray-900">
-    //             {mahasiswaData.length}
-    //           </span>
-    //         </span>
-    //         <button
-    //           onClick={() => setIsAutoplay(!isAutoplay)}
-    //           className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-    //             isAutoplay
-    //               ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-    //               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-    //           }`}
-    //         >
-    //           {isAutoplay ? (
-    //             <>
-    //               <FaPause /> Pause
-    //             </>
-    //           ) : (
-    //             <>
-    //               <FaPlay /> Play
-    //             </>
-    //           )}
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
     <div className="w-full my-12">
-      {/* Main Card */}
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-500">
         <div className="relative">
-          {/* Content Grid */}
           <div className="grid lg:grid-cols-5 gap-6 p-6 lg:p-8">
-            {/* Photo Section */}
             <div className="lg:col-span-2 flex items-center justify-center py-4">
               <div className="relative w-full max-w-sm">
                 <div className="aspect-square rounded-2xl overflow-hidden shadow-lg border-4 border-blue-50 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4">
@@ -341,16 +182,13 @@ export default function ProfilMahasiswaPLP() {
                   />
                 </div>
 
-                {/* Number Badge */}
                 <div className="absolute -bottom-3 -right-3 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">
                   {currentIndex + 1}
                 </div>
               </div>
             </div>
 
-            {/* Info Section */}
             <div className="lg:col-span-3 flex flex-col justify-center space-y-6">
-              {/* Name */}
               <div>
                 <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                   {currentMahasiswa.nama}
@@ -358,9 +196,7 @@ export default function ProfilMahasiswaPLP() {
                 <div className="h-1 w-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></div>
               </div>
 
-              {/* Info Cards */}
               <div className="grid gap-4">
-                {/* NIM */}
                 <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                   <div className="bg-blue-100 p-2.5 rounded-lg flex-shrink-0">
                     <FaUser className="text-xl text-blue-600" />
@@ -375,7 +211,6 @@ export default function ProfilMahasiswaPLP() {
                   </div>
                 </div>
 
-                {/* Jurusan */}
                 <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                   <div className="bg-indigo-100 p-2.5 rounded-lg flex-shrink-0">
                     <FaGraduationCap className="text-xl text-indigo-600" />
@@ -390,7 +225,6 @@ export default function ProfilMahasiswaPLP() {
                   </div>
                 </div>
 
-                {/* Guru Pamong */}
                 <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                   <div className="bg-purple-100 p-2.5 rounded-lg flex-shrink-0">
                     <FaBook className="text-xl text-purple-600" />
@@ -408,7 +242,6 @@ export default function ProfilMahasiswaPLP() {
             </div>
           </div>
 
-          {/* Navigation Arrows */}
           <button
             onClick={prevSlide}
             className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white p-2.5 rounded-full shadow-lg transition-all hover:scale-110 hover:shadow-xl z-10"
@@ -425,7 +258,6 @@ export default function ProfilMahasiswaPLP() {
           </button>
         </div>
 
-        {/* Dots Navigation */}
         <div className="flex justify-center items-center gap-2 py-6 px-4 bg-gradient-to-b from-white to-gray-50 overflow-x-auto">
           {mahasiswaData.map((_, index) => (
             <button
@@ -442,7 +274,6 @@ export default function ProfilMahasiswaPLP() {
           ))}
         </div>
 
-        {/* Footer Info */}
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">

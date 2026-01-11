@@ -27,7 +27,6 @@ const VideoModal = ({
     }, 300);
   }, []);
 
-  // Handle ESC key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
@@ -48,10 +47,6 @@ const VideoModal = ({
 
   return (
     <>
-      {/* 
-        KITA KEMBALI KE CLASS STANDAR 
-        Efek animasi & spotlight sekarang ditangani oleh global CSS & JS
-      */}
       <button
         onClick={openModal}
         className="btn btn-outline-primary mb-4 ml-0 md:ml-4 gap-2"
@@ -61,14 +56,12 @@ const VideoModal = ({
         {label}
       </button>
 
-      {/* Render Modal Fullscreen */}
       {isMounted && (
         <div
           className={`fixed inset-0 z-[9999] bg-black transition-opacity duration-300 ease-in-out ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
         >
-          {/* Tombol Close */}
           <button
             onClick={closeModal}
             className={`absolute right-6 top-6 z-50 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition-all duration-500 hover:bg-white hover:text-black hover:rotate-90 ${
@@ -81,7 +74,6 @@ const VideoModal = ({
             <FaTimes size={24} />
           </button>
 
-          {/* Container Video */}
           <div className="absolute inset-0 flex h-full w-full items-center justify-center">
             {videoId ? (
               <iframe

@@ -1,17 +1,14 @@
 import { slug } from "github-slugger";
 import { marked } from "marked";
 
-// slugify
 export const slugify = (content: string) => {
   return slug(content);
 };
 
-// markdownify
 export const markdownify = (content: string, div?: boolean) => {
   return div ? marked.parse(content) : marked.parseInline(content);
 };
 
-// humanize
 export const humanize = (content: string) => {
   return content
     .replace(/^[\s_]+|[\s_]+$/g, "")
@@ -22,7 +19,6 @@ export const humanize = (content: string) => {
     });
 };
 
-// titleify
 export const titleify = (content: string) => {
   const humanized = humanize(content);
   return humanized
@@ -31,7 +27,6 @@ export const titleify = (content: string) => {
     .join(" ");
 };
 
-// plainify
 export const plainify = (content: string) => {
   const parseMarkdown: any = marked.parse(content);
   const filterBrackets = parseMarkdown.replace(/<\/?[^>]+(>|$)/gm, "");
@@ -40,7 +35,6 @@ export const plainify = (content: string) => {
   return stripHTML;
 };
 
-// strip entities for plainify
 const htmlEntityDecoder = (htmlWithEntities: string) => {
   let entityList: { [key: string]: string } = {
     "&nbsp;": " ",

@@ -3,7 +3,7 @@ import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
 import readingTime from "@/lib/utils/readingTime"; // Import Reading Time
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
-import { FaRegFolder, FaRegUserCircle, FaRegClock } from "react-icons/fa"; // Tambah FaRegClock
+import { FaCubes, FaRegUserCircle, FaCalendarTimes } from "react-icons/fa"; // Tambah FaRegClock
 import ImageMod from "./ImageMod.astro";
 
 const {
@@ -40,7 +40,7 @@ const { title, image, date, author, categories } = data.data;
       </a>
     </li>
     <li class="mr-4 inline-block">
-      <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
+      <FaCubes className={"mr-2 -mt-1 inline-block"} />
       {
         categories.map((category: string, index: number) => (
           <a href={`/categories/${slugify(category)}`}>
@@ -50,10 +50,8 @@ const { title, image, date, author, categories } = data.data;
         ))
       }
     </li>
-
-    {/* Penambahan Waktu Baca */}
     <li class="mr-4 inline-block">
-      <FaRegClock className={"mr-2 -mt-1 inline-block"} />
+      <FaCalendarTimes className={"mr-2 -mt-1 inline-block"} />
       {readingTime(data.body)}
     </li>
 

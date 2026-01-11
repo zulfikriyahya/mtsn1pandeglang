@@ -2,51 +2,38 @@ import React, { useEffect, useState } from "react";
 import { FaRegEye } from "react-icons/fa";
 
 const PostViewCounter = () => {
-  const [loading, setLoading] = useState(true);
+  const [views, setViews] = useState("...");
 
   useEffect(() => {
-    // Hapus script lama agar bisa memuat ulang hitungan untuk URL baru ini
-    const existingScript = document.getElementById("busuanzi-script-post");
-    if (existingScript) {
-      existingScript.remove();
-    }
+    const pathSegments = window.location.pathname.split("/").filter(Boolean);
+    const rawSlug = pathSegments[pathSegments.length - 1] || "home";
+    const safeSlug = rawSlug.replace(/[^a-zA-Z0-9]/g, "_");
 
-    // Buat script baru khusus untuk halaman ini
-    const script = document.createElement("script");
-    script.id = "busuanzi-script-post";
-    script.src = "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
-    script.async = true;
+    const sessionKey = `viewed_${safeSlug}`;
+    const hasViewed = sessionStorage.getItem(sessionKey);
 
-    script.onload = () => {
-      // Beri sedikit jeda agar angka muncul
-      setTimeout(() => setLoading(false), 500);
+    const hitViews = async () => {
+      try {
+        const url = `/api/stats.php?action=view&slug=${safeSlug}`;
+        const method = !hasViewed ? "POST" : "GET";
+        const response = await fetch(url, { method });
+        if (response.ok) {
+          const data = await response.json();
+          setViews(data.value.toLocaleString("id-ID"));
+          if (!hasViewed) sessionStorage.setItem(sessionKey, "true");
+        }
+      } catch (error) {
+        console.error(error);
+      }
     };
-
-    document.body.appendChild(script);
-
-    // Cleanup
-    return () => {
-      const scriptToRemove = document.getElementById("busuanzi-script-post");
-      if (scriptToRemove) scriptToRemove.remove();
-    };
+    hitViews();
   }, []);
 
   return (
     <span className="flex items-center gap-2" title="Jumlah Pembaca">
       <FaRegEye className="text-gray-500 dark:text-gray-400" />
-
-      {/* Container ini wajib ada agar script Busuanzi bisa mendeteksi dan mengisinya */}
-      <span
-        id="busuanzi_container_page_pv"
-        className={loading ? "hidden" : "inline-block animate-fade-in"}
-        style={{ display: loading ? "none" : "inline-block" }}
-      >
-        <span id="busuanzi_value_page_pv" className="font-semibold">
-          ...
-        </span>
-      </span>
-
-      {loading && <span className="text-xs opacity-50">...</span>}
+      <span className="font-regular">{views}</span>
+      <span className="text-md">Kali dibaca</span>
     </span>
   );
 };
