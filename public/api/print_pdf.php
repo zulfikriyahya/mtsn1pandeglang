@@ -307,17 +307,18 @@ try {
     $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
 
-    // Baris 5: Indeks Kepuasan Masy (IKM)
+    // Baris 5: Rincian Indeks (Split 3 Kolom)
+    $wSub = 190 / 3;
+    $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
+
+    // Baris 6: Indeks Kepuasan Masy (IKM)
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(240, 240, 240); // Highlight background
     $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masyarakat (IKM)', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
 
-    // Baris 6: Rincian Indeks (Split 3 Kolom)
-    $wSub = 190 / 3;
-    $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
-    $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
-    $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
 
     $pdf->Ln(8);
 
