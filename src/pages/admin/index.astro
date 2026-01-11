@@ -1,0 +1,20 @@
+---
+import Base from "@/layouts/Base.astro";
+import AdminDashboard from "@/layouts/helpers/AdminDashboard";
+
+// Halaman ini bersifat statis di sisi Astro,
+// proteksi sebenarnya dilakukan di dalam komponen React (Client-side)
+// dan di PHP API (Server-side)
+---
+
+<Base
+  title="Admin Dashboard"
+  meta_title="Admin Panel - MTsN 1 Pandeglang"
+  noindex={true}
+>
+  <section class="section-sm bg-gray-50 dark:bg-darkmode-body min-h-screen">
+    <div class="container">
+      <AdminDashboard client:only="react" />
+    </div>
+  </section>
+</Base>
