@@ -254,8 +254,8 @@ try {
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell($wTable1, $rowH, ' I. RINGKASAN TRAFIK WEBSITE', 1, 0, 'L', true);
-    // Kotak QR Kosong (Placeholder)
-    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C'); // Tinggi = Header + 3 Baris Data
+    // Kotak QR
+    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
 
     // Isi QR Code
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}|RTG:{$avgRatingVal}");
@@ -268,7 +268,7 @@ try {
     $wLabel = 65;
     $wValue = 90;
     $pdf->SetFont('Arial', '', 9);
-    $pdf->SetFillColor(250, 250, 250); // Agak putih
+    $pdf->SetFillColor(250, 250, 250);
 
     // Baris 1: Bulan
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
@@ -282,13 +282,13 @@ try {
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
 
-    $pdf->Ln(5); // Jarak antar tabel
+    $pdf->Ln(5);
 
     // ==========================================
-    // TABEL 2: KUALITAS LAYANAN & PARTISIPASI (Full Width)
+    // TABEL 2: KUALITAS PELAYANAN (5 BARIS PAS)
     // ==========================================
 
-    // Header Tabel 2
+    // Header
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
@@ -296,34 +296,35 @@ try {
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
 
-    // Config Lebar Kolom Split
-    // Kita bagi 190 menjadi: Label(50) | Value(45) | Label(50) | Value(45)
+    // Config Lebar Split
     $wL = 50;
     $wV = 45;
 
-    // Baris 1: Partisipasi (Split)
+    // BARIS 2: Partisipasi (Split)
     $pdf->Cell($wL, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
     $pdf->Cell($wV, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 0, 'L');
     $pdf->Cell($wL, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wV, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
 
-    // Baris 2: Rincian Indeks (Split 3 Kolom)
-    // Label(50) | Val1(46.6) | Val2(46.6) | Val3(46.6)
-    $pdf->Cell(50, $rowH, ' Rincian Indeks (Skala 5)', 1, 0, 'L', true);
-    $pdf->Cell(46.6, $rowH, ' ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C');
-    $pdf->Cell(46.6, $rowH, ' Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C');
-    $pdf->Cell(46.8, $rowH, ' Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C'); // Sisa lebar
+    // BARIS 3: Indeks Detail 1 (Split)
+    $pdf->Cell($wL, $rowH, ' Indeks Zona Integritas (ZI)', 1, 0, 'L', true);
+    $pdf->Cell($wV, $rowH, ' ' . ($idxZI > 0 ? $idxZI : '-') . ' / 5.00', 1, 0, 'L');
+    $pdf->Cell($wL, $rowH, ' Indeks Pelayanan Publik', 1, 0, 'L', true);
+    $pdf->Cell($wV, $rowH, ' ' . ($idxService > 0 ? $idxService : '-') . ' / 5.00', 1, 1, 'L');
 
-    // Baris 3: Total IKM & Rating (Split)
-    $pdf->SetFont('Arial', 'B', 9);
-    $pdf->Cell($wL, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . $ikmText, 1, 0, 'L');
-
-    $pdf->SetFont('Arial', '', 9);
+    // BARIS 4: Indeks Detail 2 (Split)
+    $pdf->Cell($wL, $rowH, ' Indeks Kualitas Akademik', 1, 0, 'L', true);
+    $pdf->Cell($wV, $rowH, ' ' . ($idxAcademic > 0 ? $idxAcademic : '-') . ' / 5.00', 1, 0, 'L');
     $pdf->Cell($wL, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
     $pdf->Cell($wV, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
 
-    $pdf->Ln(8); // Jarak ke tabel detail
+    // BARIS 5: IKM TOTAL (Full highlight)
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->SetFillColor(240, 240, 240);
+    $pdf->Cell($wL, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
+    $pdf->Cell($wV + $wL + $wV, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
+
+    $pdf->Ln(8);
 
     // === BAGIAN A: DATA SURVEI ===
     $pdf->SetFont('Arial', 'B', 10);
