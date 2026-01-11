@@ -21,6 +21,7 @@ EXCLUDE_PATTERNS=(
   "./public/images/*"
   "./public/videos/*"
   "./public/icons/*"
+  "./public/api/lib/*"
   "./package-lock.json" 
   "./pnpm-lock.yaml"
   "./bun.lockb"

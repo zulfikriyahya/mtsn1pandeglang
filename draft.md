@@ -113,10 +113,6 @@
           "url": "/program"
         },
         {
-          "name": "Layanan PTSP",
-          "url": "/pelayanan"
-        },
-        {
           "name": "Kalender Pendidikan",
           "url": "#"
         }
@@ -179,6 +175,18 @@
           "url": "/authors/yahya-zulfikri"
         },
         {
+          "name": "Layanan PTSP",
+          "url": "/pelayanan"
+        },
+        {
+          "name": "Survei Kepuasan",
+          "url": "/survei-kepuasan"
+        },
+        {
+          "name": "Pertanyaan Umum (FAQ)",
+          "url": "/faq"
+        },
+        {
           "name": "Galeri Foto",
           "url": "https://www.instagram.com/mtsn1_pandeglang/?hl=id"
         },
@@ -234,12 +242,12 @@
       "url": "/about"
     },
     {
-      "name": "Hubungi Kami",
-      "url": "/contact"
-    },
-    {
       "name": "Kebijakan Privasi",
       "url": "/kebijakan-privasi"
+    },
+    {
+      "name": "Pertanyaan Umum (FAQ)",
+      "url": "/faq"
     }
   ]
 }
@@ -2430,6 +2438,102 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 ---
 
+### File: `./src/content/pages/faq.mdx`
+
+```markdown
+---
+title: "Pertanyaan Umum (FAQ)"
+meta_title: "FAQ - Pertanyaan Umum MTs Negeri 1 Pandeglang"
+description: "Temukan jawaban atas pertanyaan yang sering diajukan mengenai Pendaftaran (PPDB), Kurikulum, Ekstrakurikuler, dan Layanan di MTs Negeri 1 Pandeglang."
+draft: false
+---
+
+Berikut adalah daftar pertanyaan yang sering diajukan oleh calon siswa, orang tua/wali murid, dan masyarakat umum. Silakan klik pada pertanyaan untuk melihat jawabannya.
+
+### Penerimaan Peserta Didik Baru (PPDB)
+
+<Accordion client:load title="Kapan pendaftaran siswa baru (PPDB) dibuka?">
+  Pendaftaran Peserta Didik Baru (PPDB) biasanya dibuka mulai bulan **Februari
+  hingga Mei** setiap tahunnya. Jadwal pasti dapat berubah menyesuaikan kalender
+  pendidikan Kemenag. Silakan pantau website resmi atau menu [PPDB
+  Online](https://daftar.mtsn1pandeglang.sch.id) untuk informasi terbaru.
+</Accordion>
+
+<Accordion client:load title="Apakah ada biaya pendaftaran?">
+  MTs Negeri 1 Pandeglang berkomitmen pada zona integritas. Biaya pendaftaran
+  dan operasional sekolah mengacu pada ketentuan DIPA dan Komite Madrasah yang
+  transparan. Untuk jalur reguler biasanya **Gratis** formulir. Detail rincian
+  daftar ulang akan disampaikan saat rapat wali murid.
+</Accordion>
+
+<Accordion client:load title="Apa saja jalur masuk yang tersedia?">
+  Kami membuka beberapa jalur: 1. **Jalur Prestasi:** Menggunakan sertifikat
+  kejuaraan akademik/non-akademik minimal tingkat Kabupaten. 2. **Jalur
+  Tahfidz:** Bagi siswa yang memiliki hafalan Al-Qur'an minimal 1-2 Juz. 3.
+  **Jalur Reguler:** Melalui tes seleksi akademik umum. 4. **Jalur Afirmasi:**
+  Untuk siswa dari keluarga kurang mampu (KIP/PKH).
+</Accordion>
+
+---
+
+### Akademik & Kurikulum
+
+<Accordion client:load title="Kurikulum apa yang digunakan di sini?">
+  Kami menggunakan **Kurikulum Merdeka** yang dipadukan dengan **Kurikulum
+  Kemenag**. Pendekatan kami adalah *Kurikulum Berbasis Cinta* yang
+  menyeimbangkan kecerdasan intelektual, emosional, dan spiritual.
+</Accordion>
+
+<Accordion client:load title="Apakah ada program kelas unggulan?">
+  Ya, kami memiliki beberapa program kelas khusus: - **Kelas Sains & Riset:**
+  Fokus pada pendalaman MIPA dan persiapan olimpiade. - **Kelas Tahfidz:** Fokus
+  pada hafalan Al-Qur'an intensif. - **Kelas Digital:** Pembelajaran berbasis IT
+  menggunakan perangkat tablet/laptop. - **Kelas Bilingual:** Pengantar bahasa
+  Arab dan Inggris.
+</Accordion>
+
+<Accordion client:load title="Bagaimana jam belajar di MTsN 1 Pandeglang?">
+  Kegiatan Belajar Mengajar (KBM) dimulai pukul **07.00 WIB** (diawali dengan
+  pembiasaan sholat Dhuha & Tadarus) dan berakhir pukul **14.30 WIB**. Untuk
+  kegiatan ekstrakurikuler dilaksanakan setelah jam pelajaran selesai atau di
+  hari Sabtu.
+</Accordion>
+
+---
+
+### Sarana & Layanan
+
+<Accordion client:load title="Apakah boleh membawa HP ke madrasah?">
+  Secara umum, siswa **tidak diperkenankan** membawa Smartphone untuk
+  menghindari penyalahgunaan dan gangguan fokus belajar, kecuali ada instruksi
+  khusus dari guru mata pelajaran untuk kebutuhan KBM Digital (biasanya
+  dititipkan di loker kelas/wali kelas).
+</Accordion>
+
+<Accordion client:load title="Bagaimana cara melegalisir ijazah alumni?">
+  Kami sudah memiliki layanan **PTSP (Pelayanan Terpadu Satu Pintu)**. Alumni
+  bisa datang langsung membawa fotokopi ijazah asli ke gedung PTSP pada jam
+  kerja (Senin-Jumat, 08.00 - 15.00 WIB). Layanan ini **Gratis** dan bisa
+  ditunggu (±15 menit).
+</Accordion>
+
+<Accordion client:load title="Apakah tersedia Asrama/Pondok Pesantren?">
+  Saat ini MTs Negeri 1 Pandeglang belum menyediakan asrama internal. Namun,
+  banyak siswa kami yang tinggal di pondok pesantren di sekitar lingkungan
+  madrasah (Ciekek, Kaduhejo, dll) yang bermitra dengan masyarakat sekitar.
+</Accordion>
+
+---
+
+<Notice type="info">
+  Tidak menemukan jawaban yang Anda cari? Silakan hubungi kami langsung melalui
+  WhatsApp PTSP di pojok kanan bawah atau melalui halaman [Hubungi
+  Kami](/contact).
+</Notice>
+```
+
+---
+
 ### File: `./src/content/pages/footsal-club.mdx`
 
 ```markdown
@@ -3053,6 +3157,8 @@ description: "Akses layanan administrasi pendidikan satu pintu yang modern, tran
 draft: false
 ---
 
+import ServiceRating from "@/helpers/ServiceRating";
+
 ### Birokrasi Bersih, Melayani Sepenuh Hati
 
 **"Cepat, Tepat, Transparan, dan Akuntabel"**
@@ -3116,6 +3222,10 @@ Kami mendesain ruang PTSP senyaman lobi perbankan untuk kenyamanan Anda:
 - Akses ramah disabilitas (kursi roda & jalur landai).
 
 ---
+
+<div className="my-10 max-w-lg mx-auto">
+  <ServiceRating client:load />
+</div>
 
 > "Kepuasan Anda adalah kebanggaan kami. Kami hadir untuk memangkas birokrasi, bukan menambahnya. PTSP MTs Negeri 1 Pandeglang siap melayani dengan senyum, salam, dan sapa."
 >
@@ -4834,6 +4944,985 @@ const { className }: { className?: string } = Astro.props;
 
 ---
 
+### File: `./src/layouts/helpers/AdminDashboard.tsx`
+
+```tsx
+import React, { useEffect, useState, useMemo } from "react";
+import {
+  FaDownload,
+  FaSignOutAlt,
+  FaEye,
+  FaStar,
+  FaChartLine,
+  FaPoll,
+  FaSort,
+  FaSortUp,
+  FaSortDown,
+  FaSearch,
+  FaChevronLeft,
+  FaChevronRight,
+  FaExclamationTriangle,
+  FaTimes,
+  FaExternalLinkAlt,
+  FaQuoteLeft,
+} from "react-icons/fa";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+import { Bar, Pie, Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+);
+
+interface User {
+  name: string;
+  email: string;
+  picture: string;
+}
+
+// --- HELPER: FORMAT TANGGAL ---
+const formatDateIndo = (dateString: string) => {
+  if (!dateString) return "-";
+  try {
+    const date = new Date(
+      dateString.includes("Z")
+        ? dateString
+        : dateString.replace(" ", "T") + "Z",
+    );
+    return new Intl.DateTimeFormat("id-ID", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Jakarta",
+      timeZoneName: "short",
+    })
+      .format(date)
+      .replace("pukul", "");
+  } catch (e) {
+    return dateString;
+  }
+};
+
+const AdminDashboard = () => {
+  // --- STATE HOOKS (HARUS DI PALING ATAS) ---
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // State Modal
+  const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
+    null,
+  );
+
+  // State Filter PDF
+  const [selectedMonth, setSelectedMonth] = useState(
+    () => new Date().getMonth() + 1,
+  );
+  const [selectedYear, setSelectedYear] = useState(() =>
+    new Date().getFullYear(),
+  );
+
+  // --- GOOGLE AUTH INIT ---
+  const initializeGoogleButton = () => {
+    const btnContainer = document.getElementById("googleBtn");
+    if (!btnContainer) return;
+    /* @ts-ignore */
+    if (window.google && window.google.accounts) {
+      /* @ts-ignore */
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+        auto_select: false,
+        ui_mode: "popup",
+      });
+      /* @ts-ignore */
+      window.google.accounts.id.renderButton(btnContainer, {
+        theme: "outline",
+        size: "large",
+        width: 250,
+      });
+    }
+  };
+
+  const handleCredentialResponse = async (response: any) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth.php?action=login", {
+        method: "POST",
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      const result = await res.json();
+      if (result.status === "success") {
+        setUser(result.user);
+        fetchStats();
+      } else {
+        alert(result.message);
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan.");
+    }
+    setLoading(false);
+  };
+
+  const fetchStats = async () => {
+    setErrorMsg(null);
+    try {
+      const res = await fetch("/api/admin.php?action=stats");
+      if (!res.ok) throw new Error(`Server Error: ${res.status}`);
+      const json = await res.json();
+      if (json.status === "error") throw new Error(json.message);
+      setData(json);
+    } catch (e: any) {
+      setErrorMsg(e.message || "Gagal memuat data.");
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    const init = async () => {
+      try {
+        const authRes = await fetch("/api/auth.php?action=check");
+        const authData = await authRes.json();
+        if (isMounted) {
+          if (authData.status === "authenticated") {
+            setUser(authData.user);
+            fetchStats();
+          } else {
+            if (!document.getElementById("google-client-script")) {
+              const script = document.createElement("script");
+              script.src = "https://accounts.google.com/gsi/client";
+              script.async = true;
+              script.id = "google-client-script";
+              script.onload = initializeGoogleButton;
+              document.body.appendChild(script);
+            } else {
+              setTimeout(initializeGoogleButton, 500);
+            }
+          }
+          setLoading(false);
+        }
+      } catch (e) {
+        if (isMounted) setErrorMsg("Gagal menghubungi server autentikasi.");
+        setLoading(false);
+      }
+    };
+    init();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth.php?action=logout");
+    setUser(null);
+    window.location.reload();
+  };
+
+  const downloadReport = (type: string) => {
+    window.open(`/api/admin.php?action=export&type=${type}`, "_blank");
+  };
+
+  const printPDF = () => {
+    window.open(
+      `/api/print_pdf.php?month=${selectedMonth}&year=${selectedYear}`,
+      "_blank",
+    );
+  };
+
+  const openDetail = (item: any, type: "feedback" | "survey") => {
+    setSelectedItem(item);
+    setModalType(type);
+  };
+
+  const closeDetail = () => {
+    setSelectedItem(null);
+    setModalType(null);
+  };
+
+  // --- RENDER LOGIC ---
+  if (loading)
+    return (
+      <div className="text-center p-12">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+        Memuat Sistem...
+      </div>
+    );
+
+  if (!user) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+        <div className="w-full max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-xl dark:border-darkmode-border dark:bg-darkmode-light">
+          <img
+            src="/images/brand-lightmode.png"
+            alt="Logo"
+            className="mx-auto mb-6 h-12"
+          />
+          <h2 className="h4 mb-2">Portal Admin</h2>
+          <div className="flex justify-center h-[50px]">
+            <div id="googleBtn"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen pb-12 relative">
+      {/* Header */}
+      <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          <img
+            src={user.picture}
+            alt={user.name}
+            className="h-12 w-12 rounded-full border border-gray-200 shadow-sm"
+          />
+          <div>
+            <h3 className="h5 mb-0 font-bold">{user.name}</h3>
+            <p className="text-sm text-text-light">{user.email}</p>
+          </div>
+        </div>
+
+        {/* PDF Controls */}
+        <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(Number(e.target.value))}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
+          >
+            {[
+              "Januari",
+              "Februari",
+              "Maret",
+              "April",
+              "Mei",
+              "Juni",
+              "Juli",
+              "Agustus",
+              "September",
+              "Oktober",
+              "November",
+              "Desember",
+            ].map((m, i) => (
+              <option key={i} value={i + 1}>
+                {m}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
+          >
+            {[2024, 2025, 2026].map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+
+          <button
+            onClick={printPDF}
+            className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden whitespace-nowrap"
+          >
+            <FaDownload /> PDF
+          </button>
+          <button
+            onClick={handleLogout}
+            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap"
+          >
+            <FaSignOutAlt /> Keluar
+          </button>
+        </div>
+      </div>
+
+      {errorMsg && (
+        <div className="mb-8 rounded-xl bg-red-50 p-4 border border-red-200 text-red-700 flex items-center gap-3">
+          <FaExclamationTriangle className="text-xl" />
+          <div>
+            <p className="font-bold">Gagal memuat data</p>
+            <p className="text-sm">{errorMsg}</p>
+            <button
+              onClick={fetchStats}
+              className="mt-2 text-xs underline hover:text-red-900"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        </div>
+      )}
+
+      {data && (
+        <div className="animate-fade-in">
+          {/* Overview Cards */}
+          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard
+              label="Total Kunjungan"
+              value={data.overview.visits.toLocaleString()}
+              icon={<FaEye />}
+              color="text-blue-500"
+              bg="bg-blue-50 dark:bg-blue-900/20"
+            />
+            <StatCard
+              label="Artikel Dibaca"
+              value={data.overview.posts_count.toLocaleString()}
+              icon={<FaChartLine />}
+              color="text-green-500"
+              bg="bg-green-50 dark:bg-green-900/20"
+            />
+            <StatCard
+              label="Total Ulasan"
+              value={data.overview.feedback_count.toLocaleString()}
+              icon={<FaStar />}
+              color="text-yellow-500"
+              bg="bg-yellow-50 dark:bg-yellow-900/20"
+            />
+            <StatCard
+              label="Responden Survei"
+              value={data.overview.survey_count.toLocaleString()}
+              icon={<FaPoll />}
+              color="text-purple-500"
+              bg="bg-purple-50 dark:bg-purple-900/20"
+            />
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="mb-8 border-b border-border dark:border-darkmode-border">
+            <nav className="-mb-px flex space-x-8 overflow-x-auto">
+              {[
+                { id: "overview", label: "Ringkasan Grafik" },
+                { id: "posts", label: "Data Artikel" },
+                { id: "feedback", label: "Data Ulasan" },
+                { id: "surveys", label: "Data Survei" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-gray-500 hover:border-gray-300 dark:text-gray-400"}`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          {/* TAB CONTENTS */}
+          {activeTab === "overview" && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6">Tren Aktivitas (30 Hari Terakhir)</h3>
+                <div className="h-72">
+                  <Line
+                    data={{
+                      labels: data.charts.activity.labels,
+                      datasets: [
+                        {
+                          label: "Ulasan Masuk",
+                          data: data.charts.activity.feedback,
+                          borderColor: "#eab308",
+                          backgroundColor: "rgba(234, 179, 8, 0.1)",
+                          fill: true,
+                          tension: 0.4,
+                        },
+                        {
+                          label: "Survei Masuk",
+                          data: data.charts.activity.survey,
+                          borderColor: "#8b5cf6",
+                          backgroundColor: "rgba(139, 92, 246, 0.1)",
+                          fill: true,
+                          tension: 0.4,
+                        },
+                      ],
+                    }}
+                    options={{ responsive: true, maintainAspectRatio: false }}
+                  />
+                </div>
+              </div>
+              <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6 text-center">
+                  Distribusi Rating Bintang
+                </h3>
+                <div className="h-64 flex justify-center">
+                  <Pie
+                    data={{
+                      labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
+                      datasets: [
+                        {
+                          data: [5, 4, 3, 2, 1].map(
+                            (r) => data.charts.stars[r],
+                          ),
+                          backgroundColor: [
+                            "#22c55e",
+                            "#3b82f6",
+                            "#eab308",
+                            "#f97316",
+                            "#ef4444",
+                          ],
+                          borderWidth: 1,
+                        },
+                      ],
+                    }}
+                    options={{ responsive: true, maintainAspectRatio: false }}
+                  />
+                </div>
+              </div>
+              <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
+                <div className="h-64">
+                  <Bar
+                    data={{
+                      labels: ["Zona Integritas", "Pelayanan", "Akademik"],
+                      datasets: [
+                        {
+                          label: "Skor (Skala 5)",
+                          data: [
+                            data.charts.survey_avg.zi,
+                            data.charts.survey_avg.service,
+                            data.charts.survey_avg.academic,
+                          ],
+                          backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
+                          borderRadius: 6,
+                        },
+                      ],
+                    }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      scales: { y: { min: 0, max: 5 } },
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "posts" && (
+            <DataTable
+              title="Statistik Artikel Populer"
+              data={data.tables.posts}
+              onDownload={() => downloadReport("posts")}
+              columns={[
+                {
+                  key: "slug",
+                  label: "Judul Artikel",
+                  render: (val: string) => val.replace(/-/g, " ").toUpperCase(),
+                },
+                {
+                  key: "views",
+                  label: "Jumlah Pembaca",
+                  sortable: true,
+                  className: "text-right font-bold",
+                },
+              ]}
+            />
+          )}
+
+          {activeTab === "feedback" && (
+            <DataTable
+              title="Data Ulasan Masuk"
+              data={data.tables.feedbacks}
+              searchKeys={["name", "message"]}
+              onDownload={() => downloadReport("feedback")}
+              columns={[
+                {
+                  key: "created_at",
+                  label: "Waktu",
+                  sortable: true,
+                  className: "w-48 text-sm text-gray-500",
+                  render: (val: string) => formatDateIndo(val),
+                },
+                {
+                  key: "name",
+                  label: "Nama Pengirim",
+                  sortable: true,
+                  className: "font-medium w-48",
+                },
+                {
+                  key: "rating",
+                  label: "Rating",
+                  sortable: true,
+                  className: "w-24",
+                  render: (val: number) => (
+                    <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
+                      {val} ★
+                    </span>
+                  ),
+                },
+                {
+                  key: "message",
+                  label: "Pesan / Kritik",
+                  render: (val: string, row: any) => (
+                    <div className="group relative">
+                      <p className="italic text-gray-600 dark:text-gray-400 line-clamp-1 max-w-xs">
+                        {val || "-"}
+                      </p>
+                      {val && val.length > 50 && (
+                        <button
+                          onClick={() => openDetail(row, "feedback")}
+                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                        >
+                          Lihat Detail{" "}
+                          <FaExternalLinkAlt className="text-[10px]" />
+                        </button>
+                      )}
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          )}
+
+          {activeTab === "surveys" && (
+            <DataTable
+              title="Data Survei Kepuasan"
+              data={data.tables.surveys}
+              searchKeys={["respondent_name", "feedback"]}
+              onDownload={() => downloadReport("survey")}
+              columns={[
+                {
+                  key: "created_at",
+                  label: "Waktu",
+                  sortable: true,
+                  className: "w-48 text-sm text-gray-500",
+                  render: (val: string) => formatDateIndo(val),
+                },
+                {
+                  key: "respondent_name",
+                  label: "Responden",
+                  sortable: true,
+                  className: "w-48",
+                  render: (_: any, row: any) => (
+                    <div>
+                      <div className="font-bold">{row.respondent_name}</div>
+                      <div className="text-xs text-gray-500">
+                        {row.respondent_role}
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "score_zi",
+                  label: "ZI",
+                  sortable: true,
+                  className: "text-center font-semibold text-blue-600 w-16",
+                },
+                {
+                  key: "score_service",
+                  label: "Layanan",
+                  sortable: true,
+                  className: "text-center font-semibold text-green-600 w-16",
+                },
+                {
+                  key: "score_academic",
+                  label: "Akademik",
+                  sortable: true,
+                  className: "text-center font-semibold text-purple-600 w-16",
+                },
+                {
+                  key: "feedback",
+                  label: "Masukan",
+                  render: (val: string, row: any) => (
+                    <div>
+                      <p className="italic text-gray-500 text-sm line-clamp-1 max-w-xs">
+                        {val || "-"}
+                      </p>
+                      {val && val.length > 50 && (
+                        <button
+                          onClick={() => openDetail(row, "survey")}
+                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                        >
+                          Lihat Detail{" "}
+                          <FaExternalLinkAlt className="text-[10px]" />
+                        </button>
+                      )}
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          )}
+        </div>
+      )}
+
+      {/* DETAIL MODAL POPUP */}
+      {selectedItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+                  Detail{" "}
+                  {modalType === "feedback" ? "Ulasan" : "Masukan Survei"}
+                </h3>
+                <p className="text-xs text-gray-500 mt-1">
+                  {formatDateIndo(selectedItem.created_at)}
+                </p>
+              </div>
+              <button
+                onClick={closeDetail}
+                className="text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="h-12 w-12 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
+                  {(selectedItem.name || selectedItem.respondent_name || "A")
+                    .charAt(0)
+                    .toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-bold text-lg text-gray-800 dark:text-white">
+                    {selectedItem.name || selectedItem.respondent_name}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {selectedItem.respondent_role || "Pengunjung / Wali Murid"}
+                  </p>
+
+                  {modalType === "feedback" && (
+                    <div className="mt-2 flex gap-1">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <FaStar
+                          key={s}
+                          className={
+                            s <= selectedItem.rating
+                              ? "text-yellow-400"
+                              : "text-gray-200"
+                          }
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Message Box */}
+              <div className="relative rounded-xl bg-gray-50 dark:bg-white/5 p-6 border border-gray-100 dark:border-darkmode-border">
+                <FaQuoteLeft className="absolute top-4 left-4 text-gray-200 dark:text-gray-600 text-2xl" />
+                <div className="relative z-10">
+                  <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                    Isi Pesan:
+                  </p>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                    {modalType === "feedback"
+                      ? selectedItem.message
+                      : selectedItem.feedback}
+                  </p>
+                </div>
+              </div>
+
+              {/* Stats for Survey */}
+              {modalType === "survey" && (
+                <div className="grid grid-cols-3 gap-4 mt-6">
+                  <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
+                    <div className="text-xs text-blue-600 font-bold uppercase">
+                      ZI
+                    </div>
+                    <div className="text-xl font-bold text-blue-700">
+                      {selectedItem.score_zi}
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg dark:bg-green-900/20">
+                    <div className="text-xs text-green-600 font-bold uppercase">
+                      Layanan
+                    </div>
+                    <div className="text-xl font-bold text-green-700">
+                      {selectedItem.score_service}
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-purple-50 rounded-lg dark:bg-purple-900/20">
+                    <div className="text-xs text-purple-600 font-bold uppercase">
+                      Akademik
+                    </div>
+                    <div className="text-xl font-bold text-purple-700">
+                      {selectedItem.score_academic}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-between items-center text-xs text-gray-400 border-t border-gray-100 dark:border-darkmode-border">
+              <span>IP: {selectedItem.ip_address}</span>
+              <button onClick={closeDetail} className="btn btn-primary btn-sm">
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- SUB COMPONENTS ---
+const StatCard = ({ label, value, icon, color, bg }: any) => (
+  <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
+    <div>
+      <p className="text-sm font-medium text-text-light">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-text-dark dark:text-white">
+        {value}
+      </p>
+    </div>
+    <div
+      className={`flex h-12 w-12 items-center justify-center rounded-lg ${bg} text-xl ${color}`}
+    >
+      {icon}
+    </div>
+  </div>
+);
+
+// --- DATA TABLE ---
+interface Column {
+  key: string;
+  label: string;
+  sortable?: boolean;
+  className?: string;
+  render?: (value: any, row: any) => React.ReactNode;
+}
+
+const DataTable = ({
+  title,
+  data,
+  columns,
+  searchKeys = ["slug"],
+  onDownload,
+}: {
+  title: string;
+  data: any[];
+  columns: Column[];
+  searchKeys?: string[];
+  onDownload: () => void;
+}) => {
+  const [search, setSearch] = useState("");
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const filteredData = useMemo(() => {
+    if (!search) return data;
+    return data.filter((row) =>
+      searchKeys.some((key) =>
+        String(row[key] || "")
+          .toLowerCase()
+          .includes(search.toLowerCase()),
+      ),
+    );
+  }, [data, search, searchKeys]);
+
+  const sortedData = useMemo(() => {
+    if (!sortConfig) return filteredData;
+    return [...filteredData].sort((a, b) => {
+      let aVal = a[sortConfig.key];
+      let bVal = b[sortConfig.key];
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [filteredData, sortConfig]);
+
+  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
+  const paginatedData = sortedData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage,
+  );
+  const requestSort = (key: string) => {
+    setSortConfig({
+      key,
+      direction:
+        sortConfig?.key === key && sortConfig.direction === "asc"
+          ? "desc"
+          : "asc",
+    });
+  };
+
+  return (
+    <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden dark:bg-darkmode-light dark:border-darkmode-border">
+      <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between border-b border-border dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
+        <h3 className="text-lg font-bold">{title}</h3>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative">
+            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Cari data..."
+              className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus:border-primary focus:outline-none dark:bg-darkmode-body dark:border-darkmode-border"
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
+          <button
+            onClick={onDownload}
+            className="btn btn-primary btn-sm flex items-center justify-center gap-2 bg-green-600 border-green-600 hover:bg-green-700"
+          >
+            <FaDownload /> Excel
+          </button>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
+            <tr>
+              <th className="px-6 py-3 w-10 text-center">#</th>
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  className={`px-6 py-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${col.className || ""}`}
+                  onClick={() => col.sortable && requestSort(col.key)}
+                >
+                  <div
+                    className={`flex items-center gap-1 ${col.className?.includes("text-center") ? "justify-center" : ""} ${col.className?.includes("text-right") ? "justify-end" : ""}`}
+                  >
+                    {col.label}
+                    {col.sortable && (
+                      <span className="text-gray-400">
+                        {sortConfig?.key === col.key ? (
+                          sortConfig.direction === "asc" ? (
+                            <FaSortUp />
+                          ) : (
+                            <FaSortDown />
+                          )
+                        ) : (
+                          <FaSort />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border dark:divide-darkmode-border">
+            {paginatedData.length > 0 ? (
+              paginatedData.map((row, i) => (
+                <tr
+                  key={i}
+                  className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                >
+                  <td className="px-6 py-4 text-center text-gray-400">
+                    {(currentPage - 1) * rowsPerPage + i + 1}
+                  </td>
+                  {columns.map((col) => (
+                    <td
+                      key={col.key}
+                      className={`px-6 py-4 ${col.className || ""}`}
+                    >
+                      {col.render
+                        ? col.render(row[col.key], row)
+                        : row[col.key]}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={columns.length + 1}
+                  className="px-6 py-10 text-center text-gray-500"
+                >
+                  Tidak ada data ditemukan.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-gray-50 p-4 dark:bg-white/5 dark:border-darkmode-border sm:flex-row">
+        <div className="text-xs text-gray-500">
+          Menampilkan{" "}
+          <span className="font-bold text-gray-700 dark:text-gray-300">
+            {(currentPage - 1) * rowsPerPage + 1}
+          </span>{" "}
+          sampai{" "}
+          <span className="font-bold text-gray-700 dark:text-gray-300">
+            {Math.min(currentPage * rowsPerPage, sortedData.length)}
+          </span>{" "}
+          dari{" "}
+          <span className="font-bold text-gray-700 dark:text-gray-300">
+            {sortedData.length}
+          </span>{" "}
+          data
+        </div>
+        <div className="flex items-center gap-2">
+          <select
+            className="rounded border border-border bg-white px-2 py-1 text-xs outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
+            value={rowsPerPage}
+            onChange={(e) => {
+              setRowsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+          <div className="flex rounded border border-border bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-white/10"
+            >
+              <FaChevronLeft className="text-xs" />
+            </button>
+            <span className="px-3 py-1 text-xs font-medium border-l border-r border-border dark:border-darkmode-border flex items-center">
+              Halaman {currentPage}
+            </span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+              className="px-3 py-1 hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-white/10"
+            >
+              <FaChevronRight className="text-xs" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;
+```
+
+---
+
 ### File: `./src/layouts/helpers/CardViewCounter.tsx`
 
 ```tsx
@@ -6100,6 +7189,646 @@ const SearchResult = ({
 };
 
 export default SearchResult;
+```
+
+---
+
+### File: `./src/layouts/helpers/ServiceRating.tsx`
+
+```tsx
+import React, { useState, useEffect } from "react";
+import { FaStar, FaUserCheck } from "react-icons/fa";
+
+const ServiceRating = () => {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "submitting" | "success" | "error" | "submitted"
+  >("loading");
+  const [responseMsg, setResponseMsg] = useState("");
+
+  // State untuk menyimpan data statistik
+  const [stats, setStats] = useState({ average: 0, total: 0 });
+
+  // 1. Cek Status saat load
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const res = await fetch("/api/feedback.php");
+        const data = await res.json();
+
+        if (data.stats) setStats(data.stats);
+
+        if (data.has_submitted) {
+          setStatus("submitted");
+        } else {
+          setStatus("idle");
+        }
+      } catch (error) {
+        setStatus("error");
+      }
+    };
+    checkStatus();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rating === 0) {
+      alert("Mohon berikan bintang terlebih dahulu.");
+      return;
+    }
+
+    setStatus("submitting");
+
+    try {
+      const res = await fetch("/api/feedback.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, rating, message }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.status === "success") {
+        setStatus("submitted"); // Ubah ke submitted agar tampil statistik
+        if (data.stats) setStats(data.stats);
+        setResponseMsg(data.message);
+      } else {
+        setStatus("error");
+        setResponseMsg(data.message || "Terjadi kesalahan.");
+      }
+    } catch (error) {
+      setStatus("error");
+      setResponseMsg("Gagal menghubungi server.");
+    }
+  };
+
+  // Tampilan Hasil Statistik (Jika sudah submit)
+  if (status === "submitted") {
+    return (
+      <div className="rounded-xl border border-border bg-white p-8 shadow-sm text-center dark:border-darkmode-border dark:bg-darkmode-body">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600 mb-4 animate-bounce">
+          <FaUserCheck size={30} />
+        </div>
+        <h3 className="h4 mb-2 text-green-700 dark:text-green-400">
+          Terima Kasih!
+        </h3>
+        <p className="mb-6 text-sm text-text-light">
+          Anda sudah memberikan penilaian untuk layanan kami.
+        </p>
+
+        <div className="bg-light dark:bg-darkmode-light p-6 rounded-lg">
+          <p className="text-sm font-semibold mb-2 uppercase tracking-wide text-text-light">
+            Indeks Kepuasan Masyarakat
+          </p>
+          <div className="flex justify-center items-end gap-2 mb-2">
+            <span className="text-5xl font-bold text-primary">
+              {stats.average}
+            </span>
+            <span className="text-xl text-gray-400 mb-1">/ 5.0</span>
+          </div>
+          <div className="flex justify-center gap-1 mb-4">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <FaStar
+                key={star}
+                size={20}
+                className={
+                  star <= Math.round(stats.average)
+                    ? "text-yellow-400"
+                    : "text-gray-300"
+                }
+              />
+            ))}
+          </div>
+          <p className="text-xs text-text-light">
+            Berdasarkan {stats.total} responden
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "loading")
+    return <div className="text-center p-8">Memuat data...</div>;
+
+  return (
+    <div className="rounded-xl border border-border bg-white p-8 shadow-sm dark:border-darkmode-border dark:bg-darkmode-body">
+      <h3 className="h4 mb-2 text-center">Beri Penilaian Pelayanan</h3>
+      <p className="mb-6 text-center text-sm text-text-light dark:text-darkmode-text-light">
+        Bagaimana pengalaman Anda hari ini?
+      </p>
+
+      <form onSubmit={handleSubmit}>
+        <div className="mb-6 flex justify-center gap-2">
+          {[...Array(5)].map((_, index) => {
+            const ratingValue = index + 1;
+            return (
+              <label key={index} className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="rating"
+                  className="hidden"
+                  value={ratingValue}
+                  onClick={() => setRating(ratingValue)}
+                />
+                <FaStar
+                  className="transition-transform duration-200 hover:scale-110"
+                  size={35}
+                  color={
+                    ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"
+                  }
+                  onMouseEnter={() => setHover(ratingValue)}
+                  onMouseLeave={() => setHover(0)}
+                />
+              </label>
+            );
+          })}
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <input
+              type="text"
+              className="form-input py-2 text-sm"
+              placeholder="Nama Anda (Opsional)"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div>
+            <textarea
+              className="form-input py-2 text-sm"
+              rows={3}
+              placeholder="Kritik & Saran..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            ></textarea>
+          </div>
+        </div>
+
+        {status === "error" && (
+          <p className="mt-4 text-center text-sm text-red-500">{responseMsg}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={status === "submitting"}
+          className="btn btn-primary mt-6 w-full"
+        >
+          {status === "submitting" ? "Mengirim..." : "Kirim Penilaian"}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default ServiceRating;
+```
+
+---
+
+### File: `./src/layouts/helpers/SurveyWizard.tsx`
+
+```tsx
+import React, { useState, useEffect } from "react";
+import {
+  FaCheck,
+  FaChevronLeft,
+  FaChevronRight,
+  FaUser,
+  FaBuilding,
+  FaConciergeBell,
+  FaGraduationCap,
+  FaPaperPlane,
+  FaChartBar,
+} from "react-icons/fa";
+
+// Data Pertanyaan (Sama seperti sebelumnya)
+const surveyData = [
+  {
+    id: "zi",
+    title: "Zona Integritas",
+    icon: <FaBuilding />,
+    description: "Penilaian terkait transparansi dan anti-korupsi.",
+    questions: [
+      {
+        id: "zi_1",
+        text: "Tidak ada pungutan liar (pungli) atau gratifikasi dalam layanan.",
+      },
+      {
+        id: "zi_2",
+        text: "Prosedur pelayanan jelas, transparan, dan mudah dipahami.",
+      },
+      {
+        id: "zi_3",
+        text: "Petugas menolak segala bentuk pemberian imbalan di luar ketentuan.",
+      },
+    ],
+  },
+  {
+    id: "service",
+    title: "Pelayanan PTSP",
+    icon: <FaConciergeBell />,
+    description: "Kualitas layanan administrasi di ruang PTSP.",
+    questions: [
+      {
+        id: "srv_1",
+        text: "Petugas melayani dengan ramah, sopan, dan santun.",
+      },
+      { id: "srv_2", text: "Ruang tunggu pelayanan nyaman dan bersih." },
+      {
+        id: "srv_3",
+        text: "Layanan selesai tepat waktu sesuai standar yang dijanjikan.",
+      },
+    ],
+  },
+  {
+    id: "academic",
+    title: "Akademik",
+    icon: <FaGraduationCap />,
+    description: "Kualitas pembelajaran dan kompetensi guru.",
+    questions: [
+      { id: "acd_1", text: "Guru menguasai materi pembelajaran dengan baik." },
+      {
+        id: "acd_2",
+        text: "Komunikasi antara sekolah dan wali murid berjalan lancar.",
+      },
+      {
+        id: "acd_3",
+        text: "Fasilitas pembelajaran mendukung kebutuhan siswa.",
+      },
+    ],
+  },
+];
+
+const SurveyWizard = () => {
+  const [step, setStep] = useState(0);
+  const [profile, setProfile] = useState({ name: "", role: "Wali Murid" });
+  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [feedback, setFeedback] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "submitting" | "success" | "submitted" | "error"
+  >("loading");
+  const [stats, setStats] = useState({
+    zi: 0,
+    service: 0,
+    academic: 0,
+    total: 0,
+  });
+
+  const totalSteps = surveyData.length + 2;
+
+  // 1. Fetch Status & Stats
+  useEffect(() => {
+    const fetchSurveyData = async () => {
+      try {
+        const res = await fetch("/api/survey.php");
+        const data = await res.json();
+
+        if (data.stats) setStats(data.stats);
+
+        if (data.has_submitted) {
+          setStatus("submitted");
+        } else {
+          setStatus("idle");
+        }
+      } catch (error) {
+        setStatus("error");
+      }
+    };
+    fetchSurveyData();
+  }, []);
+
+  const handleScore = (qId: string, val: number) => {
+    setAnswers((prev) => ({ ...prev, [qId]: val }));
+  };
+
+  const calculateScores = () => {
+    const scores: Record<string, number> = {};
+    surveyData.forEach((section) => {
+      let sum = 0;
+      section.questions.forEach((q) => {
+        sum += answers[q.id] || 0;
+      });
+      scores[section.id] = parseFloat(
+        (sum / section.questions.length).toFixed(2),
+      );
+    });
+    return scores;
+  };
+
+  const handleSubmit = async () => {
+    setStatus("submitting");
+    const finalData = {
+      profile,
+      answers,
+      feedback,
+      scores: calculateScores(),
+    };
+
+    try {
+      const res = await fetch("/api/survey.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalData),
+      });
+      const result = await res.json();
+      if (res.ok && result.status === "success") {
+        if (result.stats) setStats(result.stats);
+        setStatus("submitted"); // Switch ke tampilan hasil
+      } else {
+        setStatus("error");
+      }
+    } catch (e) {
+      setStatus("error");
+    }
+  };
+
+  // Tampilan Hasil Survei (Statistik)
+  if (status === "submitted" || status === "success") {
+    return (
+      <div className="max-w-3xl mx-auto bg-white dark:bg-darkmode-light rounded-xl p-8 border border-border dark:border-darkmode-border shadow-lg animate-fade-in">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-100 text-blue-600 mb-6">
+            <FaChartBar className="text-4xl" />
+          </div>
+          <h2 className="h3 mb-2">Hasil Survei Kepuasan</h2>
+          <p className="text-text-light dark:text-darkmode-text-light">
+            Terima kasih telah berpartisipasi. Berikut adalah indeks kepuasan
+            rata-rata dari <strong>{stats.total}</strong> responden.
+          </p>
+        </div>
+
+        <div className="space-y-8">
+          {/* Result Item: ZI */}
+          <div>
+            <div className="flex justify-between items-end mb-2">
+              <h4 className="text-lg flex items-center gap-2">
+                <FaBuilding className="text-primary" /> Zona Integritas
+              </h4>
+              <span className="font-bold text-2xl text-primary">
+                {stats.zi}
+                <span className="text-sm text-gray-400 font-normal">/5</span>
+              </span>
+            </div>
+            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+              <div
+                className="h-full bg-blue-500 transition-all duration-1000"
+                style={{ width: `${(stats.zi / 5) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Result Item: Service */}
+          <div>
+            <div className="flex justify-between items-end mb-2">
+              <h4 className="text-lg flex items-center gap-2">
+                <FaConciergeBell className="text-primary" /> Pelayanan PTSP
+              </h4>
+              <span className="font-bold text-2xl text-primary">
+                {stats.service}
+                <span className="text-sm text-gray-400 font-normal">/5</span>
+              </span>
+            </div>
+            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+              <div
+                className="h-full bg-green-500 transition-all duration-1000"
+                style={{ width: `${(stats.service / 5) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Result Item: Academic */}
+          <div>
+            <div className="flex justify-between items-end mb-2">
+              <h4 className="text-lg flex items-center gap-2">
+                <FaGraduationCap className="text-primary" /> Akademik
+              </h4>
+              <span className="font-bold text-2xl text-primary">
+                {stats.academic}
+                <span className="text-sm text-gray-400 font-normal">/5</span>
+              </span>
+            </div>
+            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+              <div
+                className="h-full bg-purple-500 transition-all duration-1000"
+                style={{ width: `${(stats.academic / 5) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-12">
+          <a href="/" className="btn btn-outline-primary">
+            Kembali ke Beranda
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "loading")
+    return <div className="text-center p-12">Memuat survei...</div>;
+
+  // Render Logic Form (Sama seperti sebelumnya)
+  const isProfileStep = step === 0;
+  const isFeedbackStep = step === totalSteps - 1;
+  const isSurveyStep = step > 0 && step < totalSteps - 1;
+  const currentSection = isSurveyStep ? surveyData[step - 1] : null;
+
+  const canProceed = () => {
+    if (isProfileStep) return profile.name.length > 2;
+    if (isSurveyStep && currentSection) {
+      return currentSection.questions.every((q) => answers[q.id]);
+    }
+    return true;
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      {/* Progress Bar */}
+      <div className="mb-8">
+        <div className="flex justify-between mb-2 text-xs font-semibold uppercase text-text-light dark:text-darkmode-text-light tracking-wide">
+          <span>Data Diri</span>
+          {surveyData.map((s) => (
+            <span key={s.id} className="hidden sm:inline">
+              {s.title}
+            </span>
+          ))}
+          <span>Selesai</span>
+        </div>
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+          <div
+            className="h-full bg-primary transition-all duration-500 ease-out"
+            style={{ width: `${((step + 1) / totalSteps) * 100}%` }}
+          ></div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border border-border dark:border-darkmode-border overflow-hidden">
+        {/* Header Section */}
+        <div className="bg-light dark:bg-darkmode-body px-8 py-6 border-b border-border dark:border-darkmode-border">
+          <h2 className="h4 flex items-center gap-3">
+            {isProfileStep && (
+              <>
+                <FaUser className="text-primary" /> Data Responden
+              </>
+            )}
+            {isSurveyStep && currentSection && (
+              <>
+                <span className="text-primary">{currentSection.icon}</span>{" "}
+                {currentSection.title}
+              </>
+            )}
+            {isFeedbackStep && (
+              <>
+                <FaPaperPlane className="text-primary" /> Kritik & Saran
+              </>
+            )}
+          </h2>
+          {isSurveyStep && currentSection && (
+            <p className="text-sm mt-1 text-text-light opacity-80">
+              {currentSection.description}
+            </p>
+          )}
+        </div>
+
+        {/* Content Body */}
+        <div className="p-8">
+          {/* STEP 1: PROFILE */}
+          {isProfileStep && (
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <label className="form-label text-sm">Nama Lengkap</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Masukkan nama Anda"
+                  value={profile.name}
+                  onChange={(e) =>
+                    setProfile({ ...profile, name: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label className="form-label text-sm">Peran Anda</label>
+                <select
+                  className="form-input cursor-pointer"
+                  value={profile.role}
+                  onChange={(e) =>
+                    setProfile({ ...profile, role: e.target.value })
+                  }
+                >
+                  <option>Wali Murid</option>
+                  <option>Siswa</option>
+                  <option>Alumni</option>
+                  <option>Tamu / Masyarakat Umum</option>
+                  <option>Guru / Staf</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2..N: SURVEY QUESTIONS */}
+          {isSurveyStep && currentSection && (
+            <div className="space-y-8 animate-fade-in">
+              {currentSection.questions.map((q, idx) => (
+                <div
+                  key={q.id}
+                  className="p-4 rounded-lg bg-light/50 dark:bg-darkmode-body/50 border border-transparent hover:border-border transition-all"
+                >
+                  <p className="font-medium mb-4">
+                    {idx + 1}. {q.text}
+                  </p>
+                  <div className="flex flex-wrap gap-2 sm:gap-4 justify-center sm:justify-start">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button
+                        key={val}
+                        onClick={() => handleScore(q.id, val)}
+                        className={`
+                          w-10 h-10 sm:w-12 sm:h-12 rounded-full font-bold text-sm sm:text-base transition-all
+                          ${
+                            answers[q.id] === val
+                              ? "bg-primary text-white scale-110 shadow-lg shadow-primary/40"
+                              : "bg-white dark:bg-darkmode-body border border-border dark:border-darkmode-border text-text-light hover:border-primary hover:text-primary"
+                          }
+                        `}
+                      >
+                        {val}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex justify-between mt-2 text-xs text-text-light px-1">
+                    <span>Sangat Buruk</span>
+                    <span>Sangat Baik</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* STEP FINAL: FEEDBACK */}
+          {isFeedbackStep && (
+            <div className="animate-fade-in">
+              <label className="form-label">
+                Apakah ada saran untuk perbaikan?
+              </label>
+              <textarea
+                rows={5}
+                className="form-input"
+                placeholder="Tuliskan pesan, kritik, atau saran Anda di sini..."
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+              ></textarea>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {status === "error" && (
+            <div className="mt-4 p-3 bg-red-100 text-red-700 rounded text-sm text-center">
+              Terjadi kesalahan (mungkin Anda sudah mengisi atau koneksi
+              terputus).
+            </div>
+          )}
+        </div>
+
+        {/* Footer Navigation */}
+        <div className="bg-light dark:bg-darkmode-body px-8 py-4 border-t border-border dark:border-darkmode-border flex justify-between items-center">
+          <button
+            onClick={() => setStep((prev) => prev - 1)}
+            disabled={step === 0 || status === "submitting"}
+            className="btn btn-outline-primary btn-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <FaChevronLeft className="text-xs" /> Kembali
+          </button>
+
+          {isFeedbackStep ? (
+            <button
+              onClick={handleSubmit}
+              disabled={status === "submitting"}
+              className="btn btn-primary btn-sm flex items-center gap-2"
+            >
+              {status === "submitting" ? "Mengirim..." : "Kirim Survei"}{" "}
+              <FaPaperPlane className="text-xs" />
+            </button>
+          ) : (
+            <button
+              onClick={() => setStep((prev) => prev + 1)}
+              disabled={!canProceed()}
+              className="btn btn-primary btn-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Lanjut <FaChevronRight className="text-xs" />
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SurveyWizard;
 ```
 
 ---
@@ -7833,6 +9562,33 @@ if (aboutIndex.data.draft) {
 
 ---
 
+### File: `./src/pages/admin/index.astro`
+
+```astro
+---
+import Base from "@/layouts/Base.astro";
+import AdminDashboard from "@/layouts/helpers/AdminDashboard";
+
+// Halaman ini bersifat statis di sisi Astro,
+// proteksi sebenarnya dilakukan di dalam komponen React (Client-side)
+// dan di PHP API (Server-side)
+---
+
+<Base
+  title="Admin Dashboard"
+  meta_title="Admin Panel - MTsN 1 Pandeglang"
+  noindex={true}
+>
+  <section class="section-sm bg-gray-50 dark:bg-darkmode-body min-h-screen">
+    <div class="container">
+      <AdminDashboard client:only="react" />
+    </div>
+  </section>
+</Base>
+```
+
+---
+
 ### File: `./src/pages/authors/index.astro`
 
 ```astro
@@ -8514,6 +10270,45 @@ const { banner, features } = homepage.data;
   </div>
 
   <TawkChat client:only="react" />
+</Base>
+```
+
+---
+
+### File: `./src/pages/survei-kepuasan.astro`
+
+```astro
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import SurveyWizard from "@/layouts/helpers/SurveyWizard";
+
+const title = "Survei Kepuasan Masyarakat";
+const description =
+  "Bantu kami meningkatkan kualitas layanan MTs Negeri 1 Pandeglang dengan mengisi survei kepuasan pelanggan secara online.";
+---
+
+<Base title={title} meta_title={title} description={description}>
+  <PageHeader title={title} />
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="lg:col-10">
+          <div class="mb-10 text-center">
+            <p class="text-lg">
+              Survei ini bertujuan untuk mengukur tingkat kepuasan masyarakat
+              terhadap penyelenggaraan pelayanan publik di <strong
+                >MTs Negeri 1 Pandeglang</strong
+              >. Identitas dan jawaban Anda dijamin kerahasiaannya.
+            </p>
+          </div>
+
+          <SurveyWizard client:only="react" />
+        </div>
+      </div>
+    </div>
+  </section>
 </Base>
 ```
 
@@ -9701,6 +11496,796 @@ export type Button = {
 
 ---
 
+### File: `./public/api/admin.php`
+
+```
+<?php
+session_start();
+date_default_timezone_set('Asia/Jakarta'); // Set Timezone Server ke Jakarta
+
+// Proteksi
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('HTTP/1.1 403 Forbidden');
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    exit;
+}
+
+$dbPath = __DIR__ . '/../../stats.db';
+
+try {
+    if (!class_exists('SQLite3')) {
+        throw new Exception("SQLite3 driver not installed.");
+    }
+
+    $db = new SQLite3($dbPath);
+    $action = $_GET['action'] ?? 'stats';
+
+    // === HELPER: Format Tanggal Indonesia ===
+    function formatTanggalIndo($timestamp)
+    {
+        // Asumsi timestamp dari DB adalah UTC, kita konversi ke Jakarta
+        try {
+            $dt = new DateTime($timestamp, new DateTimeZone('UTC'));
+            $dt->setTimezone(new DateTimeZone('Asia/Jakarta'));
+
+            $bulan = [
+                1 => 'Januari',
+                'Februari',
+                'Maret',
+                'April',
+                'Mei',
+                'Juni',
+                'Juli',
+                'Agustus',
+                'September',
+                'Oktober',
+                'November',
+                'Desember'
+            ];
+
+            $tgl = $dt->format('d');
+            $bln = $bulan[(int)$dt->format('m')];
+            $thn = $dt->format('Y');
+            $jam = $dt->format('H:i');
+
+            return "$tgl $bln $thn, $jam WIB";
+        } catch (Exception $e) {
+            return $timestamp;
+        }
+    }
+
+    // === HELPER: Grafik Harian (Waktu Jakarta) ===
+    function getSafeDailyActivity($db, $table, $days = 30)
+    {
+        $data = [];
+        // Generate tanggal 30 hari terakhir (Waktu Jakarta)
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-$i days"));
+            $data[$date] = 0;
+        }
+
+        try {
+            $check = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$table'");
+            if (!$check) return $data;
+
+            // Query dengan penyesuaian Timezone (+7 Jam untuk WIB)
+            // datetime(created_at, '+7 hours') mengubah UTC ke WIB sebelum di-group
+            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count
+                      FROM $table
+                      WHERE created_at >= date('now', '-$days days', '-7 hours')
+                      GROUP BY date";
+
+            $res = $db->query($query);
+            if ($res) {
+                while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                    if (isset($data[$row['date']])) {
+                        $data[$row['date']] = $row['count'];
+                    }
+                }
+            }
+        } catch (Exception $e) {
+        }
+        return $data;
+    }
+
+    if ($action === 'stats') {
+        header('Content-Type: application/json');
+
+        // 1. Overview Count
+        $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
+
+        $total_posts = 0;
+        if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='post_stats'")) {
+            $total_posts = $db->querySingle("SELECT COUNT(*) FROM post_stats") ?: 0;
+        }
+
+        $total_feedback = 0;
+        $stars = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+        if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='feedback'")) {
+            $total_feedback = $db->querySingle("SELECT COUNT(*) FROM feedback") ?: 0;
+            $resStar = $db->query("SELECT rating, COUNT(*) as count FROM feedback GROUP BY rating");
+            while ($row = $resStar->fetchArray(SQLITE3_ASSOC)) {
+                $stars[$row['rating']] = $row['count'];
+            }
+        }
+
+        $total_survey = 0;
+        $survey_avg = ['zi' => 0, 'service' => 0, 'academic' => 0];
+        if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'")) {
+            $total_survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses") ?: 0;
+            $avgQuery = $db->querySingle("SELECT AVG(score_zi) as zi, AVG(score_service) as service, AVG(score_academic) as academic FROM survey_responses", true);
+            if ($avgQuery) {
+                $survey_avg['zi'] = round($avgQuery['zi'] ?? 0, 2);
+                $survey_avg['service'] = round($avgQuery['service'] ?? 0, 2);
+                $survey_avg['academic'] = round($avgQuery['academic'] ?? 0, 2);
+            }
+        }
+
+        // 4. Activity Trends
+        $activity_feedback = getSafeDailyActivity($db, 'feedback');
+        $activity_survey = getSafeDailyActivity($db, 'survey_responses');
+
+        // 5. Raw Data (Dikirim Mentah UTC, diformat di Frontend)
+        $posts = [];
+        if ($total_posts > 0) {
+            $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
+            while ($row = $resPost->fetchArray(SQLITE3_ASSOC)) $posts[] = $row;
+        }
+
+        $feedbacks = [];
+        if ($total_feedback > 0) {
+            $resFeed = $db->query("SELECT * FROM feedback ORDER BY created_at DESC");
+            while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) $feedbacks[] = $row;
+        }
+
+        $surveys = [];
+        if ($total_survey > 0) {
+            $resSurv = $db->query("SELECT * FROM survey_responses ORDER BY created_at DESC");
+            while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) $surveys[] = $row;
+        }
+
+        echo json_encode([
+            'overview' => [
+                'visits' => $visits,
+                'posts_count' => $total_posts,
+                'feedback_count' => $total_feedback,
+                'survey_count' => $total_survey
+            ],
+            'charts' => [
+                'stars' => $stars,
+                'survey_avg' => $survey_avg,
+                'activity' => [
+                    'labels' => array_keys($activity_feedback),
+                    'feedback' => array_values($activity_feedback),
+                    'survey' => array_values($activity_survey)
+                ]
+            ],
+            'tables' => [
+                'posts' => $posts,
+                'feedbacks' => $feedbacks,
+                'surveys' => $surveys
+            ]
+        ]);
+    }
+
+    // === EXPORT LOGIC (FORMAT INDONESIA) ===
+    elseif ($action === 'export') {
+        $type = $_GET['type'] ?? '';
+        $filename = "laporan_{$type}_" . date('Y-m-d_His') . ".csv";
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+        // Tambahkan BOM untuk Excel agar bisa baca karakter UTF-8 dengan benar
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        if ($type === 'feedback') {
+            fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Rating', 'Pesan', 'IP Address']);
+            $res = $db->query("SELECT id, created_at, name, rating, message, ip_address FROM feedback ORDER BY created_at DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $row['created_at'] = formatTanggalIndo($row['created_at']);
+                fputcsv($output, $row);
+            }
+        } elseif ($type === 'survey') {
+            fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Peran', 'Skor ZI', 'Skor Pelayanan', 'Skor Akademik', 'Masukan', 'IP Address']);
+            $res = $db->query("SELECT id, created_at, respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, ip_address FROM survey_responses ORDER BY created_at DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $row['created_at'] = formatTanggalIndo($row['created_at']);
+                fputcsv($output, $row);
+            }
+        } elseif ($type === 'posts') {
+            fputcsv($output, ['Judul Artikel / Slug', 'Jumlah Pembaca']);
+            $res = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) fputcsv($output, $row);
+        }
+        fclose($output);
+        exit;
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+}
+
+```
+
+---
+
+### File: `./public/api/auth.php`
+
+```
+<?php
+session_start();
+header('Content-Type: application/json');
+header('Cross-Origin-Opener-Policy: same-origin-allow-popups');
+header('Referrer-Policy: no-referrer-when-downgrade');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET');
+
+// Konfigurasi Email Admin (Hardcode untuk keamanan ganda atau ambil dari env jika server support)
+$ALLOWED_EMAIL = 'dev.mtsn1pandeglang@gmail.com';
+
+$action = $_GET['action'] ?? '';
+
+if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+    $id_token = $data['credential'] ?? '';
+
+    if (!$id_token) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Token tidak ditemukan']);
+        exit;
+    }
+
+    // Verifikasi Token langsung ke Google (Tanpa Library Berat)
+    $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $id_token;
+    $response = file_get_contents($url);
+
+    if ($response) {
+        $payload = json_decode($response, true);
+
+        // Cek Email & Verified Email
+        if (isset($payload['email']) && $payload['email_verified'] == 'true') {
+            if ($payload['email'] === $ALLOWED_EMAIL) {
+                // Login Sukses
+                $_SESSION['admin_logged_in'] = true;
+                $_SESSION['admin_email'] = $payload['email'];
+                $_SESSION['admin_name'] = $payload['name'];
+                $_SESSION['admin_picture'] = $payload['picture'];
+
+                echo json_encode([
+                    'status' => 'success',
+                    'user' => [
+                        'name' => $payload['name'],
+                        'email' => $payload['email'],
+                        'picture' => $payload['picture']
+                    ]
+                ]);
+            } else {
+                http_response_code(403);
+                echo json_encode(['status' => 'error', 'message' => 'Akses ditolak. Email tidak terdaftar sebagai Admin.']);
+            }
+        } else {
+            http_response_code(401);
+            echo json_encode(['status' => 'error', 'message' => 'Token Google tidak valid.']);
+        }
+    } else {
+        http_response_code(500);
+        echo json_encode(['status' => 'error', 'message' => 'Gagal memverifikasi ke Google.']);
+    }
+} elseif ($action === 'check') {
+    if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+        echo json_encode([
+            'status' => 'authenticated',
+            'user' => [
+                'name' => $_SESSION['admin_name'],
+                'email' => $_SESSION['admin_email'],
+                'picture' => $_SESSION['admin_picture']
+            ]
+        ]);
+    } else {
+        echo json_encode(['status' => 'guest']);
+    }
+} elseif ($action === 'logout') {
+    session_destroy();
+    echo json_encode(['status' => 'success']);
+}
+
+```
+
+---
+
+### File: `./public/api/feedback.php`
+
+```
+<?php
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+
+$dbPath = __DIR__ . '/../../stats.db';
+
+function getClientIP()
+{
+    // Handle IP jika di belakang proxy/Cloudflare
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    return $_SERVER['REMOTE_ADDR'];
+}
+
+try {
+    if (!class_exists('SQLite3')) {
+        throw new Exception("SQLite3 driver not installed.");
+    }
+
+    $db = new SQLite3($dbPath);
+    $ip_address = getClientIP();
+
+    // 1. Update Struktur Tabel (Menambahkan kolom ip_address jika belum ada)
+    // Kita cek dulu apakah kolom sudah ada, cara simpel: coba query dummy
+    $checkTable = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='feedback'");
+    if ($checkTable) {
+        $cols = $db->query("PRAGMA table_info(feedback)");
+        $hasIpCol = false;
+        while ($row = $cols->fetchArray()) {
+            if ($row['name'] === 'ip_address') $hasIpCol = true;
+        }
+        if (!$hasIpCol) {
+            $db->exec("ALTER TABLE feedback ADD COLUMN ip_address TEXT");
+        }
+    } else {
+        $query = "CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            rating INTEGER NOT NULL,
+            message TEXT,
+            ip_address TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($query);
+    }
+
+    // Fungsi Helper untuk ambil stats
+    function getStats($db)
+    {
+        $row = $db->querySingle("SELECT AVG(rating) as average, COUNT(*) as total FROM feedback", true);
+        return [
+            'average' => round($row['average'] ?? 0, 1),
+            'total' => $row['total'] ?? 0
+        ];
+    }
+
+    // 2. Handle POST (Submit Data)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Cek apakah IP sudah pernah submit
+        $checkIp = $db->prepare("SELECT id FROM feedback WHERE ip_address = :ip");
+        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
+        $res = $checkIp->execute();
+
+        if ($res->fetchArray()) {
+            echo json_encode(['status' => 'error', 'message' => 'Anda sudah memberikan penilaian sebelumnya.']);
+            exit;
+        }
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        if (!isset($data['rating'])) throw new Exception("Rating wajib diisi.");
+
+        $name = isset($data['name']) ? htmlspecialchars(strip_tags($data['name'])) : 'Anonim';
+        $rating = (int)$data['rating'];
+        $message = isset($data['message']) ? htmlspecialchars(strip_tags($data['message'])) : '';
+
+        $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, ip_address) VALUES (:name, :rating, :message, :ip)");
+        $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+        $stmt->bindValue(':rating', $rating, SQLITE3_INTEGER);
+        $stmt->bindValue(':message', $message, SQLITE3_TEXT);
+        $stmt->bindValue(':ip', $ip_address, SQLITE3_TEXT);
+
+        if ($stmt->execute()) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Terima kasih atas penilaian Anda!',
+                'stats' => getStats($db)
+            ]);
+        } else {
+            throw new Exception("Gagal menyimpan data.");
+        }
+    }
+    // 3. Handle GET (Cek Status IP & Ambil Stats)
+    else {
+        $checkIp = $db->prepare("SELECT id FROM feedback WHERE ip_address = :ip");
+        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
+        $res = $checkIp->execute();
+        $hasSubmitted = ($res->fetchArray()) ? true : false;
+
+        echo json_encode([
+            'status' => 'ready',
+            'has_submitted' => $hasSubmitted,
+            'stats' => getStats($db)
+        ]);
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+}
+
+```
+
+---
+
+### File: `./public/api/print_pdf.php`
+
+```
+<?php
+// Matikan display error agar tidak merusak output PDF
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+session_start();
+date_default_timezone_set('Asia/Jakarta');
+
+// 1. Cek Login
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    die("Akses Ditolak.");
+}
+
+// 2. Cek Library
+if (!file_exists(__DIR__ . '/lib/fpdf.php')) {
+    die("Error: Library FPDF tidak ditemukan.");
+}
+require('lib/fpdf.php');
+
+// 3. Database
+$dbPath = __DIR__ . '/../../stats.db';
+try {
+    $db = new SQLite3($dbPath);
+} catch (Exception $e) {
+    die("Error DB: " . $e->getMessage());
+}
+
+// 4. Parameter
+$month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
+$year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+$bulanIndo = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+$periodeText = strtoupper($bulanIndo[$month] . ' ' . $year);
+
+// 5. Helpers
+function getIndonesianDate($timestamp = null)
+{
+    $dt = new DateTime($timestamp ?? 'now');
+    $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    return $dt->format('d') . ' ' . $bulan[(int)$dt->format('m')] . ' ' . $dt->format('Y');
+}
+function formatFullTime($timestamp)
+{
+    return getIndonesianDate($timestamp) . ' ' . date('H:i', strtotime($timestamp)) . ' WIB';
+}
+
+// 6. PDF Class
+class PDF extends FPDF
+{
+    var $widths;
+    var $aligns;
+    function SetWidths($w)
+    {
+        $this->widths = $w;
+    }
+    function SetAligns($a)
+    {
+        $this->aligns = $a;
+    }
+
+    function ImageRemote($url, $x, $y, $w, $h)
+    {
+        $tmpFile = sys_get_temp_dir() . '/qr_' . md5($url) . '.png';
+        if (file_exists($tmpFile) && filesize($tmpFile) > 0) {
+            $this->Image($tmpFile, $x, $y, $w, $h);
+            return;
+        }
+        $ch = curl_init($url);
+        $fp = fopen($tmpFile, 'wb');
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        fclose($fp);
+
+        if ($code == 200 && filesize($tmpFile) > 0) {
+            $this->Image($tmpFile, $x, $y, $w, $h);
+        } else {
+            $this->SetXY($x, $y);
+            $this->SetFont('Arial', 'I', 7);
+            $this->Cell($w, $h, 'QR Error', 0, 0, 'C');
+        }
+    }
+
+    function Header()
+    {
+        $path = '../images/instansi/';
+        $logoSize = 18;
+
+        if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 12, 10, $logoSize);
+        if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 180, 10, $logoSize);
+
+        $this->SetY(11);
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
+        $this->SetFont('Arial', 'B', 14);
+        $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
+        $this->SetFont('Arial', 'B', 16);
+        $this->Cell(0, 7, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
+        $this->SetFont('Arial', '', 9);
+        $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
+        $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
+
+        $this->SetLineWidth(0.5);
+        $this->Line(10, 43, 200, 43);
+        $this->SetLineWidth(0.2);
+        $this->Line(10, 44, 200, 44);
+        $this->Ln(12);
+    }
+
+    function Footer()
+    {
+        $this->SetY(-15);
+        $this->SetFont('Arial', 'I', 8);
+        $this->Cell(0, 10, 'Hal ' . $this->PageNo() . '/{nb} | Sistem Informasi MTsN 1 Pandeglang | Dicetak: ' . date('d/m/Y H:i') . ' WIB', 0, 0, 'C');
+    }
+
+    function Row($data, $fill = false)
+    {
+        $nb = 0;
+        for ($i = 0; $i < count($data); $i++) $nb = max($nb, $this->NbLines($this->widths[$i], $data[$i]));
+        $h = 5 * $nb;
+        $this->CheckPageBreak($h);
+        for ($i = 0; $i < count($data); $i++) {
+            $w = $this->widths[$i];
+            $a = isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+            $x = $this->GetX();
+            $y = $this->GetY();
+            $this->Rect($x, $y, $w, $h, $fill ? 'DF' : 'D');
+            $this->MultiCell($w, 5, $data[$i], 0, $a);
+            $this->SetXY($x + $w, $y);
+        }
+        $this->Ln($h);
+    }
+
+    function CheckPageBreak($h)
+    {
+        if ($this->GetY() + $h > $this->PageBreakTrigger) $this->AddPage($this->CurOrientation);
+    }
+    function NbLines($w, $txt)
+    {
+        $cw = &$this->CurrentFont['cw'];
+        if ($w == 0) $w = $this->w - $this->rMargin - $this->x;
+        $wmax = ($w - 2 * $this->cMargin) * 1000 / $this->FontSize;
+        $s = str_replace("\r", '', $txt);
+        $nb = strlen($s);
+        if ($nb > 0 && $s[$nb - 1] == "\n") $nb--;
+        $sep = -1;
+        $i = 0;
+        $j = 0;
+        $l = 0;
+        $nl = 1;
+        while ($i < $nb) {
+            $c = $s[$i];
+            if ($c == "\n") {
+                $i++;
+                $sep = -1;
+                $j = $i;
+                $l = 0;
+                $nl++;
+                continue;
+            }
+            if ($c == ' ') $sep = $i;
+            $l += $cw[$c];
+            if ($l > $wmax) {
+                if ($sep == -1) {
+                    if ($i == $j) $i++;
+                } else $i = $sep + 1;
+                $sep = -1;
+                $j = $i;
+                $l = 0;
+                $nl++;
+            } else $i++;
+        }
+        return $nl;
+    }
+}
+
+// MAIN SCRIPT
+try {
+    $pdf = new PDF();
+    $pdf->AliasNbPages();
+    $pdf->SetMargins(10, 10, 10);
+    $pdf->AddPage();
+
+    // Queries
+    $m = str_pad($month, 2, '0', STR_PAD_LEFT);
+    $y = $year;
+
+    $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
+    $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+    $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+
+    // === JUDUL LAPORAN ===
+    $pdf->SetFont('Arial', 'B', 12);
+    $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL', 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
+    $pdf->Ln(8); // Beri jarak sebelum tabel ringkasan
+
+    // === TABEL RINGKASAN (Compact & Fix Overlap) ===
+    $startX = 10;
+    // PENTING: Ambil Y saat ini agar tabel mulai di tempat yang benar
+    $startY = $pdf->GetY();
+
+    $rowH = 7;
+    $wLabel = 70;
+    $wValue = 85;
+    $wQR = 35;
+
+    $pdf->SetFont('Arial', '', 9);
+    $pdf->SetFillColor(245, 245, 245);
+
+    // 1. Gambar Kotak QR Dulu (Gabung 4 Baris)
+    $pdf->SetXY($startX + $wLabel + $wValue, $startY);
+    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
+
+    // Isi QR Code (Tengah Kotak)
+    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|F:{$feedback}|VALID");
+    $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
+    // Padding manual agar di tengah: (35-24)/2 = 5.5 (X), (28-24)/2 = 2 (Y)
+    $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $startY + 2, 24, 24);
+
+    // 2. Gambar Baris Data (Label & Value)
+    // Baris 1
+    $pdf->SetXY($startX, $startY);
+    $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
+
+    // Baris 2
+    $pdf->SetXY($startX, $startY + $rowH);
+    $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
+
+    // Baris 3
+    $pdf->SetXY($startX, $startY + ($rowH * 2));
+    $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
+
+    // Baris 4
+    $pdf->SetXY($startX, $startY + ($rowH * 3));
+    $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
+
+    // === PENTING: RESET POSISI Y ===
+    // Pindahkan kursor ke bawah tabel ringkasan agar tabel berikutnya tidak menabrak
+    // Y Start + Tinggi Tabel (4*7=28) + Spasi (10)
+    $pdf->SetY($startY + ($rowH * 4) + 10);
+
+    // === BAGIAN A: DATA SURVEI (Hijau) ===
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(0, 7, 'A. DATA SURVEI KEPUASAN MASYARAKAT', 0, 1, 'L');
+
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->SetFillColor(0, 150, 100);
+    $pdf->SetTextColor(255);
+    $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
+    $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
+    $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
+    $pdf->Cell(15, 7, 'ZI', 1, 0, 'C', true);
+    $pdf->Cell(15, 7, 'LYN', 1, 0, 'C', true);
+    $pdf->Cell(15, 7, 'AKD', 1, 0, 'C', true);
+    $pdf->Cell(62, 7, 'Masukan', 1, 1, 'L', true);
+
+    $pdf->SetTextColor(0);
+    $pdf->SetFont('Arial', '', 8);
+    $pdf->SetWidths([8, 35, 40, 15, 15, 15, 62]);
+    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'L']);
+
+    $resSurv = $db->query("SELECT * FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at DESC");
+    $no = 1;
+    $found1 = false;
+    while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
+        $found1 = true;
+        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $row['feedback'] ?: '-']);
+    }
+    if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
+    $pdf->Ln(6);
+
+    // === BAGIAN B: DATA ULASAN (Kuning) ===
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(0, 7, 'B. DATA ULASAN & RATING PELAYANAN', 0, 1, 'L');
+
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->SetFillColor(255, 193, 7);
+    $pdf->SetTextColor(0);
+    $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
+    $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
+    $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
+    $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
+    $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
+
+    $pdf->SetFont('Arial', '', 8);
+    $pdf->SetWidths([8, 35, 45, 20, 82]);
+    $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
+
+    $resFeed = $db->query("SELECT * FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at DESC");
+    $no = 1;
+    $found2 = false;
+    while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) {
+        $found2 = true;
+        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['name'] ?: 'Anonim', $row['rating'] . ' / 5', $row['message'] ?: '-']);
+    }
+    if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
+
+    // === TANDA TANGAN ===
+    $pdf->AddPage();
+    $pdf->Ln(5);
+    $path = '../images/instansi/';
+    $tglCetak = getIndonesianDate();
+    $qrSize = 18;
+    $yStart = $pdf->GetY();
+
+    $pdf->SetXY(120, $yStart);
+    $pdf->SetFont('Arial', '', 11);
+    $pdf->Cell(70, 5, 'Pandeglang, ' . $tglCetak, 0, 1, 'C');
+    $pdf->Ln(5);
+    $yJabatan = $pdf->GetY();
+
+    $pdf->SetXY(20, $yJabatan);
+    $pdf->Cell(70, 5, 'Kepala Tata Usaha,', 0, 0, 'C');
+    $pdf->SetXY(120, $yJabatan);
+    $pdf->Cell(70, 5, 'Koordinator Tim Pusdatin,', 0, 1, 'C');
+
+    $yImage = $pdf->GetY() + 1;
+    if (file_exists($path . 'tte-kepala-tata-usaha.png')) $pdf->Image($path . 'tte-kepala-tata-usaha.png', 46, $yImage, $qrSize);
+    if (file_exists($path . 'tte-koordinator-tim-pusdatin.png')) $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 146, $yImage, $qrSize);
+
+    $pdf->SetY($yImage + 19);
+    $pdf->SetFont('Arial', 'B', 11);
+    $pdf->SetX(20);
+    $pdf->Cell(70, 5, "UMAR MU'TAMAR, S.Ag.", 0, 0, 'C');
+    $pdf->SetX(120);
+    $pdf->Cell(70, 5, 'YAHYA ZULFIKRI', 0, 1, 'C');
+
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->SetX(20);
+    $pdf->Cell(70, 4, 'NIP. 196903061998031004', 0, 0, 'C');
+    $pdf->SetX(120);
+    $pdf->Cell(70, 4, 'NIP. 200001142025211016', 0, 1, 'C');
+
+    $pdf->Ln(8);
+    $pdf->SetFont('Arial', '', 11);
+    $pdf->Cell(0, 5, 'Mengetahui,', 0, 1, 'C');
+    $pdf->Cell(0, 5, 'Kepala Madrasah,', 0, 1, 'C');
+
+    $yImageKamad = $pdf->GetY() + 1;
+    if (file_exists($path . 'tte-kepala-madrasah.png')) $pdf->Image($path . 'tte-kepala-madrasah.png', 96, $yImageKamad, $qrSize);
+
+    $pdf->SetY($yImageKamad + 19);
+    $pdf->SetFont('Arial', 'B', 11);
+    $pdf->Cell(0, 5, 'H. EMAN SULAIMAN, S.Ag., M.Pd.', 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(0, 4, 'NIP. 197006032000031002', 0, 1, 'C');
+
+    $pdf->Output('I', 'Laporan_Statistik_Website_' . $month . '_' . $year . '.pdf');
+} catch (Exception $e) {
+    die("PDF Error: " . $e->getMessage());
+}
+
+```
+
+---
+
 ### File: `./public/api/stats.php`
 
 ```
@@ -9754,6 +12339,147 @@ try {
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
+}
+
+```
+
+---
+
+### File: `./public/api/survey.php`
+
+```
+<?php
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+
+$dbPath = __DIR__ . '/../../stats.db';
+
+function getClientIP()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    return $_SERVER['REMOTE_ADDR'];
+}
+
+try {
+    if (!class_exists('SQLite3')) {
+        throw new Exception("SQLite3 driver not installed.");
+    }
+
+    $db = new SQLite3($dbPath);
+    $ip_address = getClientIP();
+
+    // 1. Update Struktur Tabel (Add ip_address)
+    $checkTable = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'");
+    if ($checkTable) {
+        $cols = $db->query("PRAGMA table_info(survey_responses)");
+        $hasIpCol = false;
+        while ($row = $cols->fetchArray()) {
+            if ($row['name'] === 'ip_address') $hasIpCol = true;
+        }
+        if (!$hasIpCol) {
+            $db->exec("ALTER TABLE survey_responses ADD COLUMN ip_address TEXT");
+        }
+    } else {
+        $query = "CREATE TABLE IF NOT EXISTS survey_responses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            respondent_name TEXT,
+            respondent_role TEXT,
+            score_zi REAL,
+            score_service REAL,
+            score_academic REAL,
+            feedback TEXT,
+            details_json TEXT,
+            ip_address TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($query);
+    }
+
+    // Helper Stats
+    function getSurveyStats($db)
+    {
+        $sql = "SELECT
+            AVG(score_zi) as zi,
+            AVG(score_service) as service,
+            AVG(score_academic) as academic,
+            COUNT(*) as total
+            FROM survey_responses";
+        $row = $db->querySingle($sql, true);
+
+        return [
+            'zi' => round($row['zi'] ?? 0, 1),
+            'service' => round($row['service'] ?? 0, 1),
+            'academic' => round($row['academic'] ?? 0, 1),
+            'total' => $row['total'] ?? 0
+        ];
+    }
+
+    // 2. Handle POST
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Cek IP
+        $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
+        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
+        $res = $checkIp->execute();
+
+        if ($res->fetchArray()) {
+            echo json_encode(['status' => 'error', 'message' => 'Anda sudah mengisi survei ini.']);
+            exit;
+        }
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        if (empty($data['answers'])) throw new Exception("Data jawaban kosong.");
+
+        $name = htmlspecialchars(strip_tags($data['profile']['name'] ?? 'Anonim'));
+        $role = htmlspecialchars(strip_tags($data['profile']['role'] ?? 'Umum'));
+        $feedback = htmlspecialchars(strip_tags($data['feedback'] ?? ''));
+        $scoreZi = $data['scores']['zi'] ?? 0;
+        $scoreService = $data['scores']['service'] ?? 0;
+        $scoreAcademic = $data['scores']['academic'] ?? 0;
+        $details = json_encode($data['answers']);
+
+        $stmt = $db->prepare("INSERT INTO survey_responses
+            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json, ip_address)
+            VALUES (:name, :role, :zi, :service, :academic, :feedback, :details, :ip)");
+
+        $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+        $stmt->bindValue(':role', $role, SQLITE3_TEXT);
+        $stmt->bindValue(':zi', $scoreZi, SQLITE3_FLOAT);
+        $stmt->bindValue(':service', $scoreService, SQLITE3_FLOAT);
+        $stmt->bindValue(':academic', $scoreAcademic, SQLITE3_FLOAT);
+        $stmt->bindValue(':feedback', $feedback, SQLITE3_TEXT);
+        $stmt->bindValue(':details', $details, SQLITE3_TEXT);
+        $stmt->bindValue(':ip', $ip_address, SQLITE3_TEXT);
+
+        if ($stmt->execute()) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Survei berhasil dikirim.',
+                'stats' => getSurveyStats($db)
+            ]);
+        } else {
+            throw new Exception("Gagal menyimpan data.");
+        }
+    }
+    // 3. Handle GET
+    else {
+        $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
+        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
+        $res = $checkIp->execute();
+        $hasSubmitted = ($res->fetchArray()) ? true : false;
+
+        echo json_encode([
+            'status' => 'ready',
+            'has_submitted' => $hasSubmitted,
+            'stats' => getSurveyStats($db)
+        ]);
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
 
 ```
@@ -10001,6 +12727,16 @@ const path = require("path");
 
 ## Direktori: ROOT
 
+### File: `./.env`
+
+```
+# Google Auth
+PUBLIC_GOOGLE_CLIENT_ID=33203236150-amm5kr16pc5pds6vmmsknd4rec3tplur.apps.googleusercontent.com
+ADMIN_EMAIL=dev.mtsn1pandeglang@gmail.com
+```
+
+---
+
 ### File: `./astro.config.mjs`
 
 ```javascript
@@ -10176,7 +12912,8 @@ echo "--- Finalizing Permissions ---"
 sudo chown www-data:www-data "$DB_FILE"
 sudo chmod 664 "$DB_FILE"
 sudo chown -R www-data:www-data $PROJECT_DIR
-sudo chown -R $USER:$USER $PROJECT_DIR/generate.sh
+sudo chown $USER:$USER "$PROJECT_DIR/deploy.sh"
+sudo chmod +x "$PROJECT_DIR/deploy.sh"
 echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
 ```
 
@@ -10216,6 +12953,7 @@ echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
     "astro-auto-import": "^0.4.5",
     "astro-font": "^1.1.0",
     "better-sqlite3": "^12.6.0",
+    "chart.js": "^4.5.1",
     "date-fns": "^4.1.0",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
@@ -10224,6 +12962,7 @@ echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
     "marked": "^16.4.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.0",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
     "remark-collapse": "^0.1.2",
