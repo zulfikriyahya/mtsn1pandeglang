@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaCheck,
   FaChevronLeft,
@@ -8,9 +8,10 @@ import {
   FaConciergeBell,
   FaGraduationCap,
   FaPaperPlane,
+  FaChartBar,
 } from "react-icons/fa";
 
-// Definisi Pertanyaan
+// Data Pertanyaan (Sama seperti sebelumnya)
 const surveyData = [
   {
     id: "zi",
@@ -69,22 +70,47 @@ const surveyData = [
 ];
 
 const SurveyWizard = () => {
-  const [step, setStep] = useState(0); // 0: Profile, 1..n: Survey Sections, n+1: Feedback
+  const [step, setStep] = useState(0);
   const [profile, setProfile] = useState({ name: "", role: "Wali Murid" });
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [feedback, setFeedback] = useState("");
   const [status, setStatus] = useState<
-    "idle" | "submitting" | "success" | "error"
-  >("idle");
+    "idle" | "loading" | "submitting" | "success" | "submitted" | "error"
+  >("loading");
+  const [stats, setStats] = useState({
+    zi: 0,
+    service: 0,
+    academic: 0,
+    total: 0,
+  });
 
-  const totalSteps = surveyData.length + 2; // Profile + Sections + Feedback
+  const totalSteps = surveyData.length + 2;
 
-  // Handle Score Change
+  // 1. Fetch Status & Stats
+  useEffect(() => {
+    const fetchSurveyData = async () => {
+      try {
+        const res = await fetch("/api/survey.php");
+        const data = await res.json();
+
+        if (data.stats) setStats(data.stats);
+
+        if (data.has_submitted) {
+          setStatus("submitted");
+        } else {
+          setStatus("idle");
+        }
+      } catch (error) {
+        setStatus("error");
+      }
+    };
+    fetchSurveyData();
+  }, []);
+
   const handleScore = (qId: string, val: number) => {
     setAnswers((prev) => ({ ...prev, [qId]: val }));
   };
 
-  // Helper: Calculate Average Score
   const calculateScores = () => {
     const scores: Record<string, number> = {};
     surveyData.forEach((section) => {
@@ -99,7 +125,6 @@ const SurveyWizard = () => {
     return scores;
   };
 
-  // Submit Handler
   const handleSubmit = async () => {
     setStatus("submitting");
     const finalData = {
@@ -117,7 +142,8 @@ const SurveyWizard = () => {
       });
       const result = await res.json();
       if (res.ok && result.status === "success") {
-        setStatus("success");
+        if (result.stats) setStats(result.stats);
+        setStatus("submitted"); // Switch ke tampilan hasil
       } else {
         setStatus("error");
       }
@@ -126,13 +152,98 @@ const SurveyWizard = () => {
     }
   };
 
-  // Render Logic
+  // Tampilan Hasil Survei (Statistik)
+  if (status === "submitted" || status === "success") {
+    return (
+      <div className="max-w-3xl mx-auto bg-white dark:bg-darkmode-light rounded-xl p-8 border border-border dark:border-darkmode-border shadow-lg animate-fade-in">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-100 text-blue-600 mb-6">
+            <FaChartBar className="text-4xl" />
+          </div>
+          <h2 className="h3 mb-2">Hasil Survei Kepuasan</h2>
+          <p className="text-text-light dark:text-darkmode-text-light">
+            Terima kasih telah berpartisipasi. Berikut adalah indeks kepuasan
+            rata-rata dari <strong>{stats.total}</strong> responden.
+          </p>
+        </div>
+
+        <div className="space-y-8">
+          {/* Result Item: ZI */}
+          <div>
+            <div className="flex justify-between items-end mb-2">
+              <h4 className="text-lg flex items-center gap-2">
+                <FaBuilding className="text-primary" /> Zona Integritas
+              </h4>
+              <span className="font-bold text-2xl text-primary">
+                {stats.zi}
+                <span className="text-sm text-gray-400 font-normal">/5</span>
+              </span>
+            </div>
+            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+              <div
+                className="h-full bg-blue-500 transition-all duration-1000"
+                style={{ width: `${(stats.zi / 5) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Result Item: Service */}
+          <div>
+            <div className="flex justify-between items-end mb-2">
+              <h4 className="text-lg flex items-center gap-2">
+                <FaConciergeBell className="text-primary" /> Pelayanan PTSP
+              </h4>
+              <span className="font-bold text-2xl text-primary">
+                {stats.service}
+                <span className="text-sm text-gray-400 font-normal">/5</span>
+              </span>
+            </div>
+            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+              <div
+                className="h-full bg-green-500 transition-all duration-1000"
+                style={{ width: `${(stats.service / 5) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Result Item: Academic */}
+          <div>
+            <div className="flex justify-between items-end mb-2">
+              <h4 className="text-lg flex items-center gap-2">
+                <FaGraduationCap className="text-primary" /> Akademik
+              </h4>
+              <span className="font-bold text-2xl text-primary">
+                {stats.academic}
+                <span className="text-sm text-gray-400 font-normal">/5</span>
+              </span>
+            </div>
+            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+              <div
+                className="h-full bg-purple-500 transition-all duration-1000"
+                style={{ width: `${(stats.academic / 5) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-12">
+          <a href="/" className="btn btn-outline-primary">
+            Kembali ke Beranda
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "loading")
+    return <div className="text-center p-12">Memuat survei...</div>;
+
+  // Render Logic Form (Sama seperti sebelumnya)
   const isProfileStep = step === 0;
   const isFeedbackStep = step === totalSteps - 1;
   const isSurveyStep = step > 0 && step < totalSteps - 1;
   const currentSection = isSurveyStep ? surveyData[step - 1] : null;
 
-  // Validation for Next Button
   const canProceed = () => {
     if (isProfileStep) return profile.name.length > 2;
     if (isSurveyStep && currentSection) {
@@ -140,23 +251,6 @@ const SurveyWizard = () => {
     }
     return true;
   };
-
-  if (status === "success") {
-    return (
-      <div className="text-center py-12 animate-fade-in bg-white dark:bg-darkmode-light rounded-xl p-8 border border-border dark:border-darkmode-border shadow-lg">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-600 mb-6">
-          <FaCheck className="text-4xl" />
-        </div>
-        <h2 className="h3 mb-2">Terima Kasih!</h2>
-        <p className="text-text-light dark:text-darkmode-text-light">
-          Masukan Anda sangat berharga untuk kemajuan MTs Negeri 1 Pandeglang.
-        </p>
-        <a href="/" className="btn btn-primary mt-8">
-          Kembali ke Beranda
-        </a>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -300,7 +394,8 @@ const SurveyWizard = () => {
           {/* Error Message */}
           {status === "error" && (
             <div className="mt-4 p-3 bg-red-100 text-red-700 rounded text-sm text-center">
-              Terjadi kesalahan saat mengirim data. Silakan coba lagi.
+              Terjadi kesalahan (mungkin Anda sudah mengisi atau koneksi
+              terputus).
             </div>
           )}
         </div>
