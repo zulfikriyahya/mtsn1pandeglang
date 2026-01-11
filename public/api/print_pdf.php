@@ -295,17 +295,18 @@ try {
     $wLabelFull = 70;
     $wValueFull = 120;
 
-    // Baris 2: Jumlah Responden (Sendiri)
-    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
-    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
 
-    // Baris 3: Jumlah Ulasan (Sendiri)
+    // Baris 2: Jumlah Ulasan (Sendiri)
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
 
-    // Baris 4: Rata-rata Rating Ulasan
+    // Baris 3: Rata-rata Rating Ulasan
     $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
+
+    // Baris 4: Jumlah Responden (Sendiri)
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
 
     // Baris 5: Rincian Indeks (Split 3 Kolom)
     $wSub = 190 / 3;
