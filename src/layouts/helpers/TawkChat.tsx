@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
+
+// Menambahkan definisi tipe untuk window agar TypeScript tidak error
+declare global {
+  interface Window {
+    Tawk_API: any;
+    Tawk_LoadStart: Date;
+  }
+}
 
 const TawkChat = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  // Ref untuk menyimpan ID interval agar bisa dibersihkan
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isWidgetVisible = useRef(false);
 
   useEffect(() => {
     // 1. Cek Apakah di Homepage?
-    // Jika path bukan "/" atau base url, jangan muat
     if (window.location.pathname !== "/") return;
 
-    // 2. Delay Load (Agar tidak bentrok dengan popup cookie/install di awal)
-    // Muncul setelah 5 detik
-    const timer = setTimeout(() => {
-      loadTawk();
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const loadTawk = () => {
-    // Cek jika script sudah ada
+    // Cek jika script sudah ada agar tidak double
     if (document.getElementById("tawk-script")) return;
 
+    // 2. Setup Variable Tawk
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_LoadStart = new Date();
+
+    // 3. Inject Script
     const s1 = document.createElement("script");
     s1.id = "tawk-script";
     s1.async = true;
@@ -28,39 +32,63 @@ const TawkChat = () => {
     s1.charset = "UTF-8";
     s1.setAttribute("crossorigin", "*");
 
-    // Callback saat script selesai dimuat
+    // 4. Logika setelah script selesai dimuat dari server Tawk
     s1.onload = () => {
-      setIsLoaded(true);
-      initAnimationLoop();
+      // Callback saat Tawk benar-benar siap
+      window.Tawk_API.onLoad = function () {
+        // A. Sembunyikan dulu di awal (biar Cookie Popup tampil duluan)
+        window.Tawk_API.hideWidget();
+        isWidgetVisible.current = false;
+
+        // B. Tunggu 5 detik, baru mulai animasi loop
+        setTimeout(() => {
+          startAnimationLoop();
+        }, 5000);
+      };
     };
 
     document.head.appendChild(s1);
-  };
 
-  // 3. Logika Animasi (Sembunyi/Tampil per 10 detik)
-  const initAnimationLoop = () => {
-    // Pastikan Tawk API tersedia
-    const interval = setInterval(() => {
-      // @ts-ignore
-      if (window.Tawk_API) {
-        // @ts-ignore
-        if (window.Tawk_API.isChatMinimized()) {
-          // Jika sedang minimize, tampilkan (Maximize)
-          // @ts-ignore
-          window.Tawk_API.maximize();
-        } else {
-          // Jika sedang maximize, sembunyikan (Minimize)
-          // @ts-ignore
-          window.Tawk_API.minimize();
-        }
+    // Cleanup saat pindah halaman
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      // Opsional: Sembunyikan widget saat pindah dari homepage
+      if (window.Tawk_API && window.Tawk_API.hideWidget) {
+        window.Tawk_API.hideWidget();
       }
-    }, 15000); // Set 15 detik agar user punya waktu baca chat
+    };
+  }, []);
 
-    // Cleanup interval saat unmount
-    return () => clearInterval(interval);
+  const startAnimationLoop = () => {
+    // Jalankan pertama kali (Munculkan)
+    toggleWidget();
+
+    // Ulangi setiap 10 detik
+    intervalRef.current = setInterval(() => {
+      toggleWidget();
+    }, 10000);
   };
 
-  return null; // Komponen ini tidak merender UI, hanya logic
+  const toggleWidget = () => {
+    if (!window.Tawk_API) return;
+
+    // PENTING: Jangan sembunyikan jika user sedang membuka chat (isChatMaximized)
+    if (window.Tawk_API.isChatMaximized()) {
+      return;
+    }
+
+    if (isWidgetVisible.current) {
+      // Jika sedang tampil -> Sembunyikan
+      window.Tawk_API.hideWidget();
+      isWidgetVisible.current = false;
+    } else {
+      // Jika sedang sembunyi -> Tampilkan
+      window.Tawk_API.showWidget();
+      isWidgetVisible.current = true;
+    }
+  };
+
+  return null; // Tidak merender UI apa-apa, hanya logic
 };
 
 export default TawkChat;
