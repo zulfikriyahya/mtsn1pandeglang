@@ -1,5 +1,5 @@
 <?php
-// Matikan display error agar tidak merusak output PDF
+// Matikan display error
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
@@ -196,10 +196,10 @@ try {
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
     $y = $year;
 
-    // Data Utama
+    // Data Counts
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
-    $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
-    $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+    $feedbackCount = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+    $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
     // --- HITUNG INDEKS DETAIL ---
@@ -214,11 +214,16 @@ try {
     $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
     $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
 
-    // Hitung IKM Total
+    // IKM Total
     $ikmValue = 0;
-    if ($survey > 0) {
+    if ($surveyCount > 0) {
         $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
     }
+
+    // --- HITUNG RATA-RATA RATING FEEDBACK (BARU) ---
+    $avgRatingRaw = $db->querySingle("SELECT AVG(rating) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
+    $avgRatingVal = $avgRatingRaw ? round($avgRatingRaw, 2) : 0;
+    $avgRatingText = ($avgRatingVal > 0) ? "$avgRatingVal / 5.00" : "-";
 
     // Predikat Mutu
     function getPredikat($val)
@@ -239,74 +244,80 @@ try {
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
     $pdf->Ln(8);
 
-    // === TABEL RINGKASAN (Compact Mode: 7 Baris) ===
+    // === TABEL RINGKASAN COMPACT ===
     $startX = 10;
     $startY = $pdf->GetY();
 
     $rowH = 7;
-    $wLabel = 70;
-    $wValue = 85;
-    $wQR = 35;
+    $totalBoxHeight = $rowH * 6; // 6 Baris Total
 
-    // Total 7 Baris
-    $totalBoxHeight = $rowH * 7;
+    // Width Config
+    $wQR = 35;
+    $wTotalData = 155; // Sisa ruang (190 - 35)
+
+    // Split Widths untuk Dual Column Row
+    $wLabelSplit = 32;
+    $wValueSplit = 45.5;
+
+    // Width untuk Full Row
+    $wLabelFull = 70;
+    $wValueFull = 85;
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(245, 245, 245);
 
-    // 1. Gambar Kotak QR (Gabung 7 Baris)
-    $pdf->SetXY($startX + $wLabel + $wValue, $startY);
+    // 1. Gambar Kotak QR (Kanan)
+    $pdf->SetXY($startX + $wTotalData, $startY);
     $pdf->Cell($wQR, $totalBoxHeight, '', 1, 0, 'C');
 
-    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|ZI:{$idxZI}|LYN:{$idxService}|AKD:{$idxAcademic}|IKM:{$ikmValue}|VALID");
+    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}|RTG:{$avgRatingVal}");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
     $qrY = $startY + ($totalBoxHeight - 24) / 2;
-    $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $qrY, 24, 24);
+    $pdf->ImageRemote($qrUrl, ($startX + $wTotalData) + 5.5, $qrY, 24, 24);
 
-    // 2. Gambar Baris Data
-    // Baris 1: Bulan
+    // --- BARIS 1: BULAN (FULL) ---
     $pdf->SetXY($startX, $startY);
-    $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
+    $pdf->Cell($wLabelFull, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, '  ' . $periodeText, 1, 0, 'L');
 
-    // Baris 2: Kunjungan
+    // --- BARIS 2: TRAFIK (SPLIT: KUNJUNGAN | ARTIKEL) ---
     $pdf->SetXY($startX, $startY + $rowH);
-    $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
+    $pdf->Cell($wLabelSplit, $rowH, ' Kunjungan Web', 1, 0, 'L', true);
+    $pdf->Cell($wValueSplit, $rowH, ' ' . number_format($visits), 1, 0, 'L'); // Value 1
 
-    // Baris 3: Artikel
+    $pdf->Cell($wLabelSplit, $rowH, ' Artikel Dibaca', 1, 0, 'L', true);
+    $pdf->Cell($wValueSplit, $rowH, ' ' . number_format($articleViews), 1, 0, 'L'); // Value 2
+
+    // --- BARIS 3: INTERAKSI (SPLIT: RESPONDEN | ULASAN) ---
     $pdf->SetXY($startX, $startY + ($rowH * 2));
-    $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca (Akumulasi)', 1, 0, 'L');
+    $pdf->Cell($wLabelSplit, $rowH, ' Jml. Responden', 1, 0, 'L', true);
+    $pdf->Cell($wValueSplit, $rowH, ' ' . number_format($surveyCount) . ' Org', 1, 0, 'L'); // Value 1
 
-    // Baris 4: Responden
+    $pdf->Cell($wLabelSplit, $rowH, ' Jml. Ulasan', 1, 0, 'L', true);
+    $pdf->Cell($wValueSplit, $rowH, ' ' . number_format($feedbackCount) . ' Psn', 1, 0, 'L'); // Value 2
+
+    // --- BARIS 4: RINCIAN INDEKS (3 KOLOM COMPACT) ---
     $pdf->SetXY($startX, $startY + ($rowH * 3));
-    $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
-
-    // === BARIS 5: DETAIL INDEKS COMPACT (3 Kolom dalam 1 Baris) ===
-    $pdf->SetXY($startX, $startY + ($rowH * 4));
-    $pdf->Cell($wLabel, $rowH, ' Rincian Indeks (ZI / LYN / AKD)', 1, 0, 'L', true);
-
-    // Pecah Kolom Value menjadi 3
-    $wSub = $wValue / 3;
-    $pdf->SetFont('Arial', '', 8); // Kecilkan font sedikit agar muat
+    $pdf->Cell($wLabelFull, $rowH, ' Rincian Indeks (ZI / LYN / AKD)', 1, 0, 'L', true);
+    // Pecah value jadi 3
+    $wSub = $wValueFull / 3;
+    $pdf->SetFont('Arial', '', 8);
     $pdf->Cell($wSub, $rowH, 'ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C');
     $pdf->Cell($wSub, $rowH, 'Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C');
     $pdf->Cell($wSub, $rowH, 'Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 0, 'C');
-    $pdf->SetFont('Arial', '', 9); // Kembalikan font
-
-    // Baris 6: IKM Total (Tebal)
-    $pdf->SetXY($startX, $startY + ($rowH * 5));
-    $pdf->SetFont('Arial', 'B', 9);
-    $pdf->Cell($wLabel, $rowH, ' Indeks Kepuasan Masy. (Total)', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $ikmText, 1, 0, 'L');
     $pdf->SetFont('Arial', '', 9);
 
-    // Baris 7: Ulasan
-    $pdf->SetXY($startX, $startY + ($rowH * 6));
-    $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
+    // --- BARIS 5: IKM TOTAL (FULL - BOLD) ---
+    $pdf->SetXY($startX, $startY + ($rowH * 4));
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, '  ' . $ikmText, 1, 0, 'L');
+    $pdf->SetFont('Arial', '', 9);
+
+    // --- BARIS 6: RATA-RATA RATING FEEDBACK (FULL - BARU) ---
+    $pdf->SetXY($startX, $startY + ($rowH * 5));
+    $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan Publik', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, '  ' . $avgRatingText . ' (Dari ' . $feedbackCount . ' Ulasan)', 1, 0, 'L');
 
     // === RESET POSISI Y ===
     $pdf->SetY($startY + $totalBoxHeight + 10);
