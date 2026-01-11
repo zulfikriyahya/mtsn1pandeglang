@@ -7,8 +7,8 @@ const VisitorCounter = () => {
 
   useEffect(() => {
     // Ganti titik dengan underscore agar aman untuk ID
-    const NAMESPACE = "mtsn1pandeglang_sch_id";
-    const KEY = "site_visits";
+    const NAMESPACE = "mtsn1pandeglang";
+    const KEY = "site-visits";
 
     const fetchCounter = async () => {
       try {

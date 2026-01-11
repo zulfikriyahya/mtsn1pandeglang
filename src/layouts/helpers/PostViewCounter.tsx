@@ -6,20 +6,20 @@ const PostViewCounter = () => {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    const NAMESPACE = "mtsn1pandeglang_sch_id";
+    // 1. Namespace Bersih (Tanpa titik/underscore)
+    const NAMESPACE = "mtsn1pandeglang";
 
-    // Ambil path URL, ganti slash dengan underscore agar valid
-    let pathKey = window.location.pathname
-      .replace(/^\/|\/$/g, "")
-      .replace(/\//g, "_");
-    if (!pathKey) pathKey = "home";
+    // 2. Ambil Slug dari URL terakhir saja
+    // Contoh: /blog/judul-artikel -> judul-artikel
+    const pathSegments = window.location.pathname.split("/").filter(Boolean);
+    const slug = pathSegments[pathSegments.length - 1] || "home";
 
-    // Prefix 'post_' untuk membedakan dengan counter lain
-    const KEY = `post_${pathKey}`;
+    // 3. Key Format: post-{slug}
+    const KEY = `post-${slug}`;
 
     const fetchCounter = async () => {
       try {
-        // Increment
+        // Hitungan Naik (Up)
         const res = await fetch(
           `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`,
         );
@@ -27,7 +27,7 @@ const PostViewCounter = () => {
         const data = await res.json();
         setViews(data.count.toLocaleString("id-ID"));
       } catch (error) {
-        // Fallback: Read Only
+        // Fallback: Baca Saja (Down/Get)
         try {
           const resRead = await fetch(
             `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`,
@@ -36,7 +36,7 @@ const PostViewCounter = () => {
           const dataRead = await resRead.json();
           setViews(dataRead.count.toLocaleString("id-ID"));
         } catch (err) {
-          setIsHidden(true); // Sembunyikan jika error total
+          setIsHidden(true);
         }
       }
     };
@@ -49,8 +49,8 @@ const PostViewCounter = () => {
   return (
     <span className="flex items-center gap-2" title="Jumlah Pembaca">
       <FaRegEye className="text-gray-500 dark:text-gray-400" />
-      <span className="font-regular">{views}</span>
-      <span className="text-md">kali dibaca</span>
+      <span className="font-semibold">{views}</span>
+      <span className="text-xs">kali dibaca</span>
     </span>
   );
 };
