@@ -5,50 +5,31 @@ const PostViewCounter = () => {
   const [views, setViews] = useState("...");
 
   useEffect(() => {
-    const NAMESPACE = "mtsn1pandeglang_v2";
+    const NAMESPACE = "mtsn1pandeglang";
 
-    // Logika Key: Ambil bagian terakhir URL, ganti karakter aneh dengan underscore
+    // Ambil bagian terakhir dari URL
     const pathSegments = window.location.pathname.split("/").filter(Boolean);
-    const slug = pathSegments[pathSegments.length - 1] || "home";
-    const safeSlug = slug.replace(/[^a-zA-Z0-9]/g, "_");
+    const rawSlug = pathSegments[pathSegments.length - 1] || "home";
 
+    // BERSIHKAN SLUG: Hanya huruf, angka, dan underscore
+    const safeSlug = rawSlug.replace(/[^a-zA-Z0-9]/g, "_");
     const KEY = `post_${safeSlug}`;
-    const CALLBACK_NAME = `cb_post_${safeSlug}_${Math.floor(Math.random() * 100000)}`;
 
-    // 1. Definisikan Callback
-    // @ts-ignore
-    window[CALLBACK_NAME] = (response) => {
-      setViews(response.value.toLocaleString("id-ID"));
-      // Simpan ke local storage agar CardView punya backup data jika API error
-      localStorage.setItem(`local_view_${KEY}`, response.value);
-      cleanup();
+    const fetchViews = async () => {
+      try {
+        // Gunakan /up untuk menambah view
+        const res = await fetch(
+          `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`,
+        );
+        if (!res.ok) throw new Error("Error");
+        const data = await res.json();
+        setViews(data.count.toLocaleString("id-ID"));
+      } catch (error) {
+        // Silent fail
+      }
     };
 
-    // 2. Buat Script JSONP
-    const script = document.createElement("script");
-    script.id = `script-${CALLBACK_NAME}`;
-    // Gunakan /hit karena ini halaman baca (nambah view)
-    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${CALLBACK_NAME}`;
-
-    // 3. Fallback Error
-    script.onerror = () => {
-      const localKey = `local_view_${KEY}`;
-      let localCount = parseInt(localStorage.getItem(localKey) || "0");
-      localCount++;
-      localStorage.setItem(localKey, localCount.toString());
-      setViews(localCount > 0 ? localCount.toLocaleString("id-ID") : "1");
-      cleanup();
-    };
-
-    document.body.appendChild(script);
-
-    const cleanup = () => {
-      // @ts-ignore
-      delete window[CALLBACK_NAME];
-      document.getElementById(`script-${CALLBACK_NAME}`)?.remove();
-    };
-
-    return () => cleanup();
+    fetchViews();
   }, []);
 
   return (
