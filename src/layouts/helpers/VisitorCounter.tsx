@@ -2,45 +2,47 @@ import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 
 const VisitorCounter = () => {
-  const [visits, setVisits] = useState<string>("...");
+  const [visits, setVisits] = useState("...");
 
   useEffect(() => {
     const NAMESPACE = "mtsn1pandeglang_v2";
     const KEY = "site_visits";
-    const API_URL = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`;
+    const CALLBACK_NAME = `cb_visit_${Math.floor(Math.random() * 100000)}`;
 
-    // Key untuk simpan data di browser sendiri (jika API error)
-    const LOCAL_STORAGE_KEY = "local_site_visits";
-
-    const fetchVisits = async () => {
-      try {
-        // Coba panggil API
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error("API Error");
-        const data = await res.json();
-
-        // Jika sukses, simpan angka terbaru
-        setVisits(data.value.toLocaleString("id-ID"));
-        localStorage.setItem(LOCAL_STORAGE_KEY, data.value);
-      } catch (error) {
-        // JIKA GAGAL (Kena AdBlock/CORS), gunakan Local Storage
-        // Ambil data terakhir yang tersimpan
-        let localCount = parseInt(
-          localStorage.getItem(LOCAL_STORAGE_KEY) || "0",
-        );
-
-        // Tambah 1 (simulasi hitungan lokal)
-        localCount++;
-        localStorage.setItem(LOCAL_STORAGE_KEY, localCount.toString());
-
-        // Tampilkan angka lokal (agar tidak pernah kosong)
-        // Kita mulai dari angka dasar misal 1500 agar terlihat bagus jika data kosong
-        const displayCount = localCount > 0 ? localCount : 1205 + localCount;
-        setVisits(displayCount.toLocaleString("id-ID"));
-      }
+    // 1. Definisikan Callback di Window
+    // @ts-ignore
+    window[CALLBACK_NAME] = (response) => {
+      setVisits(response.value.toLocaleString("id-ID"));
+      cleanup();
     };
 
-    fetchVisits();
+    // 2. Buat Script JSONP
+    const script = document.createElement("script");
+    script.id = `script-${CALLBACK_NAME}`;
+    // Gunakan /hit untuk menambah hitungan
+    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${CALLBACK_NAME}`;
+
+    // 3. Handle Error (Fallback ke LocalStorage jika script diblokir total)
+    script.onerror = () => {
+      let localCount = parseInt(
+        localStorage.getItem("local_site_visits") || "0",
+      );
+      localCount++;
+      localStorage.setItem("local_site_visits", localCount.toString());
+      setVisits((1205 + localCount).toLocaleString("id-ID")); // Angka dummy + local
+      cleanup();
+    };
+
+    document.body.appendChild(script);
+
+    // Fungsi bersih-bersih
+    const cleanup = () => {
+      // @ts-ignore
+      delete window[CALLBACK_NAME];
+      document.getElementById(`script-${CALLBACK_NAME}`)?.remove();
+    };
+
+    return () => cleanup();
   }, []);
 
   return (

@@ -2,43 +2,53 @@ import React, { useEffect, useState } from "react";
 import { FaRegEye } from "react-icons/fa";
 
 const PostViewCounter = () => {
-  const [views, setViews] = useState<string>("...");
+  const [views, setViews] = useState("...");
 
   useEffect(() => {
-    // Ambil slug artikel
+    const NAMESPACE = "mtsn1pandeglang_v2";
+
+    // Logika Key: Ambil bagian terakhir URL, ganti karakter aneh dengan underscore
     const pathSegments = window.location.pathname.split("/").filter(Boolean);
     const slug = pathSegments[pathSegments.length - 1] || "home";
-    const safeSlug = slug.replace(/[^a-zA-Z0-9]/g, "_"); // Bersihkan karakter aneh
+    const safeSlug = slug.replace(/[^a-zA-Z0-9]/g, "_");
 
-    const NAMESPACE = "mtsn1pandeglang_v2";
     const KEY = `post_${safeSlug}`;
+    const CALLBACK_NAME = `cb_post_${safeSlug}_${Math.floor(Math.random() * 100000)}`;
 
-    const API_URL = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`;
-    const LOCAL_STORAGE_KEY = `local_view_${KEY}`;
-
-    const fetchViews = async () => {
-      try {
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error("API Error");
-        const data = await res.json();
-
-        setViews(data.value.toLocaleString("id-ID"));
-        localStorage.setItem(LOCAL_STORAGE_KEY, data.value);
-      } catch (error) {
-        // Fallback Local Storage
-        let localCount = parseInt(
-          localStorage.getItem(LOCAL_STORAGE_KEY) || "0",
-        );
-        localCount++;
-        localStorage.setItem(LOCAL_STORAGE_KEY, localCount.toString());
-
-        // Angka dasar dummy (misal 50) + hitungan lokal agar tidak terlihat 0
-        const displayCount = localCount > 0 ? localCount : 25 + localCount;
-        setViews(displayCount.toLocaleString("id-ID"));
-      }
+    // 1. Definisikan Callback
+    // @ts-ignore
+    window[CALLBACK_NAME] = (response) => {
+      setViews(response.value.toLocaleString("id-ID"));
+      // Simpan ke local storage agar CardView punya backup data jika API error
+      localStorage.setItem(`local_view_${KEY}`, response.value);
+      cleanup();
     };
 
-    fetchViews();
+    // 2. Buat Script JSONP
+    const script = document.createElement("script");
+    script.id = `script-${CALLBACK_NAME}`;
+    // Gunakan /hit karena ini halaman baca (nambah view)
+    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${CALLBACK_NAME}`;
+
+    // 3. Fallback Error
+    script.onerror = () => {
+      const localKey = `local_view_${KEY}`;
+      let localCount = parseInt(localStorage.getItem(localKey) || "0");
+      localCount++;
+      localStorage.setItem(localKey, localCount.toString());
+      setViews(localCount > 0 ? localCount.toLocaleString("id-ID") : "1");
+      cleanup();
+    };
+
+    document.body.appendChild(script);
+
+    const cleanup = () => {
+      // @ts-ignore
+      delete window[CALLBACK_NAME];
+      document.getElementById(`script-${CALLBACK_NAME}`)?.remove();
+    };
+
+    return () => cleanup();
   }, []);
 
   return (
