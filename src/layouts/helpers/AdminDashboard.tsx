@@ -12,6 +12,7 @@ import {
   FaSearch,
   FaChevronLeft,
   FaChevronRight,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -28,7 +29,6 @@ import {
 } from "chart.js";
 import { Bar, Pie, Line } from "react-chartjs-2";
 
-// Registrasi Komponen Chart
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -52,9 +52,10 @@ const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null); // State Error
   const [activeTab, setActiveTab] = useState("overview");
 
-  // --- GOOGLE AUTH INIT ---
+  // --- GOOGLE AUTH & FETCH ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -81,10 +82,12 @@ const AdminDashboard = () => {
       try {
         const authRes = await fetch("/api/auth.php?action=check");
         const authData = await authRes.json();
+
         if (authData.status === "authenticated") {
           setUser(authData.user);
-          fetchStats();
+          fetchStats(); // Fetch data setelah login terkonfirmasi
         } else {
+          // Load Google Script
           if (!document.getElementById("google-client-script")) {
             const script = document.createElement("script");
             script.src = "https://accounts.google.com/gsi/client";
@@ -98,6 +101,7 @@ const AdminDashboard = () => {
         }
       } catch (e) {
         console.error(e);
+        setErrorMsg("Gagal menghubungi server autentikasi.");
       }
       setLoading(false);
     };
@@ -106,25 +110,41 @@ const AdminDashboard = () => {
 
   const handleCredentialResponse = async (response: any) => {
     setLoading(true);
-    const res = await fetch("/api/auth.php?action=login", {
-      method: "POST",
-      body: JSON.stringify({ credential: response.credential }),
-    });
-    const result = await res.json();
-    if (result.status === "success") {
-      setUser(result.user);
-      fetchStats();
-    } else {
-      alert(result.message);
+    try {
+      const res = await fetch("/api/auth.php?action=login", {
+        method: "POST",
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      const result = await res.json();
+      if (result.status === "success") {
+        setUser(result.user);
+        fetchStats();
+      } else {
+        alert(result.message);
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan.");
     }
     setLoading(false);
   };
 
   const fetchStats = async () => {
-    const res = await fetch("/api/admin.php?action=stats");
-    if (res.ok) {
+    setErrorMsg(null);
+    try {
+      const res = await fetch("/api/admin.php?action=stats");
+      if (!res.ok) {
+        throw new Error(`Server Error: ${res.status} ${res.statusText}`);
+      }
       const json = await res.json();
+
+      if (json.status === "error") {
+        throw new Error(json.message);
+      }
+
       setData(json);
+    } catch (e: any) {
+      console.error(e);
+      setErrorMsg(e.message || "Gagal memuat data statistik.");
     }
   };
 
@@ -141,9 +161,14 @@ const AdminDashboard = () => {
   const printPDF = () => window.print();
 
   if (loading)
-    return <div className="text-center p-12">Memuat Sistem Admin...</div>;
+    return (
+      <div className="text-center p-12">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+        Memuat Sistem...
+      </div>
+    );
 
-  // --- LOGIN UI ---
+  // --- LOGIN SCREEN ---
   if (!user) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
@@ -154,9 +179,6 @@ const AdminDashboard = () => {
             className="mx-auto mb-6 h-12"
           />
           <h2 className="h4 mb-2">Portal Admin</h2>
-          <p className="mb-8 text-sm text-text-light">
-            Silakan login untuk mengakses data.
-          </p>
           <div className="flex justify-center h-[50px]">
             <div id="googleBtn"></div>
           </div>
@@ -165,10 +187,10 @@ const AdminDashboard = () => {
     );
   }
 
-  // --- DASHBOARD UI ---
+  // --- DASHBOARD SCREEN ---
   return (
     <div className="min-h-screen pb-12">
-      {/* 1. Header */}
+      {/* 1. Header Card */}
       <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
         <div className="flex items-center gap-4">
           <img
@@ -197,9 +219,27 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      {/* ERROR MESSAGE DISPLAY */}
+      {errorMsg && (
+        <div className="mb-8 rounded-xl bg-red-50 p-4 border border-red-200 text-red-700 flex items-center gap-3">
+          <FaExclamationTriangle className="text-xl" />
+          <div>
+            <p className="font-bold">Gagal memuat data</p>
+            <p className="text-sm">{errorMsg}</p>
+            <button
+              onClick={fetchStats}
+              className="mt-2 text-xs underline hover:text-red-900"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* DATA CONTENT */}
       {data && (
-        <>
-          {/* 2. Overview Stats Cards */}
+        <div className="animate-fade-in">
+          {/* 2. Stats Overview */}
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
@@ -231,7 +271,7 @@ const AdminDashboard = () => {
             />
           </div>
 
-          {/* 3. Navigation Tabs */}
+          {/* 3. Tabs */}
           <div className="mb-8 border-b border-border dark:border-darkmode-border">
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
@@ -255,229 +295,221 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* 4. Content Area */}
-          <div className="animate-fade-in">
-            {/* TAB: OVERVIEW (Charts) */}
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Trend Chart */}
-                <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
-                  <h3 className="h6 mb-6">Tren Aktivitas (30 Hari Terakhir)</h3>
-                  <div className="h-72">
-                    <Line
-                      data={{
-                        labels: data.charts.activity.labels,
-                        datasets: [
-                          {
-                            label: "Ulasan Masuk",
-                            data: data.charts.activity.feedback,
-                            borderColor: "#eab308",
-                            backgroundColor: "rgba(234, 179, 8, 0.1)",
-                            fill: true,
-                            tension: 0.4,
-                          },
-                          {
-                            label: "Survei Masuk",
-                            data: data.charts.activity.survey,
-                            borderColor: "#8b5cf6",
-                            backgroundColor: "rgba(139, 92, 246, 0.1)",
-                            fill: true,
-                            tension: 0.4,
-                          },
-                        ],
-                      }}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: "top" } },
-                      }}
-                    />
-                  </div>
-                </div>
+          {/* 4. Tab Contents */}
 
-                {/* Pie Chart: Rating */}
-                <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
-                  <h3 className="h6 mb-6 text-center">
-                    Distribusi Rating Bintang
-                  </h3>
-                  <div className="h-64 flex justify-center">
-                    <Pie
-                      data={{
-                        labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
-                        datasets: [
-                          {
-                            data: [5, 4, 3, 2, 1].map(
-                              (r) => data.charts.stars[r],
-                            ),
-                            backgroundColor: [
-                              "#22c55e",
-                              "#3b82f6",
-                              "#eab308",
-                              "#f97316",
-                              "#ef4444",
-                            ],
-                            borderWidth: 1,
-                          },
-                        ],
-                      }}
-                      options={{ responsive: true, maintainAspectRatio: false }}
-                    />
-                  </div>
-                </div>
-
-                {/* Bar Chart: Survey Score */}
-                <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
-                  <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
-                  <div className="h-64">
-                    <Bar
-                      data={{
-                        labels: ["Zona Integritas", "Pelayanan", "Akademik"],
-                        datasets: [
-                          {
-                            label: "Skor (Skala 5)",
-                            data: [
-                              data.charts.survey_avg.zi,
-                              data.charts.survey_avg.service,
-                              data.charts.survey_avg.academic,
-                            ],
-                            backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
-                            borderRadius: 6,
-                          },
-                        ],
-                      }}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: { y: { min: 0, max: 5 } },
-                      }}
-                    />
-                  </div>
+          {/* OVERVIEW */}
+          {activeTab === "overview" && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Line Chart */}
+              <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6">Tren Aktivitas (30 Hari Terakhir)</h3>
+                <div className="h-72">
+                  <Line
+                    data={{
+                      labels: data.charts.activity.labels,
+                      datasets: [
+                        {
+                          label: "Ulasan Masuk",
+                          data: data.charts.activity.feedback,
+                          borderColor: "#eab308",
+                          backgroundColor: "rgba(234, 179, 8, 0.1)",
+                          fill: true,
+                          tension: 0.4,
+                        },
+                        {
+                          label: "Survei Masuk",
+                          data: data.charts.activity.survey,
+                          borderColor: "#8b5cf6",
+                          backgroundColor: "rgba(139, 92, 246, 0.1)",
+                          fill: true,
+                          tension: 0.4,
+                        },
+                      ],
+                    }}
+                    options={{ responsive: true, maintainAspectRatio: false }}
+                  />
                 </div>
               </div>
-            )}
 
-            {/* TAB: POSTS */}
-            {activeTab === "posts" && (
-              <DataTable
-                title="Statistik Artikel Populer"
-                data={data.tables.posts}
-                columns={[
-                  {
-                    key: "slug",
-                    label: "Judul Artikel",
-                    render: (val: string) =>
-                      val.replace(/-/g, " ").toUpperCase(),
-                  },
-                  {
-                    key: "views",
-                    label: "Jumlah Pembaca",
-                    sortable: true,
-                    className: "text-right font-bold",
-                  },
-                ]}
-                onDownload={() => downloadReport("posts")}
-              />
-            )}
+              {/* Pie Chart */}
+              <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6 text-center">
+                  Distribusi Rating Bintang
+                </h3>
+                <div className="h-64 flex justify-center">
+                  <Pie
+                    data={{
+                      labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
+                      datasets: [
+                        {
+                          data: [5, 4, 3, 2, 1].map(
+                            (r) => data.charts.stars[r],
+                          ),
+                          backgroundColor: [
+                            "#22c55e",
+                            "#3b82f6",
+                            "#eab308",
+                            "#f97316",
+                            "#ef4444",
+                          ],
+                          borderWidth: 1,
+                        },
+                      ],
+                    }}
+                    options={{ responsive: true, maintainAspectRatio: false }}
+                  />
+                </div>
+              </div>
 
-            {/* TAB: FEEDBACK */}
-            {activeTab === "feedback" && (
-              <DataTable
-                title="Data Ulasan Masuk"
-                data={data.tables.feedbacks}
-                columns={[
-                  {
-                    key: "created_at",
-                    label: "Tanggal",
-                    sortable: true,
-                    className: "w-32 text-sm text-gray-500",
-                  },
-                  {
-                    key: "name",
-                    label: "Nama Pengirim",
-                    sortable: true,
-                    className: "font-medium",
-                  },
-                  {
-                    key: "rating",
-                    label: "Rating",
-                    sortable: true,
-                    render: (val: number) => (
-                      <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                        {val} ★
-                      </span>
-                    ),
-                  },
-                  {
-                    key: "message",
-                    label: "Pesan / Kritik",
-                    className: "italic text-gray-600 dark:text-gray-400",
-                  },
-                  {
-                    key: "ip_address",
-                    label: "IP Address",
-                    className: "text-xs text-gray-400 font-mono",
-                  },
-                ]}
-                searchKeys={["name", "message"]}
-                onDownload={() => downloadReport("feedback")}
-              />
-            )}
+              {/* Bar Chart */}
+              <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
+                <div className="h-64">
+                  <Bar
+                    data={{
+                      labels: ["Zona Integritas", "Pelayanan", "Akademik"],
+                      datasets: [
+                        {
+                          label: "Skor (Skala 5)",
+                          data: [
+                            data.charts.survey_avg.zi,
+                            data.charts.survey_avg.service,
+                            data.charts.survey_avg.academic,
+                          ],
+                          backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
+                          borderRadius: 6,
+                        },
+                      ],
+                    }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      scales: { y: { min: 0, max: 5 } },
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
-            {/* TAB: SURVEY */}
-            {activeTab === "surveys" && (
-              <DataTable
-                title="Data Survei Kepuasan"
-                data={data.tables.surveys}
-                columns={[
-                  {
-                    key: "created_at",
-                    label: "Tanggal",
-                    sortable: true,
-                    className: "w-32 text-sm text-gray-500",
-                  },
-                  {
-                    key: "respondent_name",
-                    label: "Responden",
-                    sortable: true,
-                    render: (_: any, row: any) => (
-                      <div>
-                        <div className="font-bold">{row.respondent_name}</div>
-                        <div className="text-xs text-gray-500">
-                          {row.respondent_role}
-                        </div>
+          {/* TABLES */}
+          {activeTab === "posts" && (
+            <DataTable
+              title="Statistik Artikel Populer"
+              data={data.tables.posts}
+              columns={[
+                {
+                  key: "slug",
+                  label: "Judul Artikel",
+                  render: (val: string) => val.replace(/-/g, " ").toUpperCase(),
+                },
+                {
+                  key: "views",
+                  label: "Jumlah Pembaca",
+                  sortable: true,
+                  className: "text-right font-bold",
+                },
+              ]}
+              onDownload={() => downloadReport("posts")}
+            />
+          )}
+
+          {activeTab === "feedback" && (
+            <DataTable
+              title="Data Ulasan Masuk"
+              data={data.tables.feedbacks}
+              columns={[
+                {
+                  key: "created_at",
+                  label: "Tanggal",
+                  sortable: true,
+                  className: "w-32 text-sm text-gray-500",
+                },
+                {
+                  key: "name",
+                  label: "Nama Pengirim",
+                  sortable: true,
+                  className: "font-medium",
+                },
+                {
+                  key: "rating",
+                  label: "Rating",
+                  sortable: true,
+                  render: (val: number) => (
+                    <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
+                      {val} ★
+                    </span>
+                  ),
+                },
+                {
+                  key: "message",
+                  label: "Pesan / Kritik",
+                  className: "italic text-gray-600 dark:text-gray-400",
+                },
+                {
+                  key: "ip_address",
+                  label: "IP Address",
+                  className: "text-xs text-gray-400 font-mono",
+                },
+              ]}
+              searchKeys={["name", "message"]}
+              onDownload={() => downloadReport("feedback")}
+            />
+          )}
+
+          {activeTab === "surveys" && (
+            <DataTable
+              title="Data Survei Kepuasan"
+              data={data.tables.surveys}
+              columns={[
+                {
+                  key: "created_at",
+                  label: "Tanggal",
+                  sortable: true,
+                  className: "w-32 text-sm text-gray-500",
+                },
+                {
+                  key: "respondent_name",
+                  label: "Responden",
+                  sortable: true,
+                  render: (_: any, row: any) => (
+                    <div>
+                      <div className="font-bold">{row.respondent_name}</div>
+                      <div className="text-xs text-gray-500">
+                        {row.respondent_role}
                       </div>
-                    ),
-                  },
-                  {
-                    key: "score_zi",
-                    label: "ZI",
-                    sortable: true,
-                    className: "text-center font-semibold text-blue-600",
-                  },
-                  {
-                    key: "score_service",
-                    label: "Layanan",
-                    sortable: true,
-                    className: "text-center font-semibold text-green-600",
-                  },
-                  {
-                    key: "score_academic",
-                    label: "Akademik",
-                    sortable: true,
-                    className: "text-center font-semibold text-purple-600",
-                  },
-                  {
-                    key: "feedback",
-                    label: "Masukan",
-                    className: "italic text-gray-500 text-sm",
-                  },
-                ]}
-                searchKeys={["respondent_name", "feedback"]}
-                onDownload={() => downloadReport("survey")}
-              />
-            )}
-          </div>
-        </>
+                    </div>
+                  ),
+                },
+                {
+                  key: "score_zi",
+                  label: "ZI",
+                  sortable: true,
+                  className: "text-center font-semibold text-blue-600",
+                },
+                {
+                  key: "score_service",
+                  label: "Layanan",
+                  sortable: true,
+                  className: "text-center font-semibold text-green-600",
+                },
+                {
+                  key: "score_academic",
+                  label: "Akademik",
+                  sortable: true,
+                  className: "text-center font-semibold text-purple-600",
+                },
+                {
+                  key: "feedback",
+                  label: "Masukan",
+                  className: "italic text-gray-500 text-sm",
+                },
+              ]}
+              searchKeys={["respondent_name", "feedback"]}
+              onDownload={() => downloadReport("survey")}
+            />
+          )}
+        </div>
       )}
     </div>
   );
@@ -501,7 +533,7 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
   </div>
 );
 
-// --- ADVANCED DATA TABLE COMPONENT ---
+// --- DATA TABLE ---
 interface Column {
   key: string;
   label: string;
@@ -531,7 +563,6 @@ const DataTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // 1. Filtering
   const filteredData = useMemo(() => {
     if (!search) return data;
     return data.filter((row) =>
@@ -543,7 +574,6 @@ const DataTable = ({
     );
   }, [data, search, searchKeys]);
 
-  // 2. Sorting
   const sortedData = useMemo(() => {
     if (!sortConfig) return filteredData;
     return [...filteredData].sort((a, b) => {
@@ -555,7 +585,6 @@ const DataTable = ({
     });
   }, [filteredData, sortConfig]);
 
-  // 3. Pagination
   const totalPages = Math.ceil(sortedData.length / rowsPerPage);
   const paginatedData = sortedData.slice(
     (currentPage - 1) * rowsPerPage,
@@ -576,7 +605,6 @@ const DataTable = ({
 
   return (
     <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden dark:bg-darkmode-light dark:border-darkmode-border">
-      {/* Table Header Controls */}
       <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between border-b border-border dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
         <h3 className="text-lg font-bold">{title}</h3>
         <div className="flex flex-col sm:flex-row gap-3">
@@ -601,7 +629,6 @@ const DataTable = ({
         </div>
       </div>
 
-      {/* Table Content */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
@@ -671,7 +698,6 @@ const DataTable = ({
         </table>
       </div>
 
-      {/* Pagination Footer */}
       <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-gray-50 p-4 dark:bg-white/5 dark:border-darkmode-border sm:flex-row">
         <div className="text-xs text-gray-500">
           Menampilkan{" "}
