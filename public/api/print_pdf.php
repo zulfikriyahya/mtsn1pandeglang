@@ -208,7 +208,7 @@ try {
     $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL', 0, 1, 'C');
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
-    $pdf->Ln(8); // Beri jarak sebelum tabel ringkasan
+    $pdf->Ln(4); // Beri jarak sebelum tabel ringkasan
 
     // === TABEL RINGKASAN (Compact & Fix Overlap) ===
     $startX = 10;
