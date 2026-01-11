@@ -89,16 +89,13 @@ class PDF extends FPDF
     function Header()
     {
         $path = '../images/instansi/';
-        // UPDATE: Logo diperbesar dari 18 menjadi 24 agar lebih proporsional
-        $logoSize = 24;
+        $logoSize = 24; // Ukuran logo dari step sebelumnya
 
-        // Posisi X disesuaikan sedikit (10 kiri, 176 kanan) untuk logo yang lebih besar
         if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 10, 10, $logoSize);
         if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
 
-        $this->SetY(12); // Sedikit penyesuaian posisi Y awal
+        $this->SetY(12);
 
-        // UPDATE: Ukuran font dikurangi (12->10, 14->12, 16->14)
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
 
@@ -108,16 +105,19 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'B', 14);
         $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
 
-        // Bagian alamat tetap sama
         $this->SetFont('Arial', '', 9);
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
 
+        // UPDATE: Posisi garis dinaikkan agar lebih mepet dengan teks
+        // Dari Y=43 & 44 menjadi Y=39 & 40
         $this->SetLineWidth(0.5);
-        $this->Line(10, 43, 200, 43);
+        $this->Line(10, 39, 200, 39);
         $this->SetLineWidth(0.2);
-        $this->Line(10, 44, 200, 44);
-        $this->Ln(12);
+        $this->Line(10, 40, 200, 40);
+
+        // Jarak ke konten di bawahnya disesuaikan
+        $this->Ln(6);
     }
 
     function Footer()
