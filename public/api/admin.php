@@ -12,19 +12,28 @@ $dbPath = __DIR__ . '/../../stats.db';
 $db = new SQLite3($dbPath);
 $action = $_GET['action'] ?? 'stats';
 
-// === HELPER FUNCTION: GROUP BY DATE (SQLite) ===
-function getDailyActivity($db, $table)
+// === HELPER: Fill Missing Dates for Line Chart ===
+function getDailyActivity($db, $table, $days = 30)
 {
     $data = [];
-    // Ambil data 7 hari terakhir
+    // 1. Generate array tanggal 30 hari terakhir (default 0)
+    for ($i = $days - 1; $i >= 0; $i--) {
+        $date = date('Y-m-d', strtotime("-$i days"));
+        $data[$date] = 0;
+    }
+
+    // 2. Query Database
     $query = "SELECT strftime('%Y-%m-%d', created_at) as date, COUNT(*) as count 
               FROM $table 
-              WHERE created_at >= date('now', '-7 days') 
-              GROUP BY date 
-              ORDER BY date ASC";
+              WHERE created_at >= date('now', '-$days days') 
+              GROUP BY date";
     $res = $db->query($query);
+
+    // 3. Merge Data
     while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-        $data[$row['date']] = $row['count'];
+        if (isset($data[$row['date']])) {
+            $data[$row['date']] = $row['count'];
+        }
     }
     return $data;
 }
@@ -38,31 +47,31 @@ if ($action === 'stats') {
     $total_feedback = $db->querySingle("SELECT COUNT(*) FROM feedback") ?: 0;
     $total_survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses") ?: 0;
 
-    // 2. Rating Distribution (Untuk Pie Chart)
+    // 2. Rating Distribution (Pie Chart)
     $stars = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
     $resStar = $db->query("SELECT rating, COUNT(*) as count FROM feedback GROUP BY rating");
     while ($row = $resStar->fetchArray(SQLITE3_ASSOC)) {
         $stars[$row['rating']] = $row['count'];
     }
 
-    // 3. Survey Averages (Untuk Bar Chart)
+    // 3. Survey Averages (Bar Chart)
     $survey_avg = $db->querySingle("SELECT AVG(score_zi) as zi, AVG(score_service) as service, AVG(score_academic) as academic FROM survey_responses", true);
 
-    // 4. Activity Trends (Untuk Line Chart)
+    // 4. Activity Trends (Line Chart - 30 Hari)
     $activity_feedback = getDailyActivity($db, 'feedback');
     $activity_survey = getDailyActivity($db, 'survey_responses');
 
-    // 5. Raw Data (Tables)
+    // 5. Raw Data (Ambil SEMUA untuk Client-side Pagination)
     $posts = [];
-    $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC LIMIT 20");
+    $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
     while ($row = $resPost->fetchArray(SQLITE3_ASSOC)) $posts[] = $row;
 
     $feedbacks = [];
-    $resFeed = $db->query("SELECT * FROM feedback ORDER BY created_at DESC LIMIT 100");
+    $resFeed = $db->query("SELECT * FROM feedback ORDER BY created_at DESC");
     while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) $feedbacks[] = $row;
 
     $surveys = [];
-    $resSurv = $db->query("SELECT * FROM survey_responses ORDER BY created_at DESC LIMIT 100");
+    $resSurv = $db->query("SELECT * FROM survey_responses ORDER BY created_at DESC");
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) $surveys[] = $row;
 
     echo json_encode([
@@ -80,8 +89,9 @@ if ($action === 'stats') {
                 'academic' => round($survey_avg['academic'] ?? 0, 2),
             ],
             'activity' => [
-                'feedback' => $activity_feedback,
-                'survey' => $activity_survey
+                'labels' => array_keys($activity_feedback), // Tanggal
+                'feedback' => array_values($activity_feedback),
+                'survey' => array_values($activity_survey)
             ]
         ],
         'tables' => [
@@ -92,7 +102,7 @@ if ($action === 'stats') {
     ]);
 }
 
-// === EXPORT LOGIC (SAMA SEPERTI SEBELUMNYA) ===
+// === EXPORT LOGIC (Tidak Berubah) ===
 elseif ($action === 'export') {
     $type = $_GET['type'] ?? '';
     $filename = "laporan_{$type}_" . date('Y-m-d') . ".csv";
