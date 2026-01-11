@@ -201,12 +201,11 @@ try {
     $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
 
-    // --- HITUNG IKM (Indeks Kepuasan Masyarakat) ---
-    // Mengambil rata-rata dari 3 komponen (ZI, Service, Academic)
+    // --- HITUNG IKM ---
     $ikmRaw = $db->querySingle("SELECT AVG((score_zi + score_service + score_academic) / 3) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
     $ikmValue = $ikmRaw ? round($ikmRaw, 2) : 0;
 
-    // Tentukan Predikat Mutu
+    // Predikat Mutu
     $mutu = "-";
     if ($ikmValue > 0) {
         if ($ikmValue >= 4.5) $mutu = "Sangat Baik (A)";
@@ -215,7 +214,6 @@ try {
         else $mutu = "Kurang (D)";
     }
     $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 ($mutu)" : "-";
-    // ------------------------------------------------
 
     // === JUDUL LAPORAN ===
     $pdf->SetFont('Arial', 'B', 12);
@@ -224,7 +222,7 @@ try {
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
     $pdf->Ln(8);
 
-    // === TABEL RINGKASAN (Update: 5 Baris) ===
+    // === TABEL RINGKASAN ===
     $startX = 10;
     $startY = $pdf->GetY();
 
@@ -232,81 +230,85 @@ try {
     $wLabel = 70;
     $wValue = 85;
     $wQR = 35;
-
-    // Hitung Total Tinggi Kotak (5 Baris)
     $totalBoxHeight = $rowH * 5;
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(245, 245, 245);
 
-    // 1. Gambar Kotak QR (Gabung 5 Baris)
+    // QR Code
     $pdf->SetXY($startX + $wLabel + $wValue, $startY);
     $pdf->Cell($wQR, $totalBoxHeight, '', 1, 0, 'C');
-
-    // Isi QR Code (Tengah Kotak)
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|IKM:{$ikmValue}|F:{$feedback}|VALID");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
-
-    // Center Vertically di box 5 baris: ($totalBoxHeight - 24) / 2
     $qrY = $startY + ($totalBoxHeight - 24) / 2;
     $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $qrY, 24, 24);
 
-    // 2. Gambar Baris Data
-    // Baris 1: Bulan
+    // Baris Data
     $pdf->SetXY($startX, $startY);
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
 
-    // Baris 2: Kunjungan
     $pdf->SetXY($startX, $startY + $rowH);
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
 
-    // Baris 3: Responden
     $pdf->SetXY($startX, $startY + ($rowH * 2));
     $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
 
-    // Baris 4: IKM (BARU)
     $pdf->SetXY($startX, $startY + ($rowH * 3));
     $pdf->Cell($wLabel, $rowH, ' Indeks Kepuasan Masyarakat', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $ikmText, 1, 0, 'L');
 
-    // Baris 5: Ulasan
     $pdf->SetXY($startX, $startY + ($rowH * 4));
     $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
 
-    // === RESET POSISI Y ===
-    // Pindahkan kursor ke bawah tabel ringkasan (5 Baris + Spasi)
     $pdf->SetY($startY + $totalBoxHeight + 10);
 
-    // === BAGIAN A: DATA SURVEI ===
+    // === BAGIAN A: DATA SURVEI (UPDATE: TAMBAH KOLOM IDX) ===
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA SURVEI KEPUASAN MASYARAKAT', 0, 1, 'L');
 
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(0, 150, 100);
     $pdf->SetTextColor(255);
+
+    // Header Tabel (Adjusted Widths: Total 190)
+    // [8, 35, 40, 14, 14, 14, 14, 51]
     $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
     $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
     $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
-    $pdf->Cell(15, 7, 'ZI', 1, 0, 'C', true);
-    $pdf->Cell(15, 7, 'LYN', 1, 0, 'C', true);
-    $pdf->Cell(15, 7, 'AKD', 1, 0, 'C', true);
-    $pdf->Cell(62, 7, 'Masukan', 1, 1, 'L', true);
+    $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
+    $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
+    $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
+    $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true); // Kolom Baru: Index per user
+    $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
 
     $pdf->SetTextColor(0);
     $pdf->SetFont('Arial', '', 8);
-    $pdf->SetWidths([8, 35, 40, 15, 15, 15, 62]);
-    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'L']);
+    // Lebar kolom disesuaikan untuk memuat IDX
+    $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
+    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
 
     $resSurv = $db->query("SELECT * FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at DESC");
     $no = 1;
     $found1 = false;
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
         $found1 = true;
-        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $row['feedback'] ?: '-']);
+        // Hitung Index Individual
+        $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
+
+        $pdf->Row([
+            $no++,
+            formatFullTime($row['created_at']),
+            $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")",
+            $row['score_zi'],
+            $row['score_service'],
+            $row['score_academic'],
+            $idxIndividual, // Nilai Index per user
+            $row['feedback'] ?: '-'
+        ]);
     }
     if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
