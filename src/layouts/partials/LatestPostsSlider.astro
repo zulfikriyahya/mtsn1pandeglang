@@ -4,8 +4,14 @@ import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import dateFormat from "@/lib/utils/dateFormat";
 import readingTime from "@/lib/utils/readingTime";
+import CardViewCounter from "@/layouts/helpers/CardViewCounter";
 import { humanize } from "@/lib/utils/textConverter";
-import { FaRegClock, FaRegCalendarAlt, FaArrowRight } from "react-icons/fa";
+import {
+  FaRegClock,
+  FaRegCalendarAlt,
+  FaArrowRight,
+  FaRegEye,
+} from "react-icons/fa";
 
 // 1. Ambil data blog
 const posts = await getSinglePage("blog");
@@ -72,6 +78,10 @@ const latestPosts = sortedPosts.slice(0, 6);
                       <div class="flex items-center gap-1">
                         <FaRegClock />
                         {readingTime(post.body)}
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <FaRegEye />
+                        <CardViewCounter client:visible slug={post.id} />
                       </div>
                     </div>
 
