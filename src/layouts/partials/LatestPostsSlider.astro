@@ -13,17 +13,13 @@ import {
   FaRegEye,
 } from "react-icons/fa";
 
-// 1. Ambil data blog
 const posts = await getSinglePage("blog");
-// 2. Urutkan dari yang terbaru
 const sortedPosts = sortByDate(posts);
-// 3. Ambil 6 postingan terbaru saja
 const latestPosts = sortedPosts.slice(0, 6);
 ---
 
 <section class="section bg-light dark:bg-darkmode-light overflow-hidden">
   <div class="container">
-    <!-- Header Section -->
     <div class="mb-12 text-center">
       <h2 class="h2 gsap-fade-up">Berita & Artikel Terbaru</h2>
       <p
@@ -34,7 +30,6 @@ const latestPosts = sortedPosts.slice(0, 6);
       </p>
     </div>
 
-    <!-- Swiper Container -->
     <div class="gsap-fade-up relative">
       <div class="swiper latest-posts-slider !pb-12">
         <div class="swiper-wrapper">
@@ -42,7 +37,6 @@ const latestPosts = sortedPosts.slice(0, 6);
             latestPosts.map((post) => (
               <div class="swiper-slide h-auto">
                 <div class="group h-full flex flex-col overflow-hidden rounded-2xl border border-border bg-body transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-darkmode-border dark:bg-darkmode-body">
-                  {/* Image Thumbnail */}
                   <div class="relative h-56 overflow-hidden">
                     {post.data.image ? (
                       <ImageMod
@@ -59,7 +53,6 @@ const latestPosts = sortedPosts.slice(0, 6);
                       </div>
                     )}
 
-                    {/* Badge Kategori */}
                     <div class="absolute left-4 top-4">
                       <span class="rounded-md bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary shadow-sm backdrop-blur-sm dark:bg-black/80 dark:text-white">
                         {humanize(post.data.categories[0])}
@@ -67,9 +60,7 @@ const latestPosts = sortedPosts.slice(0, 6);
                     </div>
                   </div>
 
-                  {/* Content */}
                   <div class="flex flex-1 flex-col p-6">
-                    {/* Meta Data */}
                     <div class="mb-3 flex items-center gap-4 text-xs text-text-light dark:text-darkmode-text-light">
                       <div class="flex items-center gap-1">
                         <FaRegCalendarAlt />
@@ -84,7 +75,6 @@ const latestPosts = sortedPosts.slice(0, 6);
                       </div>
                     </div>
 
-                    {/* Title */}
                     <h3 class="h5 mb-3 flex-1 font-bold leading-snug">
                       <a
                         href={`/blog/${post.id}`}
@@ -94,7 +84,6 @@ const latestPosts = sortedPosts.slice(0, 6);
                       </a>
                     </h3>
 
-                    {/* Link Read More */}
                     <div class="mt-4 pt-4 border-t border-border dark:border-darkmode-border">
                       <a
                         href={`/blog/${post.id}`}
@@ -111,7 +100,6 @@ const latestPosts = sortedPosts.slice(0, 6);
           }
         </div>
 
-        {/* Pagination Dots Container */}
         <div class="latest-posts-pagination mt-8 flex justify-center gap-2">
         </div>
       </div>

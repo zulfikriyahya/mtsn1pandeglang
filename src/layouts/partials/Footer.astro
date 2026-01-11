@@ -38,7 +38,6 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
     >
       <p set:html={markdownify(config.params.copyright)} />
 
-      {/* Cukup panggil komponen ini saja */}
       <VisitorCounter client:only="react" />
     </div>
   </div>

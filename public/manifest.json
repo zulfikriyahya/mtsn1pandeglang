@@ -3,7 +3,7 @@
   "short_name": "MTs Negeri 1 Pandeglang",
   "author": {
     "name": "Yahya Zulfikri",
-    "role": "Head of IT",
+    "role": "Fullstack Developer",
     "phone": "62895351856267"
   },
   "description": "Mandiri, Takwa, Peduli Lingkungan, Prestasi.",
@@ -41,7 +41,7 @@
   ],
   "screenshots": [
     {
-      "src": "/images/icons/icon-512x512.png",
+      "src": "/images/icons/screenshoot.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "narrow"

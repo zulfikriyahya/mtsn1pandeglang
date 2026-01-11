@@ -1,4 +1,3 @@
-/* section style */
 .section {
   @apply py-24 xl:py-28;
 }
@@ -7,12 +6,10 @@
   @apply py-16 xl:py-20;
 }
 
-/* container */
 .container {
   @apply mx-auto xl:!max-w-[1320px] px-4;
 }
 
-/* social icons */
 .social-icons {
   @apply space-x-4;
 }
@@ -26,7 +23,6 @@
   @apply h-5 w-5;
 }
 
-/* notice */
 .notice {
   @apply mb-6 rounded-lg border px-8 py-6;
 }
@@ -70,8 +66,6 @@
   @apply text-[#DB2C23];
   @apply border-current;
 }
-
-/* tab */
 .tab {
   @apply overflow-hidden rounded-lg border border-border dark:border-darkmode-border;
 }
@@ -104,7 +98,6 @@
   @apply block;
 }
 
-/* accordion */
 .accordion {
   @apply mb-6 overflow-hidden rounded-lg border border-border bg-light dark:border-darkmode-border dark:bg-darkmode-light;
 }
@@ -129,7 +122,6 @@
   @apply max-h-screen;
 }
 
-/* modal */
 .modal {
   @apply fixed inset-0 z-40 hidden h-full w-full overflow-auto;
 }
@@ -146,7 +138,6 @@
   @apply absolute right-3 top-3 h-8 w-8 rounded-full bg-light text-center leading-8 text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark;
 }
 
-/* content style */
 .content {
   @apply prose max-w-none;
   @apply prose-headings:mb-[.3em] prose-headings:mt-[.6em] prose-headings:text-text-dark dark:prose-headings:text-darkmode-text-dark;

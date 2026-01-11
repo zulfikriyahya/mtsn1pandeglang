@@ -14,18 +14,11 @@ const InstallPrompt = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check if dismissed in current session
     const sessionDismissed = sessionStorage.getItem("pwa-install-dismissed");
-
-    // Detect iOS
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(isIOSDevice);
-
-    // Detect dark mode
     const isDark = document.documentElement.classList.contains("dark");
     setIsDarkMode(isDark);
-
-    // Listen for theme changes
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains("dark");
       setIsDarkMode(isDark);
@@ -49,7 +42,6 @@ const InstallPrompt = () => {
       }
     };
 
-    // Log untuk debugging
     console.log("InstallPrompt mounted, isIOS:", isIOSDevice);
     console.log("Session dismissed:", sessionDismissed);
 
@@ -95,7 +87,6 @@ const InstallPrompt = () => {
       <div className="rounded-lg border border-border bg-white shadow-2xl dark:border-darkmode-border dark:bg-darkmode-body">
         <div className="p-4">
           <div className="flex items-start gap-3">
-            {/* App Icon */}
             <div className="flex-shrink-0">
               <img
                 src="/images/icons/icon-192x192.png"
@@ -104,7 +95,6 @@ const InstallPrompt = () => {
               />
             </div>
 
-            {/* Content */}
             <div className="flex-1">
               <h3 className="mb-1 font-semibold text-dark dark:text-white">
                 Install Aplikasi
@@ -115,7 +105,6 @@ const InstallPrompt = () => {
                   : "Install MTs Negeri 1 Pandeglang untuk akses lebih cepat dan bisa digunakan offline!"}
               </p>
 
-              {/* Buttons */}
               <div className="flex gap-2">
                 {!isIOS && deferredPrompt && (
                   <button
@@ -134,7 +123,6 @@ const InstallPrompt = () => {
               </div>
             </div>
 
-            {/* Close Button */}
             <button
               onClick={handleDismiss}
               className="flex-shrink-0 text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaCookieBite, FaTimes } from "react-icons/fa";
 
-// Definisi TypeScript agar tidak error saat akses window.dataLayer
 declare global {
   interface Window {
     dataLayer: any[];
@@ -11,12 +10,8 @@ declare global {
 const CookieConsent = () => {
   const [show, setShow] = useState(false);
 
-  // Fungsi untuk mengirim sinyal ke GTM
   const grantConsent = () => {
-    // Pastikan dataLayer ada
     window.dataLayer = window.dataLayer || [];
-
-    // Push event 'consent_granted' ke GTM
     window.dataLayer.push({
       event: "consent_granted",
       consent_status: "granted",
@@ -29,12 +24,9 @@ const CookieConsent = () => {
     const consent = localStorage.getItem("cookie-consent");
 
     if (consent === "accepted") {
-      // Jika sudah pernah setuju, langsung aktifkan GTM tracking
       grantConsent();
     } else if (consent === "declined") {
-      // Jika ditolak, jangan lakukan apa-apa (Tracking mati)
     } else {
-      // Jika belum memilih, tampilkan popup
       const timer = setTimeout(() => setShow(true), 2000);
       return () => clearTimeout(timer);
     }
@@ -42,13 +34,12 @@ const CookieConsent = () => {
 
   const handleAccept = () => {
     localStorage.setItem("cookie-consent", "accepted");
-    grantConsent(); // Aktifkan tracking sekarang
+    grantConsent();
     setShow(false);
   };
 
   const handleDecline = () => {
     localStorage.setItem("cookie-consent", "declined");
-    // Kita tidak push event apa-apa, jadi tag GTM tidak akan jalan
     setShow(false);
   };
 

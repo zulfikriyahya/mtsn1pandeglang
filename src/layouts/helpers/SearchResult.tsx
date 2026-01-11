@@ -28,8 +28,6 @@ export interface ISearchGroup {
     content: string;
   }[];
 }
-
-// search result component
 const SearchResult = ({
   searchResult,
   searchString,
@@ -37,7 +35,6 @@ const SearchResult = ({
   searchResult: ISearchItem[];
   searchString: string;
 }) => {
-  // generate search result group
   const generateSearchGroup = (searchResult: ISearchItem[]) => {
     const joinDataByGroup: ISearchGroup[] = searchResult.reduce(
       (groupItems: ISearchGroup[], item: ISearchItem) => {
@@ -71,7 +68,6 @@ const SearchResult = ({
   };
   const finalResult = generateSearchGroup(searchResult);
 
-  // match marker
   const matchMarker = (text: string, substring: string) => {
     const parts = text.split(new RegExp(`(${substring})`, "gi"));
     return parts.map((part, index) =>
@@ -83,7 +79,6 @@ const SearchResult = ({
     );
   };
 
-  // match underline
   const matchUnderline = (text: string, substring: string) => {
     const parts = text?.split(new RegExp(`(${substring})`, "gi"));
     return parts?.map((part, index) =>
@@ -97,14 +92,12 @@ const SearchResult = ({
     );
   };
 
-  // match content
   const matchContent = (content: string, substring: string) => {
     const plainContent = plainify(content);
     const position = plainContent
       .toLowerCase()
       .indexOf(substring.toLowerCase());
 
-    // Find the start of the word containing the substring
     let wordStart = position;
     while (wordStart > 0 && plainContent[wordStart - 1] !== " ") {
       wordStart--;

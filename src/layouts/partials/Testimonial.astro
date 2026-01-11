@@ -85,7 +85,6 @@ const { testimonial } = Astro.props;
   import "swiper/css/pagination";
   import { Autoplay, Pagination } from "swiper/modules";
 
-  // astro:page-load event is fired when the page is loaded
   document.addEventListener("astro:page-load", () => {
     new Swiper(".testimonial-slider", {
       modules: [Pagination, Autoplay],

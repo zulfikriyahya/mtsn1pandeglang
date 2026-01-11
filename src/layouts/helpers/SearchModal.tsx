@@ -4,13 +4,9 @@ import SearchResult, { type ISearchItem } from "./SearchResult";
 
 const SearchModal = () => {
   const [searchString, setSearchString] = useState("");
-
-  // handle input change
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     setSearchString(e.currentTarget.value.replace("\\", "").toLowerCase());
   };
-
-  // generate search result
   const doSearch = (searchData: ISearchItem[]) => {
     const regex = new RegExp(`${searchString}`, "gi");
     if (searchString === "") {
@@ -38,14 +34,10 @@ const SearchModal = () => {
       return searchResult;
     }
   };
-
-  // get search result
   const startTime = performance.now();
   const searchResult = doSearch(searchData as ISearchItem[]);
   const endTime = performance.now();
   const totalTime = ((endTime - startTime) / 1000).toFixed(3);
-
-  // search dom manipulation
   useEffect(() => {
     const searchModal = document.getElementById("searchModal");
     const searchInput = document.getElementById("searchInput");
@@ -55,28 +47,21 @@ const SearchModal = () => {
       "[data-search-trigger]",
     );
 
-    // Fungsi Helper untuk Buka/Tutup Modal
     const openModal = () => {
       searchModal!.classList.add("show");
-      document.body.classList.add("overflow-hidden"); // KUNCI: Matikan scroll body
+      document.body.classList.add("overflow-hidden");
       searchInput!.focus();
     };
 
     const closeModal = () => {
       searchModal!.classList.remove("show");
-      document.body.classList.remove("overflow-hidden"); // KUNCI: Nyalakan scroll body
-      setSearchString(""); // Opsional: Reset pencarian saat tutup
+      document.body.classList.remove("overflow-hidden");
+      setSearchString("");
     };
-
-    // 1. Trigger Click (Tombol Kaca Pembesar)
     searchModalTriggers.forEach((button) => {
       button.addEventListener("click", openModal);
     });
-
-    // 2. Overlay Click (Tutup saat klik di luar)
     searchModalOverlay!.addEventListener("click", closeModal);
-
-    // 3. Keyboard Navigation
     let selectedIndex = -1;
 
     const updateSelection = () => {
@@ -95,14 +80,12 @@ const SearchModal = () => {
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Shortcut CTRL+K / CMD+K untuk Buka
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        event.preventDefault(); // Mencegah browser focus bar
+        event.preventDefault();
         openModal();
         updateSelection();
       }
 
-      // Navigasi Arrow
       if (searchModal!.classList.contains("show")) {
         if (event.key === "ArrowUp" || event.key === "ArrowDown") {
           event.preventDefault();
@@ -125,8 +108,6 @@ const SearchModal = () => {
           ) as HTMLAnchorElement;
           if (activeLink) {
             activeLink?.click();
-            // Kita tidak perlu panggil closeModal() di sini karena navigasi akan merefresh halaman
-            // Tapi untuk SPA, kita harus remove overflow
             document.body.classList.remove("overflow-hidden");
           }
         }
@@ -136,7 +117,6 @@ const SearchModal = () => {
 
     document.addEventListener("keydown", handleKeyDown);
 
-    // Cleanup Event Listeners saat unmount
     return () => {
       searchModalTriggers.forEach((button) => {
         button.removeEventListener("click", openModal);

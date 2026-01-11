@@ -16,7 +16,6 @@ import SearchModal from "./helpers/SearchModal";
 import InstallPrompt from "@/layouts/helpers/InstallPrompt";
 import CookieConsent from "@/layouts/helpers/CookieConsent";
 
-// font families
 const pf = theme.fonts.font_family.primary;
 const sf = theme.fonts.font_family.secondary;
 
@@ -31,8 +30,6 @@ if (theme.fonts.font_family.secondary) {
     .replace(/\+/g, " ")
     .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
 }
-
-// types for frontmatters
 export interface Props {
   title?: string;
   meta_title?: string;
@@ -42,7 +39,6 @@ export interface Props {
   canonical?: string;
 }
 
-// destructure frontmatter
 const { title, meta_title, description, image, noindex, canonical } =
   Astro.props;
 ---
@@ -50,17 +46,13 @@ const { title, meta_title, description, image, noindex, canonical } =
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    <!-- google tag manager -->
     {
       config.google_tag_manager.enable && (
         <GoogleTagmanager id={config.google_tag_manager.gtm_id} />
       )
     }
-    <!-- favicon -->
     <link rel="shortcut icon" href={config.site.favicon} />
-    <!-- theme meta -->
     <meta name="theme-name" content="astroplate" />
     <meta name="msapplication-TileColor" content="#000000" />
     <meta
@@ -75,7 +67,6 @@ const { title, meta_title, description, image, noindex, canonical } =
     />
     <meta name="generator" content={Astro.generator} />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <!-- google font css -->
     <AstroFont
       config={[
         {
@@ -99,24 +90,19 @@ const { title, meta_title, description, image, noindex, canonical } =
       ]}
     />
 
-    <!-- responsive meta -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=5"
     />
 
-    <!-- title -->
     <title>
       {plainify(meta_title ? meta_title : title ? title : config.site.title)}
     </title>
 
-    <!-- canonical url -->
     {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
 
-    <!-- noindex robots -->
     {noindex && <meta name="robots" content="noindex,nofollow" />}
 
-    <!-- meta-description -->
     <meta
       name="description"
       content={plainify(
@@ -126,10 +112,8 @@ const { title, meta_title, description, image, noindex, canonical } =
 
     <ClientRouter />
 
-    <!-- author from config.json -->
     <meta name="author" content={config.metadata.meta_author} />
 
-    <!-- og-title -->
     <meta
       property="og:title"
       content={plainify(
@@ -137,7 +121,6 @@ const { title, meta_title, description, image, noindex, canonical } =
       )}
     />
 
-    <!-- og-description -->
     <meta
       property="og:description"
       content={plainify(
@@ -150,7 +133,6 @@ const { title, meta_title, description, image, noindex, canonical } =
       content={`${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`}
     />
 
-    <!-- twitter-title -->
     <meta
       name="twitter:title"
       content={plainify(
@@ -158,7 +140,6 @@ const { title, meta_title, description, image, noindex, canonical } =
       )}
     />
 
-    <!-- twitter-description -->
     <meta
       name="twitter:description"
       content={plainify(
@@ -166,7 +147,6 @@ const { title, meta_title, description, image, noindex, canonical } =
       )}
     />
 
-    <!-- og-image -->
     <meta
       property="og:image"
       content={`${config.site.base_url}${
@@ -174,7 +154,6 @@ const { title, meta_title, description, image, noindex, canonical } =
       }`}
     />
 
-    <!-- twitter-image -->
     <meta
       name="twitter:image"
       content={`${config.site.base_url}${
@@ -184,7 +163,6 @@ const { title, meta_title, description, image, noindex, canonical } =
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    {/* google tag manager noscript */}
     {
       config.google_tag_manager.enable && (
         <GoogleTagmanagerNoscript id={config.google_tag_manager.gtm_id} />
@@ -204,7 +182,6 @@ const { title, meta_title, description, image, noindex, canonical } =
     <script>
       import { initAnimations } from "@/scripts/gsap-animations";
 
-      // Jalankan saat halaman pertama kali load dan setiap kali navigasi berpindah
       document.addEventListener("astro:page-load", () => {
         initAnimations();
       });
@@ -212,12 +189,10 @@ const { title, meta_title, description, image, noindex, canonical } =
 
     <script>
       import { initAnimations } from "@/scripts/gsap-animations";
-      // Import script spotlight yang baru dibuat
       import { initSpotlightButtons } from "@/scripts/spotlight";
 
       document.addEventListener("astro:page-load", () => {
         initAnimations();
-        // Jalankan inisialisasi spotlight
         initSpotlightButtons();
       });
     </script>
