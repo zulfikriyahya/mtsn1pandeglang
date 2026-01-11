@@ -56,22 +56,23 @@ class PDF extends FPDF
     // --- KOP SURAT RESMI ---
     function Header()
     {
+        // Path Relative
         $path = '../images/instansi/';
 
-        // UKURAN LOGO DIPERKECIL (18mm)
-        $logoSize = 18;
+        // Ukuran Logo
+        $logoSize = 21;
 
-        // 1. LOGO KIRI (Kemenag)
+        // 1. LOGO KIRI (Kemenag) - X=12, Y=10
         if (file_exists($path . 'logo-institusi.png')) {
             $this->Image($path . 'logo-institusi.png', 12, 10, $logoSize);
         }
 
-        // 2. LOGO KANAN (MTs) - X = 210 - 12 - 18 = 180
+        // 2. LOGO KANAN (MTs) - X=177 (A4 210 - Margin - Size)
         if (file_exists($path . 'logo-instansi.png')) {
-            $this->Image($path . 'logo-instansi.png', 180, 10, $logoSize);
+            $this->Image($path . 'logo-instansi.png', 177, 10, $logoSize);
         }
 
-        // Teks Kop
+        // Teks Kop (Geser Y sedikit ke bawah agar center dengan Logo)
         $this->SetY(11);
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
@@ -185,7 +186,7 @@ $posts = $db->querySingle("SELECT COUNT(*) FROM post_stats") ?: 0;
 $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback") ?: 0;
 $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses") ?: 0;
 
-// Tabel Statistik
+// Tabel Statistik Ringkas
 $pdf->SetFont('Arial', '', 10);
 $pdf->SetFillColor(245, 245, 245);
 $pdf->Cell(95, 8, 'Total Kunjungan Website', 1, 0, 'L', true);
@@ -268,8 +269,8 @@ $pdf->Ln(10);
 $path = '../images/instansi/';
 $tglCetak = getIndonesianDate();
 
-// UKURAN QR CODE DIPERKECIL (17mm)
-$qrSize = 17;
+// Ukuran TTE (QR Code) diperkecil
+$qrSize = 22;
 
 $yStart = $pdf->GetY();
 
@@ -292,18 +293,22 @@ $pdf->Cell(70, 5, 'Koordinator Tim Pusdatin,', 0, 1, 'C');
 // --- GAMBAR TTE (BARIS 1) ---
 $yImage = $pdf->GetY() + 2;
 
-// TTE Kiri (KTU) - Center di 55. X = 55 - (17/2) = 46.5
+// TTE Kiri (KTU) - Posisi Tengah dari Kolom Kiri
+// Kolom Start: 20, Width: 70. Center = 20 + 35 = 55.
+// Image X = 55 - (22/2) = 44
 if (file_exists($path . 'tte-kepala-tata-usaha.png')) {
-    $pdf->Image($path . 'tte-kepala-tata-usaha.png', 46.5, $yImage, $qrSize);
+    $pdf->Image($path . 'tte-kepala-tata-usaha.png', 44, $yImage, $qrSize);
 }
 
-// TTE Kanan (Pusdatin) - Center di 155. X = 155 - (17/2) = 146.5
+// TTE Kanan (Pusdatin) - Posisi Tengah dari Kolom Kanan
+// Kolom Start: 120, Width: 70. Center = 120 + 35 = 155.
+// Image X = 155 - (22/2) = 144
 if (file_exists($path . 'tte-koordinator-tim-pusdatin.png')) {
-    $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 146.5, $yImage, $qrSize);
+    $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 144, $yImage, $qrSize);
 }
 
-// Space tanda tangan (Disesuaikan dengan QR Kecil)
-$pdf->Ln(25);
+// Space tanda tangan (dikurangi karena gambar kecil)
+$pdf->Ln(28);
 
 // --- NAMA & NIP (BARIS 1) ---
 $pdf->SetFont('Arial', 'B', 11);
@@ -337,11 +342,11 @@ $pdf->Cell(0, 5, 'Kepala Madrasah,', 0, 1, 'C');
 // Image Kamad (Tengah)
 $yImageKamad = $pdf->GetY() + 2;
 if (file_exists($path . 'tte-kepala-madrasah.png')) {
-    // Center Page 105. X = 105 - (17/2) = 96.5
-    $pdf->Image($path . 'tte-kepala-madrasah.png', 96.5, $yImageKamad, $qrSize);
+    // Center Page: 210/2 = 105. Image X = 105 - 11 = 94
+    $pdf->Image($path . 'tte-kepala-madrasah.png', 94, $yImageKamad, $qrSize);
 }
 
-$pdf->Ln(25);
+$pdf->Ln(28);
 
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(0, 5, 'H. EMAN SULAIMAN, S.Ag., M.Pd.', 0, 1, 'C');
