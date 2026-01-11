@@ -56,10 +56,11 @@ class PDF extends FPDF
     // --- KOP SURAT RESMI ---
     function Header()
     {
-        // Path Gambar Absolut
-        $path = __DIR__ . '../../../images/instansi/';
+        // Path Relative (Naik satu folder dari 'api' ke 'public/images')
+        $path = '../images/instansi/';
 
-        // 1. LOGO KIRI (Kemenag / Institusi) - Hirarki lebih tinggi di kiri
+        // 1. LOGO KIRI (Kemenag / Institusi)
+        // Cek file
         if (file_exists($path . 'logo-institusi.png')) {
             $this->Image($path . 'logo-institusi.png', 10, 10, 23);
         }
@@ -182,7 +183,7 @@ $posts = $db->querySingle("SELECT COUNT(*) FROM post_stats") ?: 0;
 $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback") ?: 0;
 $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses") ?: 0;
 
-// Tabel Statistik
+// Tabel Statistik Ringkas
 $pdf->SetFont('Arial', '', 10);
 $pdf->SetFillColor(245, 245, 245);
 $pdf->Cell(95, 8, 'Total Kunjungan Website', 1, 0, 'L', true);
@@ -200,7 +201,6 @@ $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(0, 150, 100);
 $pdf->SetTextColor(255);
 
-// Header Table
 $pdf->Cell(8, 8, 'No', 1, 0, 'C', true);
 $pdf->Cell(35, 8, 'Waktu', 1, 0, 'C', true);
 $pdf->Cell(40, 8, 'Responden', 1, 0, 'L', true);
@@ -214,7 +214,6 @@ $pdf->SetFont('Arial', '', 8);
 $pdf->SetWidths([8, 35, 40, 15, 15, 15, 62]);
 $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'L']);
 
-// QUERY TANPA LIMIT
 $resSurv = $db->query("SELECT * FROM survey_responses ORDER BY created_at DESC");
 $no = 1;
 while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
@@ -234,7 +233,7 @@ $pdf->Ln(5);
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->Cell(0, 8, 'B. DATA ULASAN & RATING PELAYANAN (LENGKAP)', 0, 1, 'L');
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->SetFillColor(255, 193, 7); // Warna Kuning/Emas
+$pdf->SetFillColor(255, 193, 7);
 $pdf->SetTextColor(0);
 
 $pdf->Cell(8, 8, 'No', 1, 0, 'C', true);
@@ -247,7 +246,6 @@ $pdf->SetFont('Arial', '', 8);
 $pdf->SetWidths([8, 35, 45, 20, 82]);
 $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
 
-// QUERY TANPA LIMIT
 $resFeed = $db->query("SELECT * FROM feedback ORDER BY created_at DESC");
 $no = 1;
 while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) {
@@ -260,17 +258,17 @@ while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) {
     ]);
 }
 
-// === AREA TANDA TANGAN (SIGNATURE SECTION) ===
-$pdf->AddPage(); // Pindah halaman khusus tanda tangan agar rapi
+// === AREA TANDA TANGAN ===
+$pdf->AddPage();
 $pdf->Ln(10);
 
-$path = __DIR__ . '/../../images/instansi/';
+// Path Relative untuk Tanda Tangan
+$path = '../images/instansi/';
 $tglCetak = getIndonesianDate();
 
-// Posisi Y awal tanda tangan
 $yStart = $pdf->GetY();
 
-// --- KANAN (PUSDATIN + Tanggal) ---
+// --- KANAN (PUSDATIN + TANGGAL) ---
 $pdf->SetXY(120, $yStart);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(70, 5, 'Pandeglang, ' . $tglCetak, 0, 1, 'C');
@@ -289,17 +287,16 @@ $pdf->Cell(70, 5, 'Koordinator Tim Pusdatin,', 0, 1, 'C');
 // --- GAMBAR TTE (BARIS 1) ---
 $yImage = $pdf->GetY() + 2;
 
-// TTE KIRI (KTU)
+// TTE KTU (Kiri)
 if (file_exists($path . 'tte-kepala-tata-usaha.png')) {
     $pdf->Image($path . 'tte-kepala-tata-usaha.png', 40, $yImage, 30);
 }
 
-// TTE KANAN (Pusdatin)
+// TTE Pusdatin (Kanan)
 if (file_exists($path . 'tte-koordinator-tim-pusdatin.png')) {
     $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 140, $yImage, 30);
 }
 
-// Space tanda tangan
 $pdf->Ln(35);
 
 // --- NAMA & NIP (BARIS 1) ---
@@ -334,7 +331,6 @@ $pdf->Cell(0, 5, 'Kepala Madrasah,', 0, 1, 'C');
 // Image Kamad (Tengah)
 $yImageKamad = $pdf->GetY() + 2;
 if (file_exists($path . 'tte-kepala-madrasah.png')) {
-    // Tengah A4 (210mm) dikurang setengah lebar gambar (15mm) = 90
     $pdf->Image($path . 'tte-kepala-madrasah.png', 90, $yImageKamad, 30);
 }
 
