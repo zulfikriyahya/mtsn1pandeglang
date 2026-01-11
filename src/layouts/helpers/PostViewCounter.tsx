@@ -2,52 +2,36 @@ import React, { useEffect, useState } from "react";
 import { FaRegEye } from "react-icons/fa";
 
 const PostViewCounter = () => {
-  const [views, setViews] = useState<string>("...");
-  const [isHidden, setIsHidden] = useState(false);
+  const [views, setViews] = useState("...");
 
   useEffect(() => {
-    // Gunakan namespace tanpa titik agar aman
-    const NAMESPACE = "mtsn1pandeglang";
+    const NAMESPACE = "mtsn1pandeglang_official";
 
-    // Ambil Slug dari URL terakhir
+    // Ambil slug, bersihkan karakter aneh
     const pathSegments = window.location.pathname.split("/").filter(Boolean);
     const slug = pathSegments[pathSegments.length - 1] || "home";
+    // Ganti karakter selain huruf/angka dengan underscore
+    const safeSlug = slug.replace(/[^a-zA-Z0-9]/g, "_");
 
-    // Key Format: post-{slug}
-    const KEY = `post-${slug}`;
+    const KEY = `post_${safeSlug}`;
+    const callbackName = `cb_post_${Math.floor(Math.random() * 100000)}`;
 
-    const fetchCounter = async () => {
-      try {
-        // Gunakan countapi.dev
-        // /hit = Menambah angka (Increment)
-        const res = await fetch(
-          `https://api.countapi.dev/hit/${NAMESPACE}/${KEY}`,
-        );
-
-        if (!res.ok) throw new Error("Failed");
-
-        const data = await res.json();
-        // countapi.dev mengembalikan properti 'value', bukan 'count'
-        setViews(data.value.toLocaleString("id-ID"));
-      } catch (error) {
-        // Fallback: Baca Saja (/get)
-        try {
-          const resRead = await fetch(
-            `https://api.countapi.dev/get/${NAMESPACE}/${KEY}`,
-          );
-          if (!resRead.ok) throw new Error("Read Failed");
-          const dataRead = await resRead.json();
-          setViews(dataRead.value.toLocaleString("id-ID"));
-        } catch (err) {
-          setIsHidden(true);
-        }
-      }
+    // 1. Callback JSONP
+    // @ts-ignore
+    window[callbackName] = (response) => {
+      setViews(response.value.toLocaleString("id-ID"));
+      // @ts-ignore
+      delete window[callbackName];
+      document.getElementById("script-post-view")?.remove();
     };
 
-    fetchCounter();
-  }, []);
+    // 2. Script Injection
+    const script = document.createElement("script");
+    script.id = "script-post-view";
+    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${callbackName}`;
 
-  if (isHidden) return null;
+    document.body.appendChild(script);
+  }, []);
 
   return (
     <span className="flex items-center gap-2" title="Jumlah Pembaca">

@@ -2,45 +2,39 @@ import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 
 const VisitorCounter = () => {
-  const [visits, setVisits] = useState<string>("...");
-  const [isHidden, setIsHidden] = useState(false);
+  const [visits, setVisits] = useState("...");
 
   useEffect(() => {
-    const NAMESPACE = "mtsn1pandeglang";
-    const KEY = "site-visits";
+    // Namespace unik (Gunakan nama domain tanpa titik untuk aman)
+    const NAMESPACE = "mtsn1pandeglang_official";
+    const KEY = "site_visits";
 
-    const fetchCounter = async () => {
-      try {
-        // /hit = Tambah kunjungan
-        const res = await fetch(
-          `https://api.countapi.dev/hit/${NAMESPACE}/${KEY}`,
-        );
-        if (!res.ok) throw new Error("Network response was not ok");
-        const data = await res.json();
-        setVisits(data.value.toLocaleString("id-ID"));
-      } catch (error) {
-        try {
-          // /get = Baca saja jika hit gagal
-          const resRead = await fetch(
-            `https://api.countapi.dev/get/${NAMESPACE}/${KEY}`,
-          );
-          if (!resRead.ok) throw new Error("Read failed");
-          const dataRead = await resRead.json();
-          setVisits(dataRead.value.toLocaleString("id-ID"));
-        } catch (err) {
-          setIsHidden(true);
-        }
-      }
+    // Nama fungsi callback unik
+    const callbackName = `cb_visits_${Math.floor(Math.random() * 100000)}`;
+
+    // 1. Definisikan fungsi callback di window
+    // @ts-ignore
+    window[callbackName] = (response) => {
+      setVisits(response.value.toLocaleString("id-ID"));
+      // Bersihkan script setelah selesai
+      // @ts-ignore
+      delete window[callbackName];
+      document.getElementById("script-visits")?.remove();
     };
 
-    fetchCounter();
+    // 2. Buat script tag JSONP (Bypass CORS)
+    const script = document.createElement("script");
+    script.id = "script-visits";
+    // ?callback=... adalah kunci JSONP
+    script.src = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}?callback=${callbackName}`;
+
+    // 3. Eksekusi
+    document.body.appendChild(script);
   }, []);
 
-  if (isHidden) return null;
-
   return (
-    <div className="mt-4 flex justify-center text-xs text-text-light dark:text-darkmode-text-light opacity-80 transition-opacity duration-500">
-      <div className="flex items-center gap-2" title="Total Kunjungan Website">
+    <div className="mt-4 flex justify-center text-xs text-text-light dark:text-darkmode-text-light opacity-80">
+      <div className="flex items-center gap-2" title="Total Kunjungan">
         <FaEye className="text-blue-500" />
         <span className="font-bold">{visits}</span>
         <span>Total Kunjungan</span>

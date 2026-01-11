@@ -16,7 +16,7 @@ const CardViewCounter = ({ slug }: Props) => {
       try {
         // Gunakan /get (Hanya membaca, tidak menambah)
         const res = await fetch(
-          `https://api.countapi.dev/get/${NAMESPACE}/${KEY}`,
+          `https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`,
         );
 
         if (!res.ok) throw new Error("Not found");
