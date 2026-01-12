@@ -1,6 +1,6 @@
 <?php
 session_start();
-date_default_timezone_set('Asia/Jakarta');
+date_default_timezone_set('Asia/Jakarta'); // Set Timezone Server ke Jakarta
 
 // Proteksi
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -17,20 +17,31 @@ try {
     }
 
     $db = new SQLite3($dbPath);
-    // [FIX] WAJIB: Aktifkan Mode WAL
-    $db->busyTimeout(5000);
-    $db->exec('PRAGMA journal_mode = WAL');
-
     $action = $_GET['action'] ?? 'stats';
 
     // === HELPER: Format Tanggal Indonesia ===
     function formatTanggalIndo($timestamp)
     {
+        // Asumsi timestamp dari DB adalah UTC, kita konversi ke Jakarta
         try {
             $dt = new DateTime($timestamp, new DateTimeZone('UTC'));
             $dt->setTimezone(new DateTimeZone('Asia/Jakarta'));
 
-            $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            $bulan = [
+                1 => 'Januari',
+                'Februari',
+                'Maret',
+                'April',
+                'Mei',
+                'Juni',
+                'Juli',
+                'Agustus',
+                'September',
+                'Oktober',
+                'November',
+                'Desember'
+            ];
+
             $tgl = $dt->format('d');
             $bln = $bulan[(int)$dt->format('m')];
             $thn = $dt->format('Y');
@@ -42,24 +53,25 @@ try {
         }
     }
 
-    // === HELPER: Grafik Harian (Safe Mode) ===
+    // === HELPER: Grafik Harian (Waktu Jakarta) ===
     function getSafeDailyActivity($db, $table, $days = 30)
     {
         $data = [];
+        // Generate tanggal 30 hari terakhir (Waktu Jakarta)
         for ($i = $days - 1; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-$i days"));
             $data[$date] = 0;
         }
 
         try {
-            // Cek tabel exist dulu agar tidak error 500
             $check = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$table'");
             if (!$check) return $data;
 
-            // Query Group by Date (WIB)
-            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count
-                      FROM $table
-                      WHERE created_at >= date('now', '-$days days', '-7 hours')
+            // Query dengan penyesuaian Timezone (+7 Jam untuk WIB)
+            // datetime(created_at, '+7 hours') mengubah UTC ke WIB sebelum di-group
+            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count 
+                      FROM $table 
+                      WHERE created_at >= date('now', '-$days days', '-7 hours') 
                       GROUP BY date";
 
             $res = $db->query($query);
@@ -71,7 +83,6 @@ try {
                 }
             }
         } catch (Exception $e) {
-            // Silent fail jika query bermasalah
         }
         return $data;
     }
@@ -109,12 +120,11 @@ try {
             }
         }
 
-        // 4. Activity Trends (Real Data)
+        // 4. Activity Trends
         $activity_feedback = getSafeDailyActivity($db, 'feedback');
         $activity_survey = getSafeDailyActivity($db, 'survey_responses');
-        $activity_visits = getSafeDailyActivity($db, 'traffic_logs'); // Data dari log harian
 
-        // 5. Raw Data Tables
+        // 5. Raw Data (Dikirim Mentah UTC, diformat di Frontend)
         $posts = [];
         if ($total_posts > 0) {
             $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
@@ -146,8 +156,7 @@ try {
                 'activity' => [
                     'labels' => array_keys($activity_feedback),
                     'feedback' => array_values($activity_feedback),
-                    'survey' => array_values($activity_survey),
-                    'visits' => array_values($activity_visits)
+                    'survey' => array_values($activity_survey)
                 ]
             ],
             'tables' => [
@@ -158,11 +167,8 @@ try {
         ]);
     }
 
-    // === EXPORT CSV ===
+    // === EXPORT LOGIC (FORMAT INDONESIA) ===
     elseif ($action === 'export') {
-        // [FIX] Bersihkan buffer agar CSV bersih
-        if (ob_get_length()) ob_end_clean();
-
         $type = $_GET['type'] ?? '';
         $filename = "laporan_{$type}_" . date('Y-m-d_His') . ".csv";
 
@@ -170,7 +176,8 @@ try {
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $output = fopen('php://output', 'w');
-        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM for Excel
+        // Tambahkan BOM untuk Excel agar bisa baca karakter UTF-8 dengan benar
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         if ($type === 'feedback') {
             fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Rating', 'Pesan', 'IP Address']);

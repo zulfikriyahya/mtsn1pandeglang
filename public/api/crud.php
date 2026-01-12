@@ -2,6 +2,7 @@
 session_start();
 header('Content-Type: application/json');
 
+// 1. Cek Login Admin
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     http_response_code(403);
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
@@ -16,9 +17,6 @@ try {
     }
 
     $db = new SQLite3($dbPath);
-    // [FIX] WAJIB: Aktifkan Mode WAL
-    $db->busyTimeout(5000);
-    $db->exec('PRAGMA journal_mode = WAL');
 
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
@@ -27,6 +25,8 @@ try {
 
     if ($action === 'delete') {
         $type = $data['type'] ?? '';
+
+        // UPDATE: Mendukung single ID atau multiple IDs
         $ids = [];
         if (isset($data['ids']) && is_array($data['ids'])) {
             $ids = $data['ids'];
@@ -36,6 +36,7 @@ try {
 
         if (empty($ids)) throw new Exception("Tidak ada data yang dipilih.");
 
+        // Validasi Tipe Tabel
         $table = '';
         if ($type === 'feedback') {
             $table = 'feedback';
@@ -45,9 +46,12 @@ try {
             throw new Exception("Tipe data tidak dikenal.");
         }
 
+        // Sanitasi ID menjadi integer semua
         $sanitized_ids = array_map('intval', $ids);
         $ids_string = implode(',', $sanitized_ids);
 
+        // Eksekusi Bulk Delete
+        // Query: DELETE FROM table WHERE id IN (1, 2, 3)
         $query = "DELETE FROM $table WHERE id IN ($ids_string)";
 
         if ($db->exec($query)) {
