@@ -29,8 +29,8 @@
 
   "navigation_button": {
     "enable": true,
-    "label": "Daftar Sekarang",
-    "link": "https://daftar.mtsn1pandeglang.sch.id"
+    "label": "Login",
+    "link": "https://mtsn1pandeglang.sch.id/admin"
   },
 
   "google_tag_manager": {
