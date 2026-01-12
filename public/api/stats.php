@@ -13,6 +13,10 @@ try {
     }
     $db = new SQLite3($dbPath);
 
+    // [FIX] WAJIB: Aktifkan Mode WAL dan Timeout
+    $db->busyTimeout(5000);
+    $db->exec('PRAGMA journal_mode = WAL');
+
     // Tabel Akumulasi (Lama - Tetap dipakai untuk counter total cepat)
     $db->exec("CREATE TABLE IF NOT EXISTS global_stats (key TEXT PRIMARY KEY, value INTEGER DEFAULT 0)");
     $db->exec("INSERT OR IGNORE INTO global_stats (key, value) VALUES ('site_visits', 0)");
@@ -20,7 +24,7 @@ try {
     // Tabel Statistik Artikel
     $db->exec("CREATE TABLE IF NOT EXISTS post_stats (slug TEXT PRIMARY KEY, views INTEGER DEFAULT 0)");
 
-    // [BARU] Tabel Log Trafik Harian (Untuk Grafik Real)
+    // Tabel Log Trafik Harian (Detail)
     $db->exec("CREATE TABLE IF NOT EXISTS traffic_logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         ip_address TEXT,
@@ -42,7 +46,7 @@ try {
                 // 1. Update Total Counter (Global)
                 $db->exec("UPDATE global_stats SET value = value + 1 WHERE key = 'site_visits'");
 
-                // 2. [BARU] Insert Log Harian (Detail)
+                // 2. Insert Log Harian (Detail)
                 $stmt = $db->prepare("INSERT INTO traffic_logs (ip_address, user_agent, endpoint) VALUES (:ip, :ua, 'home')");
                 $stmt->bindValue(':ip', $_SERVER['REMOTE_ADDR'], SQLITE3_TEXT);
                 $stmt->bindValue(':ua', $_SERVER['HTTP_USER_AGENT'] ?? '', SQLITE3_TEXT);

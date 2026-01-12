@@ -6122,9 +6122,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
         body: formData,
       });
 
-      // PENTING: Ambil response sebagai text dulu untuk debugging
       const textResponse = await res.text();
-
       try {
         const json = JSON.parse(textResponse);
         if (json.status === "success") {
@@ -6134,10 +6132,9 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
           alert("Gagal: " + (json.message || "Terjadi kesalahan server."));
         }
       } catch (jsonError) {
-        // Jika gagal parse JSON, berarti server error (PHP Error/HTML)
-        console.error("Server Response:", textResponse);
+        console.error("Server Raw Response:", textResponse);
         alert(
-          "Terjadi kesalahan server (Lihat Console). Kemungkinan permission database atau file import.php error.",
+          "Terjadi kesalahan pada Server (Cek Console). Pastikan struktur database sesuai template.",
         );
       }
     } catch (e) {
@@ -12604,74 +12601,49 @@ try {
 ```
 <?php
 session_start();
-header('Content-Type: application/json');
-
-// Matikan display error agar tidak merusak JSON (PENTING untuk menghindari Network Error)
+// Matikan display error agar tidak merusak JSON (PENTING)
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-
-// 1. Cek Login Admin
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
-    exit;
-}
-
-$dbPath = __DIR__ . '/../../stats.db';
-
-// Cek permission file DB sebelum lanjut
-if (!is_writable($dbPath)) {
-    http_response_code(500);
-    echo json_encode(['status' => 'error', 'message' => 'File database tidak bisa ditulis (Permission Denied). Hubungi Administrator Server.']);
-    exit;
-}
+header('Content-Type: application/json');
 
 try {
+    // 1. Cek Login Admin
+    if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+        throw new Exception("Unauthorized access.");
+    }
+
+    // 2. Koneksi Database
+    $dbPath = __DIR__ . '/../../stats.db';
+
+    // Cek Permission File
+    if (file_exists($dbPath) && !is_writable($dbPath)) {
+        throw new Exception("File database terkunci (Permission Denied). Mohon cek izin file stats.db");
+    }
+
+    // Cek Permission Folder (untuk file .wal)
+    if (!is_writable(dirname($dbPath))) {
+        throw new Exception("Folder database terkunci. Mohon cek izin folder root.");
+    }
+
     $db = new SQLite3($dbPath);
-    // Timeout agar tidak error "database is locked"
     $db->busyTimeout(5000);
 
     $action = $_GET['action'] ?? '';
 
-    // === ACTION: DOWNLOAD TEMPLATE CSV ===
-    if ($action === 'template') {
-        $type = $_GET['type'] ?? 'feedback';
-        $filename = "template_import_{$type}.csv";
-
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-        $output = fopen('php://output', 'w');
-
-        // Tambahkan BOM untuk Excel Windows agar karakter aman
-        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
-
-        if ($type === 'feedback') {
-            fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
-            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan mantap', date('Y-m-d H:i:s'), '192.168.1.1']);
-        } elseif ($type === 'survey') {
-            fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
-            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Tingkatkan lagi', date('Y-m-d H:i:s'), '192.168.1.2']);
-        }
-
-        fclose($output);
-        exit;
-    }
-
-    // === ACTION: IMPORT DATA ===
+    // === ACTION: IMPORT ===
     if ($action === 'import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+
         if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception("File CSV tidak ditemukan atau error upload (Code: " . ($_FILES['file']['error'] ?? 'Unknown') . ")");
+            throw new Exception("Upload failed with error code: " . ($_FILES['file']['error'] ?? 'Unknown'));
         }
 
         $type = $_POST['type'] ?? '';
         $fileTmpPath = $_FILES['file']['tmp_name'];
 
-        // Deteksi Line Ending untuk kompatibilitas Windows/Mac
+        // Baca CSV
         ini_set('auto_detect_line_endings', true);
-
         $handle = fopen($fileTmpPath, "r");
-        if ($handle === FALSE) throw new Exception("Gagal membaca file.");
+        if (!$handle) throw new Exception("Tidak bisa membaca file temporary.");
 
         // Skip Header
         fgetcsv($handle, 1000, ",");
@@ -12681,71 +12653,111 @@ try {
 
         try {
             if ($type === 'feedback') {
-                $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
+                // Cek kolom ip_address secara dinamis
+                $resCols = $db->query("PRAGMA table_info(feedback)");
+                $hasIp = false;
+                while ($col = $resCols->fetchArray()) {
+                    if ($col['name'] === 'ip_address') $hasIp = true;
+                }
+
+                // Query Adaptif
+                $fields = ['name', 'rating', 'message', 'created_at'];
+                $params = [':name', ':rating', ':message', ':created_at'];
+
+                if ($hasIp) {
+                    $fields[] = 'ip_address';
+                    $params[] = ':ip_address';
+                }
+
+                $sql = "INSERT INTO feedback (" . implode(',', $fields) . ") VALUES (" . implode(',', $params) . ")";
+                $stmt = $db->prepare($sql);
 
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
-                    // Bersihkan karakter aneh jika ada
                     $data = array_map('trim', $data);
+                    if (count($data) < 2) continue;
 
-                    if (count($data) < 2) continue; // Skip baris kosong
+                    $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
+                    $stmt->bindValue(':rating', max(1, min(5, (int)($data[1] ?? 5))), SQLITE3_INTEGER);
+                    $stmt->bindValue(':message', $data[2] ?? '', SQLITE3_TEXT);
+                    $stmt->bindValue(':created_at', $data[3] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT);
+                    if ($hasIp) $stmt->bindValue(':ip_address', $data[4] ?? '127.0.0.1', SQLITE3_TEXT);
 
-                    $name = !empty($data[0]) ? $data[0] : 'Anonim';
-                    $rating = isset($data[1]) ? (int)$data[1] : 5;
-                    // Pastikan rating valid
-                    if ($rating < 1) $rating = 1;
-                    if ($rating > 5) $rating = 5;
-
-                    $msg = isset($data[2]) ? $data[2] : '';
-                    $date = !empty($data[3]) ? $data[3] : date('Y-m-d H:i:s');
-                    $ip = !empty($data[4]) ? $data[4] : '127.0.0.1';
-
-                    $stmt->bindValue(':name', $name, SQLITE3_TEXT);
-                    $stmt->bindValue(':rating', $rating, SQLITE3_INTEGER);
-                    $stmt->bindValue(':message', $msg, SQLITE3_TEXT);
-                    $stmt->bindValue(':created_at', $date, SQLITE3_TEXT);
-                    $stmt->bindValue(':ip_address', $ip, SQLITE3_TEXT);
                     $stmt->execute();
                     $successCount++;
                 }
             } elseif ($type === 'survey') {
-                $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
+                // Cek kolom dinamis
+                $resCols = $db->query("PRAGMA table_info(survey_responses)");
+                $cols = [];
+                while ($col = $resCols->fetchArray()) {
+                    $cols[] = $col['name'];
+                }
+
+                $hasIp = in_array('ip_address', $cols);
+                $hasJson = in_array('details_json', $cols);
+
+                // Build query
+                $fields = ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at'];
+                $params = [':name', ':role', ':zi', ':service', ':acad', ':feedback', ':created'];
+
+                if ($hasIp) {
+                    $fields[] = 'ip_address';
+                    $params[] = ':ip';
+                }
+                if ($hasJson) {
+                    $fields[] = 'details_json';
+                    $params[] = ':json';
+                }
+
+                $sql = "INSERT INTO survey_responses (" . implode(',', $fields) . ") VALUES (" . implode(',', $params) . ")";
+                $stmt = $db->prepare($sql);
 
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
                     $data = array_map('trim', $data);
-
                     if (count($data) < 5) continue;
 
-                    $name = !empty($data[0]) ? $data[0] : 'Anonim';
-                    $role = !empty($data[1]) ? $data[1] : 'Umum';
-                    $zi = isset($data[2]) ? (float)$data[2] : 0;
-                    $srv = isset($data[3]) ? (float)$data[3] : 0;
-                    $acd = isset($data[4]) ? (float)$data[4] : 0;
-                    $fb = isset($data[5]) ? $data[5] : '';
-                    $date = !empty($data[6]) ? $data[6] : date('Y-m-d H:i:s');
-                    $ip = !empty($data[7]) ? $data[7] : '127.0.0.1';
+                    $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
+                    $stmt->bindValue(':role', $data[1] ?: 'Umum', SQLITE3_TEXT);
+                    $stmt->bindValue(':zi', (float)($data[2] ?? 0), SQLITE3_FLOAT);
+                    $stmt->bindValue(':service', (float)($data[3] ?? 0), SQLITE3_FLOAT);
+                    $stmt->bindValue(':acad', (float)($data[4] ?? 0), SQLITE3_FLOAT);
+                    $stmt->bindValue(':feedback', $data[5] ?? '', SQLITE3_TEXT);
+                    $stmt->bindValue(':created', $data[6] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT);
 
-                    $stmt->bindValue(':name', $name, SQLITE3_TEXT);
-                    $stmt->bindValue(':role', $role, SQLITE3_TEXT);
-                    $stmt->bindValue(':zi', $zi, SQLITE3_FLOAT);
-                    $stmt->bindValue(':service', $srv, SQLITE3_FLOAT);
-                    $stmt->bindValue(':acad', $acd, SQLITE3_FLOAT);
-                    $stmt->bindValue(':feedback', $fb, SQLITE3_TEXT);
-                    $stmt->bindValue(':created', $date, SQLITE3_TEXT);
-                    $stmt->bindValue(':ip', $ip, SQLITE3_TEXT);
+                    if ($hasIp) $stmt->bindValue(':ip', $data[7] ?? '127.0.0.1', SQLITE3_TEXT);
+                    if ($hasJson) $stmt->bindValue(':json', '{}', SQLITE3_TEXT);
+
                     $stmt->execute();
                     $successCount++;
                 }
-            } else {
-                throw new Exception("Tipe import tidak dikenal.");
             }
 
             $db->exec('COMMIT');
             fclose($handle);
-            echo json_encode(['status' => 'success', 'message' => "Berhasil mengimport $successCount data."]);
+            echo json_encode(['status' => 'success', 'message' => "Sukses import $successCount data."]);
         } catch (Exception $ex) {
             $db->exec('ROLLBACK');
             throw $ex;
         }
+    }
+    // === ACTION: TEMPLATE ===
+    elseif ($action === 'template') {
+        $type = $_GET['type'] ?? 'feedback';
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="template_' . $type . '.csv"');
+        $out = fopen('php://output', 'w');
+        fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM
+
+        if ($type === 'feedback') {
+            fputcsv($out, ['name', 'rating', 'message', 'created_at', 'ip_address']);
+            fputcsv($out, ['Budi', '5', 'Mantap', date('Y-m-d H:i:s'), '127.0.0.1']);
+        } else {
+            fputcsv($out, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
+            fputcsv($out, ['Siti', 'Wali Murid', '5', '4', '5', 'Oke', date('Y-m-d H:i:s'), '127.0.0.1']);
+        }
+        fclose($out);
+    } else {
+        throw new Exception("Invalid Action");
     }
 } catch (Exception $e) {
     http_response_code(500);
@@ -12769,14 +12781,15 @@ date_default_timezone_set('Asia/Jakarta');
 
 // 1. Cek Login
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    die("Akses Ditolak.");
+    die("Akses Ditolak. Silakan Login.");
 }
 
 // 2. Cek Library
-if (!file_exists(__DIR__ . '/lib/fpdf.php')) {
-    die("Error: Library FPDF tidak ditemukan.");
+$libPath = __DIR__ . '/lib/fpdf.php';
+if (!file_exists($libPath)) {
+    die("ERROR: Library FPDF tidak ditemukan. Pastikan file uploaded di public/api/lib/fpdf.php");
 }
-require('lib/fpdf.php');
+require($libPath);
 
 // 3. Database
 $dbPath = __DIR__ . '/../../stats.db';
@@ -12821,60 +12834,40 @@ class PDF extends FPDF
     function ImageRemote($url, $x, $y, $w, $h)
     {
         $tmpFile = sys_get_temp_dir() . '/qr_' . md5($url) . '.png';
-        if (file_exists($tmpFile) && filesize($tmpFile) > 0) {
-            $this->Image($tmpFile, $x, $y, $w, $h);
-            return;
+        if (!file_exists($tmpFile) || filesize($tmpFile) == 0) {
+            $ch = curl_init($url);
+            $fp = fopen($tmpFile, 'wb');
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_exec($ch);
+            curl_close($ch);
+            fclose($fp);
         }
-        $ch = curl_init($url);
-        $fp = fopen($tmpFile, 'wb');
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_exec($ch);
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        fclose($fp);
-
-        if ($code == 200 && filesize($tmpFile) > 0) {
-            $this->Image($tmpFile, $x, $y, $w, $h);
-        } else {
-            $this->SetXY($x, $y);
-            $this->SetFont('Arial', 'I', 7);
-            $this->Cell($w, $h, 'QR Error', 0, 0, 'C');
-        }
+        if (file_exists($tmpFile) && filesize($tmpFile) > 0) $this->Image($tmpFile, $x, $y, $w, $h);
     }
 
     function Header()
     {
         $path = '../images/instansi/';
         $logoSize = 24;
-
         if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 10, 10, $logoSize);
         if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
-
         $this->SetY(12);
-
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
-
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
-
         $this->SetFont('Arial', 'B', 14);
         $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
-
         $this->SetFont('Arial', '', 9);
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
-
         $this->SetLineWidth(0.5);
         $this->Line(10, 39, 200, 39);
         $this->SetLineWidth(0.2);
         $this->Line(10, 40, 200, 40);
-
         $this->Ln(6);
     }
 
@@ -12902,7 +12895,6 @@ class PDF extends FPDF
         }
         $this->Ln($h);
     }
-
     function CheckPageBreak($h)
     {
         if ($this->GetY() + $h > $this->PageBreakTrigger) $this->AddPage($this->CurOrientation);
@@ -12953,32 +12945,19 @@ try {
     $pdf->SetMargins(10, 10, 10);
     $pdf->AddPage();
 
-    // Queries
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
     $y = $year;
 
-    // Data Counts
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
     $feedbackCount = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
-    // Hitung Indeks
-    $indices = $db->querySingle("SELECT
-        AVG(score_zi) as zi,
-        AVG(score_service) as service,
-        AVG(score_academic) as academic
-        FROM survey_responses
-        WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
-
+    $indices = $db->querySingle("SELECT AVG(score_zi) as zi, AVG(score_service) as service, AVG(score_academic) as academic FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
     $idxZI = $indices ? round($indices['zi'] ?? 0, 2) : 0;
     $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
     $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
-
-    $ikmValue = 0;
-    if ($surveyCount > 0) {
-        $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
-    }
+    $ikmValue = ($surveyCount > 0) ? round(($idxZI + $idxService + $idxAcademic) / 3, 2) : 0;
 
     $avgRatingRaw = $db->querySingle("SELECT AVG(rating) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
     $avgRatingVal = $avgRatingRaw ? round($avgRatingRaw, 2) : 0;
@@ -12994,17 +12973,14 @@ try {
     }
     $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 (" . getPredikat($ikmValue) . ")" : "-";
 
-    // === JUDUL ===
+    // Header Laporan
     $pdf->SetFont('Arial', 'B', 12);
     $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL', 0, 1, 'C');
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
     $pdf->Ln(5);
 
-    // ==========================================
     // TABEL 1: RINGKASAN TRAFIK (Kiri) & QR (Kanan)
-    // ==========================================
-
     $startX = 10;
     $startY = $pdf->GetY();
     $rowH = 7;
@@ -13015,81 +12991,60 @@ try {
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell($wTable1, $rowH, ' I. RINGKASAN TRAFIK WEBSITE', 1, 0, 'L', true);
 
-    // QR Code Container
     $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
     $pdf->ImageRemote($qrUrl, ($startX + $wTable1) + 5.5, $startY + 2, 24, 24);
-
     $pdf->Ln($rowH);
 
-    // Data Tabel 1
     $wLabel = 65;
     $wValue = 90;
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
-
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 1, 'L');
-
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung', 1, 1, 'L');
-
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
-
     $pdf->Ln(5);
 
-    // ==========================================
-    // TABEL 2: KUALITAS PELAYANAN (DIPISAH: 6 Baris Total)
-    // ==========================================
-
-    // Baris 1: Header
+    // TABEL 2: KUALITAS PELAYANAN (5 Baris Total)
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
+    $wL = 50;
+    $wV = 45;
 
-    // Lebar Kolom
-    $wLabelFull = 70;
-    $wValueFull = 120;
+    // Baris 2 (Partisipasi - Split)
+    $pdf->Cell($wL, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
+    $pdf->Cell($wV, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 0, 'L');
+    $pdf->Cell($wL, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
+    $pdf->Cell($wV, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
 
-
-    // Baris 2: Jumlah Ulasan (Sendiri)
-    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
-    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
-
-    // Baris 3: Rata-rata Rating Ulasan
-    $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
-    $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
-
-    // Baris 4: Jumlah Responden (Sendiri)
-    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
-    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
-
-    // Baris 5: Rincian Indeks (Split 3 Kolom)
+    // Baris 3 (Rincian Indeks - Split 3)
     $wSub = 190 / 3;
     $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
 
-    // Baris 6: Indeks Kepuasan Masy (IKM)
+    // Baris 4 (Rating Ulasan - Full)
+    $pdf->Cell(70, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
+    $pdf->Cell(120, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
+
+    // Baris 5 (IKM Total - Full Highlight)
     $pdf->SetFont('Arial', 'B', 9);
-    $pdf->SetFillColor(240, 240, 240); // Highlight background
-    $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masyarakat (IKM)', 1, 0, 'L', true);
-    $pdf->Cell($wValueFull, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
-
-
+    $pdf->SetFillColor(240, 240, 240);
+    $pdf->Cell(70, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
+    $pdf->Cell(120, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
     $pdf->Ln(8);
 
-    // === BAGIAN A & B (Tabel Detail) Tetap Sama ===
-
-    // A. DATA SURVEI
+    // Detail Tables
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
-
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(0, 150, 100);
     $pdf->SetTextColor(255);
@@ -13101,7 +13056,6 @@ try {
     $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
     $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
     $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
-
     $pdf->SetTextColor(0);
     $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
@@ -13112,16 +13066,14 @@ try {
     $found1 = false;
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
         $found1 = true;
-        $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
-        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
+        $idx = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
+        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idx, $row['feedback'] ?: '-']);
     }
-    if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
+    if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data.', 1, 1, 'C');
     $pdf->Ln(6);
 
-    // B. DATA ULASAN
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
-
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(255, 193, 7);
     $pdf->SetTextColor(0);
@@ -13130,7 +13082,6 @@ try {
     $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
     $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
     $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
-
     $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 45, 20, 82]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
@@ -13142,52 +13093,44 @@ try {
         $found2 = true;
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['name'] ?: 'Anonim', $row['rating'] . ' / 5', $row['message'] ?: '-']);
     }
-    if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
+    if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data.', 1, 1, 'C');
 
-    // === TANDA TANGAN ===
+    // TTE
     $pdf->AddPage();
     $pdf->Ln(5);
     $path = '../images/instansi/';
     $tglCetak = getIndonesianDate();
     $qrSize = 18;
     $yStart = $pdf->GetY();
-
     $pdf->SetXY(120, $yStart);
     $pdf->SetFont('Arial', '', 11);
     $pdf->Cell(70, 5, 'Pandeglang, ' . $tglCetak, 0, 1, 'C');
     $pdf->Ln(5);
     $yJabatan = $pdf->GetY();
-
     $pdf->SetXY(20, $yJabatan);
     $pdf->Cell(70, 5, 'Kepala Tata Usaha,', 0, 0, 'C');
     $pdf->SetXY(120, $yJabatan);
     $pdf->Cell(70, 5, 'Koordinator Tim Pusdatin,', 0, 1, 'C');
-
     $yImage = $pdf->GetY() + 1;
     if (file_exists($path . 'tte-kepala-tata-usaha.png')) $pdf->Image($path . 'tte-kepala-tata-usaha.png', 46, $yImage, $qrSize);
     if (file_exists($path . 'tte-koordinator-tim-pusdatin.png')) $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 146, $yImage, $qrSize);
-
     $pdf->SetY($yImage + 19);
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->SetX(20);
     $pdf->Cell(70, 5, "UMAR MU'TAMAR, S.Ag.", 0, 0, 'C');
     $pdf->SetX(120);
     $pdf->Cell(70, 5, 'YAHYA ZULFIKRI', 0, 1, 'C');
-
     $pdf->SetFont('Arial', '', 10);
     $pdf->SetX(20);
     $pdf->Cell(70, 4, 'NIP. 196903061998031004', 0, 0, 'C');
     $pdf->SetX(120);
     $pdf->Cell(70, 4, 'NIP. 200001142025211016', 0, 1, 'C');
-
     $pdf->Ln(8);
     $pdf->SetFont('Arial', '', 11);
     $pdf->Cell(0, 5, 'Mengetahui,', 0, 1, 'C');
     $pdf->Cell(0, 5, 'Kepala Madrasah,', 0, 1, 'C');
-
     $yImageKamad = $pdf->GetY() + 1;
     if (file_exists($path . 'tte-kepala-madrasah.png')) $pdf->Image($path . 'tte-kepala-madrasah.png', 96, $yImageKamad, $qrSize);
-
     $pdf->SetY($yImageKamad + 19);
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->Cell(0, 5, 'H. EMAN SULAIMAN, S.Ag., M.Pd.', 0, 1, 'C');
@@ -13984,3 +13927,69 @@ echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
 ```
 
 ---
+
+permasalahan yang saya temukan
+error yang saya temukan
+Akses penyimpanan secara otomatis diberikan untuk sumber “about:neterror” di “https://mtsn1pandeglang.sch.id”.
+Server Response: <empty string> <anonymous code>:1:147461
+overrideMethod <anonymous code>:1
+d https://mtsn1pandeglang.sch.id/_astro/AdminDashboard.D8KQHYcJ.js:18
+Kesalahan peta sumber: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
+Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
+\_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1066:22
+SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
+\_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
+
+Sumber URL: https://mtsn1pandeglang.sch.id/admin/%3Canonymous%20code%3E
+URL Peta Sumber: installHook.js.map
+
+XHRPOST
+https://mtsn1pandeglang.sch.id/api/import.php?action=import
+[HTTP/2 500 677ms]
+
+Server Response: <empty string> <anonymous code>:1:147461
+overrideMethod <anonymous code>:1
+d https://mtsn1pandeglang.sch.id/_astro/AdminDashboard.D8KQHYcJ.js:18
+Mv https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
+Qc https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
+qi https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
+Qc https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
+kc https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:33
+Xd https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:33
+
+https://mtsn1pandeglang.sch.id/api/admin.php?action=export&type=survey mungkin memiliki masalah sementara atau mungkin telah dipindahkan.
+
+Kode kesalahan: 500 Internal Server Error
+
+code
+Code
+download
+content_copy
+expand_less
+Sementara ini mungkin situs terlalu sibuk atau tidak menyala. Cobalah beberapa saat lagi.
+
+https://mtsn1pandeglang.sch.id/api/admin.php?action=export&type=feedback mungkin memiliki masalah sementara atau mungkin telah dipindahkan.
+
+Kode kesalahan: 500 Internal Server Error
+
+code
+Code
+download
+content_copy
+expand_less
+Sementara ini mungkin situs terlalu sibuk atau tidak menyala. Cobalah beberapa saat lagi.
+
+https://mtsn1pandeglang.sch.id/api/print_pdf.php?month=1&year=2026 mungkin memiliki masalah sementara atau mungkin telah dipindahkan.
+
+Kode kesalahan: 500 Internal Server Error
+
+code
+Code
+download
+content_copy
+expand_less
+Sementara ini mungkin situs terlalu sibuk atau tidak menyala. Cobalah beberapa saat lagi.
+
+library pdf sudah ada dan database saya versi terbaru dan sudah fix permission
+
+masalah di import, export, print pdf

@@ -17,6 +17,10 @@ try {
     }
 
     $db = new SQLite3($dbPath);
+    // [FIX] WAJIB: Aktifkan Mode WAL
+    $db->busyTimeout(5000);
+    $db->exec('PRAGMA journal_mode = WAL');
+
     $action = $_GET['action'] ?? 'stats';
 
     // === HELPER: Format Tanggal Indonesia ===
@@ -38,7 +42,7 @@ try {
         }
     }
 
-    // === HELPER: Grafik Harian ===
+    // === HELPER: Grafik Harian (Safe Mode) ===
     function getSafeDailyActivity($db, $table, $days = 30)
     {
         $data = [];
@@ -48,6 +52,7 @@ try {
         }
 
         try {
+            // Cek tabel exist dulu agar tidak error 500
             $check = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$table'");
             if (!$check) return $data;
 
@@ -66,6 +71,7 @@ try {
                 }
             }
         } catch (Exception $e) {
+            // Silent fail jika query bermasalah
         }
         return $data;
     }
@@ -106,7 +112,7 @@ try {
         // 4. Activity Trends (Real Data)
         $activity_feedback = getSafeDailyActivity($db, 'feedback');
         $activity_survey = getSafeDailyActivity($db, 'survey_responses');
-        $activity_visits = getSafeDailyActivity($db, 'traffic_logs'); // [BARU] Data Kunjungan Harian
+        $activity_visits = getSafeDailyActivity($db, 'traffic_logs'); // Data dari log harian
 
         // 5. Raw Data Tables
         $posts = [];
@@ -141,7 +147,7 @@ try {
                     'labels' => array_keys($activity_feedback),
                     'feedback' => array_values($activity_feedback),
                     'survey' => array_values($activity_survey),
-                    'visits' => array_values($activity_visits) // [BARU] Kirim ke Frontend
+                    'visits' => array_values($activity_visits)
                 ]
             ],
             'tables' => [
@@ -154,6 +160,9 @@ try {
 
     // === EXPORT CSV ===
     elseif ($action === 'export') {
+        // [FIX] Bersihkan buffer agar CSV bersih
+        if (ob_get_length()) ob_end_clean();
+
         $type = $_GET['type'] ?? '';
         $filename = "laporan_{$type}_" . date('Y-m-d_His') . ".csv";
 

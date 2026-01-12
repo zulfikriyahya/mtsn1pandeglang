@@ -7,7 +7,6 @@ $dbPath = __DIR__ . '/../../stats.db';
 
 function getClientIP()
 {
-    // Handle IP jika di belakang proxy/Cloudflare
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
     if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
     return $_SERVER['REMOTE_ADDR'];
@@ -19,10 +18,13 @@ try {
     }
 
     $db = new SQLite3($dbPath);
+    // [FIX] WAJIB: Aktifkan Mode WAL
+    $db->busyTimeout(5000);
+    $db->exec('PRAGMA journal_mode = WAL');
+
     $ip_address = getClientIP();
 
-    // 1. Update Struktur Tabel (Menambahkan kolom ip_address jika belum ada)
-    // Kita cek dulu apakah kolom sudah ada, cara simpel: coba query dummy
+    // 1. Update Struktur Tabel
     $checkTable = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='feedback'");
     if ($checkTable) {
         $cols = $db->query("PRAGMA table_info(feedback)");
@@ -45,7 +47,6 @@ try {
         $db->exec($query);
     }
 
-    // Fungsi Helper untuk ambil stats
     function getStats($db)
     {
         $row = $db->querySingle("SELECT AVG(rating) as average, COUNT(*) as total FROM feedback", true);
@@ -55,9 +56,7 @@ try {
         ];
     }
 
-    // 2. Handle POST (Submit Data)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Cek apakah IP sudah pernah submit
         $checkIp = $db->prepare("SELECT id FROM feedback WHERE ip_address = :ip");
         $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
         $res = $checkIp->execute();
@@ -91,9 +90,7 @@ try {
         } else {
             throw new Exception("Gagal menyimpan data.");
         }
-    }
-    // 3. Handle GET (Cek Status IP & Ambil Stats)
-    else {
+    } else {
         $checkIp = $db->prepare("SELECT id FROM feedback WHERE ip_address = :ip");
         $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
         $res = $checkIp->execute();

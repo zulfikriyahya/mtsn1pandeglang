@@ -18,9 +18,13 @@ try {
     }
 
     $db = new SQLite3($dbPath);
+    // [FIX] WAJIB: Aktifkan Mode WAL
+    $db->busyTimeout(5000);
+    $db->exec('PRAGMA journal_mode = WAL');
+
     $ip_address = getClientIP();
 
-    // 1. Update Struktur Tabel (Add ip_address)
+    // 1. Update Struktur Tabel
     $checkTable = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'");
     if ($checkTable) {
         $cols = $db->query("PRAGMA table_info(survey_responses)");
@@ -47,14 +51,13 @@ try {
         $db->exec($query);
     }
 
-    // Helper Stats
     function getSurveyStats($db)
     {
-        $sql = "SELECT 
-            AVG(score_zi) as zi, 
-            AVG(score_service) as service, 
-            AVG(score_academic) as academic, 
-            COUNT(*) as total 
+        $sql = "SELECT
+            AVG(score_zi) as zi,
+            AVG(score_service) as service,
+            AVG(score_academic) as academic,
+            COUNT(*) as total
             FROM survey_responses";
         $row = $db->querySingle($sql, true);
 
@@ -66,9 +69,7 @@ try {
         ];
     }
 
-    // 2. Handle POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Cek IP
         $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
         $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
         $res = $checkIp->execute();
@@ -91,8 +92,8 @@ try {
         $scoreAcademic = $data['scores']['academic'] ?? 0;
         $details = json_encode($data['answers']);
 
-        $stmt = $db->prepare("INSERT INTO survey_responses 
-            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json, ip_address) 
+        $stmt = $db->prepare("INSERT INTO survey_responses
+            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json, ip_address)
             VALUES (:name, :role, :zi, :service, :academic, :feedback, :details, :ip)");
 
         $stmt->bindValue(':name', $name, SQLITE3_TEXT);
@@ -113,9 +114,7 @@ try {
         } else {
             throw new Exception("Gagal menyimpan data.");
         }
-    }
-    // 3. Handle GET
-    else {
+    } else {
         $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
         $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
         $res = $checkIp->execute();

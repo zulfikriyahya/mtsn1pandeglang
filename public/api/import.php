@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Matikan display error agar tidak merusak JSON (PENTING)
+// Matikan display error agar tidak merusak JSON
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 header('Content-Type: application/json');
@@ -25,15 +25,35 @@ try {
     }
 
     $db = new SQLite3($dbPath);
+    // [FIX] WAJIB: Aktifkan Mode WAL
     $db->busyTimeout(5000);
+    $db->exec('PRAGMA journal_mode = WAL');
 
     $action = $_GET['action'] ?? '';
 
     // === ACTION: IMPORT ===
     if ($action === 'import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
+        // [FIX] Cek Error Upload Bawaan PHP
         if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception("Upload failed with error code: " . ($_FILES['file']['error'] ?? 'Unknown'));
+            $msg = 'Upload failed. ';
+            switch ($_FILES['file']['error'] ?? 99) {
+                case UPLOAD_ERR_INI_SIZE:
+                    $msg .= 'File exceeds upload_max_filesize';
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $msg .= 'File exceeds MAX_FILE_SIZE';
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $msg .= 'File only partially uploaded';
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $msg .= 'No file uploaded';
+                    break;
+                default:
+                    $msg .= 'Code: ' . ($_FILES['file']['error'] ?? 'Unknown');
+            }
+            throw new Exception($msg);
         }
 
         $type = $_POST['type'] ?? '';
@@ -52,14 +72,12 @@ try {
 
         try {
             if ($type === 'feedback') {
-                // Cek kolom ip_address secara dinamis
                 $resCols = $db->query("PRAGMA table_info(feedback)");
                 $hasIp = false;
                 while ($col = $resCols->fetchArray()) {
                     if ($col['name'] === 'ip_address') $hasIp = true;
                 }
 
-                // Query Adaptif
                 $fields = ['name', 'rating', 'message', 'created_at'];
                 $params = [':name', ':rating', ':message', ':created_at'];
 
@@ -85,7 +103,6 @@ try {
                     $successCount++;
                 }
             } elseif ($type === 'survey') {
-                // Cek kolom dinamis
                 $resCols = $db->query("PRAGMA table_info(survey_responses)");
                 $cols = [];
                 while ($col = $resCols->fetchArray()) {
@@ -95,7 +112,6 @@ try {
                 $hasIp = in_array('ip_address', $cols);
                 $hasJson = in_array('details_json', $cols);
 
-                // Build query
                 $fields = ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at'];
                 $params = [':name', ':role', ':zi', ':service', ':acad', ':feedback', ':created'];
 

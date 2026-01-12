@@ -1,7 +1,10 @@
 <?php
-// Matikan display error
+// [FIX] Matikan display error agar tidak merusak binary PDF
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
+
+// [FIX] Bersihkan buffer sebelum memulai
+if (ob_get_length()) ob_end_clean();
 
 session_start();
 date_default_timezone_set('Asia/Jakarta');
@@ -22,6 +25,9 @@ require($libPath);
 $dbPath = __DIR__ . '/../../stats.db';
 try {
     $db = new SQLite3($dbPath);
+    // [FIX] WAJIB: Aktifkan Mode WAL
+    $db->busyTimeout(5000);
+    $db->exec('PRAGMA journal_mode = WAL');
 } catch (Exception $e) {
     die("Error DB: " . $e->getMessage());
 }
