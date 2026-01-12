@@ -7,7 +7,7 @@ header('Access-Control-Allow-Methods: POST, GET');
 // Load Env Manual
 $ADMIN_EMAIL_ENV = getenv('ADMIN_EMAIL') ?: 'dev.mtsn1pandeglang@gmail.com';
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     $db = new SQLite3($dbPath);

@@ -34,7 +34,7 @@ if [ $SUCCESS -eq 0 ]; then
     exit 1
 fi
 echo "--- Setting up Database ---"
-DB_FILE="$PROJECT_DIR/stats.db"
+DB_FILE="$PROJECT_DIR/database.db"
 if [ ! -f "$DB_FILE" ]; then
     touch "$DB_FILE"
     echo "Database created."

@@ -335,7 +335,7 @@ const AdminDashboard = () => {
   const fetchStats = async () => {
     setErrorMsg(null);
     try {
-      const res = await fetch("/api/dashboard.php?action=stats");
+      const res = await fetch("/api/admin.php?action=stats");
       if (!res.ok) throw new Error(`Server Error: ${res.status}`);
       const json = await res.json();
       if (json.status === "error") throw new Error(json.message);
@@ -396,7 +396,7 @@ const AdminDashboard = () => {
   };
 
   const downloadReport = (type: string) => {
-    window.open(`/api/dashboard.php?action=export&type=${type}`, "_blank");
+    window.open(`/api/admin.php?action=export&type=${type}`, "_blank");
   };
 
   const printPDF = () => {

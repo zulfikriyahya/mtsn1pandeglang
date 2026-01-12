@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: https://mtsn1pandeglang.sch.id');
 header('Access-Control-Allow-Methods: GET, POST');
 session_start();
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     if (!class_exists('SQLite3')) {

@@ -8736,7 +8736,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     if (!class_exists('SQLite3')) {
@@ -9036,7 +9036,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     if (!class_exists('SQLite3')) {
@@ -9107,7 +9107,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 function getClientIP()
 {
@@ -9232,7 +9232,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     $db = new SQLite3($dbPath);
@@ -9363,7 +9363,7 @@ if (!file_exists(__DIR__ . '/lib/fpdf.php')) {
 require('lib/fpdf.php');
 
 // 3. Database
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 try {
     $db = new SQLite3($dbPath);
 } catch (Exception $e) {
@@ -9793,7 +9793,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: https://mtsn1pandeglang.sch.id');
 header('Access-Control-Allow-Methods: GET, POST');
 session_start();
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     if (!class_exists('SQLite3')) {
@@ -9852,7 +9852,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 function getClientIP()
 {

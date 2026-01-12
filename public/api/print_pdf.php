@@ -18,7 +18,7 @@ if (!file_exists(__DIR__ . '/lib/fpdf.php')) {
 require('lib/fpdf.php');
 
 // 3. Database
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 try {
     $db = new SQLite3($dbPath);
 } catch (Exception $e) {

@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     if (!class_exists('SQLite3')) {

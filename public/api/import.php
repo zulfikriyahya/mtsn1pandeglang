@@ -15,7 +15,7 @@ if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_a
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
-$dbPath = __DIR__ . '/../../stats.db';
+$dbPath = __DIR__ . '/../../database.db';
 
 try {
     $db = new SQLite3($dbPath);
