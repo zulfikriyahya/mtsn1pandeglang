@@ -50,11 +50,11 @@ try {
     // Helper Stats
     function getSurveyStats($db)
     {
-        $sql = "SELECT 
-            AVG(score_zi) as zi, 
-            AVG(score_service) as service, 
-            AVG(score_academic) as academic, 
-            COUNT(*) as total 
+        $sql = "SELECT
+            AVG(score_zi) as zi,
+            AVG(score_service) as service,
+            AVG(score_academic) as academic,
+            COUNT(*) as total
             FROM survey_responses";
         $row = $db->querySingle($sql, true);
 
@@ -91,8 +91,8 @@ try {
         $scoreAcademic = $data['scores']['academic'] ?? 0;
         $details = json_encode($data['answers']);
 
-        $stmt = $db->prepare("INSERT INTO survey_responses 
-            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json, ip_address) 
+        $stmt = $db->prepare("INSERT INTO survey_responses
+            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json, ip_address)
             VALUES (:name, :role, :zi, :service, :academic, :feedback, :details, :ip)");
 
         $stmt->bindValue(':name', $name, SQLITE3_TEXT);

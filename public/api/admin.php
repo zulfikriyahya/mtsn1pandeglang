@@ -69,9 +69,9 @@ try {
 
             // Query dengan penyesuaian Timezone (+7 Jam untuk WIB)
             // datetime(created_at, '+7 hours') mengubah UTC ke WIB sebelum di-group
-            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count 
-                      FROM $table 
-                      WHERE created_at >= date('now', '-$days days', '-7 hours') 
+            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count
+                      FROM $table
+                      WHERE created_at >= date('now', '-$days days', '-7 hours')
                       GROUP BY date";
 
             $res = $db->query($query);
