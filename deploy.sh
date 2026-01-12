@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Fix PATH untuk yarn
-export PATH="/home/zulfikriyahya/.nvm/versions/node/v25.2.1/bin/yarn"
-
 # --- KONFIGURASI ---
 MAX_RETRIES=3
 DELAY=5
@@ -44,7 +41,7 @@ fi
 
 # Build
 log "--- Installing Dependencies ---"
-yarn install --check-files || { log "Yarn install gagal!"; exit 1; }
+/home/zulfikriyahya/.nvm/versions/node/v25.2.1/bin/yarn install --check-files || { log "Yarn install gagal!"; exit 1; }
 
 rm -rf dist/
 ATTEMPT=1
@@ -52,7 +49,7 @@ SUCCESS=0
 
 while [ $ATTEMPT -le $MAX_RETRIES ]; do
     log "--- Build Attempt $ATTEMPT of $MAX_RETRIES ---"
-    yarn build
+    /home/zulfikriyahya/.nvm/versions/node/v25.2.1/bin/yarn build
     if [ $? -eq 0 ]; then
         SUCCESS=1
         break
