@@ -342,7 +342,7 @@ try {
         $pdf->SetTextColor(255);
         $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
         $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-        $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
+        $pdf->Cell(40, 7, 'Nama Responden', 1, 0, 'L', true);
         $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
         $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
         $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
@@ -353,7 +353,7 @@ try {
     };
 
     $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN (Terlama -> Terbaru)', 0, 1, 'L');
+    $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
 
     $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
@@ -387,7 +387,7 @@ try {
         $pdf->SetTextColor(0);
         $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
         $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-        $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
+        $pdf->Cell(45, 7, 'Nama Lengkap', 1, 0, 'L', true);
         $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
         $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
         $pdf->SetFont('Arial', '', 8);
@@ -397,7 +397,7 @@ try {
     // PERBAIKAN: Gunakan Getter
     if ($pdf->GetY() + 15 > $pdf->getPageBreakTrigger()) $pdf->AddPage();
 
-    $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK (Terlama -> Terbaru)', 0, 1, 'L');
+    $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
 
     $pdf->SetWidths([8, 35, 45, 20, 82]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
