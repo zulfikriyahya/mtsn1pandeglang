@@ -4,8 +4,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET');
 
-// Load Env Manual (Simulasi, karena di PHP Native jarang ada library dotenv bawaan)
-// Di production, pastikan variabel ini ada di Server Environment atau hardcode untuk keamanan
+// Load Env Manual
 $ADMIN_EMAIL_ENV = getenv('ADMIN_EMAIL') ?: 'dev.mtsn1pandeglang@gmail.com';
 
 $dbPath = __DIR__ . '/../../stats.db';
@@ -13,15 +12,14 @@ $dbPath = __DIR__ . '/../../stats.db';
 try {
     $db = new SQLite3($dbPath);
 
-    // 1. INIT TABLE USERS
+    // 1. INIT TABLE USERS (Hapus kolom verification_token karena tidak dipakai lagi)
     $db->exec("CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE NOT NULL,
         name TEXT,
         picture TEXT,
         role TEXT DEFAULT 'user', -- super_admin, operator, user
-        status TEXT DEFAULT 'unverified', -- active, inactive, unverified
-        verification_token TEXT,
+        status TEXT DEFAULT 'active', -- active, inactive
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
 
@@ -29,7 +27,6 @@ try {
     $stmt = $db->prepare("SELECT id FROM users WHERE email = :email");
     $stmt->bindValue(':email', $ADMIN_EMAIL_ENV, SQLITE3_TEXT);
     if (!$stmt->execute()->fetchArray()) {
-        // Jika Super Admin belum ada di DB, buat baru
         $ins = $db->prepare("INSERT INTO users (email, name, role, status) VALUES (:email, 'Super Admin', 'super_admin', 'active')");
         $ins->bindValue(':email', $ADMIN_EMAIL_ENV, SQLITE3_TEXT);
         $ins->execute();
@@ -61,19 +58,16 @@ try {
             $user = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
             if ($user) {
-                // Update Nama & Foto terbaru dari Google
+                // Update Data Terbaru Google
                 $upd = $db->prepare("UPDATE users SET name = :name, picture = :pic WHERE id = :id");
                 $upd->bindValue(':name', $payload['name'], SQLITE3_TEXT);
                 $upd->bindValue(':pic', $payload['picture'], SQLITE3_TEXT);
                 $upd->bindValue(':id', $user['id'], SQLITE3_INTEGER);
                 $upd->execute();
 
-                // Validasi Status
+                // Cek Status (Hanya Inactive yang ditolak)
                 if ($user['status'] === 'inactive') {
                     throw new Exception('Akun Anda dinonaktifkan. Hubungi Administrator.');
-                }
-                if ($user['status'] === 'unverified') {
-                    throw new Exception('Akun belum diverifikasi. Silakan cek email Anda atau hubungi Admin.');
                 }
 
                 // Set Session
@@ -94,15 +88,14 @@ try {
                     ]
                 ]);
             } else {
-                // User belum terdaftar
-                echo json_encode(['status' => 'unregistered', 'message' => 'Email belum terdaftar. Silakan registrasi.', 'email' => $email]);
+                echo json_encode(['status' => 'unregistered', 'message' => 'Email belum terdaftar.', 'email' => $email]);
             }
         } else {
             throw new Exception('Token Google tidak valid.');
         }
     }
 
-    // === REGISTER ===
+    // === REGISTER (LANGSUNG AKTIF) ===
     elseif ($action === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -110,7 +103,6 @@ try {
 
         if (!$id_token) throw new Exception('Token tidak ditemukan');
 
-        // Verifikasi lagi token Google (Security)
         $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $id_token;
         $response = @file_get_contents($url);
         $payload = json_decode($response, true);
@@ -121,61 +113,52 @@ try {
         $name = $payload['name'];
         $picture = $payload['picture'];
 
-        // Generate Token Verifikasi
-        $token = bin2hex(random_bytes(16));
+        // Cek double register
+        $cek = $db->prepare("SELECT id FROM users WHERE email = :email");
+        $cek->bindValue(':email', $email, SQLITE3_TEXT);
+        if ($cek->execute()->fetchArray()) {
+            throw new Exception("Email sudah terdaftar. Silakan login.");
+        }
 
-        // Simpan ke DB (Role Default: user, Status: unverified)
-        $stmt = $db->prepare("INSERT INTO users (email, name, picture, role, status, verification_token) VALUES (:email, :name, :pic, 'user', 'unverified', :token)");
+        // Simpan User Baru (Status Langsung Active)
+        $stmt = $db->prepare("INSERT INTO users (email, name, picture, role, status) VALUES (:email, :name, :pic, 'user', 'active')");
         $stmt->bindValue(':email', $email, SQLITE3_TEXT);
         $stmt->bindValue(':name', $name, SQLITE3_TEXT);
         $stmt->bindValue(':pic', $picture, SQLITE3_TEXT);
-        $stmt->bindValue(':token', $token, SQLITE3_TEXT);
 
         if ($stmt->execute()) {
-            // --- SIMULASI KIRIM EMAIL ---
-            // Di production, gunakan PHPMailer atau fungsi mail()
-            // Di sini kita kirim link verifikasi sebagai respons JSON untuk testing
-            $verifyLink = "https://" . $_SERVER['HTTP_HOST'] . "/api/auth.php?action=verify&token=" . $token;
-
-            // Logika "Kirim Email" (Mockup)
-            // mail($email, "Verifikasi Akun", "Klik link ini: $verifyLink");
+            // AUTO LOGIN SETELAH REGISTER
+            $newId = $db->lastInsertRowID();
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['user_id'] = $newId;
+            $_SESSION['user_email'] = $email;
+            $_SESSION['user_name'] = $name;
+            $_SESSION['user_picture'] = $picture;
+            $_SESSION['user_role'] = 'user'; // Default Role
 
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Registrasi berhasil! Silakan cek email untuk verifikasi.',
-                'debug_link' => $verifyLink // Hapus ini di production
+                'message' => 'Registrasi berhasil! Selamat datang.',
+                'user' => [
+                    'name' => $name,
+                    'email' => $email,
+                    'picture' => $picture,
+                    'role' => 'user'
+                ]
             ]);
         } else {
-            throw new Exception('Gagal mendaftar (Email mungkin sudah ada).');
-        }
-    }
-
-    // === VERIFIKASI EMAIL ===
-    elseif ($action === 'verify') {
-        $token = $_GET['token'] ?? '';
-        if (!$token) die("Token invalid.");
-
-        $stmt = $db->prepare("UPDATE users SET status = 'active', verification_token = NULL WHERE verification_token = :token");
-        $stmt->bindValue(':token', $token, SQLITE3_TEXT);
-        $stmt->execute();
-
-        if ($db->changes() > 0) {
-            echo "<h1>Verifikasi Berhasil!</h1><p>Akun Anda telah aktif. Silakan kembali ke halaman login.</p><script>setTimeout(()=>window.location.href='/admin', 3000);</script>";
-        } else {
-            echo "<h1>Gagal Verifikasi</h1><p>Token salah atau sudah kadaluarsa.</p>";
+            throw new Exception('Gagal mendaftar.');
         }
     }
 
     // === CEK SESSION ===
     elseif ($action === 'check') {
         if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-            // FIX: Pastikan role memiliki fallback jika session lama masih nyangkut
             $role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'user';
-
             echo json_encode([
                 'status' => 'authenticated',
                 'user' => [
-                    'name' => $_SESSION['user_name'] ?? 'Admin',
+                    'name' => $_SESSION['user_name'] ?? 'User',
                     'email' => $_SESSION['user_email'] ?? '',
                     'picture' => $_SESSION['user_picture'] ?? '',
                     'role' => $role
