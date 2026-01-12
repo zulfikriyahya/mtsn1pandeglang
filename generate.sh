@@ -29,13 +29,17 @@ EXCLUDE_PATTERNS=(
   "./.prettierrc"
   "./.markdownlint.json"
   "./LICENSE"
+  "./install.sh"
+  "./feedback.sh"
+  "./survey.sh"
+  "./generate.sh"
   "./$OUT" 
   "./config/nginx/*"
   # Eksklusi file media
   "*.png" "*.jpg" "*.jpeg" "*.webp" "*.ico" "*.gif" "*.svg" "*.avif"
   "*.woff" "*.woff2" "*.ttf" "*.otf" "*.eot"
   "*.mp3" "*.mp4" "*.wav" "*.avi"
-  "*.db" "*.csv" "*.sh" "*.htaccess" "*.txt" "*.mdx" "*.lock"
+  "*.db" "*.csv" "*.htaccess" "*.txt" "*.mdx" "*.lock"
 )
 
 # Fungsi untuk menentukan bahasa berdasarkan ekstensi file
