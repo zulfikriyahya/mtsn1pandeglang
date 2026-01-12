@@ -38,12 +38,6 @@
     "gtm_id": "G-31LVR4XF5F"
   },
 
-  "disqus": {
-    "enable": false,
-    "shortname": "themefisher-template",
-    "settings": {}
-  },
-
   "metadata": {
     "meta_author": "Yahya Zulfikri",
     "meta_image": "/images/authors/yahya-zulfikri.png",
