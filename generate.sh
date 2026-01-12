@@ -14,6 +14,7 @@ EXCLUDE_PATTERNS=(
   "./.vscode/*" 
   "./.gitignore"
   "./.env"
+  "./todo.md"
   "./.gitattributes"
   "./.yarnrc.yml"
   "./.DS_Store"
@@ -25,14 +26,8 @@ EXCLUDE_PATTERNS=(
   "./public/api/lib/*"
   "./package-lock.json" 
   "./pnpm-lock.yaml"
-  "./bun.lockb"
-  "./yarn.lock"
   "./.prettierrc"
   "./.markdownlint.json"
-  "./README.mdx"
-  "./README.md"
-  "./readme.mdx"
-  "./readme.md"
   "./LICENSE"
   "./$OUT" 
   "./config/nginx/*"
@@ -40,7 +35,7 @@ EXCLUDE_PATTERNS=(
   "*.png" "*.jpg" "*.jpeg" "*.webp" "*.ico" "*.gif" "*.svg" "*.avif"
   "*.woff" "*.woff2" "*.ttf" "*.otf" "*.eot"
   "*.mp3" "*.mp4" "*.wav" "*.avi"
-  "*.db" "*.csv" "*.sh"
+  "*.db" "*.csv" "*.sh" "*.htaccess" "*.txt" "*.mdx" "*.lock"
 )
 
 # Fungsi untuk menentukan bahasa berdasarkan ekstensi file
