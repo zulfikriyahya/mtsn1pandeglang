@@ -6,14 +6,6 @@
 - Insert: Timpa otomatis jika nama file duplikat
 - Delete: Hapus file artikel
 
-2. Data Ulasan
-
-- Tambahkan progress bar saat import CSV
-
-3. Data Survei
-
-- Tambahkan progress bar saat import CSV
-
 4. Cetak PDF
 
 - Urutkan data berdasarkan timestamp (terbaru → terlama)
