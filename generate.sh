@@ -34,15 +34,13 @@ EXCLUDE_PATTERNS=(
   "./readme.mdx"
   "./readme.md"
   "./LICENSE"
-  "./generate.sh" 
-  "./install.sh" 
   "./$OUT" 
   "./config/nginx/*"
   # Eksklusi file media
   "*.png" "*.jpg" "*.jpeg" "*.webp" "*.ico" "*.gif" "*.svg" "*.avif"
   "*.woff" "*.woff2" "*.ttf" "*.otf" "*.eot"
   "*.mp3" "*.mp4" "*.wav" "*.avi"
-  "*.db" "*.csv"
+  "*.db" "*.csv" "*.sh"
 )
 
 # Fungsi untuk menentukan bahasa berdasarkan ekstensi file
