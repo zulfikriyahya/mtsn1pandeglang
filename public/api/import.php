@@ -9,6 +9,10 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
+// Konfigurasi untuk handle file besar
+set_time_limit(0); // Unlimited execution time
+ini_set('memory_limit', '512M'); // Increase memory limit
+
 $dbPath = __DIR__ . '/../../stats.db';
 
 try {
@@ -29,12 +33,12 @@ try {
             // Header yang dibutuhkan untuk Feedback
             fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
             // Contoh Data
-            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan sangat memuaskan, terima kasih.', '2024-01-01 10:00:00', '192.168.1.1']);
+            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan sangat memuaskan.', '2024-01-01 10:00:00', '192.168.1.1']);
         } elseif ($type === 'survey') {
             // Header yang dibutuhkan untuk Survey
             fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
             // Contoh Data
-            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Tingkatkan terus kualitasnya.', '2024-01-02 14:30:00', '192.168.1.2']);
+            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Pertahankan kualitas.', '2024-01-02 14:30:00', '192.168.1.2']);
         }
 
         fclose($output);
@@ -44,16 +48,22 @@ try {
     // === ACTION: IMPORT DATA ===
     if ($action === 'import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception("File CSV tidak ditemukan atau error saat upload.");
+            throw new Exception("File CSV tidak ditemukan atau error saat upload (Code: " . $_FILES['file']['error'] . ").");
         }
 
         $type = $_POST['type'] ?? '';
         $fileTmpPath = $_FILES['file']['tmp_name'];
-        $handle = fopen($fileTmpPath, "r");
 
+        // Validasi tipe file (Mime Type & Extension)
+        $fileExt = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+        if ($fileExt !== 'csv') {
+            throw new Exception("Format file harus .csv");
+        }
+
+        $handle = fopen($fileTmpPath, "r");
         if ($handle === FALSE) throw new Exception("Gagal membaca file.");
 
-        // Baca Header
+        // Baca Header (Skip baris pertama)
         $headers = fgetcsv($handle, 1000, ",");
         $successCount = 0;
 
@@ -63,13 +73,9 @@ try {
             if ($type === 'feedback') {
                 $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
 
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    // Mapping data berdasarkan indeks header (Asumsi urutan sesuai template)
-                    // Jika user mengubah urutan, logika ini perlu mapping yang lebih kompleks. 
-                    // Kita asumsikan user memakai template kita.
-
-                    // Validasi minimal
-                    if (count($data) < 3) continue;
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    // Validasi jumlah kolom minimal (5 kolom sesuai template)
+                    if (count($data) < 5) continue;
 
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':rating', (int)$data[1], SQLITE3_INTEGER);
@@ -82,8 +88,9 @@ try {
             } elseif ($type === 'survey') {
                 $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
 
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    if (count($data) < 6) continue;
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    // Validasi jumlah kolom minimal (8 kolom sesuai template)
+                    if (count($data) < 8) continue;
 
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':role', $data[1] ?: 'Umum', SQLITE3_TEXT);
