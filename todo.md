@@ -1,6 +1,6 @@
-# Content
+# Admin Dashboard
 
-1. Kurikulum Berbasis Cinta
-2. Program Guru Tamu
-3. Prestasi Madrasah
-4. Publish kegiatan yang telah lalu.
+- Tambahkan Progress bar untuk import csv
+- Urutkan Data PDF berdasarkan Timestamps
+- Upload File Konten.mdx pada admin dashboard di path ("src/content/blog/")
+- Tambahkan Fitur insert [timpa data jika duplikat nama file] dan delete [hapus data]
