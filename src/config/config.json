@@ -30,7 +30,7 @@
   "navigation_button": {
     "enable": true,
     "label": "Login",
-    "link": "https://mtsn1pandeglang.sch.id/admin"
+    "link": "https://mtsn1pandeglang.sch.id/dashboard"
   },
 
   "google_tag_manager": {
