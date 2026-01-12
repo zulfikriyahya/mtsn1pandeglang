@@ -32,9 +32,9 @@ log "--- Mengembalikan perubahan lokal ---"
 git stash pop
 
 # Push jika ada konten baru
-if [[ -n $(git status -s src/content/ public/images/) ]]; then
+if [[ -n $(git status -s) ]]; then
     log "--- Sync konten ke GitHub ---"
-    git add src/content/ public/images/
+    git add .
     git commit -m "AutoSync: Konten baru [Skip CI]"
     git push origin $BRANCH
 fi
