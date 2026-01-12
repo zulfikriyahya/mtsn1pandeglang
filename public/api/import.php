@@ -10,8 +10,8 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 // Konfigurasi untuk handle file besar
-set_time_limit(0); // Unlimited execution time
-ini_set('memory_limit', '512M'); // Increase memory limit
+set_time_limit(0);
+ini_set('memory_limit', '512M');
 
 $dbPath = __DIR__ . '/../../stats.db';
 
@@ -30,17 +30,12 @@ try {
         $output = fopen('php://output', 'w');
 
         if ($type === 'feedback') {
-            // Header yang dibutuhkan untuk Feedback
             fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
-            // Contoh Data
             fputcsv($output, ['Budi Santoso', '5', 'Pelayanan sangat memuaskan.', '2024-01-01 10:00:00', '192.168.1.1']);
         } elseif ($type === 'survey') {
-            // Header yang dibutuhkan untuk Survey
             fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
-            // Contoh Data
             fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Pertahankan kualitas.', '2024-01-02 14:30:00', '192.168.1.2']);
         }
-
         fclose($output);
         exit;
     }
@@ -48,13 +43,13 @@ try {
     // === ACTION: IMPORT DATA ===
     if ($action === 'import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception("File CSV tidak ditemukan atau error saat upload (Code: " . $_FILES['file']['error'] . ").");
+            throw new Exception("File CSV tidak ditemukan atau error saat upload.");
         }
 
         $type = $_POST['type'] ?? '';
         $fileTmpPath = $_FILES['file']['tmp_name'];
 
-        // Validasi tipe file (Mime Type & Extension)
+        // Validasi Ekstensi
         $fileExt = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
         if ($fileExt !== 'csv') {
             throw new Exception("Format file harus .csv");
@@ -63,10 +58,38 @@ try {
         $handle = fopen($fileTmpPath, "r");
         if ($handle === FALSE) throw new Exception("Gagal membaca file.");
 
-        // Baca Header (Skip baris pertama)
+        // --- VALIDASI HEADER CSV (FITUR BARU) ---
+        // Baca baris pertama (Header)
         $headers = fgetcsv($handle, 1000, ",");
-        $successCount = 0;
 
+        if (!$headers) throw new Exception("File CSV kosong atau tidak terbaca.");
+
+        // Bersihkan Header (Trim, Lowercase, Hapus BOM/Karakter aneh dari Excel)
+        $cleanHeaders = array_map(function ($h) {
+            // Menghapus karakter non-printable (BOM utf-8 sering muncul di awal file Excel)
+            $h = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h);
+            return strtolower(trim($h));
+        }, $headers);
+
+        // Logika Pengecekan Kecocokan Kolom
+        if ($type === 'feedback') {
+            // Pastikan ada kolom 'rating' dan 'message' (Ciri khas Feedback)
+            if (!in_array('rating', $cleanHeaders) || !in_array('message', $cleanHeaders)) {
+                fclose($handle);
+                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Ulasan', tetapi file CSV ini tampaknya bukan template Ulasan (Kolom 'rating'/'message' tidak ditemukan).");
+            }
+        } elseif ($type === 'survey') {
+            // Pastikan ada kolom 'score_zi' dan 'respondent_role' (Ciri khas Survey)
+            if (!in_array('score_zi', $cleanHeaders) || !in_array('respondent_role', $cleanHeaders)) {
+                fclose($handle);
+                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Survei', tetapi file CSV ini tampaknya bukan template Survei (Kolom 'score_zi'/'respondent_role' tidak ditemukan).");
+            }
+        } else {
+            throw new Exception("Tipe import tidak dikenal.");
+        }
+        // --- AKHIR VALIDASI ---
+
+        $successCount = 0;
         $db->exec('BEGIN TRANSACTION');
 
         try {
@@ -74,7 +97,7 @@ try {
                 $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
 
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
-                    // Validasi jumlah kolom minimal (5 kolom sesuai template)
+                    // Validasi jumlah kolom minimal agar tidak error index offset
                     if (count($data) < 5) continue;
 
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
@@ -89,7 +112,6 @@ try {
                 $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
 
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
-                    // Validasi jumlah kolom minimal (8 kolom sesuai template)
                     if (count($data) < 8) continue;
 
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
@@ -103,13 +125,11 @@ try {
                     $stmt->execute();
                     $successCount++;
                 }
-            } else {
-                throw new Exception("Tipe import tidak dikenal.");
             }
 
             $db->exec('COMMIT');
             fclose($handle);
-            echo json_encode(['status' => 'success', 'message' => "Berhasil mengimport $successCount data."]);
+            echo json_encode(['status' => 'success', 'message' => "Validasi Sukses! Berhasil mengimport $successCount data."]);
         } catch (Exception $ex) {
             $db->exec('ROLLBACK');
             throw $ex;
