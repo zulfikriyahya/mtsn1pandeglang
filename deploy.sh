@@ -96,7 +96,9 @@ sudo chown -R www-data:www-data $PROJECT_DIR
 
 # Pastikan script deploy tetap milik user kita agar bisa diedit/jalankan manual nanti
 sudo chown $USER:$USER "$PROJECT_DIR/deploy.sh"
+sudo chown $USER:$USER "$PROJECT_DIR/rebuild.sh"
 sudo chmod +x "$PROJECT_DIR/deploy.sh"
+sudo chmod +x "$PROJECT_DIR/rebuild.sh"
 
 # Pastikan database bisa ditulisi www-data
 sudo chmod 664 "$DB_FILE"
