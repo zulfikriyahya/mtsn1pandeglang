@@ -1161,27 +1161,42 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
 
   const handleUpload = async () => {
     if (!file) return alert("Pilih file CSV terlebih dahulu.");
+
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", importType);
+
     try {
       const res = await fetch("/api/import.php?action=import", {
         method: "POST",
         body: formData,
       });
-      const json = await res.json();
-      if (json.status === "success") {
-        alert(json.message);
-        onSuccess();
-      } else {
-        alert(json.message || "Gagal mengupload file.");
+
+      // PENTING: Ambil response sebagai text dulu untuk debugging
+      const textResponse = await res.text();
+
+      try {
+        const json = JSON.parse(textResponse);
+        if (json.status === "success") {
+          alert(json.message);
+          onSuccess();
+        } else {
+          alert("Gagal: " + (json.message || "Terjadi kesalahan server."));
+        }
+      } catch (jsonError) {
+        // Jika gagal parse JSON, berarti server error (PHP Error/HTML)
+        console.error("Server Response:", textResponse);
+        alert(
+          "Terjadi kesalahan server (Lihat Console). Kemungkinan permission database atau file import.php error.",
+        );
       }
     } catch (e) {
-      alert("Terjadi kesalahan jaringan.");
+      alert("Terjadi kesalahan jaringan atau koneksi terputus.");
     } finally {
       setIsUploading(false);
       setFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
