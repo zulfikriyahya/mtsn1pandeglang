@@ -3,9 +3,11 @@ session_start();
 header('Content-Type: application/json');
 
 // 1. Cek Login Admin
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+// Cek Login & Role (Super Admin OR Operator)
+// User biasa TIDAK BOLEH import
+if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_admin' && $_SESSION['user_role'] !== 'operator')) {
     http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    echo json_encode(['status' => 'error', 'message' => 'Akses Ditolak: User biasa tidak bisa melakukan import.']);
     exit;
 }
 

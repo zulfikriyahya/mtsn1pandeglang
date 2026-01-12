@@ -2,10 +2,10 @@
 session_start();
 header('Content-Type: application/json');
 
-// 1. Cek Login Admin
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+// Cek Login & Role Super Admin
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['user_role'] !== 'super_admin') {
     http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    echo json_encode(['status' => 'error', 'message' => 'Akses Ditolak: Hanya Super Admin yang bisa menghapus data.']);
     exit;
 }
 
