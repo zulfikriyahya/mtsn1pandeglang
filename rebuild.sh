@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Panggil script deploy.sh yang canggih (Smart Sync)
+# Outputnya kita lempar ke log file
+/var/www/mtsn1pandeglang.sch.id/deploy.sh >> /var/log/web_build.log 2>&1
