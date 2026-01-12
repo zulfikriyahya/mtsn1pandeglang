@@ -1490,10 +1490,15 @@ const AdminDashboard = () => {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="h5 mb-0 font-bold">{user.name}</h3>
-              <span
+              {/* <span
                 className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${user.role === "super_admin" ? "bg-red-100 text-red-700" : user.role === "operator" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
               >
                 {user.role.replace("_", " ")}
+              </span> */}
+              <span
+                className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${user.role === "super_admin" ? "bg-red-100 text-red-700" : user.role === "operator" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
+              >
+                {(user.role || "user").replace("_", " ")}
               </span>
             </div>
             <p className="text-sm text-text-light">{user.email}</p>

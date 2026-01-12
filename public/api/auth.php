@@ -169,13 +169,16 @@ try {
     // === CEK SESSION ===
     elseif ($action === 'check') {
         if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+            // FIX: Pastikan role memiliki fallback jika session lama masih nyangkut
+            $role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'user';
+
             echo json_encode([
                 'status' => 'authenticated',
                 'user' => [
-                    'name' => $_SESSION['user_name'],
-                    'email' => $_SESSION['user_email'],
-                    'picture' => $_SESSION['user_picture'],
-                    'role' => $_SESSION['user_role']
+                    'name' => $_SESSION['user_name'] ?? 'Admin',
+                    'email' => $_SESSION['user_email'] ?? '',
+                    'picture' => $_SESSION['user_picture'] ?? '',
+                    'role' => $role
                 ]
             ]);
         } else {
