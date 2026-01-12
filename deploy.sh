@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Fix PATH untuk yarn
-export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.yarn/bin:$PATH"
+export PATH="/home/zulfikriyahya/.nvm/versions/node/v25.2.1/bin/yarn"
 
 # --- KONFIGURASI ---
 MAX_RETRIES=3
