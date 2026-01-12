@@ -13,6 +13,7 @@ EXCLUDE_PATTERNS=(
   "./.json/*" 
   "./.vscode/*" 
   "./.gitignore"
+  "./.env"
   "./.gitattributes"
   "./.yarnrc.yml"
   "./.DS_Store"
@@ -41,7 +42,7 @@ EXCLUDE_PATTERNS=(
   "*.png" "*.jpg" "*.jpeg" "*.webp" "*.ico" "*.gif" "*.svg" "*.avif"
   "*.woff" "*.woff2" "*.ttf" "*.otf" "*.eot"
   "*.mp3" "*.mp4" "*.wav" "*.avi"
-  "*.db"
+  "*.db" "*.csv"
 )
 
 # Fungsi untuk menentukan bahasa berdasarkan ekstensi file
