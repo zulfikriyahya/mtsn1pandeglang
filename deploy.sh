@@ -68,4 +68,7 @@ fi
 DB_FILE="$PROJECT_DIR/database.db"
 [ ! -f "$DB_FILE" ] && touch "$DB_FILE" && chmod 664 "$DB_FILE"
 
+sudo chown www-data:www-data /var/www/mtsn1pandeglang.sch.id/rebuild.sh
+sudo chown www-data:www-data /var/www/mtsn1pandeglang.sch.id/deploy.sh
+
 log "=== DEPLOYMENT SUKSES! ==="
