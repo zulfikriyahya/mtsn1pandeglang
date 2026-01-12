@@ -43,11 +43,16 @@ function formatFullTime($timestamp)
     return getIndonesianDate($timestamp) . ' ' . date('H:i', strtotime($timestamp)) . ' WIB';
 }
 
-// 6. PDF Class
+// 6. PDF Class (DIMODIFIKASI UNTUK FITUR HEADER BERULANG)
 class PDF extends FPDF
 {
     var $widths;
     var $aligns;
+
+    // --- FITUR BARU: Variable untuk menyimpan fungsi header ---
+    var $tableHeaderCallback = null;
+    var $isPrintingTable = false;
+
     function SetWidths($w)
     {
         $this->widths = $w;
@@ -55,6 +60,12 @@ class PDF extends FPDF
     function SetAligns($a)
     {
         $this->aligns = $a;
+    }
+
+    // --- FITUR BARU: Setter untuk Callback Header ---
+    function SetTableHeaderCallback($callback)
+    {
+        $this->tableHeaderCallback = $callback;
     }
 
     function ImageRemote($url, $x, $y, $w, $h)
@@ -142,10 +153,19 @@ class PDF extends FPDF
         $this->Ln($h);
     }
 
+    // --- FITUR BARU: Cek Page Break & Cetak Header Ulang ---
     function CheckPageBreak($h)
     {
-        if ($this->GetY() + $h > $this->PageBreakTrigger) $this->AddPage($this->CurOrientation);
+        if ($this->GetY() + $h > $this->PageBreakTrigger) {
+            $this->AddPage($this->CurOrientation);
+
+            // Jika sedang mencetak tabel dan callback ada, panggil callback untuk gambar header lagi
+            if ($this->isPrintingTable && is_callable($this->tableHeaderCallback)) {
+                call_user_func($this->tableHeaderCallback);
+            }
+        }
     }
+
     function NbLines($w, $txt)
     {
         $cw = &$this->CurrentFont['cw'];
@@ -190,19 +210,21 @@ try {
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->SetMargins(10, 10, 10);
+    $pdf->SetAutoPageBreak(false); // Matikan auto page break bawaan, kita handle di CheckPageBreak
+    $pdf->PageBreakTrigger = 297 - 20; // Trigger margin bottom manual (A4 height - 20mm)
+
     $pdf->AddPage();
 
     // Queries
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
     $y = $year;
 
-    // Data Counts
+    // Data Counts & Indeks (Kode Asli Anda)
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
     $feedbackCount = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
-    // Hitung Indeks
     $indices = $db->querySingle("SELECT 
         AVG(score_zi) as zi, 
         AVG(score_service) as service, 
@@ -241,8 +263,9 @@ try {
     $pdf->Ln(5);
 
     // ==========================================
-    // TABEL 1: RINGKASAN TRAFIK (Kiri) & QR (Kanan)
+    // TABEL 1: RINGKASAN
     // ==========================================
+    // ... (Kode Tabel 1 & 2 Tetap Sama, tidak berubah) ...
 
     $startX = 10;
     $startY = $pdf->GetY();
@@ -254,7 +277,6 @@ try {
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell($wTable1, $rowH, ' I. RINGKASAN TRAFIK WEBSITE', 1, 0, 'L', true);
 
-    // QR Code Container
     $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
@@ -262,7 +284,6 @@ try {
 
     $pdf->Ln($rowH);
 
-    // Data Tabel 1
     $wLabel = 65;
     $wValue = 90;
     $pdf->SetFont('Arial', '', 9);
@@ -270,80 +291,76 @@ try {
 
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 1, 'L');
-
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung', 1, 1, 'L');
-
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
-
     $pdf->Ln(5);
 
-    // ==========================================
-    // TABEL 2: KUALITAS PELAYANAN (DIPISAH: 6 Baris Total)
-    // ==========================================
-
-    // Baris 1: Header
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
-
-    // Lebar Kolom
     $wLabelFull = 70;
     $wValueFull = 120;
 
-    // Baris 2: Jumlah Responden (Sendiri)
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
-
-    // Baris 3: Jumlah Ulasan (Sendiri)
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
 
-    // Baris 4: Rincian Indeks (Split 3 Kolom)
     $wSub = 190 / 3;
     $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
 
-    // Baris 5: Rata-rata Rating Ulasan
     $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
 
-    // Baris 6: Indeks Kepuasan Masy (IKM)
     $pdf->SetFont('Arial', 'B', 9);
-    $pdf->SetFillColor(240, 240, 240); // Highlight background
+    $pdf->SetFillColor(240, 240, 240);
     $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
 
     $pdf->Ln(8);
 
-    // === BAGIAN A & B (Tabel Detail) Tetap Sama ===
+    // ==========================================
+    // A. DATA SURVEI (MODIFIED: Dengan Header Berulang)
+    // ==========================================
 
-    // A. DATA SURVEI
+    // 1. Definisikan Fungsi Header Tabel A (Closures)
+    $drawSurveyHeader = function () use ($pdf) {
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(0, 150, 100);
+        $pdf->SetTextColor(255);
+        $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
+        $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
+        $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
+        $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
+        $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
+        $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
+        $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
+        $pdf->SetTextColor(0); // Reset warna text
+        $pdf->SetFont('Arial', '', 8);
+    };
+
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
 
-    $pdf->SetFont('Arial', 'B', 8);
-    $pdf->SetFillColor(0, 150, 100);
-    $pdf->SetTextColor(255);
-    $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
-    $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-    $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
-    $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
-    $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
-    $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
-    $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
-    $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
-
-    $pdf->SetTextColor(0);
-    $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
 
+    // 2. Gambar Header Pertama Kali
+    $drawSurveyHeader();
+
+    // 3. Registrasi Callback & Aktifkan Flag
+    $pdf->SetTableHeaderCallback($drawSurveyHeader);
+    $pdf->isPrintingTable = true;
+
+    // 4. Loop Data
     $resSurv = $db->query("SELECT * FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at ASC");
     $no = 1;
     $found1 = false;
@@ -352,26 +369,46 @@ try {
         $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
     }
+
+    // 5. Matikan Flag Table
+    $pdf->isPrintingTable = false;
+
     if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
 
-    // B. DATA ULASAN
+    // ==========================================
+    // B. DATA ULASAN (MODIFIED: Dengan Header Berulang)
+    // ==========================================
+
+    // 1. Definisikan Fungsi Header Tabel B
+    $drawFeedbackHeader = function () use ($pdf) {
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(255, 193, 7);
+        $pdf->SetTextColor(0);
+        $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
+        $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
+        $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
+        $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
+        $pdf->SetFont('Arial', '', 8);
+    };
+
     $pdf->SetFont('Arial', 'B', 10);
+    // Cek jika judul tidak muat, pindah halaman
+    if ($pdf->GetY() + 15 > $pdf->PageBreakTrigger) $pdf->AddPage();
     $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
 
-    $pdf->SetFont('Arial', 'B', 8);
-    $pdf->SetFillColor(255, 193, 7);
-    $pdf->SetTextColor(0);
-    $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
-    $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-    $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
-    $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
-    $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
-
-    $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 45, 20, 82]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
 
+    // 2. Gambar Header Pertama
+    $drawFeedbackHeader();
+
+    // 3. Registrasi Callback
+    $pdf->SetTableHeaderCallback($drawFeedbackHeader);
+    $pdf->isPrintingTable = true;
+
+    // 4. Loop Data
     $resFeed = $db->query("SELECT * FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at ASC");
     $no = 1;
     $found2 = false;
@@ -379,11 +416,33 @@ try {
         $found2 = true;
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['name'] ?: 'Anonim', $row['rating'] . ' / 5', $row['message'] ?: '-']);
     }
+
+    // 5. Matikan Flag
+    $pdf->isPrintingTable = false;
+
     if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
 
-    // === TANDA TANGAN ===
-    $pdf->AddPage();
-    $pdf->Ln(5);
+    $pdf->Ln(8);
+
+    // ==========================================
+    // === TANDA TANGAN (FITUR BARU: SMART PAGE BREAK) ===
+    // ==========================================
+
+    // Estimasi tinggi blok tanda tangan (Tanggal + Jabatan + TTE + Nama + Kamad)
+    // Sekitar 70-80mm aman.
+    $signatureBlockHeight = 80;
+
+    // Cek sisa ruang halaman. Jika tidak cukup, paksa halaman baru.
+    // Logic: Posisi Y sekarang + Tinggi Signature > Batas Halaman
+    if ($pdf->GetY() + $signatureBlockHeight > $pdf->PageBreakTrigger) {
+        $pdf->AddPage();
+    } else {
+        // Jika muat di halaman ini, dan masih ada sisa ruang yang wajar, beri jarak sedikit.
+        // Jika mepet sekali, kode AddPage diatas sudah handle.
+        // $pdf->Ln(5); // Opsional
+    }
+
+    // --- RENDER TANDA TANGAN (KODE ASLI ANDA) ---
     $path = '../images/instansi/';
     $tglCetak = getIndonesianDate();
     $qrSize = 18;
