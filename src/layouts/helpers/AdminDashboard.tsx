@@ -16,13 +16,15 @@ import {
   FaTimes,
   FaExternalLinkAlt,
   FaQuoteLeft,
-  FaTrash, // Ikon Hapus
-  FaExclamationCircle, // Ikon Konfirmasi
-  FaFileUpload, // Ikon Import (BARU)
+  FaTrash,
+  FaExclamationCircle,
+  FaFileUpload,
   FaFileCsv,
-  FaCheckCircle, // Tambahkan ini
-  FaTimesCircle, // Tambahkan ini
-  FaSpinner, // Tambahkan ini (opsional, untuk loading icon)
+  FaCheckCircle,
+  FaTimesCircle,
+  FaSpinner,
+  FaFilter,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -52,13 +54,13 @@ ChartJS.register(
   Filler,
 );
 
+// --- HELPER & INTERFACES ---
 interface User {
   name: string;
   email: string;
   picture: string;
 }
 
-// --- HELPER: FORMAT TANGGAL ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -84,21 +86,58 @@ const formatDateIndo = (dateString: string) => {
   }
 };
 
+const getMonthFromDate = (dateString: string) => {
+  try {
+    return (
+      new Date(
+        dateString.includes("Z")
+          ? dateString
+          : dateString.replace(" ", "T") + "Z",
+      ).getMonth() + 1
+    );
+  } catch (e) {
+    return 0;
+  }
+};
+
+const getYearFromDate = (dateString: string) => {
+  try {
+    return new Date(
+      dateString.includes("Z")
+        ? dateString
+        : dateString.replace(" ", "T") + "Z",
+    ).getFullYear();
+  } catch (e) {
+    return 0;
+  }
+};
+
 const AdminDashboard = () => {
-  // --- STATE HOOKS ---
+  // --- STATE UTAMA ---
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // State Modal Detail
+  // --- STATE FILTER ULASAN ---
+  const [fbFilterMonth, setFbFilterMonth] = useState<number>(0); // 0 = Semua
+  const [fbFilterYear, setFbFilterYear] = useState<number>(0); // 0 = Semua
+  const [fbFilterRating, setFbFilterRating] = useState<number>(0); // 0 = Semua
+
+  // --- STATE FILTER SURVEI ---
+  const [svFilterMonth, setSvFilterMonth] = useState<number>(0);
+  const [svFilterYear, setSvFilterYear] = useState<number>(0);
+  const [svFilterCategory, setSvFilterCategory] = useState<string>("all"); // all, zi, service, academic
+  const [svFilterScore, setSvFilterScore] = useState<number>(0); // 0 = Semua
+
+  // --- STATE MODALS ---
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
     null,
   );
 
-  // State Modal Konfirmasi Delete
+  // Modal Konfirmasi Hapus
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     ids: number[];
@@ -106,10 +145,17 @@ const AdminDashboard = () => {
     count: number;
   }>({ isOpen: false, ids: [], type: "feedback", count: 0 });
 
-  // State Modal Import (BARU)
+  // Modal Status Hapus (Sukses/Gagal)
+  const [statusModal, setStatusModal] = useState<{
+    isOpen: boolean;
+    status: "success" | "error";
+    title: string;
+    message: string;
+  }>({ isOpen: false, status: "success", title: "", message: "" });
+
   const [importModalOpen, setImportModalOpen] = useState(false);
 
-  // State Filter PDF
+  // State Filter Header (PDF)
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
   );
@@ -117,7 +163,51 @@ const AdminDashboard = () => {
     new Date().getFullYear(),
   );
 
-  // --- GOOGLE AUTH INIT ---
+  // --- LOGIKA FILTER DATA ---
+  const filteredFeedbacks = useMemo(() => {
+    if (!data?.tables?.feedbacks) return [];
+    return data.tables.feedbacks.filter((item: any) => {
+      const matchMonth =
+        fbFilterMonth === 0 ||
+        getMonthFromDate(item.created_at) === fbFilterMonth;
+      const matchYear =
+        fbFilterYear === 0 || getYearFromDate(item.created_at) === fbFilterYear;
+      const matchRating =
+        fbFilterRating === 0 || item.rating === fbFilterRating;
+      return matchMonth && matchYear && matchRating;
+    });
+  }, [data, fbFilterMonth, fbFilterYear, fbFilterRating]);
+
+  const filteredSurveys = useMemo(() => {
+    if (!data?.tables?.surveys) return [];
+    return data.tables.surveys.filter((item: any) => {
+      const matchMonth =
+        svFilterMonth === 0 ||
+        getMonthFromDate(item.created_at) === svFilterMonth;
+      const matchYear =
+        svFilterYear === 0 || getYearFromDate(item.created_at) === svFilterYear;
+
+      let matchScore = true;
+      if (svFilterScore > 0) {
+        if (svFilterCategory === "zi")
+          matchScore = Math.round(item.score_zi) === svFilterScore;
+        else if (svFilterCategory === "service")
+          matchScore = Math.round(item.score_service) === svFilterScore;
+        else if (svFilterCategory === "academic")
+          matchScore = Math.round(item.score_academic) === svFilterScore;
+        else {
+          // Jika kategori All, cek apakah salah satu score cocok
+          matchScore =
+            Math.round(item.score_zi) === svFilterScore ||
+            Math.round(item.score_service) === svFilterScore ||
+            Math.round(item.score_academic) === svFilterScore;
+        }
+      }
+      return matchMonth && matchYear && matchScore;
+    });
+  }, [data, svFilterMonth, svFilterYear, svFilterCategory, svFilterScore]);
+
+  // --- AUTH & INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -224,17 +314,12 @@ const AdminDashboard = () => {
     );
   };
 
+  // --- ACTION HANDLERS ---
   const openDetail = (item: any, type: "feedback" | "survey") => {
     setSelectedItem(item);
     setModalType(type);
   };
 
-  const closeDetail = () => {
-    setSelectedItem(null);
-    setModalType(null);
-  };
-
-  // --- LOGIKA HAPUS DATA (SINGLE & BULK) ---
   const requestDelete = (ids: number[], type: "feedback" | "survey") => {
     setConfirmModal({
       isOpen: true,
@@ -245,6 +330,7 @@ const AdminDashboard = () => {
   };
 
   const executeDelete = async () => {
+    setConfirmModal((prev) => ({ ...prev, isOpen: false }));
     try {
       const res = await fetch("/api/crud.php?action=delete", {
         method: "POST",
@@ -257,32 +343,34 @@ const AdminDashboard = () => {
       const json = await res.json();
 
       if (json.status === "success") {
-        fetchStats(); // Refresh data
-        // Tutup modal detail jika item yang dihapus sedang dibuka
+        fetchStats();
         if (
           selectedItem &&
           confirmModal.ids.includes(selectedItem.id) &&
           modalType === confirmModal.type
         ) {
-          closeDetail();
+          setSelectedItem(null);
+          setModalType(null);
         }
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "Berhasil Dihapus",
+          message: `${confirmModal.count} data telah berhasil dihapus dari database.`,
+        });
       } else {
-        alert(json.message || "Gagal menghapus data.");
+        throw new Error(json.message);
       }
-    } catch (e) {
-      alert("Terjadi kesalahan jaringan.");
-    } finally {
-      setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    } catch (e: any) {
+      setStatusModal({
+        isOpen: true,
+        status: "error",
+        title: "Gagal Menghapus",
+        message: e.message || "Terjadi kesalahan sistem saat menghapus data.",
+      });
     }
   };
 
-  // --- LOGIKA IMPORT DATA (BARU) ---
-  const handleImportSuccess = () => {
-    fetchStats();
-    setImportModalOpen(false);
-  };
-
-  // --- RENDER LOGIC ---
   if (loading)
     return (
       <div className="text-center p-12">
@@ -291,7 +379,7 @@ const AdminDashboard = () => {
       </div>
     );
 
-  if (!user) {
+  if (!user)
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <div className="w-full max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-xl dark:border-darkmode-border dark:bg-darkmode-light">
@@ -307,11 +395,27 @@ const AdminDashboard = () => {
         </div>
       </div>
     );
-  }
+
+  const monthOptions = [
+    "Semua Bulan",
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  const yearOptions = [0, 2024, 2025, 2026, 2027]; // 0 = Semua Tahun
 
   return (
     <div className="min-h-screen pb-12 relative">
-      {/* Header */}
+      {/* Header Panel */}
       <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
         <div className="flex items-center gap-4 w-full md:w-auto">
           <img
@@ -324,45 +428,33 @@ const AdminDashboard = () => {
             <p className="text-sm text-text-light">{user.email}</p>
           </div>
         </div>
-
-        {/* Action Controls */}
         <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
-          <select
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
-          >
-            {[
-              "Januari",
-              "Februari",
-              "Maret",
-              "April",
-              "Mei",
-              "Juni",
-              "Juli",
-              "Agustus",
-              "September",
-              "Oktober",
-              "November",
-              "Desember",
-            ].map((m, i) => (
-              <option key={i} value={i + 1}>
-                {m}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
-          >
-            {[2024, 2025, 2026].map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
+          {/* Filter PDF Header */}
+          <div className="flex items-center gap-2 bg-gray-50 dark:bg-white/5 p-1.5 rounded-lg border border-border dark:border-darkmode-border mr-2">
+            <span className="text-xs font-bold px-2">Cetak:</span>
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(Number(e.target.value))}
+              className="text-xs bg-transparent outline-none"
+            >
+              {monthOptions.slice(1).map((m, i) => (
+                <option key={i} value={i + 1}>
+                  {m}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+              className="text-xs bg-transparent outline-none"
+            >
+              {yearOptions.slice(1).map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <button
             onClick={() => setImportModalOpen(true)}
@@ -370,7 +462,6 @@ const AdminDashboard = () => {
           >
             <FaFileUpload /> Import
           </button>
-
           <button
             onClick={printPDF}
             className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden whitespace-nowrap"
@@ -404,7 +495,7 @@ const AdminDashboard = () => {
 
       {data && (
         <div className="animate-fade-in">
-          {/* Overview Cards */}
+          {/* Stats Cards */}
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
@@ -456,7 +547,9 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* TAB CONTENTS */}
+          {/* === CONTENT TABS === */}
+
+          {/* 1. OVERVIEW */}
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
@@ -546,6 +639,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
+          {/* 2. POSTS */}
           {activeTab === "posts" && (
             <DataTable
               title="Statistik Artikel Populer"
@@ -568,14 +662,62 @@ const AdminDashboard = () => {
             />
           )}
 
+          {/* 3. FEEDBACK (DATA ULASAN) */}
           {activeTab === "feedback" && (
             <DataTable
               title="Data Ulasan Masuk"
-              data={data.tables.feedbacks}
+              data={filteredFeedbacks} // Gunakan data yang sudah difilter
               searchKeys={["name", "message"]}
               enableSelection={true}
               onBulkDelete={(ids) => requestDelete(ids, "feedback")}
               onDownload={() => downloadReport("feedback")}
+              customFilters={
+                <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaCalendarAlt className="text-gray-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={fbFilterMonth}
+                      onChange={(e) => setFbFilterMonth(Number(e.target.value))}
+                    >
+                      {monthOptions.map((m, i) => (
+                        <option key={i} value={i}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                      value={fbFilterYear}
+                      onChange={(e) => setFbFilterYear(Number(e.target.value))}
+                    >
+                      <option value={0}>Semua Tahun</option>
+                      {yearOptions.slice(1).map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaStar className="text-yellow-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={fbFilterRating}
+                      onChange={(e) =>
+                        setFbFilterRating(Number(e.target.value))
+                      }
+                    >
+                      <option value={0}>Semua Rating</option>
+                      {[5, 4, 3, 2, 1].map((r) => (
+                        <option key={r} value={r}>
+                          {r} Bintang
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              }
               columns={[
                 {
                   key: "created_at",
@@ -639,14 +781,70 @@ const AdminDashboard = () => {
             />
           )}
 
+          {/* 4. SURVEY (DATA SURVEI) */}
           {activeTab === "surveys" && (
             <DataTable
               title="Data Survei Kepuasan"
-              data={data.tables.surveys}
+              data={filteredSurveys} // Gunakan data yang sudah difilter
               searchKeys={["respondent_name", "feedback"]}
               enableSelection={true}
               onBulkDelete={(ids) => requestDelete(ids, "survey")}
               onDownload={() => downloadReport("survey")}
+              customFilters={
+                <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaCalendarAlt className="text-gray-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={svFilterMonth}
+                      onChange={(e) => setSvFilterMonth(Number(e.target.value))}
+                    >
+                      {monthOptions.map((m, i) => (
+                        <option key={i} value={i}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                      value={svFilterYear}
+                      onChange={(e) => setSvFilterYear(Number(e.target.value))}
+                    >
+                      <option value={0}>Semua Tahun</option>
+                      {yearOptions.slice(1).map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaFilter className="text-blue-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={svFilterCategory}
+                      onChange={(e) => setSvFilterCategory(e.target.value)}
+                    >
+                      <option value="all">Semua Kategori</option>
+                      <option value="zi">Zona Integritas (ZI)</option>
+                      <option value="service">Pelayanan</option>
+                      <option value="academic">Akademik</option>
+                    </select>
+                    <select
+                      className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                      value={svFilterScore}
+                      onChange={(e) => setSvFilterScore(Number(e.target.value))}
+                    >
+                      <option value={0}>Semua Nilai</option>
+                      {[5, 4, 3, 2, 1].map((s) => (
+                        <option key={s} value={s}>
+                          Nilai {s}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              }
               columns={[
                 {
                   key: "created_at",
@@ -727,27 +925,40 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* MODAL IMPORT DATA (BARU) */}
+      {/* --- MODALS --- */}
+
+      {/* Import Modal */}
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => setImportModalOpen(false)}
-        onSuccess={handleImportSuccess}
+        onSuccess={() => {
+          fetchStats();
+          setImportModalOpen(false);
+        }}
       />
 
-      {/* CUSTOM CONFIRMATION MODAL */}
+      {/* Confirm Delete Modal */}
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
-        title="Konfirmasi Penghapusan"
-        message={`Apakah Anda yakin ingin menghapus ${confirmModal.count} data terpilih? Tindakan ini permanen dan tidak dapat dibatalkan.`}
+        title="Konfirmasi Hapus"
+        message={`Yakin ingin menghapus ${confirmModal.count} data terpilih?`}
         onConfirm={executeDelete}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
 
-      {/* DETAIL MODAL POPUP */}
+      {/* Status Modal (Success/Fail Delete) */}
+      <StatusModal
+        isOpen={statusModal.isOpen}
+        status={statusModal.status}
+        title={statusModal.title}
+        message={statusModal.message}
+        onClose={() => setStatusModal({ ...statusModal, isOpen: false })}
+      />
+
+      {/* Detail Modal */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
           <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
-            {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
               <div>
                 <h3 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -759,14 +970,15 @@ const AdminDashboard = () => {
                 </p>
               </div>
               <button
-                onClick={closeDetail}
-                className="text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
+                onClick={() => {
+                  setSelectedItem(null);
+                  setModalType(null);
+                }}
+                className="text-gray-400 hover:text-red-500 bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
               >
                 <FaTimes />
               </button>
             </div>
-
-            {/* Modal Content */}
             <div className="p-6">
               <div className="flex items-start gap-4 mb-6">
                 <div className="h-12 w-12 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
@@ -781,7 +993,6 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-500">
                     {selectedItem.respondent_role || "Pengunjung / Wali Murid"}
                   </p>
-
                   {modalType === "feedback" && (
                     <div className="mt-2 flex gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
@@ -798,8 +1009,6 @@ const AdminDashboard = () => {
                   )}
                 </div>
               </div>
-
-              {/* Message Box */}
               <div className="relative rounded-xl bg-gray-50 dark:bg-white/5 p-6 border border-gray-100 dark:border-darkmode-border">
                 <FaQuoteLeft className="absolute top-4 left-4 text-gray-200 dark:text-gray-600 text-2xl" />
                 <div className="relative z-10">
@@ -813,8 +1022,6 @@ const AdminDashboard = () => {
                   </p>
                 </div>
               </div>
-
-              {/* Stats for Survey */}
               {modalType === "survey" && (
                 <div className="grid grid-cols-3 gap-4 mt-6">
                   <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
@@ -844,8 +1051,6 @@ const AdminDashboard = () => {
                 </div>
               )}
             </div>
-
-            {/* Modal Footer */}
             <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-between items-center text-xs text-gray-400 border-t border-gray-100 dark:border-darkmode-border">
               <span>IP: {selectedItem.ip_address}</span>
               <div className="flex gap-2">
@@ -856,7 +1061,10 @@ const AdminDashboard = () => {
                   <FaTrash /> Hapus
                 </button>
                 <button
-                  onClick={closeDetail}
+                  onClick={() => {
+                    setSelectedItem(null);
+                    setModalType(null);
+                  }}
                   className="btn btn-primary btn-sm"
                 >
                   Tutup
@@ -872,231 +1080,106 @@ const AdminDashboard = () => {
 
 // --- SUB COMPONENTS ---
 
-// // 1. IMPORT MODAL (UPDATED WITH PROGRESS BAR)
-// const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
-//   const [importType, setImportType] = useState<"feedback" | "survey">(
-//     "feedback",
-//   );
-//   const [file, setFile] = useState<File | null>(null);
-//   const [isUploading, setIsUploading] = useState(false);
-//   const [progress, setProgress] = useState(0); // State untuk progress bar
-//   const fileInputRef = useRef<HTMLInputElement>(null);
+// 1. STATUS MODAL (NEW)
+const StatusModal = ({ isOpen, status, title, message, onClose }: any) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 text-center border border-gray-100 dark:border-darkmode-border">
+        <div
+          className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${status === "success" ? "bg-green-100 dark:bg-green-900/30 text-green-600" : "bg-red-100 dark:bg-red-900/30 text-red-600"}`}
+        >
+          {status === "success" ? (
+            <FaCheckCircle className="text-4xl animate-bounce" />
+          ) : (
+            <FaTimesCircle className="text-4xl" />
+          )}
+        </div>
+        <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">
+          {title}
+        </h3>
+        <p className="text-gray-500 mb-6 text-sm">{message}</p>
+        <button onClick={onClose} className="btn btn-primary w-full">
+          OK, Mengerti
+        </button>
+      </div>
+    </div>
+  );
+};
 
-//   // Reset state ketika modal dibuka/tutup
-//   useEffect(() => {
-//     if (isOpen) {
-//       setProgress(0);
-//       setFile(null);
-//       setIsUploading(false);
-//     }
-//   }, [isOpen]);
+// 2. CONFIRMATION MODAL
+const ConfirmationModal = ({
+  isOpen,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+}: any) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 mb-4 text-red-600">
+            <FaExclamationCircle className="text-3xl" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            {message}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium"
+            >
+              Batal
+            </button>
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium shadow-md shadow-red-200"
+            >
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-//   if (!isOpen) return null;
+// 3. STAT CARD
+const StatCard = ({ label, value, icon, color, bg }: any) => (
+  <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
+    <div>
+      <p className="text-sm font-medium text-text-light">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-text-dark dark:text-white">
+        {value}
+      </p>
+    </div>
+    <div
+      className={`flex h-12 w-12 items-center justify-center rounded-lg ${bg} text-xl ${color}`}
+    >
+      {icon}
+    </div>
+  </div>
+);
 
-//   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     if (e.target.files && e.target.files[0]) {
-//       setFile(e.target.files[0]);
-//       setProgress(0);
-//     }
-//   };
-
-//   const handleUpload = () => {
-//     if (!file) return alert("Pilih file CSV terlebih dahulu.");
-
-//     setIsUploading(true);
-//     setProgress(0);
-
-//     const formData = new FormData();
-//     formData.append("file", file);
-//     formData.append("type", importType);
-
-//     const xhr = new XMLHttpRequest();
-
-//     // Event Listener untuk Progress Upload
-//     xhr.upload.addEventListener("progress", (event) => {
-//       if (event.lengthComputable) {
-//         const percentComplete = Math.round((event.loaded / event.total) * 100);
-//         setProgress(percentComplete);
-//       }
-//     });
-
-//     // Event Listener ketika selesai (Response dari Server)
-//     xhr.addEventListener("load", () => {
-//       setIsUploading(false);
-//       if (xhr.status >= 200 && xhr.status < 300) {
-//         try {
-//           const json = JSON.parse(xhr.responseText);
-//           if (json.status === "success") {
-//             alert(json.message);
-//             onSuccess();
-//           } else {
-//             alert(json.message || "Gagal mengupload file.");
-//           }
-//         } catch (e) {
-//           alert("Gagal memproses respons server.");
-//         }
-//       } else {
-//         alert("Terjadi kesalahan jaringan atau server.");
-//       }
-//     });
-
-//     // Event Listener jika Error
-//     xhr.addEventListener("error", () => {
-//       setIsUploading(false);
-//       alert("Terjadi kesalahan jaringan.");
-//     });
-
-//     xhr.open("POST", "/api/import.php?action=import");
-//     xhr.send(formData);
-//   };
-
-//   return (
-//     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-//       <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
-//         <div className="flex justify-between items-center mb-6">
-//           <h3 className="text-lg font-bold">Import Data CSV</h3>
-//           <button onClick={onClose} disabled={isUploading}>
-//             <FaTimes className="text-gray-400 hover:text-red-500" />
-//           </button>
-//         </div>
-
-//         {/* Pilihan Tipe Data */}
-//         <div className="mb-4">
-//           <label className="block text-sm font-medium mb-2">
-//             Pilih Tipe Data
-//           </label>
-//           <div className="flex gap-4">
-//             <label className="flex items-center gap-2 cursor-pointer">
-//               <input
-//                 type="radio"
-//                 name="importType"
-//                 value="feedback"
-//                 checked={importType === "feedback"}
-//                 onChange={() => setImportType("feedback")}
-//                 disabled={isUploading}
-//               />
-//               Data Ulasan
-//             </label>
-//             <label className="flex items-center gap-2 cursor-pointer">
-//               <input
-//                 type="radio"
-//                 name="importType"
-//                 value="survey"
-//                 checked={importType === "survey"}
-//                 onChange={() => setImportType("survey")}
-//                 disabled={isUploading}
-//               />
-//               Data Survei
-//             </label>
-//           </div>
-//         </div>
-
-//         {/* Area Upload */}
-//         <div className="mb-6">
-//           <label className="block text-sm font-medium mb-2">Upload File</label>
-//           <div
-//             className={`border-2 border-dashed border-gray-300 rounded-lg p-6 text-center transition-colors ${
-//               isUploading
-//                 ? "opacity-50 cursor-not-allowed"
-//                 : "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5"
-//             }`}
-//             onClick={() => !isUploading && fileInputRef.current?.click()}
-//           >
-//             <input
-//               type="file"
-//               accept=".csv"
-//               ref={fileInputRef}
-//               className="hidden"
-//               onChange={handleFileChange}
-//               disabled={isUploading}
-//             />
-//             {file ? (
-//               <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
-//                 <FaFileCsv size={24} />
-//                 <span className="truncate max-w-[200px]">{file.name}</span>
-//               </div>
-//             ) : (
-//               <div className="text-gray-500">
-//                 <FaFileUpload className="mx-auto mb-2 text-2xl" />
-//                 <p>Klik untuk memilih file CSV</p>
-//               </div>
-//             )}
-//           </div>
-
-//           <div className="mt-2 text-right">
-//             <a
-//               href={`/api/import.php?action=template&type=${importType}`}
-//               className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
-//             >
-//               <FaDownload /> Download Template CSV
-//             </a>
-//           </div>
-//         </div>
-
-//         {/* Progress Bar UI */}
-//         {isUploading && (
-//           <div className="mb-6 animate-fade-in">
-//             <div className="flex justify-between text-xs mb-1 text-gray-600 dark:text-gray-300">
-//               <span>Status Upload</span>
-//               <span>{progress}%</span>
-//             </div>
-//             <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
-//               <div
-//                 className="bg-primary h-2.5 rounded-full transition-all duration-300 ease-out"
-//                 style={{ width: `${progress}%` }}
-//               ></div>
-//             </div>
-//             <p className="text-xs text-center mt-2 text-gray-500 italic">
-//               {progress < 100
-//                 ? "Mengupload ke server..."
-//                 : "Sedang memproses & menyimpan ke database, mohon tunggu..."}
-//             </p>
-//           </div>
-//         )}
-
-//         {/* Tombol Aksi */}
-//         <div className="flex justify-end gap-2">
-//           <button
-//             onClick={onClose}
-//             className="btn btn-outline-primary btn-sm"
-//             disabled={isUploading}
-//           >
-//             Batal
-//           </button>
-//           <button
-//             onClick={handleUpload}
-//             className="btn btn-primary btn-sm disabled:opacity-70 disabled:cursor-not-allowed"
-//             disabled={!file || isUploading}
-//           >
-//             {isUploading ? "Sedang Proses..." : "Mulai Import"}
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// ==========================================
-// GANTI BAGIAN IMPORT MODAL DI BAWAH INI
-// ==========================================
-
+// 4. IMPORT MODAL (UPDATED)
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   const [importType, setImportType] = useState<"feedback" | "survey">(
     "feedback",
   );
   const [file, setFile] = useState<File | null>(null);
-
-  // State Logika Baru
   const [uploadStatus, setUploadStatus] = useState<
     "idle" | "uploading" | "success" | "error"
   >("idle");
   const [progress, setProgress] = useState(0);
   const [resultMessage, setResultMessage] = useState("");
   const [countdown, setCountdown] = useState(5);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Reset state saat modal dibuka
   useEffect(() => {
     if (isOpen) {
       setUploadStatus("idle");
@@ -1107,13 +1190,12 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
     }
   }, [isOpen]);
 
-  // Logika Countdown & Redirect
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (uploadStatus === "success" && countdown > 0) {
       timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
     } else if (uploadStatus === "success" && countdown === 0) {
-      window.location.reload(); // Redirect / Refresh halaman
+      window.location.reload();
     }
     return () => clearTimeout(timer);
   }, [uploadStatus, countdown]);
@@ -1124,31 +1206,22 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
       setProgress(0);
-      setResultMessage(""); // Clear error msg jika ada
+      setResultMessage("");
     }
   };
 
   const handleUpload = () => {
     if (!file) return;
-
     setUploadStatus("uploading");
     setProgress(0);
-
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", importType);
-
     const xhr = new XMLHttpRequest();
-
-    // 1. Progress Event
     xhr.upload.addEventListener("progress", (event) => {
-      if (event.lengthComputable) {
-        const percentComplete = Math.round((event.loaded / event.total) * 100);
-        setProgress(percentComplete);
-      }
+      if (event.lengthComputable)
+        setProgress(Math.round((event.loaded / event.total) * 100));
     });
-
-    // 2. Load Event (Selesai)
     xhr.addEventListener("load", () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         try {
@@ -1169,13 +1242,10 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
         setResultMessage(`Terjadi kesalahan server (Code: ${xhr.status}).`);
       }
     });
-
-    // 3. Error Event (Jaringan)
     xhr.addEventListener("error", () => {
       setUploadStatus("error");
       setResultMessage("Terjadi kesalahan jaringan.");
     });
-
     xhr.open("POST", "/api/import.php?action=import");
     xhr.send(formData);
   };
@@ -1183,7 +1253,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transition-all duration-300">
-        {/* === TAMPILAN 1: FORM UPLOAD (IDLE) === */}
         {uploadStatus === "idle" && (
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -1192,7 +1261,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                 <FaTimes className="text-gray-400 hover:text-red-500" />
               </button>
             </div>
-
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
                 Pilih Tipe Data
@@ -1220,7 +1288,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                 </label>
               </div>
             </div>
-
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">
                 Upload File
@@ -1262,7 +1329,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                 </a>
               </div>
             </div>
-
             <div className="flex justify-end gap-2">
               <button
                 onClick={onClose}
@@ -1280,8 +1346,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
             </div>
           </div>
         )}
-
-        {/* === TAMPILAN 2: PROGRESS UPLOAD === */}
         {uploadStatus === "uploading" && (
           <div className="p-8 text-center animate-fade-in">
             <div className="mb-4">
@@ -1291,7 +1355,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
             <p className="text-sm text-gray-500 mb-6">
               Mohon jangan tutup halaman ini.
             </p>
-
             <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden relative">
               <div
                 className="bg-primary h-4 rounded-full transition-all duration-300 ease-out flex items-center justify-center"
@@ -1309,8 +1372,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
             )}
           </div>
         )}
-
-        {/* === TAMPILAN 3: SUKSES === */}
         {uploadStatus === "success" && (
           <div className="p-8 text-center animate-fade-in">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
@@ -1322,7 +1383,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               {resultMessage}
             </p>
-
             <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-darkmode-border">
               <p className="text-sm text-gray-500">
                 Halaman akan dimuat ulang dalam{" "}
@@ -1332,7 +1392,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                 detik.
               </p>
             </div>
-
             <button
               onClick={() => window.location.reload()}
               className="mt-6 btn btn-primary w-full"
@@ -1341,8 +1400,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
             </button>
           </div>
         )}
-
-        {/* === TAMPILAN 4: ERROR === */}
         {uploadStatus === "error" && (
           <div className="p-8 text-center animate-fade-in">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
@@ -1356,7 +1413,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                 {resultMessage}
               </p>
             </div>
-
             <div className="flex gap-3">
               <button
                 onClick={onClose}
@@ -1378,75 +1434,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   );
 };
 
-// 2. CONFIRMATION MODAL
-const ConfirmationModal = ({
-  isOpen,
-  title,
-  message,
-  onConfirm,
-  onCancel,
-}: any) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
-        <div className="text-center">
-          <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 mb-4">
-            <FaExclamationCircle className="text-3xl text-red-600" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-            {title}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-            {message}
-          </p>
-          <div className="flex gap-3 justify-center">
-            <button
-              onClick={onCancel}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20"
-            >
-              Batal
-            </button>
-            <button
-              onClick={onConfirm}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium shadow-md shadow-red-200 transition-colors"
-            >
-              Ya, Hapus
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// 3. STAT CARD
-const StatCard = ({ label, value, icon, color, bg }: any) => (
-  <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
-    <div>
-      <p className="text-sm font-medium text-text-light">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-text-dark dark:text-white">
-        {value}
-      </p>
-    </div>
-    <div
-      className={`flex h-12 w-12 items-center justify-center rounded-lg ${bg} text-xl ${color}`}
-    >
-      {icon}
-    </div>
-  </div>
-);
-
-// 4. DATA TABLE (Dengan Fitur Selection)
-interface Column {
-  key: string;
-  label: string;
-  sortable?: boolean;
-  className?: string;
-  render?: (value: any, row: any) => React.ReactNode;
-}
-
+// 5. DATA TABLE (UPDATED)
 const DataTable = ({
   title,
   data,
@@ -1455,15 +1443,8 @@ const DataTable = ({
   onDownload,
   enableSelection = false,
   onBulkDelete,
-}: {
-  title: string;
-  data: any[];
-  columns: Column[];
-  searchKeys?: string[];
-  onDownload: () => void;
-  enableSelection?: boolean;
-  onBulkDelete?: (ids: number[]) => void;
-}) => {
+  customFilters,
+}: any) => {
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -1473,15 +1454,14 @@ const DataTable = ({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  // Reset selection when data changes
   useEffect(() => {
     setSelectedIds([]);
   }, [data, currentPage, search]);
 
   const filteredData = useMemo(() => {
     if (!search) return data;
-    return data.filter((row) =>
-      searchKeys.some((key) =>
+    return data.filter((row: any) =>
+      searchKeys.some((key: any) =>
         String(row[key] || "")
           .toLowerCase()
           .includes(search.toLowerCase()),
@@ -1516,10 +1496,9 @@ const DataTable = ({
     });
   };
 
-  // Selection Logic
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      const currentIds = paginatedData.map((row) => row.id);
+      const currentIds = paginatedData.map((row: any) => row.id);
       setSelectedIds(currentIds);
     } else {
       setSelectedIds([]);
@@ -1539,7 +1518,6 @@ const DataTable = ({
       <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between border-b border-border dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
         <div className="flex items-center gap-3">
           <h3 className="text-lg font-bold">{title}</h3>
-          {/* BULK DELETE BUTTON */}
           {enableSelection && selectedIds.length > 0 && (
             <button
               onClick={() => onBulkDelete && onBulkDelete(selectedIds)}
@@ -1550,7 +1528,8 @@ const DataTable = ({
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col md:flex-row gap-3 md:items-center">
+          {customFilters}
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -1575,7 +1554,6 @@ const DataTable = ({
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
             <tr>
-              {/* CHECKBOX HEADER */}
               {enableSelection && (
                 <th className="px-4 py-3 w-10 text-center">
                   <div className="flex items-center justify-center">
@@ -1585,7 +1563,7 @@ const DataTable = ({
                       onChange={handleSelectAll}
                       checked={
                         paginatedData.length > 0 &&
-                        paginatedData.every((row) =>
+                        paginatedData.every((row: any) =>
                           selectedIds.includes(row.id),
                         )
                       }
@@ -1594,7 +1572,7 @@ const DataTable = ({
                 </th>
               )}
               <th className="px-6 py-3 w-10 text-center">#</th>
-              {columns.map((col) => (
+              {columns.map((col: any) => (
                 <th
                   key={col.key}
                   className={`px-6 py-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${col.className || ""}`}
@@ -1624,12 +1602,11 @@ const DataTable = ({
           </thead>
           <tbody className="divide-y divide-border dark:divide-darkmode-border">
             {paginatedData.length > 0 ? (
-              paginatedData.map((row, i) => (
+              paginatedData.map((row: any, i: number) => (
                 <tr
                   key={i}
                   className={`transition-colors ${selectedIds.includes(row.id) ? "bg-blue-50 dark:bg-blue-900/20" : "hover:bg-gray-50 dark:hover:bg-white/5"}`}
                 >
-                  {/* CHECKBOX ROW */}
                   {enableSelection && (
                     <td className="px-4 py-4 text-center">
                       <div className="flex items-center justify-center">
@@ -1645,7 +1622,7 @@ const DataTable = ({
                   <td className="px-6 py-4 text-center text-gray-400">
                     {(currentPage - 1) * rowsPerPage + i + 1}
                   </td>
-                  {columns.map((col) => (
+                  {columns.map((col: any) => (
                     <td
                       key={col.key}
                       className={`px-6 py-4 ${col.className || ""}`}
@@ -1699,6 +1676,9 @@ const DataTable = ({
             <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={500}>500</option>
+            <option value={1000}>1000</option>
           </select>
           <div className="flex rounded border border-border bg-white dark:bg-darkmode-body dark:border-darkmode-border">
             <button
