@@ -99,7 +99,11 @@ sudo chown $USER:$USER "$PROJECT_DIR/deploy.sh"
 sudo chown $USER:$USER "$PROJECT_DIR/rebuild.sh"
 sudo chmod +x "$PROJECT_DIR/deploy.sh"
 sudo chmod +x "$PROJECT_DIR/rebuild.sh"
-
+sudo usermod -a -G $USER www-data
+sudo chown -R $USER:$USER /var/www/mtsn1pandeglang.sch.id
+sudo chmod -R 775 /var/www/mtsn1pandeglang.sch.id
+sudo touch /var/log/web_build.log
+sudo chmod 666 /var/log/web_build.log
 # Pastikan database bisa ditulisi www-data
 sudo chmod 664 "$DB_FILE"
 
