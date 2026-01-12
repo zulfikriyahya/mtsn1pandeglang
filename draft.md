@@ -4947,7 +4947,7 @@ const { className }: { className?: string } = Astro.props;
 ### File: `./src/layouts/helpers/AdminDashboard.tsx`
 
 ```tsx
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import {
   FaDownload,
   FaSignOutAlt,
@@ -4965,6 +4965,12 @@ import {
   FaTimes,
   FaExternalLinkAlt,
   FaQuoteLeft,
+  FaTrash,
+  FaExclamationCircle,
+  FaFileUpload,
+  FaFileCsv,
+  FaArrowUp,
+  FaArrowRight,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -5000,7 +5006,6 @@ interface User {
   picture: string;
 }
 
-// --- HELPER: FORMAT TANGGAL ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -5027,20 +5032,30 @@ const formatDateIndo = (dateString: string) => {
 };
 
 const AdminDashboard = () => {
-  // --- STATE HOOKS (HARUS DI PALING ATAS) ---
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // State Modal
+  // State Modals
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
     null,
   );
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    ids: number[];
+    type: "feedback" | "survey";
+    count: number;
+  }>({ isOpen: false, ids: [], type: "feedback", count: 0 });
+  const [importModalOpen, setImportModalOpen] = useState(false);
+  const [statDetailModal, setStatDetailModal] = useState<{
+    isOpen: boolean;
+    type: "visits" | "posts" | "feedback" | "survey" | null;
+    title: string;
+  }>({ isOpen: false, type: null, title: "" });
 
-  // State Filter PDF
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
   );
@@ -5048,7 +5063,6 @@ const AdminDashboard = () => {
     new Date().getFullYear(),
   );
 
-  // --- GOOGLE AUTH INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -5165,12 +5179,52 @@ const AdminDashboard = () => {
     setModalType(null);
   };
 
-  // --- RENDER LOGIC ---
+  const requestDelete = (ids: number[], type: "feedback" | "survey") => {
+    setConfirmModal({ isOpen: true, ids, type, count: ids.length });
+  };
+
+  const executeDelete = async () => {
+    try {
+      const res = await fetch("/api/crud.php?action=delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ids: confirmModal.ids,
+          type: confirmModal.type,
+        }),
+      });
+      const json = await res.json();
+      if (json.status === "success") {
+        fetchStats();
+        if (
+          selectedItem &&
+          confirmModal.ids.includes(selectedItem.id) &&
+          modalType === confirmModal.type
+        ) {
+          closeDetail();
+        }
+      } else {
+        alert(json.message || "Gagal menghapus data.");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan.");
+    } finally {
+      setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    }
+  };
+
+  const handleImportSuccess = () => {
+    fetchStats();
+    setImportModalOpen(false);
+  };
+
   if (loading)
     return (
-      <div className="text-center p-12">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-        Memuat Sistem...
+      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-darkmode-body">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="text-gray-500 animate-pulse">Memuat Dashboard...</p>
+        </div>
       </div>
     );
 
@@ -5193,14 +5247,14 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen pb-12 relative">
+    <div className="min-h-screen pb-12 relative bg-gray-50 dark:bg-darkmode-body">
       {/* Header */}
-      <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+      <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border sticky top-24 z-30">
         <div className="flex items-center gap-4 w-full md:w-auto">
           <img
             src={user.picture}
             alt={user.name}
-            className="h-12 w-12 rounded-full border border-gray-200 shadow-sm"
+            className="h-12 w-12 rounded-full border-2 border-primary/20 shadow-sm"
           />
           <div>
             <h3 className="h5 mb-0 font-bold">{user.name}</h3>
@@ -5208,7 +5262,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* PDF Controls */}
         <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
           <select
             value={selectedMonth}
@@ -5248,6 +5301,13 @@ const AdminDashboard = () => {
           </select>
 
           <button
+            onClick={() => setImportModalOpen(true)}
+            className="btn btn-sm flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white border-orange-500 whitespace-nowrap shadow-md shadow-orange-500/20"
+          >
+            <FaFileUpload /> Import
+          </button>
+
+          <button
             onClick={printPDF}
             className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden whitespace-nowrap"
           >
@@ -5255,7 +5315,7 @@ const AdminDashboard = () => {
           </button>
           <button
             onClick={handleLogout}
-            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap"
+            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap shadow-md shadow-red-500/20"
           >
             <FaSignOutAlt /> Keluar
           </button>
@@ -5279,41 +5339,68 @@ const AdminDashboard = () => {
       )}
 
       {data && (
-        <div className="animate-fade-in">
-          {/* Overview Cards */}
-          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="animate-fade-in space-y-8">
+          {/* Glassmorphism Cards */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
               value={data.overview.visits.toLocaleString()}
               icon={<FaEye />}
-              color="text-blue-500"
-              bg="bg-blue-50 dark:bg-blue-900/20"
+              color="text-blue-400"
+              gradient="from-blue-500/20 to-cyan-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "visits",
+                  title: "Statistik Kunjungan",
+                })
+              }
             />
             <StatCard
               label="Artikel Dibaca"
               value={data.overview.posts_count.toLocaleString()}
               icon={<FaChartLine />}
-              color="text-green-500"
-              bg="bg-green-50 dark:bg-green-900/20"
+              color="text-emerald-400"
+              gradient="from-emerald-500/20 to-teal-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "posts",
+                  title: "Artikel Terpopuler",
+                })
+              }
             />
             <StatCard
               label="Total Ulasan"
               value={data.overview.feedback_count.toLocaleString()}
               icon={<FaStar />}
-              color="text-yellow-500"
-              bg="bg-yellow-50 dark:bg-yellow-900/20"
+              color="text-yellow-400"
+              gradient="from-yellow-500/20 to-orange-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "feedback",
+                  title: "Ulasan Terbaru",
+                })
+              }
             />
             <StatCard
               label="Responden Survei"
               value={data.overview.survey_count.toLocaleString()}
               icon={<FaPoll />}
-              color="text-purple-500"
-              bg="bg-purple-50 dark:bg-purple-900/20"
+              color="text-purple-400"
+              gradient="from-purple-500/20 to-pink-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "survey",
+                  title: "Ringkasan Survei",
+                })
+              }
             />
           </div>
 
-          {/* Navigation Tabs */}
-          <div className="mb-8 border-b border-border dark:border-darkmode-border">
+          <div className="border-b border-border dark:border-darkmode-border">
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
                 { id: "overview", label: "Ringkasan Grafik" },
@@ -5324,7 +5411,7 @@ const AdminDashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-gray-500 hover:border-gray-300 dark:text-gray-400"}`}
+                  className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-all ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-gray-500 hover:border-gray-300 dark:text-gray-400 hover:text-gray-700"}`}
                 >
                   {tab.label}
                 </button>
@@ -5332,9 +5419,8 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* TAB CONTENTS */}
           {activeTab === "overview" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6">Tren Aktivitas (30 Hari Terakhir)</h3>
                 <div className="h-72">
@@ -5426,6 +5512,7 @@ const AdminDashboard = () => {
             <DataTable
               title="Statistik Artikel Populer"
               data={data.tables.posts}
+              enableSelection={false}
               onDownload={() => downloadReport("posts")}
               columns={[
                 {
@@ -5448,6 +5535,8 @@ const AdminDashboard = () => {
               title="Data Ulasan Masuk"
               data={data.tables.feedbacks}
               searchKeys={["name", "message"]}
+              enableSelection={true}
+              onBulkDelete={(ids) => requestDelete(ids, "feedback")}
               onDownload={() => downloadReport("feedback")}
               columns={[
                 {
@@ -5494,6 +5583,20 @@ const AdminDashboard = () => {
                     </div>
                   ),
                 },
+                {
+                  key: "actions",
+                  label: "Aksi",
+                  className: "text-center w-16",
+                  render: (_: any, row: any) => (
+                    <button
+                      onClick={() => requestDelete([row.id], "feedback")}
+                      className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
+                      title="Hapus Data"
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  ),
+                },
               ]}
             />
           )}
@@ -5503,6 +5606,8 @@ const AdminDashboard = () => {
               title="Data Survei Kepuasan"
               data={data.tables.surveys}
               searchKeys={["respondent_name", "feedback"]}
+              enableSelection={true}
+              onBulkDelete={(ids) => requestDelete(ids, "survey")}
               onDownload={() => downloadReport("survey")}
               columns={[
                 {
@@ -5564,17 +5669,46 @@ const AdminDashboard = () => {
                     </div>
                   ),
                 },
+                {
+                  key: "actions",
+                  label: "Aksi",
+                  className: "text-center w-16",
+                  render: (_: any, row: any) => (
+                    <button
+                      onClick={() => requestDelete([row.id], "survey")}
+                      className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
+                      title="Hapus Data"
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  ),
+                },
               ]}
             />
           )}
         </div>
       )}
 
-      {/* DETAIL MODAL POPUP */}
+      {/* --- ALL MODALS --- */}
+
+      <ImportModal
+        isOpen={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        onSuccess={handleImportSuccess}
+      />
+
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        title="Konfirmasi Penghapusan"
+        message={`Apakah Anda yakin ingin menghapus ${confirmModal.count} data terpilih? Tindakan ini permanen dan tidak dapat dibatalkan.`}
+        onConfirm={executeDelete}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+      />
+
+      {/* DETAIL ITEM MODAL */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
-            {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
               <div>
                 <h3 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -5587,13 +5721,11 @@ const AdminDashboard = () => {
               </div>
               <button
                 onClick={closeDetail}
-                className="text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
+                className="text-gray-400 hover:text-red-500 transition-colors p-2"
               >
                 <FaTimes />
               </button>
             </div>
-
-            {/* Modal Content */}
             <div className="p-6">
               <div className="flex items-start gap-4 mb-6">
                 <div className="h-12 w-12 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
@@ -5608,7 +5740,6 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-500">
                     {selectedItem.respondent_role || "Pengunjung / Wali Murid"}
                   </p>
-
                   {modalType === "feedback" && (
                     <div className="mt-2 flex gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
@@ -5625,8 +5756,6 @@ const AdminDashboard = () => {
                   )}
                 </div>
               </div>
-
-              {/* Message Box */}
               <div className="relative rounded-xl bg-gray-50 dark:bg-white/5 p-6 border border-gray-100 dark:border-darkmode-border">
                 <FaQuoteLeft className="absolute top-4 left-4 text-gray-200 dark:text-gray-600 text-2xl" />
                 <div className="relative z-10">
@@ -5640,8 +5769,6 @@ const AdminDashboard = () => {
                   </p>
                 </div>
               </div>
-
-              {/* Stats for Survey */}
               {modalType === "survey" && (
                 <div className="grid grid-cols-3 gap-4 mt-6">
                   <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
@@ -5671,46 +5798,488 @@ const AdminDashboard = () => {
                 </div>
               )}
             </div>
-
-            {/* Modal Footer */}
             <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-between items-center text-xs text-gray-400 border-t border-gray-100 dark:border-darkmode-border">
               <span>IP: {selectedItem.ip_address}</span>
-              <button onClick={closeDetail} className="btn btn-primary btn-sm">
-                Tutup
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => requestDelete([selectedItem.id], modalType!)}
+                  className="btn bg-red-100 text-red-600 hover:bg-red-200 border-transparent btn-sm flex items-center gap-2"
+                >
+                  <FaTrash /> Hapus
+                </button>
+                <button
+                  onClick={closeDetail}
+                  className="btn btn-primary btn-sm"
+                >
+                  Tutup
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* STAT DETAIL MODAL (NEW FEATURE - REAL DATA) */}
+      <StatDetailModal
+        isOpen={statDetailModal.isOpen}
+        onClose={() =>
+          setStatDetailModal({ ...statDetailModal, isOpen: false })
+        }
+        title={statDetailModal.title}
+        type={statDetailModal.type}
+        data={data}
+      />
     </div>
   );
 };
 
 // --- SUB COMPONENTS ---
-const StatCard = ({ label, value, icon, color, bg }: any) => (
-  <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
-    <div>
-      <p className="text-sm font-medium text-text-light">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-text-dark dark:text-white">
-        {value}
-      </p>
-    </div>
+
+const StatCard = ({ label, value, icon, color, gradient, onClick }: any) => (
+  <div
+    onClick={onClick}
+    className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 dark:bg-white/5 backdrop-blur-lg p-6 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/20 cursor-pointer"
+  >
     <div
-      className={`flex h-12 w-12 items-center justify-center rounded-lg ${bg} text-xl ${color}`}
-    >
-      {icon}
+      className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} blur-2xl opacity-20 transition-all duration-500 group-hover:scale-150 group-hover:opacity-30`}
+    ></div>
+    <div className="relative z-10 flex items-start justify-between">
+      <div>
+        <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+          {label}
+        </p>
+        <h3 className="mt-2 text-3xl font-bold text-gray-800 dark:text-white transition-all group-hover:scale-105 origin-left">
+          {value}
+        </h3>
+        <div className="mt-2 flex items-center gap-1 text-xs font-medium text-green-500 bg-green-500/10 w-fit px-2 py-0.5 rounded-full">
+          <FaArrowUp className="text-[10px]" />
+          <span>Active</span>
+        </div>
+      </div>
+      <div
+        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-xl ${color} shadow-inner transition-transform duration-300 group-hover:rotate-12`}
+      >
+        {icon}
+      </div>
+    </div>
+    <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100"></div>
+    <div className="absolute bottom-4 right-4 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2">
+      <FaArrowRight className="text-gray-400 text-sm" />
     </div>
   </div>
 );
 
-// --- DATA TABLE ---
-interface Column {
-  key: string;
-  label: string;
-  sortable?: boolean;
-  className?: string;
-  render?: (value: any, row: any) => React.ReactNode;
-}
+const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
+  if (!isOpen || !data) return null;
+
+  // Helper untuk visit stats
+  const getVisitStats = () => {
+    const visits = data.charts.activity.visits || [];
+    const today = visits[visits.length - 1] || 0;
+    const totalPeriod = visits.reduce((a: number, b: number) => a + b, 0);
+    const average =
+      visits.length > 0 ? Math.round(totalPeriod / visits.length) : 0;
+    return { today, average, visits };
+  };
+
+  const visitStats =
+    type === "visits" ? getVisitStats() : { today: 0, average: 0, visits: [] };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fade-in">
+      <div className="bg-white dark:bg-[#1a1d24] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/10 flex flex-col max-h-[85vh]">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
+          <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+            {title}
+          </h3>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+          >
+            <FaTimes />
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+          {type === "visits" && (
+            <div>
+              <div className="mb-6 h-64 w-full bg-gradient-to-b from-blue-50/50 to-transparent rounded-xl p-4 border border-blue-100 dark:border-blue-900/30">
+                <Line
+                  data={{
+                    labels: data.charts.activity.labels,
+                    datasets: [
+                      {
+                        label: "Kunjungan Harian (Realtime)",
+                        data: visitStats.visits,
+                        borderColor: "#3b82f6",
+                        backgroundColor: (context: any) => {
+                          const ctx = context.chart.ctx;
+                          const gradient = ctx.createLinearGradient(
+                            0,
+                            0,
+                            0,
+                            200,
+                          );
+                          gradient.addColorStop(0, "rgba(59, 130, 246, 0.5)");
+                          gradient.addColorStop(1, "rgba(59, 130, 246, 0.0)");
+                          return gradient;
+                        },
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: "#3b82f6",
+                        pointBorderWidth: 2,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        grid: { color: "rgba(0,0,0,0.05)" },
+                      },
+                      x: { grid: { display: false } },
+                    },
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center border border-gray-100 dark:border-white/10">
+                  <p className="text-sm text-gray-500 mb-1">
+                    Kunjungan Hari Ini
+                  </p>
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {visitStats.today.toLocaleString()}
+                  </p>
+                </div>
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center border border-gray-100 dark:border-white/10">
+                  <p className="text-sm text-gray-500 mb-1">Rata-rata / Hari</p>
+                  <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                    {visitStats.average.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {type === "posts" && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                Top 5 Artikel Dibaca
+              </h4>
+              {data.tables.posts.slice(0, 5).map((post: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-white/10"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${idx < 3 ? "bg-yellow-100 text-yellow-700" : "bg-gray-100 text-gray-600"}`}
+                    >
+                      {idx + 1}
+                    </span>
+                    <span className="font-medium text-sm line-clamp-1 max-w-[250px]">
+                      {post.slug.replace(/-/g, " ")}
+                    </span>
+                  </div>
+                  <span className="text-sm font-bold text-green-600 flex items-center gap-1">
+                    <FaEye className="text-xs" /> {post.views}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          {type === "feedback" && (
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                Ulasan Terbaru
+              </h4>
+              {data.tables.feedbacks.slice(0, 5).map((fb: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-xs">
+                        {(fb.name || "A").charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">{fb.name}</p>
+                        <div className="flex text-yellow-400 text-[10px]">
+                          {[...Array(5)].map((_, i) => (
+                            <FaStar
+                              key={i}
+                              className={
+                                i < fb.rating
+                                  ? "text-yellow-400"
+                                  : "text-gray-300"
+                              }
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-gray-400">
+                      {formatDateIndo(fb.created_at)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+                    "{fb.message}"
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+          {type === "survey" && (
+            <div>
+              <div className="h-60 mb-6">
+                <Bar
+                  data={{
+                    labels: ["Zona Integritas", "Pelayanan", "Akademik"],
+                    datasets: [
+                      {
+                        label: "Skor Rata-rata",
+                        data: [
+                          data.charts.survey_avg.zi,
+                          data.charts.survey_avg.service,
+                          data.charts.survey_avg.academic,
+                        ],
+                        backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
+                        borderRadius: 8,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { max: 5 } },
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="text-center p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                  <p className="text-xs text-gray-500">ZI</p>
+                  <p className="font-bold text-blue-600">
+                    {data.charts.survey_avg.zi}
+                  </p>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
+                  <p className="text-xs text-gray-500">Layanan</p>
+                  <p className="font-bold text-green-600">
+                    {data.charts.survey_avg.service}
+                  </p>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                  <p className="text-xs text-gray-500">Akademik</p>
+                  <p className="font-bold text-purple-600">
+                    {data.charts.survey_avg.academic}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="p-4 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5 text-right">
+          <button onClick={onClose} className="btn btn-primary btn-sm">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
+  const [importType, setImportType] = useState<"feedback" | "survey">(
+    "feedback",
+  );
+  const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  if (!isOpen) return null;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) return alert("Pilih file CSV terlebih dahulu.");
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", importType);
+
+    try {
+      const res = await fetch("/api/import.php?action=import", {
+        method: "POST",
+        body: formData,
+      });
+
+      // PENTING: Ambil response sebagai text dulu untuk debugging
+      const textResponse = await res.text();
+
+      try {
+        const json = JSON.parse(textResponse);
+        if (json.status === "success") {
+          alert(json.message);
+          onSuccess();
+        } else {
+          alert("Gagal: " + (json.message || "Terjadi kesalahan server."));
+        }
+      } catch (jsonError) {
+        // Jika gagal parse JSON, berarti server error (PHP Error/HTML)
+        console.error("Server Response:", textResponse);
+        alert(
+          "Terjadi kesalahan server (Lihat Console). Kemungkinan permission database atau file import.php error.",
+        );
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan atau koneksi terputus.");
+    } finally {
+      setIsUploading(false);
+      setFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-bold">Import Data CSV</h3>
+          <button onClick={onClose}>
+            <FaTimes className="text-gray-400 hover:text-red-500" />
+          </button>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">
+            Pilih Tipe Data
+          </label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="importType"
+                value="feedback"
+                checked={importType === "feedback"}
+                onChange={() => setImportType("feedback")}
+              />{" "}
+              Data Ulasan
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="importType"
+                value="survey"
+                checked={importType === "survey"}
+                onChange={() => setImportType("survey")}
+              />{" "}
+              Data Survei
+            </label>
+          </div>
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-2">Upload File</label>
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              type="file"
+              accept=".csv"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            {file ? (
+              <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
+                <FaFileCsv size={24} />
+                {file.name}
+              </div>
+            ) : (
+              <div className="text-gray-500">
+                <FaFileUpload className="mx-auto mb-2 text-2xl" />
+                <p>Klik untuk memilih file CSV</p>
+              </div>
+            )}
+          </div>
+          <div className="mt-2 text-right">
+            <a
+              href={`/api/import.php?action=template&type=${importType}`}
+              className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
+            >
+              <FaDownload /> Download Template CSV
+            </a>
+          </div>
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="btn btn-outline-primary btn-sm"
+            disabled={isUploading}
+          >
+            Batal
+          </button>
+          <button
+            onClick={handleUpload}
+            className="btn btn-primary btn-sm"
+            disabled={!file || isUploading}
+          >
+            {isUploading ? "Mengupload..." : "Mulai Import"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ConfirmationModal = ({
+  isOpen,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+}: any) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 mb-4">
+            <FaExclamationCircle className="text-3xl text-red-600" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            {message}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20"
+            >
+              Batal
+            </button>
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium shadow-md shadow-red-200 transition-colors"
+            >
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const DataTable = ({
   title,
@@ -5718,13 +6287,9 @@ const DataTable = ({
   columns,
   searchKeys = ["slug"],
   onDownload,
-}: {
-  title: string;
-  data: any[];
-  columns: Column[];
-  searchKeys?: string[];
-  onDownload: () => void;
-}) => {
+  enableSelection = false,
+  onBulkDelete,
+}: any) => {
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -5732,11 +6297,16 @@ const DataTable = ({
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [data, currentPage, search]);
 
   const filteredData = useMemo(() => {
     if (!search) return data;
-    return data.filter((row) =>
-      searchKeys.some((key) =>
+    return data.filter((row: any) =>
+      searchKeys.some((key: any) =>
         String(row[key] || "")
           .toLowerCase()
           .includes(search.toLowerCase()),
@@ -5746,7 +6316,7 @@ const DataTable = ({
 
   const sortedData = useMemo(() => {
     if (!sortConfig) return filteredData;
-    return [...filteredData].sort((a, b) => {
+    return [...filteredData].sort((a: any, b: any) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
       if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
@@ -5769,11 +6339,35 @@ const DataTable = ({
           : "asc",
     });
   };
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedIds(paginatedData.map((row: any) => row.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+  const handleSelectRow = (id: number) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((sid) => sid !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  };
 
   return (
     <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden dark:bg-darkmode-light dark:border-darkmode-border">
       <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between border-b border-border dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
-        <h3 className="text-lg font-bold">{title}</h3>
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-bold">{title}</h3>
+          {enableSelection && selectedIds.length > 0 && (
+            <button
+              onClick={() => onBulkDelete && onBulkDelete(selectedIds)}
+              className="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 rounded text-xs font-bold flex items-center gap-2 animate-fade-in transition-all"
+            >
+              <FaTrash /> Hapus ({selectedIds.length})
+            </button>
+          )}
+        </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -5799,8 +6393,25 @@ const DataTable = ({
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
             <tr>
+              {enableSelection && (
+                <th className="px-4 py-3 w-10 text-center">
+                  <div className="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                      onChange={handleSelectAll}
+                      checked={
+                        paginatedData.length > 0 &&
+                        paginatedData.every((row: any) =>
+                          selectedIds.includes(row.id),
+                        )
+                      }
+                    />
+                  </div>
+                </th>
+              )}
               <th className="px-6 py-3 w-10 text-center">#</th>
-              {columns.map((col) => (
+              {columns.map((col: any) => (
                 <th
                   key={col.key}
                   className={`px-6 py-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${col.className || ""}`}
@@ -5830,15 +6441,27 @@ const DataTable = ({
           </thead>
           <tbody className="divide-y divide-border dark:divide-darkmode-border">
             {paginatedData.length > 0 ? (
-              paginatedData.map((row, i) => (
+              paginatedData.map((row: any, i: number) => (
                 <tr
                   key={i}
-                  className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                  className={`transition-colors ${selectedIds.includes(row.id) ? "bg-blue-50 dark:bg-blue-900/20" : "hover:bg-gray-50 dark:hover:bg-white/5"}`}
                 >
+                  {enableSelection && (
+                    <td className="px-4 py-4 text-center">
+                      <div className="flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                          checked={selectedIds.includes(row.id)}
+                          onChange={() => handleSelectRow(row.id)}
+                        />
+                      </div>
+                    </td>
+                  )}
                   <td className="px-6 py-4 text-center text-gray-400">
                     {(currentPage - 1) * rowsPerPage + i + 1}
                   </td>
-                  {columns.map((col) => (
+                  {columns.map((col: any) => (
                     <td
                       key={col.key}
                       className={`px-6 py-4 ${col.className || ""}`}
@@ -5853,7 +6476,7 @@ const DataTable = ({
             ) : (
               <tr>
                 <td
-                  colSpan={columns.length + 1}
+                  colSpan={columns.length + (enableSelection ? 2 : 1)}
                   className="px-6 py-10 text-center text-gray-500"
                 >
                   Tidak ada data ditemukan.
@@ -11501,7 +12124,7 @@ export type Button = {
 ```
 <?php
 session_start();
-date_default_timezone_set('Asia/Jakarta'); // Set Timezone Server ke Jakarta
+date_default_timezone_set('Asia/Jakarta');
 
 // Proteksi
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -11523,26 +12146,11 @@ try {
     // === HELPER: Format Tanggal Indonesia ===
     function formatTanggalIndo($timestamp)
     {
-        // Asumsi timestamp dari DB adalah UTC, kita konversi ke Jakarta
         try {
             $dt = new DateTime($timestamp, new DateTimeZone('UTC'));
             $dt->setTimezone(new DateTimeZone('Asia/Jakarta'));
 
-            $bulan = [
-                1 => 'Januari',
-                'Februari',
-                'Maret',
-                'April',
-                'Mei',
-                'Juni',
-                'Juli',
-                'Agustus',
-                'September',
-                'Oktober',
-                'November',
-                'Desember'
-            ];
-
+            $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
             $tgl = $dt->format('d');
             $bln = $bulan[(int)$dt->format('m')];
             $thn = $dt->format('Y');
@@ -11554,11 +12162,10 @@ try {
         }
     }
 
-    // === HELPER: Grafik Harian (Waktu Jakarta) ===
+    // === HELPER: Grafik Harian ===
     function getSafeDailyActivity($db, $table, $days = 30)
     {
         $data = [];
-        // Generate tanggal 30 hari terakhir (Waktu Jakarta)
         for ($i = $days - 1; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-$i days"));
             $data[$date] = 0;
@@ -11568,8 +12175,7 @@ try {
             $check = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$table'");
             if (!$check) return $data;
 
-            // Query dengan penyesuaian Timezone (+7 Jam untuk WIB)
-            // datetime(created_at, '+7 hours') mengubah UTC ke WIB sebelum di-group
+            // Query Group by Date (WIB)
             $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count
                       FROM $table
                       WHERE created_at >= date('now', '-$days days', '-7 hours')
@@ -11621,11 +12227,12 @@ try {
             }
         }
 
-        // 4. Activity Trends
+        // 4. Activity Trends (Real Data)
         $activity_feedback = getSafeDailyActivity($db, 'feedback');
         $activity_survey = getSafeDailyActivity($db, 'survey_responses');
+        $activity_visits = getSafeDailyActivity($db, 'traffic_logs'); // [BARU] Data Kunjungan Harian
 
-        // 5. Raw Data (Dikirim Mentah UTC, diformat di Frontend)
+        // 5. Raw Data Tables
         $posts = [];
         if ($total_posts > 0) {
             $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
@@ -11657,7 +12264,8 @@ try {
                 'activity' => [
                     'labels' => array_keys($activity_feedback),
                     'feedback' => array_values($activity_feedback),
-                    'survey' => array_values($activity_survey)
+                    'survey' => array_values($activity_survey),
+                    'visits' => array_values($activity_visits) // [BARU] Kirim ke Frontend
                 ]
             ],
             'tables' => [
@@ -11668,7 +12276,7 @@ try {
         ]);
     }
 
-    // === EXPORT LOGIC (FORMAT INDONESIA) ===
+    // === EXPORT CSV ===
     elseif ($action === 'export') {
         $type = $_GET['type'] ?? '';
         $filename = "laporan_{$type}_" . date('Y-m-d_His') . ".csv";
@@ -11677,8 +12285,7 @@ try {
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $output = fopen('php://output', 'w');
-        // Tambahkan BOM untuk Excel agar bisa baca karakter UTF-8 dengan benar
-        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM for Excel
 
         if ($type === 'feedback') {
             fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Rating', 'Pesan', 'IP Address']);
@@ -11790,6 +12397,83 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 } elseif ($action === 'logout') {
     session_destroy();
     echo json_encode(['status' => 'success']);
+}
+
+```
+
+---
+
+### File: `./public/api/crud.php`
+
+```
+<?php
+session_start();
+header('Content-Type: application/json');
+
+// 1. Cek Login Admin
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    exit;
+}
+
+$dbPath = __DIR__ . '/../../stats.db';
+
+try {
+    if (!class_exists('SQLite3')) {
+        throw new Exception("SQLite3 driver not installed.");
+    }
+
+    $db = new SQLite3($dbPath);
+
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+    $action = $_GET['action'] ?? '';
+
+    if ($action === 'delete') {
+        $type = $data['type'] ?? '';
+
+        // UPDATE: Mendukung single ID atau multiple IDs
+        $ids = [];
+        if (isset($data['ids']) && is_array($data['ids'])) {
+            $ids = $data['ids'];
+        } elseif (isset($data['id'])) {
+            $ids = [$data['id']];
+        }
+
+        if (empty($ids)) throw new Exception("Tidak ada data yang dipilih.");
+
+        // Validasi Tipe Tabel
+        $table = '';
+        if ($type === 'feedback') {
+            $table = 'feedback';
+        } elseif ($type === 'survey') {
+            $table = 'survey_responses';
+        } else {
+            throw new Exception("Tipe data tidak dikenal.");
+        }
+
+        // Sanitasi ID menjadi integer semua
+        $sanitized_ids = array_map('intval', $ids);
+        $ids_string = implode(',', $sanitized_ids);
+
+        // Eksekusi Bulk Delete
+        // Query: DELETE FROM table WHERE id IN (1, 2, 3)
+        $query = "DELETE FROM $table WHERE id IN ($ids_string)";
+
+        if ($db->exec($query)) {
+            $count = $db->changes();
+            echo json_encode(['status' => 'success', 'message' => "$count data berhasil dihapus."]);
+        } else {
+            throw new Exception("Gagal menghapus data.");
+        }
+    } else {
+        throw new Exception("Action tidak valid.");
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
 
 ```
@@ -11915,11 +12599,168 @@ try {
 
 ---
 
+### File: `./public/api/import.php`
+
+```
+<?php
+session_start();
+header('Content-Type: application/json');
+
+// Matikan display error agar tidak merusak JSON (PENTING untuk menghindari Network Error)
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+// 1. Cek Login Admin
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    exit;
+}
+
+$dbPath = __DIR__ . '/../../stats.db';
+
+// Cek permission file DB sebelum lanjut
+if (!is_writable($dbPath)) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => 'File database tidak bisa ditulis (Permission Denied). Hubungi Administrator Server.']);
+    exit;
+}
+
+try {
+    $db = new SQLite3($dbPath);
+    // Timeout agar tidak error "database is locked"
+    $db->busyTimeout(5000);
+
+    $action = $_GET['action'] ?? '';
+
+    // === ACTION: DOWNLOAD TEMPLATE CSV ===
+    if ($action === 'template') {
+        $type = $_GET['type'] ?? 'feedback';
+        $filename = "template_import_{$type}.csv";
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+
+        // Tambahkan BOM untuk Excel Windows agar karakter aman
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        if ($type === 'feedback') {
+            fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
+            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan mantap', date('Y-m-d H:i:s'), '192.168.1.1']);
+        } elseif ($type === 'survey') {
+            fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
+            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Tingkatkan lagi', date('Y-m-d H:i:s'), '192.168.1.2']);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    // === ACTION: IMPORT DATA ===
+    if ($action === 'import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("File CSV tidak ditemukan atau error upload (Code: " . ($_FILES['file']['error'] ?? 'Unknown') . ")");
+        }
+
+        $type = $_POST['type'] ?? '';
+        $fileTmpPath = $_FILES['file']['tmp_name'];
+
+        // Deteksi Line Ending untuk kompatibilitas Windows/Mac
+        ini_set('auto_detect_line_endings', true);
+
+        $handle = fopen($fileTmpPath, "r");
+        if ($handle === FALSE) throw new Exception("Gagal membaca file.");
+
+        // Skip Header
+        fgetcsv($handle, 1000, ",");
+
+        $successCount = 0;
+        $db->exec('BEGIN TRANSACTION');
+
+        try {
+            if ($type === 'feedback') {
+                $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
+
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    // Bersihkan karakter aneh jika ada
+                    $data = array_map('trim', $data);
+
+                    if (count($data) < 2) continue; // Skip baris kosong
+
+                    $name = !empty($data[0]) ? $data[0] : 'Anonim';
+                    $rating = isset($data[1]) ? (int)$data[1] : 5;
+                    // Pastikan rating valid
+                    if ($rating < 1) $rating = 1;
+                    if ($rating > 5) $rating = 5;
+
+                    $msg = isset($data[2]) ? $data[2] : '';
+                    $date = !empty($data[3]) ? $data[3] : date('Y-m-d H:i:s');
+                    $ip = !empty($data[4]) ? $data[4] : '127.0.0.1';
+
+                    $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+                    $stmt->bindValue(':rating', $rating, SQLITE3_INTEGER);
+                    $stmt->bindValue(':message', $msg, SQLITE3_TEXT);
+                    $stmt->bindValue(':created_at', $date, SQLITE3_TEXT);
+                    $stmt->bindValue(':ip_address', $ip, SQLITE3_TEXT);
+                    $stmt->execute();
+                    $successCount++;
+                }
+            } elseif ($type === 'survey') {
+                $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
+
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    $data = array_map('trim', $data);
+
+                    if (count($data) < 5) continue;
+
+                    $name = !empty($data[0]) ? $data[0] : 'Anonim';
+                    $role = !empty($data[1]) ? $data[1] : 'Umum';
+                    $zi = isset($data[2]) ? (float)$data[2] : 0;
+                    $srv = isset($data[3]) ? (float)$data[3] : 0;
+                    $acd = isset($data[4]) ? (float)$data[4] : 0;
+                    $fb = isset($data[5]) ? $data[5] : '';
+                    $date = !empty($data[6]) ? $data[6] : date('Y-m-d H:i:s');
+                    $ip = !empty($data[7]) ? $data[7] : '127.0.0.1';
+
+                    $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+                    $stmt->bindValue(':role', $role, SQLITE3_TEXT);
+                    $stmt->bindValue(':zi', $zi, SQLITE3_FLOAT);
+                    $stmt->bindValue(':service', $srv, SQLITE3_FLOAT);
+                    $stmt->bindValue(':acad', $acd, SQLITE3_FLOAT);
+                    $stmt->bindValue(':feedback', $fb, SQLITE3_TEXT);
+                    $stmt->bindValue(':created', $date, SQLITE3_TEXT);
+                    $stmt->bindValue(':ip', $ip, SQLITE3_TEXT);
+                    $stmt->execute();
+                    $successCount++;
+                }
+            } else {
+                throw new Exception("Tipe import tidak dikenal.");
+            }
+
+            $db->exec('COMMIT');
+            fclose($handle);
+            echo json_encode(['status' => 'success', 'message' => "Berhasil mengimport $successCount data."]);
+        } catch (Exception $ex) {
+            $db->exec('ROLLBACK');
+            throw $ex;
+        }
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+}
+
+```
+
+---
+
 ### File: `./public/api/print_pdf.php`
 
 ```
 <?php
-// Matikan display error agar tidak merusak output PDF
+// Matikan display error
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
@@ -12009,27 +12850,32 @@ class PDF extends FPDF
     function Header()
     {
         $path = '../images/instansi/';
-        $logoSize = 18;
+        $logoSize = 24;
 
-        if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 12, 10, $logoSize);
-        if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 180, 10, $logoSize);
+        if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 10, 10, $logoSize);
+        if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
 
-        $this->SetY(11);
-        $this->SetFont('Arial', 'B', 12);
+        $this->SetY(12);
+
+        $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
-        $this->SetFont('Arial', 'B', 14);
+
+        $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
-        $this->SetFont('Arial', 'B', 16);
-        $this->Cell(0, 7, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
+
+        $this->SetFont('Arial', 'B', 14);
+        $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
+
         $this->SetFont('Arial', '', 9);
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
 
         $this->SetLineWidth(0.5);
-        $this->Line(10, 43, 200, 43);
+        $this->Line(10, 39, 200, 39);
         $this->SetLineWidth(0.2);
-        $this->Line(10, 44, 200, 44);
-        $this->Ln(12);
+        $this->Line(10, 40, 200, 40);
+
+        $this->Ln(6);
     }
 
     function Footer()
@@ -12111,69 +12957,138 @@ try {
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
     $y = $year;
 
+    // Data Counts
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
-    $feedback = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
-    $survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+    $feedbackCount = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+    $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
+    $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
-    // === JUDUL LAPORAN ===
+    // Hitung Indeks
+    $indices = $db->querySingle("SELECT
+        AVG(score_zi) as zi,
+        AVG(score_service) as service,
+        AVG(score_academic) as academic
+        FROM survey_responses
+        WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
+
+    $idxZI = $indices ? round($indices['zi'] ?? 0, 2) : 0;
+    $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
+    $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
+
+    $ikmValue = 0;
+    if ($surveyCount > 0) {
+        $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
+    }
+
+    $avgRatingRaw = $db->querySingle("SELECT AVG(rating) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
+    $avgRatingVal = $avgRatingRaw ? round($avgRatingRaw, 2) : 0;
+    $avgRatingText = ($avgRatingVal > 0) ? "$avgRatingVal / 5.00" : "-";
+
+    function getPredikat($val)
+    {
+        if ($val >= 4.5) return "Sangat Baik (A)";
+        if ($val >= 4.0) return "Baik (B)";
+        if ($val >= 3.0) return "Cukup (C)";
+        if ($val > 0) return "Kurang (D)";
+        return "-";
+    }
+    $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 (" . getPredikat($ikmValue) . ")" : "-";
+
+    // === JUDUL ===
     $pdf->SetFont('Arial', 'B', 12);
     $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL', 0, 1, 'C');
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
-    $pdf->Ln(8); // Beri jarak sebelum tabel ringkasan
+    $pdf->Ln(5);
 
-    // === TABEL RINGKASAN (Compact & Fix Overlap) ===
+    // ==========================================
+    // TABEL 1: RINGKASAN TRAFIK (Kiri) & QR (Kanan)
+    // ==========================================
+
     $startX = 10;
-    // PENTING: Ambil Y saat ini agar tabel mulai di tempat yang benar
     $startY = $pdf->GetY();
-
     $rowH = 7;
-    $wLabel = 70;
-    $wValue = 85;
     $wQR = 35;
+    $wTable1 = 155;
+
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->SetFillColor(230, 230, 230);
+    $pdf->Cell($wTable1, $rowH, ' I. RINGKASAN TRAFIK WEBSITE', 1, 0, 'L', true);
+
+    // QR Code Container
+    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
+    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}");
+    $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
+    $pdf->ImageRemote($qrUrl, ($startX + $wTable1) + 5.5, $startY + 2, 24, 24);
+
+    $pdf->Ln($rowH);
+
+    // Data Tabel 1
+    $wLabel = 65;
+    $wValue = 90;
+    $pdf->SetFont('Arial', '', 9);
+    $pdf->SetFillColor(250, 250, 250);
+
+    $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 1, 'L');
+
+    $pdf->Cell($wLabel, $rowH, ' Total Kunjungan', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung', 1, 1, 'L');
+
+    $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
+    $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
+
+    $pdf->Ln(5);
+
+    // ==========================================
+    // TABEL 2: KUALITAS PELAYANAN (DIPISAH: 6 Baris Total)
+    // ==========================================
+
+    // Baris 1: Header
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->SetFillColor(230, 230, 230);
+    $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
 
     $pdf->SetFont('Arial', '', 9);
-    $pdf->SetFillColor(245, 245, 245);
+    $pdf->SetFillColor(250, 250, 250);
 
-    // 1. Gambar Kotak QR Dulu (Gabung 4 Baris)
-    $pdf->SetXY($startX + $wLabel + $wValue, $startY);
-    $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
+    // Lebar Kolom
+    $wLabelFull = 70;
+    $wValueFull = 120;
 
-    // Isi QR Code (Tengah Kotak)
-    $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|S:{$survey}|F:{$feedback}|VALID");
-    $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
-    // Padding manual agar di tengah: (35-24)/2 = 5.5 (X), (28-24)/2 = 2 (Y)
-    $pdf->ImageRemote($qrUrl, ($startX + $wLabel + $wValue) + 5.5, $startY + 2, 24, 24);
 
-    // 2. Gambar Baris Data (Label & Value)
-    // Baris 1
-    $pdf->SetXY($startX, $startY);
-    $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 0, 'L');
+    // Baris 2: Jumlah Ulasan (Sendiri)
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
 
-    // Baris 2
-    $pdf->SetXY($startX, $startY + $rowH);
-    $pdf->Cell($wLabel, $rowH, ' Total Kunjungan Website', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung (Akumulasi)', 1, 0, 'L');
+    // Baris 3: Rata-rata Rating Ulasan
+    $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
 
-    // Baris 3
-    $pdf->SetXY($startX, $startY + ($rowH * 2));
-    $pdf->Cell($wLabel, $rowH, ' Total Responden Survei IKM', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $survey . ' Responden', 1, 0, 'L');
+    // Baris 4: Jumlah Responden (Sendiri)
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
 
-    // Baris 4
-    $pdf->SetXY($startX, $startY + ($rowH * 3));
-    $pdf->Cell($wLabel, $rowH, ' Total Ulasan Masuk', 1, 0, 'L', true);
-    $pdf->Cell($wValue, $rowH, '  ' . $feedback . ' Ulasan', 1, 0, 'L');
+    // Baris 5: Rincian Indeks (Split 3 Kolom)
+    $wSub = 190 / 3;
+    $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
 
-    // === PENTING: RESET POSISI Y ===
-    // Pindahkan kursor ke bawah tabel ringkasan agar tabel berikutnya tidak menabrak
-    // Y Start + Tinggi Tabel (4*7=28) + Spasi (10)
-    $pdf->SetY($startY + ($rowH * 4) + 10);
+    // Baris 6: Indeks Kepuasan Masy (IKM)
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->SetFillColor(240, 240, 240); // Highlight background
+    $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masyarakat (IKM)', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
 
-    // === BAGIAN A: DATA SURVEI (Hijau) ===
+
+    $pdf->Ln(8);
+
+    // === BAGIAN A & B (Tabel Detail) Tetap Sama ===
+
+    // A. DATA SURVEI
     $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(0, 7, 'A. DATA SURVEI KEPUASAN MASYARAKAT', 0, 1, 'L');
+    $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
 
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(0, 150, 100);
@@ -12181,29 +13096,31 @@ try {
     $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
     $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
     $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
-    $pdf->Cell(15, 7, 'ZI', 1, 0, 'C', true);
-    $pdf->Cell(15, 7, 'LYN', 1, 0, 'C', true);
-    $pdf->Cell(15, 7, 'AKD', 1, 0, 'C', true);
-    $pdf->Cell(62, 7, 'Masukan', 1, 1, 'L', true);
+    $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
+    $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
+    $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
+    $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
+    $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
 
     $pdf->SetTextColor(0);
     $pdf->SetFont('Arial', '', 8);
-    $pdf->SetWidths([8, 35, 40, 15, 15, 15, 62]);
-    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'L']);
+    $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
+    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
 
     $resSurv = $db->query("SELECT * FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at DESC");
     $no = 1;
     $found1 = false;
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
         $found1 = true;
-        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $row['feedback'] ?: '-']);
+        $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
+        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
     }
     if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
 
-    // === BAGIAN B: DATA ULASAN (Kuning) ===
+    // B. DATA ULASAN
     $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(0, 7, 'B. DATA ULASAN & RATING PELAYANAN', 0, 1, 'L');
+    $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
 
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(255, 193, 7);
@@ -12294,6 +13211,8 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: https://mtsn1pandeglang.sch.id');
 header('Access-Control-Allow-Methods: GET, POST');
 session_start();
+date_default_timezone_set('Asia/Jakarta');
+
 $dbPath = __DIR__ . '/../../stats.db';
 
 try {
@@ -12301,26 +13220,53 @@ try {
         throw new Exception("SQLite3 driver not installed on PHP");
     }
     $db = new SQLite3($dbPath);
+
+    // Tabel Akumulasi (Lama - Tetap dipakai untuk counter total cepat)
     $db->exec("CREATE TABLE IF NOT EXISTS global_stats (key TEXT PRIMARY KEY, value INTEGER DEFAULT 0)");
-    $db->exec("CREATE TABLE IF NOT EXISTS post_stats (slug TEXT PRIMARY KEY, views INTEGER DEFAULT 0)");
     $db->exec("INSERT OR IGNORE INTO global_stats (key, value) VALUES ('site_visits', 0)");
+
+    // Tabel Statistik Artikel
+    $db->exec("CREATE TABLE IF NOT EXISTS post_stats (slug TEXT PRIMARY KEY, views INTEGER DEFAULT 0)");
+
+    // [BARU] Tabel Log Trafik Harian (Untuk Grafik Real)
+    $db->exec("CREATE TABLE IF NOT EXISTS traffic_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT,
+        user_agent TEXT,
+        endpoint TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
     $action = $_GET['action'] ?? '';
     $slug   = $_GET['slug'] ?? '';
     $method = $_SERVER['REQUEST_METHOD'];
 
     $response = ['value' => 0];
+
+    // === LOGIKA HITUNG KUNJUNGAN ===
     if ($action === 'visit') {
         if ($method === 'POST') {
             if (!isset($_SESSION['has_visited_site'])) {
+                // 1. Update Total Counter (Global)
                 $db->exec("UPDATE global_stats SET value = value + 1 WHERE key = 'site_visits'");
+
+                // 2. [BARU] Insert Log Harian (Detail)
+                $stmt = $db->prepare("INSERT INTO traffic_logs (ip_address, user_agent, endpoint) VALUES (:ip, :ua, 'home')");
+                $stmt->bindValue(':ip', $_SERVER['REMOTE_ADDR'], SQLITE3_TEXT);
+                $stmt->bindValue(':ua', $_SERVER['HTTP_USER_AGENT'] ?? '', SQLITE3_TEXT);
+                $stmt->execute();
+
                 $_SESSION['has_visited_site'] = true;
             }
         }
         $result = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'");
         $response['value'] = $result ? $result : 0;
-    } elseif ($action === 'view' && !empty($slug)) {
+    }
+    // === LOGIKA HITUNG ARTIKEL ===
+    elseif ($action === 'view' && !empty($slug)) {
         $slug = preg_replace('/[^a-zA-Z0-9_-]/', '', $slug);
         $sessionKey = 'viewed_' . $slug;
+
         if ($method === 'POST') {
             if (!isset($_SESSION[$sessionKey])) {
                 $stmt = $db->prepare("INSERT INTO post_stats (slug, views) VALUES (:slug, 1) ON CONFLICT(slug) DO UPDATE SET views = views + 1");

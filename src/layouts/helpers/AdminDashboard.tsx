@@ -1173,9 +1173,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
         body: formData,
       });
 
-      // PENTING: Ambil response sebagai text dulu untuk debugging
       const textResponse = await res.text();
-
       try {
         const json = JSON.parse(textResponse);
         if (json.status === "success") {
@@ -1185,10 +1183,9 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
           alert("Gagal: " + (json.message || "Terjadi kesalahan server."));
         }
       } catch (jsonError) {
-        // Jika gagal parse JSON, berarti server error (PHP Error/HTML)
-        console.error("Server Response:", textResponse);
+        console.error("Server Raw Response:", textResponse);
         alert(
-          "Terjadi kesalahan server (Lihat Console). Kemungkinan permission database atau file import.php error.",
+          "Terjadi kesalahan pada Server (Cek Console). Pastikan struktur database sesuai template.",
         );
       }
     } catch (e) {
