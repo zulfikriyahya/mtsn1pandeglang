@@ -29,24 +29,18 @@
 
   "params": {
     "contact_form_action": "#",
-    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br/>Dikelola & dikembangkan oleh [**Tim Pusdatin**](https://github.com/zulfikriyahya)"
+    "copyright": "[**&copy; 2022 - 2026 Madrasah Tsanawiyah Negeri 1 Pandeglang**](/)<br/>Dikelola Sepenuhnya oleh [**Tim Pusdatin**](https://github.com/zulfikriyahya)"
   },
 
   "navigation_button": {
     "enable": true,
     "label": "Daftar Sekarang",
-    "link": "https://daftar.mtsn1pandeglang.sch.id"
+    "link": "https://daftar.mtsn1pandeglang.sch.id/register"
   },
 
   "google_tag_manager": {
     "enable": true,
     "gtm_id": "G-31LVR4XF5F"
-  },
-
-  "disqus": {
-    "enable": false,
-    "shortname": "themefisher-template",
-    "settings": {}
   },
 
   "metadata": {
@@ -1899,10 +1893,16 @@ import {
   FaTimes,
   FaExternalLinkAlt,
   FaQuoteLeft,
-  FaTrash, // Ikon Hapus
-  FaExclamationCircle, // Ikon Konfirmasi
-  FaFileUpload, // Ikon Import (BARU)
+  FaTrash,
+  FaExclamationCircle,
+  FaFileUpload,
   FaFileCsv,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaSpinner,
+  FaFilter,
+  FaCalendarAlt,
+  FaUserEdit,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -1932,13 +1932,23 @@ ChartJS.register(
   Filler,
 );
 
+// --- HELPER & INTERFACES ---
 interface User {
   name: string;
   email: string;
   picture: string;
+  role: string;
 }
 
-// --- HELPER: FORMAT TANGGAL ---
+interface UserManagementData {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+  status: string;
+  created_at: string;
+}
+
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -1964,32 +1974,83 @@ const formatDateIndo = (dateString: string) => {
   }
 };
 
+const getMonthFromDate = (dateString: string) => {
+  try {
+    return (
+      new Date(
+        dateString.includes("Z")
+          ? dateString
+          : dateString.replace(" ", "T") + "Z",
+      ).getMonth() + 1
+    );
+  } catch (e) {
+    return 0;
+  }
+};
+
+const getYearFromDate = (dateString: string) => {
+  try {
+    return new Date(
+      dateString.includes("Z")
+        ? dateString
+        : dateString.replace(" ", "T") + "Z",
+    ).getFullYear();
+  } catch (e) {
+    return 0;
+  }
+};
+
 const AdminDashboard = () => {
-  // --- STATE HOOKS ---
+  // --- STATE UTAMA ---
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
 
-  // State Modal Detail
+  // --- STATE USER MANAGEMENT ---
+  const [userList, setUserList] = useState<UserManagementData[]>([]);
+  const [editUserModal, setEditUserModal] = useState<{
+    isOpen: boolean;
+    user: UserManagementData | null;
+  }>({ isOpen: false, user: null });
+
+  // --- STATE FILTER ULASAN ---
+  const [fbFilterMonth, setFbFilterMonth] = useState<number>(0);
+  const [fbFilterYear, setFbFilterYear] = useState<number>(0);
+  const [fbFilterRating, setFbFilterRating] = useState<number>(0);
+
+  // --- STATE FILTER SURVEI ---
+  const [svFilterMonth, setSvFilterMonth] = useState<number>(0);
+  const [svFilterYear, setSvFilterYear] = useState<number>(0);
+  const [svFilterCategory, setSvFilterCategory] = useState<string>("all");
+  const [svFilterScore, setSvFilterScore] = useState<number>(0);
+
+  // --- STATE MODALS ---
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
     null,
   );
 
-  // State Modal Konfirmasi Delete
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     ids: number[];
-    type: "feedback" | "survey";
+    type: string;
     count: number;
+    action?: () => void;
   }>({ isOpen: false, ids: [], type: "feedback", count: 0 });
 
-  // State Modal Import (BARU)
+  const [statusModal, setStatusModal] = useState<{
+    isOpen: boolean;
+    status: "success" | "error";
+    title: string;
+    message: string;
+  }>({ isOpen: false, status: "success", title: "", message: "" });
+
   const [importModalOpen, setImportModalOpen] = useState(false);
 
-  // State Filter PDF
+  // State Filter Header (PDF)
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
   );
@@ -1997,7 +2058,50 @@ const AdminDashboard = () => {
     new Date().getFullYear(),
   );
 
-  // --- GOOGLE AUTH INIT ---
+  // --- LOGIKA FILTER DATA ---
+  const filteredFeedbacks = useMemo(() => {
+    if (!data?.tables?.feedbacks) return [];
+    return data.tables.feedbacks.filter((item: any) => {
+      const matchMonth =
+        fbFilterMonth === 0 ||
+        getMonthFromDate(item.created_at) === fbFilterMonth;
+      const matchYear =
+        fbFilterYear === 0 || getYearFromDate(item.created_at) === fbFilterYear;
+      const matchRating =
+        fbFilterRating === 0 || item.rating === fbFilterRating;
+      return matchMonth && matchYear && matchRating;
+    });
+  }, [data, fbFilterMonth, fbFilterYear, fbFilterRating]);
+
+  const filteredSurveys = useMemo(() => {
+    if (!data?.tables?.surveys) return [];
+    return data.tables.surveys.filter((item: any) => {
+      const matchMonth =
+        svFilterMonth === 0 ||
+        getMonthFromDate(item.created_at) === svFilterMonth;
+      const matchYear =
+        svFilterYear === 0 || getYearFromDate(item.created_at) === svFilterYear;
+
+      let matchScore = true;
+      if (svFilterScore > 0) {
+        if (svFilterCategory === "zi")
+          matchScore = Math.round(item.score_zi) === svFilterScore;
+        else if (svFilterCategory === "service")
+          matchScore = Math.round(item.score_service) === svFilterScore;
+        else if (svFilterCategory === "academic")
+          matchScore = Math.round(item.score_academic) === svFilterScore;
+        else {
+          matchScore =
+            Math.round(item.score_zi) === svFilterScore ||
+            Math.round(item.score_service) === svFilterScore ||
+            Math.round(item.score_academic) === svFilterScore;
+        }
+      }
+      return matchMonth && matchYear && matchScore;
+    });
+  }, [data, svFilterMonth, svFilterYear, svFilterCategory, svFilterScore]);
+
+  // --- AUTH & INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -2006,37 +2110,103 @@ const AdminDashboard = () => {
       /* @ts-ignore */
       window.google.accounts.id.initialize({
         client_id: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
+        callback: handleAuthResponse, // MENGGUNAKAN LOGIKA PINTAR
         auto_select: false,
         ui_mode: "popup",
       });
-      /* @ts-ignore */
-      window.google.accounts.id.renderButton(btnContainer, {
-        theme: "outline",
-        size: "large",
-        width: 250,
-      });
+      renderGoogleBtn();
     }
   };
 
-  const handleCredentialResponse = async (response: any) => {
+  const renderGoogleBtn = () => {
+    const btn = document.getElementById("googleBtn");
+    if (btn)
+      /* @ts-ignore */ window.google?.accounts.id.renderButton(btn, {
+        theme: "outline",
+        size: "large",
+        width: 250,
+        text: isRegisterMode ? "signup_with" : "signin_with",
+      });
+  };
+
+  useEffect(() => {
+    if (!user && !loading) renderGoogleBtn();
+  }, [isRegisterMode, user, loading]);
+
+  // === SMART AUTH RESPONSE ===
+  const handleAuthResponse = async (response: any) => {
     setLoading(true);
+
+    // Coba Login dulu
+    if (!isRegisterMode) {
+      try {
+        const res = await fetch("/api/auth.php?action=login", {
+          method: "POST",
+          body: JSON.stringify({ credential: response.credential }),
+        });
+        const result = await res.json();
+
+        if (result.status === "success") {
+          setUser(result.user);
+          fetchStats();
+          if (result.user.role === "super_admin") fetchUsers();
+        } else if (result.status === "unregistered") {
+          // LOGIKA PINTAR: Tanya user, jika OK langsung daftar
+          if (
+            window.confirm(
+              "Email ini belum terdaftar. Apakah Anda ingin mendaftar sekarang sebagai User baru?",
+            )
+          ) {
+            await doRegister(response.credential);
+          } else {
+            alert("Login dibatalkan.");
+          }
+        } else {
+          alert(result.message);
+        }
+      } catch (e) {
+        alert("Gagal menghubungi server login.");
+      }
+    } else {
+      // Jika user memang ada di mode "Register" sejak awal
+      await doRegister(response.credential);
+    }
+
+    setLoading(false);
+  };
+
+  // Helper function untuk register otomatis
+  const doRegister = async (credential: string) => {
     try {
-      const res = await fetch("/api/auth.php?action=login", {
+      const res = await fetch("/api/auth.php?action=register", {
         method: "POST",
-        body: JSON.stringify({ credential: response.credential }),
+        body: JSON.stringify({ credential }),
       });
       const result = await res.json();
+
       if (result.status === "success") {
+        // Auto Login
         setUser(result.user);
         fetchStats();
+        setIsRegisterMode(false);
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "Selamat Datang!",
+          message:
+            "Akun Anda berhasil dibuat. Anda sekarang login sebagai User.",
+        });
       } else {
-        alert(result.message);
+        setStatusModal({
+          isOpen: true,
+          status: "error",
+          title: "Registrasi Gagal",
+          message: result.message,
+        });
       }
     } catch (e) {
-      alert("Terjadi kesalahan jaringan.");
+      alert("Gagal melakukan registrasi.");
     }
-    setLoading(false);
   };
 
   const fetchStats = async () => {
@@ -2052,6 +2222,14 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch("/api/users.php");
+      const json = await res.json();
+      if (json.status === "success") setUserList(json.data);
+    } catch (e) {}
+  };
+
   useEffect(() => {
     let isMounted = true;
     const init = async () => {
@@ -2062,6 +2240,7 @@ const AdminDashboard = () => {
           if (authData.status === "authenticated") {
             setUser(authData.user);
             fetchStats();
+            if (authData.user.role === "super_admin") fetchUsers();
           } else {
             if (!document.getElementById("google-client-script")) {
               const script = document.createElement("script");
@@ -2104,17 +2283,46 @@ const AdminDashboard = () => {
     );
   };
 
+  // --- LOGIC USER MANAGEMENT ---
+  const updateUser = async (id: number, role: string, status: string) => {
+    try {
+      const res = await fetch(`/api/users.php?action=update`, {
+        method: "POST",
+        body: JSON.stringify({ id, role, status }),
+      });
+      const json = await res.json();
+      if (json.status === "success") {
+        fetchUsers();
+        setEditUserModal({ isOpen: false, user: null });
+        alert("User updated!");
+      } else alert(json.message);
+    } catch (e) {
+      alert("Gagal update user");
+    }
+  };
+
+  const deleteUser = async (id: number) => {
+    try {
+      const res = await fetch(`/api/users.php?action=delete`, {
+        method: "POST",
+        body: JSON.stringify({ id }),
+      });
+      const json = await res.json();
+      if (json.status === "success") {
+        fetchUsers();
+        alert("User deleted!");
+      } else alert(json.message);
+    } catch (e) {
+      alert("Gagal hapus user");
+    }
+  };
+
+  // --- ACTION HANDLERS ---
   const openDetail = (item: any, type: "feedback" | "survey") => {
     setSelectedItem(item);
     setModalType(type);
   };
 
-  const closeDetail = () => {
-    setSelectedItem(null);
-    setModalType(null);
-  };
-
-  // --- LOGIKA HAPUS DATA (SINGLE & BULK) ---
   const requestDelete = (ids: number[], type: "feedback" | "survey") => {
     setConfirmModal({
       isOpen: true,
@@ -2125,6 +2333,14 @@ const AdminDashboard = () => {
   };
 
   const executeDelete = async () => {
+    // Handle User Delete via Generic Modal
+    if (confirmModal.type === "user" && confirmModal.action) {
+      confirmModal.action();
+      setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      return;
+    }
+
+    setConfirmModal((prev) => ({ ...prev, isOpen: false }));
     try {
       const res = await fetch("/api/crud.php?action=delete", {
         method: "POST",
@@ -2137,32 +2353,34 @@ const AdminDashboard = () => {
       const json = await res.json();
 
       if (json.status === "success") {
-        fetchStats(); // Refresh data
-        // Tutup modal detail jika item yang dihapus sedang dibuka
+        fetchStats();
         if (
           selectedItem &&
           confirmModal.ids.includes(selectedItem.id) &&
           modalType === confirmModal.type
         ) {
-          closeDetail();
+          setSelectedItem(null);
+          setModalType(null);
         }
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "Berhasil Dihapus",
+          message: `${confirmModal.count} data telah berhasil dihapus dari database.`,
+        });
       } else {
-        alert(json.message || "Gagal menghapus data.");
+        throw new Error(json.message);
       }
-    } catch (e) {
-      alert("Terjadi kesalahan jaringan.");
-    } finally {
-      setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    } catch (e: any) {
+      setStatusModal({
+        isOpen: true,
+        status: "error",
+        title: "Gagal Menghapus",
+        message: e.message || "Terjadi kesalahan sistem saat menghapus data.",
+      });
     }
   };
 
-  // --- LOGIKA IMPORT DATA (BARU) ---
-  const handleImportSuccess = () => {
-    fetchStats();
-    setImportModalOpen(false);
-  };
-
-  // --- RENDER LOGIC ---
   if (loading)
     return (
       <div className="text-center p-12">
@@ -2171,7 +2389,7 @@ const AdminDashboard = () => {
       </div>
     );
 
-  if (!user) {
+  if (!user)
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <div className="w-full max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-xl dark:border-darkmode-border dark:bg-darkmode-light">
@@ -2180,18 +2398,59 @@ const AdminDashboard = () => {
             alt="Logo"
             className="mx-auto mb-6 h-12"
           />
-          <h2 className="h4 mb-2">Portal Admin</h2>
+          <h2 className="h4 mb-2">
+            {isRegisterMode ? "Registrasi Akun Baru" : "Login Portal Admin"}
+          </h2>
+          <p className="text-sm text-gray-500 mb-6">
+            {isRegisterMode
+              ? "Daftarkan email Google Anda untuk akses."
+              : "Gunakan akun Google yang terdaftar."}
+          </p>
           <div className="flex justify-center h-[50px]">
             <div id="googleBtn"></div>
           </div>
+          <button
+            onClick={() => setIsRegisterMode(!isRegisterMode)}
+            className="mt-6 text-sm text-primary hover:underline"
+          >
+            {isRegisterMode
+              ? "Sudah punya akun? Login disini"
+              : "Belum punya akun? Daftar sekarang"}
+          </button>
         </div>
+        <StatusModal
+          isOpen={statusModal.isOpen}
+          status={statusModal.status}
+          title={statusModal.title}
+          message={statusModal.message}
+          onClose={() => setStatusModal({ ...statusModal, isOpen: false })}
+        />
       </div>
     );
-  }
+
+  const monthOptions = [
+    "Semua Bulan",
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  const yearOptions = [0, 2024, 2025, 2026, 2027]; // 0 = Semua Tahun
+
+  // Safe Role Check for UI
+  const userRole = user.role || "user";
 
   return (
     <div className="min-h-screen pb-12 relative">
-      {/* Header */}
+      {/* Header Panel */}
       <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
         <div className="flex items-center gap-4 w-full md:w-auto">
           <img
@@ -2200,65 +2459,67 @@ const AdminDashboard = () => {
             className="h-12 w-12 rounded-full border border-gray-200 shadow-sm"
           />
           <div>
-            <h3 className="h5 mb-0 font-bold">{user.name}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="h5 mb-0 font-bold">{user.name}</h3>
+              {/* --- FIX APPLIED HERE: (user.role || "user") --- */}
+              <span
+                className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${userRole === "super_admin" ? "bg-red-100 text-red-700" : userRole === "operator" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
+              >
+                {userRole.replace("_", " ")}
+              </span>
+            </div>
             <p className="text-sm text-text-light">{user.email}</p>
           </div>
         </div>
-
-        {/* Action Controls */}
         <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
-          <select
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
-          >
-            {[
-              "Januari",
-              "Februari",
-              "Maret",
-              "April",
-              "Mei",
-              "Juni",
-              "Juli",
-              "Agustus",
-              "September",
-              "Oktober",
-              "November",
-              "Desember",
-            ].map((m, i) => (
-              <option key={i} value={i + 1}>
-                {m}
-              </option>
-            ))}
-          </select>
+          {/* PDF Filter & Actions (Only Operator & Admin) */}
+          {(userRole === "operator" || userRole === "super_admin") && (
+            <>
+              <div className="flex items-center gap-2 bg-gray-50 dark:bg-white/5 p-1.5 rounded-lg border border-border dark:border-darkmode-border mr-2">
+                <span className="text-xs font-bold px-2">Cetak:</span>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                  className="text-xs bg-transparent outline-none"
+                >
+                  {monthOptions.slice(1).map((m, i) => (
+                    <option key={i} value={i + 1}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(Number(e.target.value))}
+                  className="text-xs bg-transparent outline-none"
+                >
+                  {yearOptions.slice(1).map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm outline-none focus:border-primary dark:bg-darkmode-body dark:border-darkmode-border"
-          >
-            {[2024, 2025, 2026].map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-
+              <button
+                onClick={() => setImportModalOpen(true)}
+                className="btn btn-sm flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white border-orange-500 whitespace-nowrap"
+              >
+                <FaFileUpload /> Import
+              </button>
+              <button
+                onClick={printPDF}
+                className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden whitespace-nowrap"
+              >
+                <FaDownload /> PDF
+              </button>
+            </>
+          )}
           <button
-            onClick={() => setImportModalOpen(true)}
-            className="btn btn-sm flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white border-orange-500 whitespace-nowrap"
-          >
-            <FaFileUpload /> Import
-          </button>
-
-          <button
-            onClick={printPDF}
-            className="btn btn-outline-primary btn-sm flex items-center gap-2 print:hidden whitespace-nowrap"
-          >
-            <FaDownload /> PDF
-          </button>
-          <button
-            onClick={handleLogout}
+            onClick={async () => {
+              await fetch("/api/auth.php?action=logout");
+              window.location.reload();
+            }}
             className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap"
           >
             <FaSignOutAlt /> Keluar
@@ -2284,7 +2545,7 @@ const AdminDashboard = () => {
 
       {data && (
         <div className="animate-fade-in">
-          {/* Overview Cards */}
+          {/* Stats Cards */}
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
@@ -2320,10 +2581,14 @@ const AdminDashboard = () => {
           <div className="mb-8 border-b border-border dark:border-darkmode-border">
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
-                { id: "overview", label: "Ringkasan Grafik" },
-                { id: "posts", label: "Data Artikel" },
-                { id: "feedback", label: "Data Ulasan" },
-                { id: "surveys", label: "Data Survei" },
+                { id: "overview", label: "Ringkasan" },
+                { id: "posts", label: "Artikel" },
+                { id: "feedback", label: "Ulasan" },
+                { id: "surveys", label: "Survei" },
+                // Show Users tab ONLY for Super Admin
+                ...(userRole === "super_admin"
+                  ? [{ id: "users", label: "Manajemen User" }]
+                  : []),
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -2336,18 +2601,20 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* TAB CONTENTS */}
+          {/* === CONTENT TABS === */}
+
+          {/* 1. OVERVIEW */}
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
-                <h3 className="h6 mb-6">Tren Aktivitas (30 Hari Terakhir)</h3>
+                <h3 className="h6 mb-6">Tren Aktivitas</h3>
                 <div className="h-72">
                   <Line
                     data={{
                       labels: data.charts.activity.labels,
                       datasets: [
                         {
-                          label: "Ulasan Masuk",
+                          label: "Ulasan",
                           data: data.charts.activity.feedback,
                           borderColor: "#eab308",
                           backgroundColor: "rgba(234, 179, 8, 0.1)",
@@ -2355,7 +2622,7 @@ const AdminDashboard = () => {
                           tension: 0.4,
                         },
                         {
-                          label: "Survei Masuk",
+                          label: "Survei",
                           data: data.charts.activity.survey,
                           borderColor: "#8b5cf6",
                           backgroundColor: "rgba(139, 92, 246, 0.1)",
@@ -2404,7 +2671,7 @@ const AdminDashboard = () => {
                       labels: ["Zona Integritas", "Pelayanan", "Akademik"],
                       datasets: [
                         {
-                          label: "Skor (Skala 5)",
+                          label: "Skor",
                           data: [
                             data.charts.survey_avg.zi,
                             data.charts.survey_avg.service,
@@ -2426,6 +2693,92 @@ const AdminDashboard = () => {
             </div>
           )}
 
+          {/* 2. USER MANAGEMENT (SUPER ADMIN ONLY) */}
+          {activeTab === "users" && userRole === "super_admin" && (
+            <div className="bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-darkmode-border overflow-hidden">
+              <div className="p-6 border-b border-border dark:border-darkmode-border flex justify-between items-center">
+                <h3 className="text-lg font-bold">Daftar Pengguna</h3>
+                <button
+                  onClick={fetchUsers}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Refresh Data
+                </button>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-gray-50 dark:bg-white/5 uppercase text-xs">
+                    <tr>
+                      <th className="px-6 py-3">User</th>
+                      <th className="px-6 py-3">Role</th>
+                      <th className="px-6 py-3">Status</th>
+                      <th className="px-6 py-3">Terdaftar</th>
+                      <th className="px-6 py-3 text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border dark:divide-darkmode-border">
+                    {userList.map((u) => (
+                      <tr key={u.id}>
+                        <td className="px-6 py-4">
+                          <div className="font-bold">{u.name}</div>
+                          <div className="text-xs text-gray-500">{u.email}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`px-2 py-1 rounded text-xs font-bold ${u.role === "super_admin" ? "bg-red-100 text-red-700" : u.role === "operator" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
+                          >
+                            {u.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`px-2 py-1 rounded text-xs font-bold ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}
+                          >
+                            {u.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-xs text-gray-500">
+                          {formatDateIndo(u.created_at)}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex justify-center gap-2">
+                            <button
+                              onClick={() =>
+                                setEditUserModal({ isOpen: true, user: u })
+                              }
+                              className="p-2 bg-blue-50 text-blue-600 rounded hover:bg-blue-100"
+                              title="Edit Role/Status"
+                            >
+                              <FaUserEdit />
+                            </button>
+                            {u.role !== "super_admin" && (
+                              <button
+                                onClick={() =>
+                                  setConfirmModal({
+                                    isOpen: true,
+                                    ids: [u.id],
+                                    type: "user",
+                                    count: 1,
+                                    action: () => deleteUser(u.id),
+                                  })
+                                }
+                                className="p-2 bg-red-50 text-red-600 rounded hover:bg-red-100"
+                                title="Hapus User"
+                              >
+                                <FaTrash />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* 3. POSTS */}
           {activeTab === "posts" && (
             <DataTable
               title="Statistik Artikel Populer"
@@ -2448,14 +2801,62 @@ const AdminDashboard = () => {
             />
           )}
 
+          {/* 4. FEEDBACK (DATA ULASAN) */}
           {activeTab === "feedback" && (
             <DataTable
               title="Data Ulasan Masuk"
-              data={data.tables.feedbacks}
+              data={filteredFeedbacks}
               searchKeys={["name", "message"]}
-              enableSelection={true}
+              enableSelection={userRole === "super_admin"}
               onBulkDelete={(ids) => requestDelete(ids, "feedback")}
               onDownload={() => downloadReport("feedback")}
+              customFilters={
+                <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaCalendarAlt className="text-gray-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={fbFilterMonth}
+                      onChange={(e) => setFbFilterMonth(Number(e.target.value))}
+                    >
+                      {monthOptions.map((m, i) => (
+                        <option key={i} value={i}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                      value={fbFilterYear}
+                      onChange={(e) => setFbFilterYear(Number(e.target.value))}
+                    >
+                      <option value={0}>Semua Tahun</option>
+                      {yearOptions.slice(1).map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaStar className="text-yellow-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={fbFilterRating}
+                      onChange={(e) =>
+                        setFbFilterRating(Number(e.target.value))
+                      }
+                    >
+                      <option value={0}>Semua Rating</option>
+                      {[5, 4, 3, 2, 1].map((r) => (
+                        <option key={r} value={r}>
+                          {r} Bintang
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              }
               columns={[
                 {
                   key: "created_at",
@@ -2505,28 +2906,85 @@ const AdminDashboard = () => {
                   key: "actions",
                   label: "Aksi",
                   className: "text-center w-16",
-                  render: (_: any, row: any) => (
-                    <button
-                      onClick={() => requestDelete([row.id], "feedback")}
-                      className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
-                      title="Hapus Data"
-                    >
-                      <FaTrash size={14} />
-                    </button>
-                  ),
+                  render: (_: any, row: any) =>
+                    userRole === "super_admin" && (
+                      <button
+                        onClick={() => requestDelete([row.id], "feedback")}
+                        className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
+                        title="Hapus Data"
+                      >
+                        <FaTrash size={14} />
+                      </button>
+                    ),
                 },
               ]}
             />
           )}
 
+          {/* 5. SURVEY (DATA SURVEI) */}
           {activeTab === "surveys" && (
             <DataTable
               title="Data Survei Kepuasan"
-              data={data.tables.surveys}
+              data={filteredSurveys}
               searchKeys={["respondent_name", "feedback"]}
-              enableSelection={true}
+              enableSelection={userRole === "super_admin"}
               onBulkDelete={(ids) => requestDelete(ids, "survey")}
               onDownload={() => downloadReport("survey")}
+              customFilters={
+                <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaCalendarAlt className="text-gray-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={svFilterMonth}
+                      onChange={(e) => setSvFilterMonth(Number(e.target.value))}
+                    >
+                      {monthOptions.map((m, i) => (
+                        <option key={i} value={i}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                      value={svFilterYear}
+                      onChange={(e) => setSvFilterYear(Number(e.target.value))}
+                    >
+                      <option value={0}>Semua Tahun</option>
+                      {yearOptions.slice(1).map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaFilter className="text-blue-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={svFilterCategory}
+                      onChange={(e) => setSvFilterCategory(e.target.value)}
+                    >
+                      <option value="all">Semua Kategori</option>
+                      <option value="zi">Zona Integritas (ZI)</option>
+                      <option value="service">Pelayanan</option>
+                      <option value="academic">Akademik</option>
+                    </select>
+                    <select
+                      className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                      value={svFilterScore}
+                      onChange={(e) => setSvFilterScore(Number(e.target.value))}
+                    >
+                      <option value={0}>Semua Nilai</option>
+                      {[5, 4, 3, 2, 1].map((s) => (
+                        <option key={s} value={s}>
+                          Nilai {s}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              }
               columns={[
                 {
                   key: "created_at",
@@ -2591,15 +3049,16 @@ const AdminDashboard = () => {
                   key: "actions",
                   label: "Aksi",
                   className: "text-center w-16",
-                  render: (_: any, row: any) => (
-                    <button
-                      onClick={() => requestDelete([row.id], "survey")}
-                      className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
-                      title="Hapus Data"
-                    >
-                      <FaTrash size={14} />
-                    </button>
-                  ),
+                  render: (_: any, row: any) =>
+                    userRole === "super_admin" && (
+                      <button
+                        onClick={() => requestDelete([row.id], "survey")}
+                        className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
+                        title="Hapus Data"
+                      >
+                        <FaTrash size={14} />
+                      </button>
+                    ),
                 },
               ]}
             />
@@ -2607,27 +3066,97 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* MODAL IMPORT DATA (BARU) */}
+      {/* --- MODALS --- */}
+
+      {/* Import Modal */}
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => setImportModalOpen(false)}
-        onSuccess={handleImportSuccess}
+        onSuccess={() => {
+          fetchStats();
+          setImportModalOpen(false);
+        }}
       />
 
-      {/* CUSTOM CONFIRMATION MODAL */}
+      {/* Confirm Delete Modal */}
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
-        title="Konfirmasi Penghapusan"
-        message={`Apakah Anda yakin ingin menghapus ${confirmModal.count} data terpilih? Tindakan ini permanen dan tidak dapat dibatalkan.`}
+        title="Konfirmasi Hapus"
+        message={`Yakin ingin menghapus ${confirmModal.count} data terpilih?`}
         onConfirm={executeDelete}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
 
-      {/* DETAIL MODAL POPUP */}
+      {/* Status Modal (Success/Fail Delete) */}
+      <StatusModal
+        isOpen={statusModal.isOpen}
+        status={statusModal.status}
+        title={statusModal.title}
+        message={statusModal.message}
+        onClose={() => setStatusModal({ ...statusModal, isOpen: false })}
+      />
+
+      {/* Edit User Modal */}
+      {editUserModal.isOpen && editUserModal.user && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl p-6 shadow-xl">
+            <h3 className="text-lg font-bold mb-4">
+              Edit User: {editUserModal.user.name}
+            </h3>
+            <div className="mb-4">
+              <label className="block text-sm mb-1">Role</label>
+              <select
+                id="editRole"
+                defaultValue={editUserModal.user.role}
+                className="w-full border p-2 rounded bg-gray-50 dark:bg-white/10 dark:text-white"
+              >
+                <option value="user">User (View Only)</option>
+                <option value="operator">Operator (View + Export)</option>
+                <option value="super_admin">Super Admin (Full Access)</option>
+              </select>
+            </div>
+            <div className="mb-6">
+              <label className="block text-sm mb-1">Status</label>
+              <select
+                id="editStatus"
+                defaultValue={editUserModal.user.status}
+                className="w-full border p-2 rounded bg-gray-50 dark:bg-white/10 dark:text-white"
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive (Banned)</option>
+                <option value="unverified">Unverified</option>
+              </select>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setEditUserModal({ isOpen: false, user: null })}
+                className="btn btn-outline-primary btn-sm"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  const role = (
+                    document.getElementById("editRole") as HTMLSelectElement
+                  ).value;
+                  const status = (
+                    document.getElementById("editStatus") as HTMLSelectElement
+                  ).value;
+                  updateUser(editUserModal.user!.id, role, status);
+                }}
+                className="btn btn-primary btn-sm"
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detail Modal */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
           <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
-            {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
               <div>
                 <h3 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -2639,14 +3168,15 @@ const AdminDashboard = () => {
                 </p>
               </div>
               <button
-                onClick={closeDetail}
-                className="text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
+                onClick={() => {
+                  setSelectedItem(null);
+                  setModalType(null);
+                }}
+                className="text-gray-400 hover:text-red-500 bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
               >
                 <FaTimes />
               </button>
             </div>
-
-            {/* Modal Content */}
             <div className="p-6">
               <div className="flex items-start gap-4 mb-6">
                 <div className="h-12 w-12 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
@@ -2661,7 +3191,6 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-500">
                     {selectedItem.respondent_role || "Pengunjung / Wali Murid"}
                   </p>
-
                   {modalType === "feedback" && (
                     <div className="mt-2 flex gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
@@ -2678,8 +3207,6 @@ const AdminDashboard = () => {
                   )}
                 </div>
               </div>
-
-              {/* Message Box */}
               <div className="relative rounded-xl bg-gray-50 dark:bg-white/5 p-6 border border-gray-100 dark:border-darkmode-border">
                 <FaQuoteLeft className="absolute top-4 left-4 text-gray-200 dark:text-gray-600 text-2xl" />
                 <div className="relative z-10">
@@ -2693,8 +3220,6 @@ const AdminDashboard = () => {
                   </p>
                 </div>
               </div>
-
-              {/* Stats for Survey */}
               {modalType === "survey" && (
                 <div className="grid grid-cols-3 gap-4 mt-6">
                   <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
@@ -2724,19 +3249,22 @@ const AdminDashboard = () => {
                 </div>
               )}
             </div>
-
-            {/* Modal Footer */}
             <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-between items-center text-xs text-gray-400 border-t border-gray-100 dark:border-darkmode-border">
               <span>IP: {selectedItem.ip_address}</span>
               <div className="flex gap-2">
+                {userRole === "super_admin" && (
+                  <button
+                    onClick={() => requestDelete([selectedItem.id], modalType!)}
+                    className="btn bg-red-100 text-red-600 hover:bg-red-200 border-transparent btn-sm flex items-center gap-2"
+                  >
+                    <FaTrash /> Hapus
+                  </button>
+                )}
                 <button
-                  onClick={() => requestDelete([selectedItem.id], modalType!)}
-                  className="btn bg-red-100 text-red-600 hover:bg-red-200 border-transparent btn-sm flex items-center gap-2"
-                >
-                  <FaTrash /> Hapus
-                </button>
-                <button
-                  onClick={closeDetail}
+                  onClick={() => {
+                    setSelectedItem(null);
+                    setModalType(null);
+                  }}
                   className="btn btn-primary btn-sm"
                 >
                   Tutup
@@ -2752,141 +3280,28 @@ const AdminDashboard = () => {
 
 // --- SUB COMPONENTS ---
 
-// 1. IMPORT MODAL
-const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
-  const [importType, setImportType] = useState<"feedback" | "survey">(
-    "feedback",
-  );
-  const [file, setFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
+// 1. STATUS MODAL (NEW)
+const StatusModal = ({ isOpen, status, title, message, onClose }: any) => {
   if (!isOpen) return null;
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file) return alert("Pilih file CSV terlebih dahulu.");
-
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", importType);
-
-    try {
-      const res = await fetch("/api/import.php?action=import", {
-        method: "POST",
-        body: formData,
-      });
-      const json = await res.json();
-
-      if (json.status === "success") {
-        alert(json.message);
-        onSuccess();
-      } else {
-        alert(json.message || "Gagal mengupload file.");
-      }
-    } catch (e) {
-      alert("Terjadi kesalahan jaringan.");
-    } finally {
-      setIsUploading(false);
-      setFile(null);
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-bold">Import Data CSV</h3>
-          <button onClick={onClose}>
-            <FaTimes className="text-gray-400 hover:text-red-500" />
-          </button>
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 text-center border border-gray-100 dark:border-darkmode-border">
+        <div
+          className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${status === "success" ? "bg-green-100 dark:bg-green-900/30 text-green-600" : "bg-red-100 dark:bg-red-900/30 text-red-600"}`}
+        >
+          {status === "success" ? (
+            <FaCheckCircle className="text-4xl animate-bounce" />
+          ) : (
+            <FaTimesCircle className="text-4xl" />
+          )}
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">
-            Pilih Tipe Data
-          </label>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="importType"
-                value="feedback"
-                checked={importType === "feedback"}
-                onChange={() => setImportType("feedback")}
-              />
-              Data Ulasan
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="importType"
-                value="survey"
-                checked={importType === "survey"}
-                onChange={() => setImportType("survey")}
-              />
-              Data Survei
-            </label>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-2">Upload File</label>
-          <div
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input
-              type="file"
-              accept=".csv"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            {file ? (
-              <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
-                <FaFileCsv size={24} />
-                {file.name}
-              </div>
-            ) : (
-              <div className="text-gray-500">
-                <FaFileUpload className="mx-auto mb-2 text-2xl" />
-                <p>Klik untuk memilih file CSV</p>
-              </div>
-            )}
-          </div>
-          <div className="mt-2 text-right">
-            <a
-              href={`/api/import.php?action=template&type=${importType}`}
-              className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
-            >
-              <FaDownload /> Download Template CSV
-            </a>
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="btn btn-outline-primary btn-sm"
-            disabled={isUploading}
-          >
-            Batal
-          </button>
-          <button
-            onClick={handleUpload}
-            className="btn btn-primary btn-sm"
-            disabled={!file || isUploading}
-          >
-            {isUploading ? "Mengupload..." : "Mulai Import"}
-          </button>
-        </div>
+        <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">
+          {title}
+        </h3>
+        <p className="text-gray-500 mb-6 text-sm">{message}</p>
+        <button onClick={onClose} className="btn btn-primary w-full">
+          OK, Mengerti
+        </button>
       </div>
     </div>
   );
@@ -2901,13 +3316,12 @@ const ConfirmationModal = ({
   onCancel,
 }: any) => {
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
         <div className="text-center">
-          <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 mb-4">
-            <FaExclamationCircle className="text-3xl text-red-600" />
+          <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 mb-4 text-red-600">
+            <FaExclamationCircle className="text-3xl" />
           </div>
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
             {title}
@@ -2918,13 +3332,13 @@ const ConfirmationModal = ({
           <div className="flex gap-3 justify-center">
             <button
               onClick={onCancel}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20"
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium"
             >
               Batal
             </button>
             <button
               onClick={onConfirm}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium shadow-md shadow-red-200 transition-colors"
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium shadow-md shadow-red-200"
             >
               Ya, Hapus
             </button>
@@ -2952,15 +3366,275 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
   </div>
 );
 
-// 4. DATA TABLE (Dengan Fitur Selection)
-interface Column {
-  key: string;
-  label: string;
-  sortable?: boolean;
-  className?: string;
-  render?: (value: any, row: any) => React.ReactNode;
-}
+// 4. IMPORT MODAL (UPDATED)
+const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
+  const [importType, setImportType] = useState<"feedback" | "survey">(
+    "feedback",
+  );
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<
+    "idle" | "uploading" | "success" | "error"
+  >("idle");
+  const [progress, setProgress] = useState(0);
+  const [resultMessage, setResultMessage] = useState("");
+  const [countdown, setCountdown] = useState(5);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (isOpen) {
+      setUploadStatus("idle");
+      setProgress(0);
+      setFile(null);
+      setResultMessage("");
+      setCountdown(5);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (uploadStatus === "success" && countdown > 0) {
+      timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
+    } else if (uploadStatus === "success" && countdown === 0) {
+      window.location.reload();
+    }
+    return () => clearTimeout(timer);
+  }, [uploadStatus, countdown]);
+
+  if (!isOpen) return null;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+      setProgress(0);
+      setResultMessage("");
+    }
+  };
+
+  const handleUpload = () => {
+    if (!file) return;
+    setUploadStatus("uploading");
+    setProgress(0);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", importType);
+    const xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", (event) => {
+      if (event.lengthComputable)
+        setProgress(Math.round((event.loaded / event.total) * 100));
+    });
+    xhr.addEventListener("load", () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const json = JSON.parse(xhr.responseText);
+          if (json.status === "success") {
+            setUploadStatus("success");
+            setResultMessage(json.message);
+          } else {
+            setUploadStatus("error");
+            setResultMessage(json.message || "Gagal mengupload file.");
+          }
+        } catch (e) {
+          setUploadStatus("error");
+          setResultMessage("Format respon server tidak valid.");
+        }
+      } else {
+        setUploadStatus("error");
+        setResultMessage(`Terjadi kesalahan server (Code: ${xhr.status}).`);
+      }
+    });
+    xhr.addEventListener("error", () => {
+      setUploadStatus("error");
+      setResultMessage("Terjadi kesalahan jaringan.");
+    });
+    xhr.open("POST", "/api/import.php?action=import");
+    xhr.send(formData);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transition-all duration-300">
+        {uploadStatus === "idle" && (
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold">Import Data CSV</h3>
+              <button onClick={onClose}>
+                <FaTimes className="text-gray-400 hover:text-red-500" />
+              </button>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Pilih Tipe Data
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="importType"
+                    value="feedback"
+                    checked={importType === "feedback"}
+                    onChange={() => setImportType("feedback")}
+                  />
+                  Data Ulasan
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="importType"
+                    value="survey"
+                    checked={importType === "survey"}
+                    onChange={() => setImportType("survey")}
+                  />
+                  Data Survei
+                </label>
+              </div>
+            </div>
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">
+                Upload File
+              </label>
+              <div
+                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  type="file"
+                  accept=".csv"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                {file ? (
+                  <div className="flex flex-col items-center justify-center gap-2 text-green-600 font-medium animate-fade-in">
+                    <FaFileCsv size={32} />
+                    <span className="truncate max-w-[200px] text-sm">
+                      {file.name}
+                    </span>
+                    <span className="text-xs text-gray-400 font-normal">
+                      Klik untuk ganti file
+                    </span>
+                  </div>
+                ) : (
+                  <div className="text-gray-500 group-hover:text-primary transition-colors">
+                    <FaFileUpload className="mx-auto mb-2 text-2xl" />
+                    <p>Klik untuk memilih file CSV</p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-2 text-right">
+                <a
+                  href={`/api/import.php?action=template&type=${importType}`}
+                  className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
+                >
+                  <FaDownload /> Download Template CSV
+                </a>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={onClose}
+                className="btn btn-outline-primary btn-sm"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleUpload}
+                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!file}
+              >
+                Mulai Import
+              </button>
+            </div>
+          </div>
+        )}
+        {uploadStatus === "uploading" && (
+          <div className="p-8 text-center animate-fade-in">
+            <div className="mb-4">
+              <FaSpinner className="mx-auto text-4xl text-primary animate-spin" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Mengupload Data...</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Mohon jangan tutup halaman ini.
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden relative">
+              <div
+                className="bg-primary h-4 rounded-full transition-all duration-300 ease-out flex items-center justify-center"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between text-xs mt-2 font-mono text-gray-600 dark:text-gray-400">
+              <span>{progress}%</span>
+              <span>100%</span>
+            </div>
+            {progress === 100 && (
+              <p className="text-xs text-orange-500 mt-4 animate-pulse">
+                Validasi & Insert Database sedang berjalan...
+              </p>
+            )}
+          </div>
+        )}
+        {uploadStatus === "success" && (
+          <div className="p-8 text-center animate-fade-in">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+              <FaCheckCircle className="text-5xl text-green-600 dark:text-green-400 animate-bounce" />
+            </div>
+            <h3 className="text-xl font-bold text-green-700 dark:text-green-400 mb-2">
+              Import Berhasil!
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              {resultMessage}
+            </p>
+            <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-darkmode-border">
+              <p className="text-sm text-gray-500">
+                Halaman akan dimuat ulang dalam{" "}
+                <span className="font-bold text-dark dark:text-white">
+                  {countdown}
+                </span>{" "}
+                detik.
+              </p>
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-6 btn btn-primary w-full"
+            >
+              Muat Ulang Sekarang
+            </button>
+          </div>
+        )}
+        {uploadStatus === "error" && (
+          <div className="p-8 text-center animate-fade-in">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+              <FaTimesCircle className="text-5xl text-red-600 dark:text-red-400" />
+            </div>
+            <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
+              Import Gagal
+            </h3>
+            <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-lg border border-red-100 dark:border-red-900/30 mb-6 overflow-y-auto max-h-40">
+              <p className="text-sm text-red-600 dark:text-red-300 break-words">
+                {resultMessage}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={onClose}
+                className="btn btn-outline-primary w-full"
+              >
+                Tutup
+              </button>
+              <button
+                onClick={() => setUploadStatus("idle")}
+                className="btn btn-primary w-full"
+              >
+                Coba Lagi
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// 5. DATA TABLE (UPDATED)
 const DataTable = ({
   title,
   data,
@@ -2969,15 +3643,8 @@ const DataTable = ({
   onDownload,
   enableSelection = false,
   onBulkDelete,
-}: {
-  title: string;
-  data: any[];
-  columns: Column[];
-  searchKeys?: string[];
-  onDownload: () => void;
-  enableSelection?: boolean;
-  onBulkDelete?: (ids: number[]) => void;
-}) => {
+  customFilters,
+}: any) => {
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -2987,15 +3654,14 @@ const DataTable = ({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  // Reset selection when data changes
   useEffect(() => {
     setSelectedIds([]);
   }, [data, currentPage, search]);
 
   const filteredData = useMemo(() => {
     if (!search) return data;
-    return data.filter((row) =>
-      searchKeys.some((key) =>
+    return data.filter((row: any) =>
+      searchKeys.some((key: any) =>
         String(row[key] || "")
           .toLowerCase()
           .includes(search.toLowerCase()),
@@ -3030,10 +3696,9 @@ const DataTable = ({
     });
   };
 
-  // Selection Logic
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      const currentIds = paginatedData.map((row) => row.id);
+      const currentIds = paginatedData.map((row: any) => row.id);
       setSelectedIds(currentIds);
     } else {
       setSelectedIds([]);
@@ -3053,7 +3718,6 @@ const DataTable = ({
       <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between border-b border-border dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
         <div className="flex items-center gap-3">
           <h3 className="text-lg font-bold">{title}</h3>
-          {/* BULK DELETE BUTTON */}
           {enableSelection && selectedIds.length > 0 && (
             <button
               onClick={() => onBulkDelete && onBulkDelete(selectedIds)}
@@ -3064,7 +3728,8 @@ const DataTable = ({
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col md:flex-row gap-3 md:items-center">
+          {customFilters}
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -3089,7 +3754,6 @@ const DataTable = ({
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
             <tr>
-              {/* CHECKBOX HEADER */}
               {enableSelection && (
                 <th className="px-4 py-3 w-10 text-center">
                   <div className="flex items-center justify-center">
@@ -3099,7 +3763,7 @@ const DataTable = ({
                       onChange={handleSelectAll}
                       checked={
                         paginatedData.length > 0 &&
-                        paginatedData.every((row) =>
+                        paginatedData.every((row: any) =>
                           selectedIds.includes(row.id),
                         )
                       }
@@ -3108,7 +3772,7 @@ const DataTable = ({
                 </th>
               )}
               <th className="px-6 py-3 w-10 text-center">#</th>
-              {columns.map((col) => (
+              {columns.map((col: any) => (
                 <th
                   key={col.key}
                   className={`px-6 py-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${col.className || ""}`}
@@ -3138,12 +3802,11 @@ const DataTable = ({
           </thead>
           <tbody className="divide-y divide-border dark:divide-darkmode-border">
             {paginatedData.length > 0 ? (
-              paginatedData.map((row, i) => (
+              paginatedData.map((row: any, i: number) => (
                 <tr
                   key={i}
                   className={`transition-colors ${selectedIds.includes(row.id) ? "bg-blue-50 dark:bg-blue-900/20" : "hover:bg-gray-50 dark:hover:bg-white/5"}`}
                 >
-                  {/* CHECKBOX ROW */}
                   {enableSelection && (
                     <td className="px-4 py-4 text-center">
                       <div className="flex items-center justify-center">
@@ -3159,7 +3822,7 @@ const DataTable = ({
                   <td className="px-6 py-4 text-center text-gray-400">
                     {(currentPage - 1) * rowsPerPage + i + 1}
                   </td>
-                  {columns.map((col) => (
+                  {columns.map((col: any) => (
                     <td
                       key={col.key}
                       className={`px-6 py-4 ${col.className || ""}`}
@@ -3213,6 +3876,9 @@ const DataTable = ({
             <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={500}>500</option>
+            <option value={1000}>1000</option>
           </select>
           <div className="flex rounded border border-border bg-white dark:bg-darkmode-body dark:border-darkmode-border">
             <button
@@ -8943,79 +9609,182 @@ try {
 <?php
 session_start();
 header('Content-Type: application/json');
-header('Cross-Origin-Opener-Policy: same-origin-allow-popups');
-header('Referrer-Policy: no-referrer-when-downgrade');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET');
 
-// Konfigurasi Email Admin (Hardcode untuk keamanan ganda atau ambil dari env jika server support)
-$ALLOWED_EMAIL = 'dev.mtsn1pandeglang@gmail.com';
+// Load Env Manual
+$ADMIN_EMAIL_ENV = getenv('ADMIN_EMAIL') ?: 'dev.mtsn1pandeglang@gmail.com';
 
-$action = $_GET['action'] ?? '';
+$dbPath = __DIR__ . '/../../database.db';
 
-if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $json = file_get_contents('php://input');
-    $data = json_decode($json, true);
-    $id_token = $data['credential'] ?? '';
+try {
+    $db = new SQLite3($dbPath);
 
-    if (!$id_token) {
-        http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Token tidak ditemukan']);
-        exit;
+    // 1. INIT TABLE USERS (Hapus kolom verification_token karena tidak dipakai lagi)
+    $db->exec("CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        name TEXT,
+        picture TEXT,
+        role TEXT DEFAULT 'user', -- super_admin, operator, user
+        status TEXT DEFAULT 'active', -- active, inactive
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
+    // 2. CEK SUPER ADMIN DARI ENV (Auto Seed)
+    $stmt = $db->prepare("SELECT id FROM users WHERE email = :email");
+    $stmt->bindValue(':email', $ADMIN_EMAIL_ENV, SQLITE3_TEXT);
+    if (!$stmt->execute()->fetchArray()) {
+        $ins = $db->prepare("INSERT INTO users (email, name, role, status) VALUES (:email, 'Super Admin', 'super_admin', 'active')");
+        $ins->bindValue(':email', $ADMIN_EMAIL_ENV, SQLITE3_TEXT);
+        $ins->execute();
     }
 
-    // Verifikasi Token langsung ke Google (Tanpa Library Berat)
-    $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $id_token;
-    $response = file_get_contents($url);
+    $action = $_GET['action'] ?? '';
 
-    if ($response) {
+    // === LOGIN ===
+    if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        $id_token = $data['credential'] ?? '';
+
+        if (!$id_token) throw new Exception('Token tidak ditemukan');
+
+        // Verifikasi ke Google
+        $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $id_token;
+        $response = @file_get_contents($url);
+
+        if (!$response) throw new Exception('Gagal koneksi ke Google.');
         $payload = json_decode($response, true);
 
-        // Cek Email & Verified Email
         if (isset($payload['email']) && $payload['email_verified'] == 'true') {
-            if ($payload['email'] === $ALLOWED_EMAIL) {
-                // Login Sukses
+            $email = $payload['email'];
+
+            // Cek User di Database
+            $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+            $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+            $user = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+
+            if ($user) {
+                // Update Data Terbaru Google
+                $upd = $db->prepare("UPDATE users SET name = :name, picture = :pic WHERE id = :id");
+                $upd->bindValue(':name', $payload['name'], SQLITE3_TEXT);
+                $upd->bindValue(':pic', $payload['picture'], SQLITE3_TEXT);
+                $upd->bindValue(':id', $user['id'], SQLITE3_INTEGER);
+                $upd->execute();
+
+                // Cek Status (Hanya Inactive yang ditolak)
+                if ($user['status'] === 'inactive') {
+                    throw new Exception('Akun Anda dinonaktifkan. Hubungi Administrator.');
+                }
+
+                // Set Session
                 $_SESSION['admin_logged_in'] = true;
-                $_SESSION['admin_email'] = $payload['email'];
-                $_SESSION['admin_name'] = $payload['name'];
-                $_SESSION['admin_picture'] = $payload['picture'];
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_name'] = $payload['name'];
+                $_SESSION['user_picture'] = $payload['picture'];
+                $_SESSION['user_role'] = $user['role'];
 
                 echo json_encode([
                     'status' => 'success',
                     'user' => [
                         'name' => $payload['name'],
-                        'email' => $payload['email'],
-                        'picture' => $payload['picture']
+                        'email' => $email,
+                        'picture' => $payload['picture'],
+                        'role' => $user['role']
                     ]
                 ]);
             } else {
-                http_response_code(403);
-                echo json_encode(['status' => 'error', 'message' => 'Akses ditolak. Email tidak terdaftar sebagai Admin.']);
+                echo json_encode(['status' => 'unregistered', 'message' => 'Email belum terdaftar.', 'email' => $email]);
             }
         } else {
-            http_response_code(401);
-            echo json_encode(['status' => 'error', 'message' => 'Token Google tidak valid.']);
+            throw new Exception('Token Google tidak valid.');
         }
-    } else {
-        http_response_code(500);
-        echo json_encode(['status' => 'error', 'message' => 'Gagal memverifikasi ke Google.']);
     }
-} elseif ($action === 'check') {
-    if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-        echo json_encode([
-            'status' => 'authenticated',
-            'user' => [
-                'name' => $_SESSION['admin_name'],
-                'email' => $_SESSION['admin_email'],
-                'picture' => $_SESSION['admin_picture']
-            ]
-        ]);
-    } else {
-        echo json_encode(['status' => 'guest']);
+
+    // === REGISTER (LANGSUNG AKTIF) ===
+    elseif ($action === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        $id_token = $data['credential'] ?? '';
+
+        if (!$id_token) throw new Exception('Token tidak ditemukan');
+
+        $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $id_token;
+        $response = @file_get_contents($url);
+        $payload = json_decode($response, true);
+
+        if (!isset($payload['email'])) throw new Exception('Token Invalid');
+
+        $email = $payload['email'];
+        $name = $payload['name'];
+        $picture = $payload['picture'];
+
+        // Cek double register
+        $cek = $db->prepare("SELECT id FROM users WHERE email = :email");
+        $cek->bindValue(':email', $email, SQLITE3_TEXT);
+        if ($cek->execute()->fetchArray()) {
+            throw new Exception("Email sudah terdaftar. Silakan login.");
+        }
+
+        // Simpan User Baru (Status Langsung Active)
+        $stmt = $db->prepare("INSERT INTO users (email, name, picture, role, status) VALUES (:email, :name, :pic, 'user', 'active')");
+        $stmt->bindValue(':email', $email, SQLITE3_TEXT);
+        $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+        $stmt->bindValue(':pic', $picture, SQLITE3_TEXT);
+
+        if ($stmt->execute()) {
+            // AUTO LOGIN SETELAH REGISTER
+            $newId = $db->lastInsertRowID();
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['user_id'] = $newId;
+            $_SESSION['user_email'] = $email;
+            $_SESSION['user_name'] = $name;
+            $_SESSION['user_picture'] = $picture;
+            $_SESSION['user_role'] = 'user'; // Default Role
+
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Registrasi berhasil! Selamat datang.',
+                'user' => [
+                    'name' => $name,
+                    'email' => $email,
+                    'picture' => $picture,
+                    'role' => 'user'
+                ]
+            ]);
+        } else {
+            throw new Exception('Gagal mendaftar.');
+        }
     }
-} elseif ($action === 'logout') {
-    session_destroy();
-    echo json_encode(['status' => 'success']);
+
+    // === CEK SESSION ===
+    elseif ($action === 'check') {
+        if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+            $role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'user';
+            echo json_encode([
+                'status' => 'authenticated',
+                'user' => [
+                    'name' => $_SESSION['user_name'] ?? 'User',
+                    'email' => $_SESSION['user_email'] ?? '',
+                    'picture' => $_SESSION['user_picture'] ?? '',
+                    'role' => $role
+                ]
+            ]);
+        } else {
+            echo json_encode(['status' => 'guest']);
+        }
+    }
+
+    // === LOGOUT ===
+    elseif ($action === 'logout') {
+        session_destroy();
+        echo json_encode(['status' => 'success']);
+    }
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
 
 ```
@@ -9029,10 +9798,10 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 session_start();
 header('Content-Type: application/json');
 
-// 1. Cek Login Admin
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+// Cek Login & Role Super Admin
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['user_role'] !== 'super_admin') {
     http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    echo json_encode(['status' => 'error', 'message' => 'Akses Ditolak: Hanya Super Admin yang bisa menghapus data.']);
     exit;
 }
 
@@ -9226,11 +9995,17 @@ session_start();
 header('Content-Type: application/json');
 
 // 1. Cek Login Admin
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+// Cek Login & Role (Super Admin OR Operator)
+// User biasa TIDAK BOLEH import
+if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_admin' && $_SESSION['user_role'] !== 'operator')) {
     http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    echo json_encode(['status' => 'error', 'message' => 'Akses Ditolak: User biasa tidak bisa melakukan import.']);
     exit;
 }
+
+// Konfigurasi untuk handle file besar
+set_time_limit(0);
+ini_set('memory_limit', '512M');
 
 $dbPath = __DIR__ . '/../../database.db';
 
@@ -9249,17 +10024,12 @@ try {
         $output = fopen('php://output', 'w');
 
         if ($type === 'feedback') {
-            // Header yang dibutuhkan untuk Feedback
             fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
-            // Contoh Data
-            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan sangat memuaskan, terima kasih.', '2024-01-01 10:00:00', '192.168.1.1']);
+            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan sangat memuaskan.', '2024-01-01 10:00:00', '192.168.1.1']);
         } elseif ($type === 'survey') {
-            // Header yang dibutuhkan untuk Survey
             fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
-            // Contoh Data
-            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Tingkatkan terus kualitasnya.', '2024-01-02 14:30:00', '192.168.1.2']);
+            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Pertahankan kualitas.', '2024-01-02 14:30:00', '192.168.1.2']);
         }
-
         fclose($output);
         exit;
     }
@@ -9272,27 +10042,57 @@ try {
 
         $type = $_POST['type'] ?? '';
         $fileTmpPath = $_FILES['file']['tmp_name'];
-        $handle = fopen($fileTmpPath, "r");
 
+        // Validasi Ekstensi
+        $fileExt = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+        if ($fileExt !== 'csv') {
+            throw new Exception("Format file harus .csv");
+        }
+
+        $handle = fopen($fileTmpPath, "r");
         if ($handle === FALSE) throw new Exception("Gagal membaca file.");
 
-        // Baca Header
+        // --- VALIDASI HEADER CSV (FITUR BARU) ---
+        // Baca baris pertama (Header)
         $headers = fgetcsv($handle, 1000, ",");
-        $successCount = 0;
 
+        if (!$headers) throw new Exception("File CSV kosong atau tidak terbaca.");
+
+        // Bersihkan Header (Trim, Lowercase, Hapus BOM/Karakter aneh dari Excel)
+        $cleanHeaders = array_map(function ($h) {
+            // Menghapus karakter non-printable (BOM utf-8 sering muncul di awal file Excel)
+            $h = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h);
+            return strtolower(trim($h));
+        }, $headers);
+
+        // Logika Pengecekan Kecocokan Kolom
+        if ($type === 'feedback') {
+            // Pastikan ada kolom 'rating' dan 'message' (Ciri khas Feedback)
+            if (!in_array('rating', $cleanHeaders) || !in_array('message', $cleanHeaders)) {
+                fclose($handle);
+                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Ulasan', tetapi file CSV ini tampaknya bukan template Ulasan (Kolom 'rating'/'message' tidak ditemukan).");
+            }
+        } elseif ($type === 'survey') {
+            // Pastikan ada kolom 'score_zi' dan 'respondent_role' (Ciri khas Survey)
+            if (!in_array('score_zi', $cleanHeaders) || !in_array('respondent_role', $cleanHeaders)) {
+                fclose($handle);
+                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Survei', tetapi file CSV ini tampaknya bukan template Survei (Kolom 'score_zi'/'respondent_role' tidak ditemukan).");
+            }
+        } else {
+            throw new Exception("Tipe import tidak dikenal.");
+        }
+        // --- AKHIR VALIDASI ---
+
+        $successCount = 0;
         $db->exec('BEGIN TRANSACTION');
 
         try {
             if ($type === 'feedback') {
                 $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
 
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    // Mapping data berdasarkan indeks header (Asumsi urutan sesuai template)
-                    // Jika user mengubah urutan, logika ini perlu mapping yang lebih kompleks.
-                    // Kita asumsikan user memakai template kita.
-
-                    // Validasi minimal
-                    if (count($data) < 3) continue;
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    // Validasi jumlah kolom minimal agar tidak error index offset
+                    if (count($data) < 5) continue;
 
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':rating', (int)$data[1], SQLITE3_INTEGER);
@@ -9305,8 +10105,8 @@ try {
             } elseif ($type === 'survey') {
                 $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
 
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    if (count($data) < 6) continue;
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    if (count($data) < 8) continue;
 
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':role', $data[1] ?: 'Umum', SQLITE3_TEXT);
@@ -9319,13 +10119,11 @@ try {
                     $stmt->execute();
                     $successCount++;
                 }
-            } else {
-                throw new Exception("Tipe import tidak dikenal.");
             }
 
             $db->exec('COMMIT');
             fclose($handle);
-            echo json_encode(['status' => 'success', 'message' => "Berhasil mengimport $successCount data."]);
+            echo json_encode(['status' => 'success', 'message' => "Validasi Sukses! Berhasil mengimport $successCount data."]);
         } catch (Exception $ex) {
             $db->exec('ROLLBACK');
             throw $ex;
@@ -9393,6 +10191,21 @@ class PDF extends FPDF
 {
     var $widths;
     var $aligns;
+    var $tableHeaderCallback = null;
+    var $isPrintingTable = false;
+
+    // --- PERBAIKAN: Getter & Setter untuk properti Protected ---
+    function setPageBreakTrigger($val)
+    {
+        $this->PageBreakTrigger = $val;
+    }
+
+    function getPageBreakTrigger()
+    {
+        return $this->PageBreakTrigger;
+    }
+    // -----------------------------------------------------------
+
     function SetWidths($w)
     {
         $this->widths = $w;
@@ -9400,6 +10213,11 @@ class PDF extends FPDF
     function SetAligns($a)
     {
         $this->aligns = $a;
+    }
+
+    function SetTableHeaderCallback($callback)
+    {
+        $this->tableHeaderCallback = $callback;
     }
 
     function ImageRemote($url, $x, $y, $w, $h)
@@ -9440,16 +10258,12 @@ class PDF extends FPDF
         if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
 
         $this->SetY(12);
-
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
-
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
-
         $this->SetFont('Arial', 'B', 14);
         $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
-
         $this->SetFont('Arial', '', 9);
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
@@ -9489,8 +10303,15 @@ class PDF extends FPDF
 
     function CheckPageBreak($h)
     {
-        if ($this->GetY() + $h > $this->PageBreakTrigger) $this->AddPage($this->CurOrientation);
+        if ($this->GetY() + $h > $this->PageBreakTrigger) {
+            $this->AddPage($this->CurOrientation);
+            // Header Berulang
+            if ($this->isPrintingTable && is_callable($this->tableHeaderCallback)) {
+                call_user_func($this->tableHeaderCallback);
+            }
+        }
     }
+
     function NbLines($w, $txt)
     {
         $cw = &$this->CurrentFont['cw'];
@@ -9535,6 +10356,12 @@ try {
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->SetMargins(10, 10, 10);
+    $pdf->SetAutoPageBreak(false); // Matikan auto page break
+
+    // PERBAIKAN: Gunakan fungsi setter yang kita buat di class PDF
+    // 297 (Tinggi A4) - 20 (Margin Bawah) = 277
+    $pdf->setPageBreakTrigger(277);
+
     $pdf->AddPage();
 
     // Queries
@@ -9586,7 +10413,7 @@ try {
     $pdf->Ln(5);
 
     // ==========================================
-    // TABEL 1: RINGKASAN TRAFIK (Kiri) & QR (Kanan)
+    // TABEL 1: RINGKASAN TRAFIK
     // ==========================================
 
     $startX = 10;
@@ -9599,7 +10426,6 @@ try {
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell($wTable1, $rowH, ' I. RINGKASAN TRAFIK WEBSITE', 1, 0, 'L', true);
 
-    // QR Code Container
     $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
@@ -9607,7 +10433,6 @@ try {
 
     $pdf->Ln($rowH);
 
-    // Data Tabel 1
     $wLabel = 65;
     $wValue = 90;
     $pdf->SetFont('Arial', '', 9);
@@ -9615,81 +10440,68 @@ try {
 
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 1, 'L');
-
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung', 1, 1, 'L');
-
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
-
     $pdf->Ln(5);
 
-    // ==========================================
-    // TABEL 2: KUALITAS PELAYANAN (DIPISAH: 6 Baris Total)
-    // ==========================================
-
-    // Baris 1: Header
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
-
-    // Lebar Kolom
     $wLabelFull = 70;
     $wValueFull = 120;
-
-    // Baris 2: Jumlah Responden (Sendiri)
-    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
-    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
-
-    // Baris 3: Jumlah Ulasan (Sendiri)
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
-
-    // Baris 4: Rincian Indeks (Split 3 Kolom)
+    $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
     $wSub = 190 / 3;
     $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
-
-    // Baris 5: Rata-rata Rating Ulasan
-    $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
-    $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
-
-    // Baris 6: Indeks Kepuasan Masy (IKM)
     $pdf->SetFont('Arial', 'B', 9);
-    $pdf->SetFillColor(240, 240, 240); // Highlight background
+    $pdf->SetFillColor(240, 240, 240);
     $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
+    $pdf->Ln(5);
 
-    $pdf->Ln(8);
-
-    // === BAGIAN A & B (Tabel Detail) Tetap Sama ===
-
+    // ==========================================
     // A. DATA SURVEI
+    // ==========================================
+
+    $drawSurveyHeader = function () use ($pdf) {
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(0, 150, 100);
+        $pdf->SetTextColor(255);
+        $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
+        $pdf->Cell(40, 7, 'Nama Responden', 1, 0, 'L', true);
+        $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
+        $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
+        $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
+        $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
+        $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('Arial', '', 8);
+    };
+
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
 
-    $pdf->SetFont('Arial', 'B', 8);
-    $pdf->SetFillColor(0, 150, 100);
-    $pdf->SetTextColor(255);
-    $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
-    $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-    $pdf->Cell(40, 7, 'Responden', 1, 0, 'L', true);
-    $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
-    $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
-    $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
-    $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
-    $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
-
-    $pdf->SetTextColor(0);
-    $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
 
-    $resSurv = $db->query("SELECT * FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at DESC");
+    $drawSurveyHeader();
+    $pdf->SetTableHeaderCallback($drawSurveyHeader);
+    $pdf->isPrintingTable = true;
+
+    // Sorting: ASC
+    $resSurv = $db->query("SELECT * FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at ASC");
     $no = 1;
     $found1 = false;
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
@@ -9697,38 +10509,67 @@ try {
         $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
     }
+
+    $pdf->isPrintingTable = false;
+
     if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
 
+    // ==========================================
     // B. DATA ULASAN
+    // ==========================================
+
+    $drawFeedbackHeader = function () use ($pdf) {
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(255, 193, 7);
+        $pdf->SetTextColor(0);
+        $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
+        $pdf->Cell(45, 7, 'Nama Lengkap', 1, 0, 'L', true);
+        $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
+        $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
+        $pdf->SetFont('Arial', '', 8);
+    };
+
     $pdf->SetFont('Arial', 'B', 10);
+    // PERBAIKAN: Gunakan Getter
+    if ($pdf->GetY() + 15 > $pdf->getPageBreakTrigger()) $pdf->AddPage();
+
     $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
 
-    $pdf->SetFont('Arial', 'B', 8);
-    $pdf->SetFillColor(255, 193, 7);
-    $pdf->SetTextColor(0);
-    $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
-    $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-    $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
-    $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
-    $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
-
-    $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 45, 20, 82]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
 
-    $resFeed = $db->query("SELECT * FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at DESC");
+    $drawFeedbackHeader();
+    $pdf->SetTableHeaderCallback($drawFeedbackHeader);
+    $pdf->isPrintingTable = true;
+
+    // Sorting: ASC
+    $resFeed = $db->query("SELECT * FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at ASC");
     $no = 1;
     $found2 = false;
     while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) {
         $found2 = true;
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['name'] ?: 'Anonim', $row['rating'] . ' / 5', $row['message'] ?: '-']);
     }
+
+    $pdf->isPrintingTable = false;
+
     if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
 
-    // === TANDA TANGAN ===
-    $pdf->AddPage();
-    $pdf->Ln(5);
+    $pdf->Ln(8);
+
+    // ==========================================
+    // TANDA TANGAN (Smart Page Break)
+    // ==========================================
+
+    $signatureBlockHeight = 80;
+
+    // PERBAIKAN: Gunakan Getter
+    if ($pdf->GetY() + $signatureBlockHeight > $pdf->getPageBreakTrigger()) {
+        $pdf->AddPage();
+    }
+
     $path = '../images/instansi/';
     $tglCetak = getIndonesianDate();
     $qrSize = 18;
@@ -9975,6 +10816,85 @@ try {
             'has_submitted' => $hasSubmitted,
             'stats' => getSurveyStats($db)
         ]);
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+}
+
+```
+
+---
+
+### File: `./public/api/users.php`
+
+```
+<?php
+session_start();
+header('Content-Type: application/json');
+
+// Proteksi: Hanya Super Admin
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['user_role'] !== 'super_admin') {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'message' => 'Access Denied: Super Admin Only']);
+    exit;
+}
+
+$dbPath = __DIR__ . '/../../database.db';
+try {
+    $db = new SQLite3($dbPath);
+    $method = $_SERVER['REQUEST_METHOD'];
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+    // GET ALL USERS
+    if ($method === 'GET') {
+        $res = $db->query("SELECT id, email, name, picture, role, status, created_at FROM users ORDER BY created_at DESC");
+        $users = [];
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $users[] = $row;
+        }
+        echo json_encode(['status' => 'success', 'data' => $users]);
+    }
+
+    // UPDATE USER (Role & Status)
+    elseif ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'update') {
+        $id = (int)$data['id'];
+        $role = $data['role']; // super_admin, operator, user
+        $status = $data['status']; // active, inactive
+
+        // Mencegah Super Admin mengubah dirinya sendiri menjadi inactive/user biasa (Anti Lockout)
+        if ($id === $_SESSION['user_id'] && ($status !== 'active' || $role !== 'super_admin')) {
+            throw new Exception("Anda tidak bisa menurunkan hak akses atau menonaktifkan akun sendiri.");
+        }
+
+        $stmt = $db->prepare("UPDATE users SET role = :role, status = :status WHERE id = :id");
+        $stmt->bindValue(':role', $role, SQLITE3_TEXT);
+        $stmt->bindValue(':status', $status, SQLITE3_TEXT);
+        $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+
+        if ($stmt->execute()) {
+            echo json_encode(['status' => 'success', 'message' => 'User berhasil diperbarui']);
+        } else {
+            throw new Exception("Gagal update user.");
+        }
+    }
+
+    // DELETE USER
+    elseif ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'delete') {
+        $id = (int)$data['id'];
+
+        if ($id === $_SESSION['user_id']) {
+            throw new Exception("Tidak bisa menghapus akun sendiri.");
+        }
+
+        $stmt = $db->prepare("DELETE FROM users WHERE id = :id");
+        $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+        if ($stmt->execute()) {
+            echo json_encode(['status' => 'success', 'message' => 'User dihapus permanen.']);
+        } else {
+            throw new Exception("Gagal menghapus user.");
+        }
     }
 } catch (Exception $e) {
     http_response_code(500);
