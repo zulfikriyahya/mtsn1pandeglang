@@ -43,15 +43,25 @@ function formatFullTime($timestamp)
     return getIndonesianDate($timestamp) . ' ' . date('H:i', strtotime($timestamp)) . ' WIB';
 }
 
-// 6. PDF Class (DIMODIFIKASI UNTUK FITUR HEADER BERULANG)
+// 6. PDF Class
 class PDF extends FPDF
 {
     var $widths;
     var $aligns;
-
-    // --- FITUR BARU: Variable untuk menyimpan fungsi header ---
     var $tableHeaderCallback = null;
     var $isPrintingTable = false;
+
+    // --- PERBAIKAN: Getter & Setter untuk properti Protected ---
+    function setPageBreakTrigger($val)
+    {
+        $this->PageBreakTrigger = $val;
+    }
+
+    function getPageBreakTrigger()
+    {
+        return $this->PageBreakTrigger;
+    }
+    // -----------------------------------------------------------
 
     function SetWidths($w)
     {
@@ -62,7 +72,6 @@ class PDF extends FPDF
         $this->aligns = $a;
     }
 
-    // --- FITUR BARU: Setter untuk Callback Header ---
     function SetTableHeaderCallback($callback)
     {
         $this->tableHeaderCallback = $callback;
@@ -106,16 +115,12 @@ class PDF extends FPDF
         if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
 
         $this->SetY(12);
-
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
-
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
-
         $this->SetFont('Arial', 'B', 14);
         $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
-
         $this->SetFont('Arial', '', 9);
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
@@ -153,13 +158,11 @@ class PDF extends FPDF
         $this->Ln($h);
     }
 
-    // --- FITUR BARU: Cek Page Break & Cetak Header Ulang ---
     function CheckPageBreak($h)
     {
         if ($this->GetY() + $h > $this->PageBreakTrigger) {
             $this->AddPage($this->CurOrientation);
-
-            // Jika sedang mencetak tabel dan callback ada, panggil callback untuk gambar header lagi
+            // Header Berulang
             if ($this->isPrintingTable && is_callable($this->tableHeaderCallback)) {
                 call_user_func($this->tableHeaderCallback);
             }
@@ -210,8 +213,11 @@ try {
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->SetMargins(10, 10, 10);
-    $pdf->SetAutoPageBreak(false); // Matikan auto page break bawaan, kita handle di CheckPageBreak
-    $pdf->PageBreakTrigger = 297 - 20; // Trigger margin bottom manual (A4 height - 20mm)
+    $pdf->SetAutoPageBreak(false); // Matikan auto page break
+
+    // PERBAIKAN: Gunakan fungsi setter yang kita buat di class PDF
+    // 297 (Tinggi A4) - 20 (Margin Bawah) = 277
+    $pdf->setPageBreakTrigger(277);
 
     $pdf->AddPage();
 
@@ -219,12 +225,13 @@ try {
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
     $y = $year;
 
-    // Data Counts & Indeks (Kode Asli Anda)
+    // Data Counts
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
     $feedbackCount = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
+    // Hitung Indeks
     $indices = $db->querySingle("SELECT 
         AVG(score_zi) as zi, 
         AVG(score_service) as service, 
@@ -263,9 +270,8 @@ try {
     $pdf->Ln(5);
 
     // ==========================================
-    // TABEL 1: RINGKASAN
+    // TABEL 1: RINGKASAN TRAFIK
     // ==========================================
-    // ... (Kode Tabel 1 & 2 Tetap Sama, tidak berubah) ...
 
     $startX = 10;
     $startY = $pdf->GetY();
@@ -327,10 +333,9 @@ try {
     $pdf->Ln(8);
 
     // ==========================================
-    // A. DATA SURVEI (MODIFIED: Dengan Header Berulang)
+    // A. DATA SURVEI
     // ==========================================
 
-    // 1. Definisikan Fungsi Header Tabel A (Closures)
     $drawSurveyHeader = function () use ($pdf) {
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetFillColor(0, 150, 100);
@@ -343,24 +348,21 @@ try {
         $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
         $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
         $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
-        $pdf->SetTextColor(0); // Reset warna text
+        $pdf->SetTextColor(0);
         $pdf->SetFont('Arial', '', 8);
     };
 
     $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
+    $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN (Terlama -> Terbaru)', 0, 1, 'L');
 
     $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
 
-    // 2. Gambar Header Pertama Kali
     $drawSurveyHeader();
-
-    // 3. Registrasi Callback & Aktifkan Flag
     $pdf->SetTableHeaderCallback($drawSurveyHeader);
     $pdf->isPrintingTable = true;
 
-    // 4. Loop Data
+    // Sorting: ASC
     $resSurv = $db->query("SELECT * FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at ASC");
     $no = 1;
     $found1 = false;
@@ -370,17 +372,15 @@ try {
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
     }
 
-    // 5. Matikan Flag Table
     $pdf->isPrintingTable = false;
 
     if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
 
     // ==========================================
-    // B. DATA ULASAN (MODIFIED: Dengan Header Berulang)
+    // B. DATA ULASAN
     // ==========================================
 
-    // 1. Definisikan Fungsi Header Tabel B
     $drawFeedbackHeader = function () use ($pdf) {
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetFillColor(255, 193, 7);
@@ -394,21 +394,19 @@ try {
     };
 
     $pdf->SetFont('Arial', 'B', 10);
-    // Cek jika judul tidak muat, pindah halaman
-    if ($pdf->GetY() + 15 > $pdf->PageBreakTrigger) $pdf->AddPage();
-    $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
+    // PERBAIKAN: Gunakan Getter
+    if ($pdf->GetY() + 15 > $pdf->getPageBreakTrigger()) $pdf->AddPage();
+
+    $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK (Terlama -> Terbaru)', 0, 1, 'L');
 
     $pdf->SetWidths([8, 35, 45, 20, 82]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
 
-    // 2. Gambar Header Pertama
     $drawFeedbackHeader();
-
-    // 3. Registrasi Callback
     $pdf->SetTableHeaderCallback($drawFeedbackHeader);
     $pdf->isPrintingTable = true;
 
-    // 4. Loop Data
+    // Sorting: ASC
     $resFeed = $db->query("SELECT * FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y' ORDER BY created_at ASC");
     $no = 1;
     $found2 = false;
@@ -417,7 +415,6 @@ try {
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['name'] ?: 'Anonim', $row['rating'] . ' / 5', $row['message'] ?: '-']);
     }
 
-    // 5. Matikan Flag
     $pdf->isPrintingTable = false;
 
     if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
@@ -425,24 +422,16 @@ try {
     $pdf->Ln(8);
 
     // ==========================================
-    // === TANDA TANGAN (FITUR BARU: SMART PAGE BREAK) ===
+    // TANDA TANGAN (Smart Page Break)
     // ==========================================
 
-    // Estimasi tinggi blok tanda tangan (Tanggal + Jabatan + TTE + Nama + Kamad)
-    // Sekitar 70-80mm aman.
     $signatureBlockHeight = 80;
 
-    // Cek sisa ruang halaman. Jika tidak cukup, paksa halaman baru.
-    // Logic: Posisi Y sekarang + Tinggi Signature > Batas Halaman
-    if ($pdf->GetY() + $signatureBlockHeight > $pdf->PageBreakTrigger) {
+    // PERBAIKAN: Gunakan Getter
+    if ($pdf->GetY() + $signatureBlockHeight > $pdf->getPageBreakTrigger()) {
         $pdf->AddPage();
-    } else {
-        // Jika muat di halaman ini, dan masih ada sisa ruang yang wajar, beri jarak sedikit.
-        // Jika mepet sekali, kode AddPage diatas sudah handle.
-        // $pdf->Ln(5); // Opsional
     }
 
-    // --- RENDER TANDA TANGAN (KODE ASLI ANDA) ---
     $path = '../images/instansi/';
     $tglCetak = getIndonesianDate();
     $qrSize = 18;
