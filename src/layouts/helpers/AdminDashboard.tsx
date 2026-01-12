@@ -26,6 +26,12 @@ import {
   FaFilter,
   FaCalendarAlt,
   FaUserEdit,
+  FaFileAlt,
+  FaImages,
+  FaVideo,
+  FaSyncAlt,
+  FaCloudUploadAlt,
+  FaHammer,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -72,6 +78,7 @@ interface UserManagementData {
   created_at: string;
 }
 
+// FORMAT TANGGAL
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -173,6 +180,19 @@ const AdminDashboard = () => {
 
   const [importModalOpen, setImportModalOpen] = useState(false);
 
+  // --- STATE CONTENT MANAGER ---
+  const [contentTab, setContentTab] = useState<"article" | "image" | "video">(
+    "article",
+  );
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [uploadConflict, setUploadConflict] = useState<{
+    isOpen: boolean;
+    file: File | null;
+    type: string;
+  }>({ isOpen: false, file: null, type: "" });
+  const [isRebuilding, setIsRebuilding] = useState(false);
+
   // State Filter Header (PDF)
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
@@ -233,7 +253,7 @@ const AdminDashboard = () => {
       /* @ts-ignore */
       window.google.accounts.id.initialize({
         client_id: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
-        callback: handleAuthResponse, // MENGGUNAKAN LOGIKA PINTAR
+        callback: handleAuthResponse,
         auto_select: false,
         ui_mode: "popup",
       });
@@ -256,11 +276,8 @@ const AdminDashboard = () => {
     if (!user && !loading) renderGoogleBtn();
   }, [isRegisterMode, user, loading]);
 
-  // === SMART AUTH RESPONSE ===
   const handleAuthResponse = async (response: any) => {
     setLoading(true);
-
-    // Coba Login dulu
     if (!isRegisterMode) {
       try {
         const res = await fetch("/api/auth.php?action=login", {
@@ -274,7 +291,6 @@ const AdminDashboard = () => {
           fetchStats();
           if (result.user.role === "super_admin") fetchUsers();
         } else if (result.status === "unregistered") {
-          // LOGIKA PINTAR: Tanya user, jika OK langsung daftar
           if (
             window.confirm(
               "Email ini belum terdaftar. Apakah Anda ingin mendaftar sekarang sebagai User baru?",
@@ -291,14 +307,11 @@ const AdminDashboard = () => {
         alert("Gagal menghubungi server login.");
       }
     } else {
-      // Jika user memang ada di mode "Register" sejak awal
       await doRegister(response.credential);
     }
-
     setLoading(false);
   };
 
-  // Helper function untuk register otomatis
   const doRegister = async (credential: string) => {
     try {
       const res = await fetch("/api/auth.php?action=register", {
@@ -308,7 +321,6 @@ const AdminDashboard = () => {
       const result = await res.json();
 
       if (result.status === "success") {
-        // Auto Login
         setUser(result.user);
         fetchStats();
         setIsRegisterMode(false);
@@ -351,6 +363,132 @@ const AdminDashboard = () => {
       const json = await res.json();
       if (json.status === "success") setUserList(json.data);
     } catch (e) {}
+  };
+
+  // --- CONTENT MANAGER FETCH ---
+  useEffect(() => {
+    if (activeTab === "content" && user) {
+      fetchFiles(contentTab);
+    }
+  }, [activeTab, contentTab, refreshTrigger, user]);
+
+  const fetchFiles = async (type: string) => {
+    try {
+      const res = await fetch(`/api/content.php?type=${type}`);
+      const json = await res.json();
+      if (json.status === "success") {
+        setFileList(json.data);
+      }
+    } catch (e) {
+      console.error("Gagal load files", e);
+    }
+  };
+
+  // --- CONTENT ACTIONS ---
+  const handleContentUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    behavior = "ask",
+  ) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("behavior", behavior); // ask, overwrite, rename
+
+    try {
+      const res = await fetch(
+        `/api/content.php?action=upload&type=${contentTab}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      const json = await res.json();
+
+      if (json.status === "conflict") {
+        // Show Conflict Modal
+        setUploadConflict({ isOpen: true, file, type: contentTab });
+      } else if (json.status === "success") {
+        setUploadConflict({ isOpen: false, file: null, type: "" });
+        setRefreshTrigger((prev) => prev + 1); // Refresh list
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "Upload Berhasil",
+          message: json.message,
+        });
+      } else {
+        throw new Error(json.message);
+      }
+    } catch (e: any) {
+      setStatusModal({
+        isOpen: true,
+        status: "error",
+        title: "Upload Gagal",
+        message: e.message || "Terjadi kesalahan upload.",
+      });
+    }
+    // Reset input
+    e.target.value = "";
+  };
+
+  const deleteContent = async (filename: string) => {
+    if (
+      !window.confirm(
+        `Yakin ingin menghapus ${filename}? Aksi ini tidak dapat dibatalkan.`,
+      )
+    )
+      return;
+
+    try {
+      const res = await fetch(
+        `/api/content.php?action=delete&type=${contentTab}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename }),
+        },
+      );
+      const json = await res.json();
+      if (json.status === "success") {
+        setRefreshTrigger((prev) => prev + 1);
+      } else {
+        alert(json.message);
+      }
+    } catch (e) {
+      alert("Gagal menghapus file.");
+    }
+  };
+
+  const triggerRebuild = async () => {
+    if (
+      !window.confirm(
+        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit.",
+      )
+    )
+      return;
+    setIsRebuilding(true);
+    try {
+      const res = await fetch(`/api/content.php?action=rebuild`, {
+        method: "POST",
+      });
+      const json = await res.json();
+      if (json.status === "success") {
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "Rebuild Dimulai",
+          message: json.message,
+        });
+      } else {
+        alert(json.message);
+      }
+    } catch (e) {
+      alert("Gagal menghubungi server.");
+    } finally {
+      setIsRebuilding(false);
+    }
   };
 
   useEffect(() => {
@@ -456,7 +594,6 @@ const AdminDashboard = () => {
   };
 
   const executeDelete = async () => {
-    // Handle User Delete via Generic Modal
     if (confirmModal.type === "user" && confirmModal.action) {
       confirmModal.action();
       setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -566,9 +703,8 @@ const AdminDashboard = () => {
     "November",
     "Desember",
   ];
-  const yearOptions = [0, 2024, 2025, 2026, 2027]; // 0 = Semua Tahun
+  const yearOptions = [0, 2024, 2025, 2026, 2027];
 
-  // Safe Role Check for UI
   const userRole = user.role || "user";
 
   return (
@@ -584,7 +720,6 @@ const AdminDashboard = () => {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="h5 mb-0 font-bold">{user.name}</h3>
-              {/* --- FIX APPLIED HERE: (user.role || "user") --- */}
               <span
                 className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${userRole === "super_admin" ? "bg-red-100 text-red-700" : userRole === "operator" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
               >
@@ -705,10 +840,10 @@ const AdminDashboard = () => {
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
                 { id: "overview", label: "Ringkasan" },
-                { id: "posts", label: "Artikel" },
+                { id: "content", label: "Manajemen Artikel & Media" },
+                { id: "posts", label: "Statistik Artikel" },
                 { id: "feedback", label: "Ulasan" },
                 { id: "surveys", label: "Survei" },
-                // Show Users tab ONLY for Super Admin
                 ...(userRole === "super_admin"
                   ? [{ id: "users", label: "Manajemen User" }]
                   : []),
@@ -816,7 +951,180 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* 2. USER MANAGEMENT (SUPER ADMIN ONLY) */}
+          {/* 2. CONTENT MANAGER (NEW) */}
+          {activeTab === "content" &&
+            (userRole === "operator" || userRole === "super_admin") && (
+              <div className="grid grid-cols-1 gap-6">
+                {/* Top Bar Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white dark:bg-darkmode-light p-4 rounded-xl border border-border dark:border-darkmode-border">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setContentTab("article")}
+                      className={`btn btn-sm ${contentTab === "article" ? "btn-primary" : "btn-outline-primary"}`}
+                    >
+                      <FaFileAlt className="mr-2" /> Artikel (.mdx)
+                    </button>
+                    <button
+                      onClick={() => setContentTab("image")}
+                      className={`btn btn-sm ${contentTab === "image" ? "btn-primary" : "btn-outline-primary"}`}
+                    >
+                      <FaImages className="mr-2" /> Gambar
+                    </button>
+                    <button
+                      onClick={() => setContentTab("video")}
+                      className={`btn btn-sm ${contentTab === "video" ? "btn-primary" : "btn-outline-primary"}`}
+                    >
+                      <FaVideo className="mr-2" /> Video
+                    </button>
+                  </div>
+
+                  <div className="flex gap-2 items-center">
+                    {contentTab === "article" && (
+                      <a
+                        href="/template.mdx"
+                        download
+                        className="text-sm text-primary hover:underline flex items-center gap-1 mr-2"
+                      >
+                        <FaDownload /> Unduh Template
+                      </a>
+                    )}
+
+                    <label className="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white border-none cursor-pointer flex items-center gap-2">
+                      <FaCloudUploadAlt /> Upload{" "}
+                      {contentTab === "article"
+                        ? "Artikel"
+                        : contentTab === "image"
+                          ? "Gambar"
+                          : "Video"}
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept={
+                          contentTab === "article"
+                            ? ".md,.mdx"
+                            : contentTab === "image"
+                              ? "image/*"
+                              : "video/*"
+                        }
+                        onChange={(e) => handleContentUpload(e)}
+                      />
+                    </label>
+
+                    {userRole === "super_admin" && (
+                      <button
+                        onClick={triggerRebuild}
+                        disabled={isRebuilding}
+                        className="btn btn-sm bg-purple-600 hover:bg-purple-700 text-white border-none flex items-center gap-2 disabled:opacity-50"
+                      >
+                        <FaHammer
+                          className={isRebuilding ? "animate-spin" : ""}
+                        />{" "}
+                        {isRebuilding ? "Building..." : "Rebuild Website"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* File List */}
+                <div className="bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-darkmode-border overflow-hidden">
+                  <div className="p-4 bg-gray-50 dark:bg-white/5 border-b border-border dark:border-darkmode-border flex justify-between items-center">
+                    <h3 className="font-bold flex items-center gap-2">
+                      File Manager: {contentTab.toUpperCase()}
+                      <span className="text-xs font-normal text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
+                        {fileList.length} files
+                      </span>
+                    </h3>
+                    <button
+                      onClick={() => setRefreshTrigger((prev) => prev + 1)}
+                      className="text-gray-500 hover:text-primary"
+                    >
+                      <FaSyncAlt />
+                    </button>
+                  </div>
+                  <div className="overflow-x-auto max-h-[500px]">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-gray-100 dark:bg-black/20 sticky top-0 z-10">
+                        <tr>
+                          <th className="px-4 py-3">Nama File</th>
+                          <th className="px-4 py-3">Ukuran</th>
+                          <th className="px-4 py-3">Tanggal Upload</th>
+                          <th className="px-4 py-3 text-right">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border dark:divide-darkmode-border">
+                        {fileList.length === 0 ? (
+                          <tr>
+                            <td
+                              colSpan={4}
+                              className="p-8 text-center text-gray-500"
+                            >
+                              Folder kosong.
+                            </td>
+                          </tr>
+                        ) : (
+                          fileList.map((file, idx) => (
+                            <tr
+                              key={idx}
+                              className="hover:bg-gray-50 dark:hover:bg-white/5"
+                            >
+                              <td className="px-4 py-3 font-medium flex items-center gap-2">
+                                {file.url ? (
+                                  <a
+                                    href={file.url}
+                                    target="_blank"
+                                    className="text-primary hover:underline truncate max-w-[200px] md:max-w-md block"
+                                    rel="noreferrer"
+                                  >
+                                    {file.name}{" "}
+                                    <FaExternalLinkAlt className="inline text-[10px] ml-1" />
+                                  </a>
+                                ) : (
+                                  <span className="truncate max-w-[200px] md:max-w-md block">
+                                    {file.name}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="px-4 py-3 text-gray-500">
+                                {file.size}
+                              </td>
+                              <td className="px-4 py-3 text-gray-500">
+                                {file.date}
+                              </td>
+                              <td className="px-4 py-3 text-right flex justify-end gap-2">
+                                {userRole === "super_admin" && (
+                                  <>
+                                    <a
+                                      href={
+                                        file.url ||
+                                        `/api/content.php?action=download&file=${file.name}`
+                                      } // Simplification for MVP
+                                      download={file.name}
+                                      className="p-2 text-green-600 hover:bg-green-50 rounded"
+                                      title="Unduh"
+                                    >
+                                      <FaDownload />
+                                    </a>
+                                    <button
+                                      onClick={() => deleteContent(file.name)}
+                                      className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                      title="Hapus"
+                                    >
+                                      <FaTrash />
+                                    </button>
+                                  </>
+                                )}
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* 3. USER MANAGEMENT (SUPER ADMIN ONLY) */}
           {activeTab === "users" && userRole === "super_admin" && (
             <div className="bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-darkmode-border overflow-hidden">
               <div className="p-6 border-b border-border dark:border-darkmode-border flex justify-between items-center">
@@ -901,7 +1209,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* 3. POSTS */}
+          {/* 4. POSTS (STATS) */}
           {activeTab === "posts" && (
             <DataTable
               title="Statistik Artikel Populer"
@@ -924,7 +1232,7 @@ const AdminDashboard = () => {
             />
           )}
 
-          {/* 4. FEEDBACK (DATA ULASAN) */}
+          {/* 5. FEEDBACK (DATA ULASAN) */}
           {activeTab === "feedback" && (
             <DataTable
               title="Data Ulasan Masuk"
@@ -1044,7 +1352,7 @@ const AdminDashboard = () => {
             />
           )}
 
-          {/* 5. SURVEY (DATA SURVEI) */}
+          {/* 6. SURVEY (DATA SURVEI) */}
           {activeTab === "surveys" && (
             <DataTable
               title="Data Survei Kepuasan"
@@ -1190,6 +1498,50 @@ const AdminDashboard = () => {
       )}
 
       {/* --- MODALS --- */}
+
+      {/* Conflict Modal */}
+      {uploadConflict.isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
+            <h3 className="text-lg font-bold mb-2">Konflik File</h3>
+            <p className="text-sm text-gray-500 mb-4">
+              File dengan nama yang sama sudah ada. Apa yang ingin Anda lakukan?
+            </p>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() =>
+                  handleContentUpload(
+                    { target: { files: [uploadConflict.file] } } as any,
+                    "overwrite",
+                  )
+                }
+                className="btn btn-primary w-full bg-red-600 border-red-600"
+              >
+                Timpa (Overwrite)
+              </button>
+              <button
+                onClick={() =>
+                  handleContentUpload(
+                    { target: { files: [uploadConflict.file] } } as any,
+                    "rename",
+                  )
+                }
+                className="btn btn-primary w-full"
+              >
+                Ganti Nama (Rename)
+              </button>
+              <button
+                onClick={() =>
+                  setUploadConflict({ isOpen: false, file: null, type: "" })
+                }
+                className="btn btn-outline-primary w-full"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Import Modal */}
       <ImportModal
