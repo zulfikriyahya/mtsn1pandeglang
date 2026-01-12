@@ -20,6 +20,9 @@ import {
   FaExclamationCircle, // Ikon Konfirmasi
   FaFileUpload, // Ikon Import (BARU)
   FaFileCsv,
+  FaCheckCircle, // Tambahkan ini
+  FaTimesCircle, // Tambahkan ini
+  FaSpinner, // Tambahkan ini (opsional, untuk loading icon)
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -869,24 +872,251 @@ const AdminDashboard = () => {
 
 // --- SUB COMPONENTS ---
 
-// 1. IMPORT MODAL (UPDATED WITH PROGRESS BAR)
+// // 1. IMPORT MODAL (UPDATED WITH PROGRESS BAR)
+// const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
+//   const [importType, setImportType] = useState<"feedback" | "survey">(
+//     "feedback",
+//   );
+//   const [file, setFile] = useState<File | null>(null);
+//   const [isUploading, setIsUploading] = useState(false);
+//   const [progress, setProgress] = useState(0); // State untuk progress bar
+//   const fileInputRef = useRef<HTMLInputElement>(null);
+
+//   // Reset state ketika modal dibuka/tutup
+//   useEffect(() => {
+//     if (isOpen) {
+//       setProgress(0);
+//       setFile(null);
+//       setIsUploading(false);
+//     }
+//   }, [isOpen]);
+
+//   if (!isOpen) return null;
+
+//   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     if (e.target.files && e.target.files[0]) {
+//       setFile(e.target.files[0]);
+//       setProgress(0);
+//     }
+//   };
+
+//   const handleUpload = () => {
+//     if (!file) return alert("Pilih file CSV terlebih dahulu.");
+
+//     setIsUploading(true);
+//     setProgress(0);
+
+//     const formData = new FormData();
+//     formData.append("file", file);
+//     formData.append("type", importType);
+
+//     const xhr = new XMLHttpRequest();
+
+//     // Event Listener untuk Progress Upload
+//     xhr.upload.addEventListener("progress", (event) => {
+//       if (event.lengthComputable) {
+//         const percentComplete = Math.round((event.loaded / event.total) * 100);
+//         setProgress(percentComplete);
+//       }
+//     });
+
+//     // Event Listener ketika selesai (Response dari Server)
+//     xhr.addEventListener("load", () => {
+//       setIsUploading(false);
+//       if (xhr.status >= 200 && xhr.status < 300) {
+//         try {
+//           const json = JSON.parse(xhr.responseText);
+//           if (json.status === "success") {
+//             alert(json.message);
+//             onSuccess();
+//           } else {
+//             alert(json.message || "Gagal mengupload file.");
+//           }
+//         } catch (e) {
+//           alert("Gagal memproses respons server.");
+//         }
+//       } else {
+//         alert("Terjadi kesalahan jaringan atau server.");
+//       }
+//     });
+
+//     // Event Listener jika Error
+//     xhr.addEventListener("error", () => {
+//       setIsUploading(false);
+//       alert("Terjadi kesalahan jaringan.");
+//     });
+
+//     xhr.open("POST", "/api/import.php?action=import");
+//     xhr.send(formData);
+//   };
+
+//   return (
+//     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+//       <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
+//         <div className="flex justify-between items-center mb-6">
+//           <h3 className="text-lg font-bold">Import Data CSV</h3>
+//           <button onClick={onClose} disabled={isUploading}>
+//             <FaTimes className="text-gray-400 hover:text-red-500" />
+//           </button>
+//         </div>
+
+//         {/* Pilihan Tipe Data */}
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-2">
+//             Pilih Tipe Data
+//           </label>
+//           <div className="flex gap-4">
+//             <label className="flex items-center gap-2 cursor-pointer">
+//               <input
+//                 type="radio"
+//                 name="importType"
+//                 value="feedback"
+//                 checked={importType === "feedback"}
+//                 onChange={() => setImportType("feedback")}
+//                 disabled={isUploading}
+//               />
+//               Data Ulasan
+//             </label>
+//             <label className="flex items-center gap-2 cursor-pointer">
+//               <input
+//                 type="radio"
+//                 name="importType"
+//                 value="survey"
+//                 checked={importType === "survey"}
+//                 onChange={() => setImportType("survey")}
+//                 disabled={isUploading}
+//               />
+//               Data Survei
+//             </label>
+//           </div>
+//         </div>
+
+//         {/* Area Upload */}
+//         <div className="mb-6">
+//           <label className="block text-sm font-medium mb-2">Upload File</label>
+//           <div
+//             className={`border-2 border-dashed border-gray-300 rounded-lg p-6 text-center transition-colors ${
+//               isUploading
+//                 ? "opacity-50 cursor-not-allowed"
+//                 : "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5"
+//             }`}
+//             onClick={() => !isUploading && fileInputRef.current?.click()}
+//           >
+//             <input
+//               type="file"
+//               accept=".csv"
+//               ref={fileInputRef}
+//               className="hidden"
+//               onChange={handleFileChange}
+//               disabled={isUploading}
+//             />
+//             {file ? (
+//               <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
+//                 <FaFileCsv size={24} />
+//                 <span className="truncate max-w-[200px]">{file.name}</span>
+//               </div>
+//             ) : (
+//               <div className="text-gray-500">
+//                 <FaFileUpload className="mx-auto mb-2 text-2xl" />
+//                 <p>Klik untuk memilih file CSV</p>
+//               </div>
+//             )}
+//           </div>
+
+//           <div className="mt-2 text-right">
+//             <a
+//               href={`/api/import.php?action=template&type=${importType}`}
+//               className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
+//             >
+//               <FaDownload /> Download Template CSV
+//             </a>
+//           </div>
+//         </div>
+
+//         {/* Progress Bar UI */}
+//         {isUploading && (
+//           <div className="mb-6 animate-fade-in">
+//             <div className="flex justify-between text-xs mb-1 text-gray-600 dark:text-gray-300">
+//               <span>Status Upload</span>
+//               <span>{progress}%</span>
+//             </div>
+//             <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
+//               <div
+//                 className="bg-primary h-2.5 rounded-full transition-all duration-300 ease-out"
+//                 style={{ width: `${progress}%` }}
+//               ></div>
+//             </div>
+//             <p className="text-xs text-center mt-2 text-gray-500 italic">
+//               {progress < 100
+//                 ? "Mengupload ke server..."
+//                 : "Sedang memproses & menyimpan ke database, mohon tunggu..."}
+//             </p>
+//           </div>
+//         )}
+
+//         {/* Tombol Aksi */}
+//         <div className="flex justify-end gap-2">
+//           <button
+//             onClick={onClose}
+//             className="btn btn-outline-primary btn-sm"
+//             disabled={isUploading}
+//           >
+//             Batal
+//           </button>
+//           <button
+//             onClick={handleUpload}
+//             className="btn btn-primary btn-sm disabled:opacity-70 disabled:cursor-not-allowed"
+//             disabled={!file || isUploading}
+//           >
+//             {isUploading ? "Sedang Proses..." : "Mulai Import"}
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// ==========================================
+// GANTI BAGIAN IMPORT MODAL DI BAWAH INI
+// ==========================================
+
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   const [importType, setImportType] = useState<"feedback" | "survey">(
     "feedback",
   );
   const [file, setFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [progress, setProgress] = useState(0); // State untuk progress bar
+
+  // State Logika Baru
+  const [uploadStatus, setUploadStatus] = useState<
+    "idle" | "uploading" | "success" | "error"
+  >("idle");
+  const [progress, setProgress] = useState(0);
+  const [resultMessage, setResultMessage] = useState("");
+  const [countdown, setCountdown] = useState(5);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Reset state ketika modal dibuka/tutup
+  // Reset state saat modal dibuka
   useEffect(() => {
     if (isOpen) {
+      setUploadStatus("idle");
       setProgress(0);
       setFile(null);
-      setIsUploading(false);
+      setResultMessage("");
+      setCountdown(5);
     }
   }, [isOpen]);
+
+  // Logika Countdown & Redirect
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (uploadStatus === "success" && countdown > 0) {
+      timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
+    } else if (uploadStatus === "success" && countdown === 0) {
+      window.location.reload(); // Redirect / Refresh halaman
+    }
+    return () => clearTimeout(timer);
+  }, [uploadStatus, countdown]);
 
   if (!isOpen) return null;
 
@@ -894,13 +1124,14 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
       setProgress(0);
+      setResultMessage(""); // Clear error msg jika ada
     }
   };
 
   const handleUpload = () => {
-    if (!file) return alert("Pilih file CSV terlebih dahulu.");
+    if (!file) return;
 
-    setIsUploading(true);
+    setUploadStatus("uploading");
     setProgress(0);
 
     const formData = new FormData();
@@ -909,7 +1140,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
 
     const xhr = new XMLHttpRequest();
 
-    // Event Listener untuk Progress Upload
+    // 1. Progress Event
     xhr.upload.addEventListener("progress", (event) => {
       if (event.lengthComputable) {
         const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -917,30 +1148,32 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
       }
     });
 
-    // Event Listener ketika selesai (Response dari Server)
+    // 2. Load Event (Selesai)
     xhr.addEventListener("load", () => {
-      setIsUploading(false);
       if (xhr.status >= 200 && xhr.status < 300) {
         try {
           const json = JSON.parse(xhr.responseText);
           if (json.status === "success") {
-            alert(json.message);
-            onSuccess();
+            setUploadStatus("success");
+            setResultMessage(json.message);
           } else {
-            alert(json.message || "Gagal mengupload file.");
+            setUploadStatus("error");
+            setResultMessage(json.message || "Gagal mengupload file.");
           }
         } catch (e) {
-          alert("Gagal memproses respons server.");
+          setUploadStatus("error");
+          setResultMessage("Format respon server tidak valid.");
         }
       } else {
-        alert("Terjadi kesalahan jaringan atau server.");
+        setUploadStatus("error");
+        setResultMessage(`Terjadi kesalahan server (Code: ${xhr.status}).`);
       }
     });
 
-    // Event Listener jika Error
+    // 3. Error Event (Jaringan)
     xhr.addEventListener("error", () => {
-      setIsUploading(false);
-      alert("Terjadi kesalahan jaringan.");
+      setUploadStatus("error");
+      setResultMessage("Terjadi kesalahan jaringan.");
     });
 
     xhr.open("POST", "/api/import.php?action=import");
@@ -949,125 +1182,197 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-bold">Import Data CSV</h3>
-          <button onClick={onClose} disabled={isUploading}>
-            <FaTimes className="text-gray-400 hover:text-red-500" />
-          </button>
-        </div>
-
-        {/* Pilihan Tipe Data */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">
-            Pilih Tipe Data
-          </label>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="importType"
-                value="feedback"
-                checked={importType === "feedback"}
-                onChange={() => setImportType("feedback")}
-                disabled={isUploading}
-              />
-              Data Ulasan
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="importType"
-                value="survey"
-                checked={importType === "survey"}
-                onChange={() => setImportType("survey")}
-                disabled={isUploading}
-              />
-              Data Survei
-            </label>
-          </div>
-        </div>
-
-        {/* Area Upload */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-2">Upload File</label>
-          <div
-            className={`border-2 border-dashed border-gray-300 rounded-lg p-6 text-center transition-colors ${
-              isUploading
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5"
-            }`}
-            onClick={() => !isUploading && fileInputRef.current?.click()}
-          >
-            <input
-              type="file"
-              accept=".csv"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={handleFileChange}
-              disabled={isUploading}
-            />
-            {file ? (
-              <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
-                <FaFileCsv size={24} />
-                <span className="truncate max-w-[200px]">{file.name}</span>
-              </div>
-            ) : (
-              <div className="text-gray-500">
-                <FaFileUpload className="mx-auto mb-2 text-2xl" />
-                <p>Klik untuk memilih file CSV</p>
-              </div>
-            )}
-          </div>
-
-          <div className="mt-2 text-right">
-            <a
-              href={`/api/import.php?action=template&type=${importType}`}
-              className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
-            >
-              <FaDownload /> Download Template CSV
-            </a>
-          </div>
-        </div>
-
-        {/* Progress Bar UI */}
-        {isUploading && (
-          <div className="mb-6 animate-fade-in">
-            <div className="flex justify-between text-xs mb-1 text-gray-600 dark:text-gray-300">
-              <span>Status Upload</span>
-              <span>{progress}%</span>
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transition-all duration-300">
+        {/* === TAMPILAN 1: FORM UPLOAD (IDLE) === */}
+        {uploadStatus === "idle" && (
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold">Import Data CSV</h3>
+              <button onClick={onClose}>
+                <FaTimes className="text-gray-400 hover:text-red-500" />
+              </button>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Pilih Tipe Data
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="importType"
+                    value="feedback"
+                    checked={importType === "feedback"}
+                    onChange={() => setImportType("feedback")}
+                  />
+                  Data Ulasan
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="importType"
+                    value="survey"
+                    checked={importType === "survey"}
+                    onChange={() => setImportType("survey")}
+                  />
+                  Data Survei
+                </label>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">
+                Upload File
+              </label>
               <div
-                className="bg-primary h-2.5 rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${progress}%` }}
-              ></div>
+                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  type="file"
+                  accept=".csv"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                {file ? (
+                  <div className="flex flex-col items-center justify-center gap-2 text-green-600 font-medium animate-fade-in">
+                    <FaFileCsv size={32} />
+                    <span className="truncate max-w-[200px] text-sm">
+                      {file.name}
+                    </span>
+                    <span className="text-xs text-gray-400 font-normal">
+                      Klik untuk ganti file
+                    </span>
+                  </div>
+                ) : (
+                  <div className="text-gray-500 group-hover:text-primary transition-colors">
+                    <FaFileUpload className="mx-auto mb-2 text-2xl" />
+                    <p>Klik untuk memilih file CSV</p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-2 text-right">
+                <a
+                  href={`/api/import.php?action=template&type=${importType}`}
+                  className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
+                >
+                  <FaDownload /> Download Template CSV
+                </a>
+              </div>
             </div>
-            <p className="text-xs text-center mt-2 text-gray-500 italic">
-              {progress < 100
-                ? "Mengupload ke server..."
-                : "Sedang memproses & menyimpan ke database, mohon tunggu..."}
-            </p>
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={onClose}
+                className="btn btn-outline-primary btn-sm"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleUpload}
+                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!file}
+              >
+                Mulai Import
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Tombol Aksi */}
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="btn btn-outline-primary btn-sm"
-            disabled={isUploading}
-          >
-            Batal
-          </button>
-          <button
-            onClick={handleUpload}
-            className="btn btn-primary btn-sm disabled:opacity-70 disabled:cursor-not-allowed"
-            disabled={!file || isUploading}
-          >
-            {isUploading ? "Sedang Proses..." : "Mulai Import"}
-          </button>
-        </div>
+        {/* === TAMPILAN 2: PROGRESS UPLOAD === */}
+        {uploadStatus === "uploading" && (
+          <div className="p-8 text-center animate-fade-in">
+            <div className="mb-4">
+              <FaSpinner className="mx-auto text-4xl text-primary animate-spin" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Mengupload Data...</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Mohon jangan tutup halaman ini.
+            </p>
+
+            <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden relative">
+              <div
+                className="bg-primary h-4 rounded-full transition-all duration-300 ease-out flex items-center justify-center"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between text-xs mt-2 font-mono text-gray-600 dark:text-gray-400">
+              <span>{progress}%</span>
+              <span>100%</span>
+            </div>
+            {progress === 100 && (
+              <p className="text-xs text-orange-500 mt-4 animate-pulse">
+                Validasi & Insert Database sedang berjalan...
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* === TAMPILAN 3: SUKSES === */}
+        {uploadStatus === "success" && (
+          <div className="p-8 text-center animate-fade-in">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+              <FaCheckCircle className="text-5xl text-green-600 dark:text-green-400 animate-bounce" />
+            </div>
+            <h3 className="text-xl font-bold text-green-700 dark:text-green-400 mb-2">
+              Import Berhasil!
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              {resultMessage}
+            </p>
+
+            <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-darkmode-border">
+              <p className="text-sm text-gray-500">
+                Halaman akan dimuat ulang dalam{" "}
+                <span className="font-bold text-dark dark:text-white">
+                  {countdown}
+                </span>{" "}
+                detik.
+              </p>
+            </div>
+
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-6 btn btn-primary w-full"
+            >
+              Muat Ulang Sekarang
+            </button>
+          </div>
+        )}
+
+        {/* === TAMPILAN 4: ERROR === */}
+        {uploadStatus === "error" && (
+          <div className="p-8 text-center animate-fade-in">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+              <FaTimesCircle className="text-5xl text-red-600 dark:text-red-400" />
+            </div>
+            <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
+              Import Gagal
+            </h3>
+            <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-lg border border-red-100 dark:border-red-900/30 mb-6 overflow-y-auto max-h-40">
+              <p className="text-sm text-red-600 dark:text-red-300 break-words">
+                {resultMessage}
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={onClose}
+                className="btn btn-outline-primary w-full"
+              >
+                Tutup
+              </button>
+              <button
+                onClick={() => setUploadStatus("idle")}
+                className="btn btn-primary w-full"
+              >
+                Coba Lagi
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
