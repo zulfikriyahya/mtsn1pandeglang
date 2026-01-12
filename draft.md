@@ -55,6 +55,7 @@
     "meta_description": "Petugas Pengelola Administrasi Belanja Pegawai (PPABP), Customer Service Officer (CSO), Web Developer, System Administrator di MTs Negeri 1 Pandeglang"
   }
 }
+
 ```
 
 ---
@@ -251,6 +252,7 @@
     }
   ]
 }
+
 ```
 
 ---
@@ -282,6 +284,7 @@
     }
   ]
 }
+
 ```
 
 ---
@@ -333,6 +336,7 @@
     }
   }
 }
+
 ```
 
 ---
@@ -484,6 +488,7 @@ export const collections = {
   ctaSection: ctaSectionCollection,
   testimonialSection: testimonialSectionCollection,
 };
+
 ```
 
 ---
@@ -526,6 +531,7 @@ Menciptakan budaya keunggulan tanpa henti. Kami memfasilitasi setiap potensi uni
 Melalui dedikasi tenaga pendidik profesional dan transformasi digital yang berkelanjutan, kami berkomitmen mencetak pemimpin masa depan yang paripurna.
 
 > _Mandiri, Takwa, Peduli Lingkungan, Prestasi_
+
 ```
 
 ---
@@ -555,6 +561,7 @@ Dedicated to orchestrating digital transformation within the educational sector.
 Beyond the code, I am a problem solver committed to building efficient, scalable, and user-centric applications. When not architecting the next system update, you can find me exploring emerging tech trends or enjoying the serene atmosphere of Pandeglang.
 
 _Let's innovate and build the future of education together._
+
 ```
 
 ---
@@ -569,6 +576,7 @@ description: "Penulis Artikel MTs Negeri 1 Pandeglang"
 image: ""
 draft: false
 ---
+
 ```
 
 ---
@@ -686,6 +694,7 @@ _Bagaimana kesan Bapak/Ibu mengenai program ini? Apakah ada profesi tertentu yan
 - **Editor:** Tim Humas MTsN 1 Pandeglang
 - **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
 - **Instagram** [@mtsn1_pandeglang](https://www.instagram.com/reel/DTRj60-kZvW/?igsh=MWkxZzFrejYzOXJzbA==)
+
 ```
 
 ---
@@ -1095,6 +1104,7 @@ Website ini sudah sangat baik dan tidak perlu perubahan besar. Focus pada konten
 - **Penulis:** Yahya Zulfikri
 - **Editor:** Tim Humas MTsN 1 Pandeglang
 - **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
+
 ````
 
 ---
@@ -1486,6 +1496,7 @@ Semoga Allah SWT membalas semua kebaikan yang telah diberikan dengan pahala yang
 - **Penulis:** Yahya Zulfikri
 - **Editor:** Tim Humas MTsN 1 Pandeglang
 - **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
+
 ```
 
 ---
@@ -1560,6 +1571,7 @@ Peresmian gedung PTSP MTsN 1 Pandeglang ini diharapkan menjadi inspirasi dan con
 - **Penulis:** Yahya Zulfikri
 - **Editor:** Tim Humas MTsN 1 Pandeglang
 - **Whatsapp:** [WhatsApp PTSP](https://wa.me/62895351856267)
+
 ```
 
 ---
@@ -1574,6 +1586,7 @@ description: "Artikel MTs Negeri 1 Pandeglang"
 image: ""
 draft: false
 ---
+
 ```
 
 ---
@@ -1588,6 +1601,7 @@ meta_title: "Kontak MTs Negeri 1 Pandeglang"
 draft: false
 image: ""
 ---
+
 ```
 
 ---
@@ -1696,6 +1710,7 @@ features:
       label: "Lihat Ekstrakurikuler"
       link: "/ekstrakurikuler"
 ---
+
 ```
 
 ---
@@ -1768,6 +1783,7 @@ Kami terus mendorong siswa dan guru untuk melahirkan inovasi ramah lingkungan, a
 > "Bumi ini tidak kita warisi dari nenek moyang, melainkan kita pinjam dari anak cucu kita. Melalui Adiwiyata, MTs Negeri 1 Pandeglang menyiapkan generasi yang tidak hanya cerdas otaknya, tetapi juga hijau hatinya untuk merawat bumi."
 >
 > — **Tim Adiwiyata MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -1837,6 +1853,7 @@ MTs Negeri 1 Pandeglang telah menerima sertifikat akreditasi dari Badan Akredita
 />
 
 > "Akreditasi MTs Negeri 1 Pandeglang adalah bukti nyata komitmen kami untuk memberikan pendidikan berkualitas kepada siswa-siswi. Kami akan terus berusaha untuk meningkatkan mutu pendidikan dan mencapai prestasi yang lebih tinggi." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -1916,6 +1933,7 @@ MTs Negeri 1 Pandeglang mendorong pembentukan komunitas alumni berdasarkan angka
 ---
 
 > "Kami sangat bangga dengan prestasi dan kontribusi yang telah diberikan oleh para alumni MTs Negeri 1 Pandeglang. Halaman Alumni ini adalah wujud apresiasi kami dan harapan untuk terus menjaga hubungan baik dengan para alumni." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -1985,6 +2003,7 @@ Kami membina pemain untuk sektor:
 > "Bulu tangkis adalah olahraga catur fisik. Kamu harus berpikir dua langkah ke depan sebelum memukul kok. Di klub ini, kami melatih tubuhmu agar secepat pikiranmu."
 >
 > — **Pelatih Bulu Tangkis MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -2060,6 +2079,7 @@ Kami rutin mengikuti berbagai turnamen untuk menguji mental bertanding:
 > "Basket mengajarkan kami bahwa ketika kami jatuh (foul), kami harus bangkit lagi untuk melakukan _free throw_. Kegagalan _shooting_ hari ini adalah alasan untuk berlatih lebih keras esok hari."
 >
 > — **Coach Basket MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -2174,6 +2194,7 @@ Komunitas literasi bagi siswa yang gemar menulis, fotografi, dan meliput berita 
 > "Jangan hanya menjadi siswa yang datang, duduk, dan pulang. Jadilah siswa yang aktif, berkarya, dan meninggalkan jejak prestasi. Pilih ekskulmu sekarang!"
 >
 > — **Wakil Kepala Madrasah Bidang Kesiswaan**
+
 ```
 
 ---
@@ -2434,6 +2455,7 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 ### Custom video
 
 <Video width="100%" src="https://www.w3schools.com/html/mov_bbb.mp4" />
+
 ````
 
 ---
@@ -2530,6 +2552,7 @@ Berikut adalah daftar pertanyaan yang sering diajukan oleh calon siswa, orang tu
   WhatsApp PTSP di pojok kanan bawah atau melalui halaman [Hubungi
   Kami](/contact).
 </Notice>
+
 ```
 
 ---
@@ -2610,6 +2633,7 @@ Kami aktif berpartisipasi dalam berbagai jenjang kompetisi untuk menambah jam te
 > "Kemenangan sejati bukan hanya skor akhir di papan skor, tapi bagaimana cara kita bermain sebagai tim. Di sini, _skill_ individu memenangkan pertandingan, tapi kerjasama tim memenangkan kejuaraan."
 >
 > — **Pelatih Futsal MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -2684,6 +2708,7 @@ Halaman Guru MTs Negeri 1 Pandeglang bertujuan untuk:
 ---
 
 > "Guru di MTs Negeri 1 Pandeglang adalah pilar utama dalam proses pembelajaran. Kami berkomitmen untuk memberikan pendidikan yang berkualitas dan mendukung perkembangan akademik serta personal siswa-siswi." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -2757,6 +2782,7 @@ Wajah publikasi karya.
 > "Jurnalisme adalah draf pertama dari sejarah. Di sini kami belajar bahwa kata-kata memiliki kekuatan untuk menginspirasi perubahan. Setiap goresan pena kami adalah dedikasi untuk almamater tercinta."
 >
 > — **Pemimpin Redaksi Siswa**
+
 ```
 
 ---
@@ -2791,6 +2817,7 @@ MTs Negeri 1 Pandeglang berkomitmen untuk melindungi informasi pribadi yang diku
 2. Setiap perubahan dalam kebijakan privasi akan diumumkan di situs web kami dan pengguna akan diberitahu melalui email.
 3. Pengguna dianjurkan untuk secara berkala memeriksa kebijakan privasi ini untuk mengetahui pembaruan terbaru.
 4. Dengan terus menggunakan layanan kami setelah perubahan kebijakan, pengguna dianggap menyetujui perubahan tersebut.
+
 ```
 
 ---
@@ -2877,6 +2904,7 @@ Dalam Kurikulum Berbasis Cinta, kami tidak membandingkan ikan dengan burung dala
 > "Pendidikan tanpa cinta hanya akan menghasilkan kecerdasan tanpa hati nurani. Kurikulum kami dirancang untuk menyentuh akal dan jiwa sekaligus, memastikan siswa tumbuh menjadi pribadi yang bahagia dan prestatif."
 >
 > — **Wakil Kepala Bidang Kurikulum**
+
 ```
 
 ---
@@ -2969,6 +2997,7 @@ Madrasah memberikan dukungan penuh bagi operasional OSIM:
 > "Di OSIM, kami tidak belajar untuk menjadi 'bos', kami belajar untuk menjadi 'pemimpin' yang melayani. Karena kepemimpinan bukan tentang jabatan, melainkan tentang seberapa besar dampak positif yang bisa kita berikan untuk orang lain."
 >
 > — **Ketua OSIM MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -3056,6 +3085,7 @@ Paskibra MTs Negeri 1 Pandeglang telah mengukir berbagai tinta emas, di antarany
 > "Kami tidak hanya diajarkan untuk mengibarkan bendera, tapi kami diajarkan bagaimana cara menghormatinya dengan segenap jiwa dan raga. Paskibra adalah tempat di mana keringat berubah menjadi emas prestasi."
 >
 > — **Komandan Satuan Paskibra**
+
 ```
 
 ---
@@ -3143,6 +3173,7 @@ Untuk menunjang kegiatan, kami didukung oleh:
 > "Kami belajar dari alam bahwa hal terindah tidak didapat dengan instan. Puncak gunung tidak akan rendah bagi mereka yang terus melangkah. Jadilah tangguh seperti karang, dan menyejukkan seperti embun pagi."
 >
 > — **Ketua SISPALA MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -3230,6 +3261,7 @@ Kami mendesain ruang PTSP senyaman lobi perbankan untuk kenyamanan Anda:
 > "Kepuasan Anda adalah kebanggaan kami. Kami hadir untuk memangkas birokrasi, bukan menambahnya. PTSP MTs Negeri 1 Pandeglang siap melayani dengan senyum, salam, dan sapa."
 >
 > — **Kepala Urusan Tata Usaha**
+
 ```
 
 ---
@@ -3311,6 +3343,7 @@ PMR memegang peran vital dalam operasional harian madrasah:
 > "Menjadi anggota PMR bukan tentang memakai seragam putih, tapi tentang memiliki hati yang siap melayani. Tangan kami dilatih untuk mengobati luka, tapi senyum kami didedikasikan untuk mengobati duka."
 >
 > — **Pembina PMR MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -3396,6 +3429,7 @@ Pramuka MTs Negeri 1 Pandeglang memberikan bekal masa depan yang tidak diajarkan
 > "Seorang Pramuka tidak pernah terkejut; dia tahu apa yang harus dilakukan ketika sesuatu yang tak terduga terjadi. Jadilah seperti kelapa: kuat akarnya, tinggi cita-citanya, dan berguna semua bagiannya."
 >
 > — **Ka. Mabigus MTs Negeri 1 Pandeglang**
+
 ```
 
 ---
@@ -3475,6 +3509,7 @@ Keberhasilan program ini didukung oleh sistem pendampingan yang ketat namun huma
 > "Kami tidak hanya mengajarkan siswa untuk menjawab soal ujian, tetapi kami mempersiapkan mereka untuk menjawab tantangan masa depan. Program unggulan adalah jalan tol bagi mereka yang ingin berlari lebih cepat."
 >
 > — **Koordinator Program Unggulan**
+
 ```
 
 ---
@@ -3515,6 +3550,7 @@ Para pendiri dan penyelenggara MTs Negeri 1 Pandeglang memiliki komitmen yang ti
 ---
 
 > "MTs Negeri 1 Pandeglang adalah madrasah yang memiliki sejarah panjang dan prestasi yang membanggakan. Kami berkomitmen untuk terus memberikan pendidikan yang berkualitas dan membentuk generasi yang berakhlak mulia." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -3588,6 +3624,7 @@ Siswa-siswi yang telah meraih prestasi akan mendapatkan penghargaan dan sertifik
 ---
 
 > "Siswa di MTs Negeri 1 Pandeglang adalah aset berharga yang kami banggakan. Kami berkomitmen untuk menyediakan pendidikan yang berkualitas dan mendukung pengembangan potensi mereka secara menyeluruh." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -3609,6 +3646,7 @@ Staf MTs Negeri 1 Pandeglang terdiri dari tenaga pendidik dan kependidikan yang 
 ---
 
 > "Staf MTs Negeri 1 Pandeglang adalah pilar utama dalam mewujudkan visi dan misi sekolah. Kami berkomitmen untuk bekerja sama dalam menciptakan lingkungan belajar yang kondusif dan inspiratif bagi siswa-siswi." - Kepala Tata Usaha MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -3652,6 +3690,7 @@ Tujuan dari MTs Negeri 1 Pandeglang adalah sebagai berikut:
 ---
 
 > "Dengan visi, misi, dan tujuan yang jelas, MTs Negeri 1 Pandeglang berkomitmen untuk terus meningkatkan kualitas pendidikan dan mencetak generasi yang berakhlak mulia, berprestasi, dan peduli terhadap lingkungan." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -3737,6 +3776,7 @@ Tim dibimbing oleh pelatih berlisensi dan guru olahraga berpengalaman yang perna
 > "Di lapangan ini, kami belajar bahwa kemenangan bukan hanya soal siapa yang paling kuat memukul bola, tapi siapa yang paling kuat bangkit saat bola menyentuh tanah. Voli mengajarkan kami arti pantang menyerah."
 >
 > — **Kapten Tim Voli Putra**
+
 ```
 
 ---
@@ -3805,6 +3845,7 @@ Pengawasan dan pengendalian dilakukan secara berkala untuk memastikan pelaksanaa
 ---
 
 > "Penerapan Zona Integritas di MTs Negeri 1 Pandeglang adalah langkah nyata kami untuk menciptakan lingkungan pendidikan yang bersih, transparan, dan berintegritas. Kami berkomitmen untuk memberikan pelayanan terbaik dan membangun kepercayaan masyarakat." - Kepala MTs Negeri 1 Pandeglang
+
 ```
 
 ---
@@ -3822,6 +3863,7 @@ button:
   label: "Daftar Sekarang"
   link: "https://daftar.mtsn1pandeglang.sch.id"
 ---
+
 ```
 
 ---
@@ -3926,6 +3968,7 @@ testimonials:
     avatar: "/images/avatar-sm.png"
     content: "MTs Negeri 1 Pandeglang punya semangat inovatif. Banyak teknologi pembelajaran diterapkan secara menarik."
 ---
+
 ```
 
 ---
@@ -3948,6 +3991,7 @@ const useTheme = (): string => {
 };
 
 export default useTheme;
+
 ```
 
 ---
@@ -4155,6 +4199,7 @@ const { title, meta_title, description, image, noindex, canonical } =
     </script>
   </body>
 </html>
+
 ```
 
 ---
@@ -4293,6 +4338,7 @@ const { title, description, author, categories, image, date, tags } = post.data;
     </div>
   </div>
 </section>
+
 ```
 
 ---
@@ -4331,6 +4377,7 @@ const { title, image, social } = data.data;
   </p>
   <Social source={social} className="social-icons" />
 </div>
+
 ```
 
 ---
@@ -4402,6 +4449,7 @@ const { title, image, date, author, categories } = data.data;
     selengkapnya
   </a>
 </div>
+
 ```
 
 ---
@@ -4454,6 +4502,7 @@ paths.forEach((label: string, i: number) => {
     }
   </ol>
 </nav>
+
 ```
 
 ---
@@ -4514,6 +4563,7 @@ const isValidPath = images[src] ? true : false;
     />
   )
 }
+
 ```
 
 ---
@@ -4584,6 +4634,7 @@ const { theme_switcher }: { theme_switcher: boolean } = config.settings;
     )
   }
 </a>
+
 ```
 
 ---
@@ -4725,6 +4776,7 @@ for (let i = 1; i <= totalPages; i++) {
     </nav>
   )
 }
+
 ```
 
 ---
@@ -4784,6 +4836,7 @@ const {
     </a>
   </li>
 </ul>
+
 ```
 
 ---
@@ -4819,6 +4872,7 @@ export interface ISocial {
     ))
   }
 </ul>
+
 ```
 
 ---
@@ -4917,6 +4971,7 @@ const { className }: { className?: string } = Astro.props;
   // Runs on view transitions navigation
   document.addEventListener("astro:after-swap", setDarkMode);
 </script>
+
 ```
 
 ---
@@ -4940,6 +4995,7 @@ const { className }: { className?: string } = Astro.props;
     </div>
   )
 }
+
 ```
 
 ---
@@ -6110,39 +6166,27 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
 
   const handleUpload = async () => {
     if (!file) return alert("Pilih file CSV terlebih dahulu.");
-
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", importType);
-
     try {
       const res = await fetch("/api/import.php?action=import", {
         method: "POST",
         body: formData,
       });
-
-      const textResponse = await res.text();
-      try {
-        const json = JSON.parse(textResponse);
-        if (json.status === "success") {
-          alert(json.message);
-          onSuccess();
-        } else {
-          alert("Gagal: " + (json.message || "Terjadi kesalahan server."));
-        }
-      } catch (jsonError) {
-        console.error("Server Raw Response:", textResponse);
-        alert(
-          "Terjadi kesalahan pada Server (Cek Console). Pastikan struktur database sesuai template.",
-        );
+      const json = await res.json();
+      if (json.status === "success") {
+        alert(json.message);
+        onSuccess();
+      } else {
+        alert(json.message || "Gagal mengupload file.");
       }
     } catch (e) {
-      alert("Terjadi kesalahan jaringan atau koneksi terputus.");
+      alert("Terjadi kesalahan jaringan.");
     } finally {
       setIsUploading(false);
       setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -6539,6 +6583,7 @@ const DataTable = ({
 };
 
 export default AdminDashboard;
+
 ```
 
 ---
@@ -6581,6 +6626,7 @@ const CardViewCounter = ({ slug }: Props) => {
 };
 
 export default CardViewCounter;
+
 ```
 
 ---
@@ -6679,6 +6725,7 @@ const CookieConsent = () => {
 };
 
 export default CookieConsent;
+
 ```
 
 ---
@@ -6719,6 +6766,7 @@ const getIconLibrary = (icon: string): IconMap | undefined => {
 };
 
 export default DynamicIcon;
+
 ```
 
 ---
@@ -6780,6 +6828,7 @@ const GiscusComment = () => {
 };
 
 export default GiscusComment;
+
 ```
 
 ---
@@ -6939,6 +6988,7 @@ const InstallPrompt = () => {
 };
 
 export default InstallPrompt;
+
 ```
 
 ---
@@ -6987,6 +7037,7 @@ const PostViewCounter = () => {
 };
 
 export default PostViewCounter;
+
 ```
 
 ---
@@ -7306,6 +7357,7 @@ export default function ProfilMahasiswaPLP() {
     </div>
   );
 }
+
 ```
 
 ---
@@ -7548,6 +7600,7 @@ const SearchModal = () => {
 };
 
 export default SearchModal;
+
 ```
 
 ---
@@ -7809,6 +7862,7 @@ const SearchResult = ({
 };
 
 export default SearchResult;
+
 ```
 
 ---
@@ -8005,6 +8059,7 @@ const ServiceRating = () => {
 };
 
 export default ServiceRating;
+
 ```
 
 ---
@@ -8449,6 +8504,7 @@ const SurveyWizard = () => {
 };
 
 export default SurveyWizard;
+
 ```
 
 ---
@@ -8524,6 +8580,7 @@ const TawkChat = () => {
 };
 
 export default TawkChat;
+
 ```
 
 ---
@@ -8635,6 +8692,7 @@ const VideoModal = ({
 };
 
 export default VideoModal;
+
 ```
 
 ---
@@ -8681,6 +8739,7 @@ const VisitorCounter = () => {
 };
 
 export default VisitorCounter;
+
 ```
 
 ---
@@ -8734,6 +8793,7 @@ const { call_to_action } = Astro.props;
     </section>
   )
 }
+
 ```
 
 ---
@@ -8785,6 +8845,7 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
     </div>
   </div>
 </footer>
+
 ```
 
 ---
@@ -9031,6 +9092,7 @@ const { pathname } = Astro.url;
     }
   }
 </style>
+
 ```
 
 ---
@@ -9178,6 +9240,7 @@ const latestPosts = sortedPosts.slice(0, 6);
 
   document.addEventListener("astro:page-load", initLatestPostsSlider);
 </script>
+
 ```
 
 ---
@@ -9202,6 +9265,7 @@ const { title = "" }: { title?: string } = Astro.props;
     </div>
   </div>
 </section>
+
 ```
 
 ---
@@ -9297,6 +9361,7 @@ const { tags, categories, allCategories } = Astro.props;
     </div>
   </div>
 </div>
+
 ```
 
 ---
@@ -9416,6 +9481,7 @@ const { testimonial } = Astro.props;
     });
   });
 </script>
+
 ```
 
 ---
@@ -9459,6 +9525,7 @@ const Accordion = ({
 };
 
 export default Accordion;
+
 ```
 
 ---
@@ -9496,6 +9563,7 @@ const Button = ({
 };
 
 export default Button;
+
 ```
 
 ---
@@ -9588,6 +9656,7 @@ function Notice({
 }
 
 export default Notice;
+
 ```
 
 ---
@@ -9602,6 +9671,7 @@ function Tab({ name, children }: { name: string; children: React.ReactNode }) {
 }
 
 export default Tab;
+
 ```
 
 ---
@@ -9680,6 +9750,7 @@ const Tabs = ({ children }: { children: React.ReactElement }) => {
 };
 
 export default Tabs;
+
 ```
 
 ---
@@ -9719,6 +9790,7 @@ function Video({
 }
 
 export default Video;
+
 ```
 
 ---
@@ -9753,6 +9825,7 @@ const Youtube = ({
 };
 
 export default Youtube;
+
 ```
 
 ---
@@ -9804,6 +9877,7 @@ export const getListPage = async <C extends CollectionKey>(
   return data;
 };
 ---
+
 ```
 
 ---
@@ -9842,6 +9916,7 @@ export const getAllTaxonomy = async (collection: any, name: string) => {
   return taxonomies;
 };
 ---
+
 ```
 
 ---
@@ -9886,6 +9961,7 @@ const bgImageMod = async (
 };
 
 export default bgImageMod;
+
 ```
 
 ---
@@ -9906,6 +9982,7 @@ const dateFormat = (
 };
 
 export default dateFormat;
+
 ```
 
 ---
@@ -9947,6 +10024,7 @@ const readingTime = (content: string): string => {
 };
 
 export default readingTime;
+
 ```
 
 ---
@@ -9984,6 +10062,7 @@ const similarItems = (currentItem: any, allItems: any[]) => {
 };
 
 export default similarItems;
+
 ```
 
 ---
@@ -10014,6 +10093,7 @@ export const sortByWeight = (array: any[]) => {
   const sortedArray = [...new Set([...sortedWeightedArray, ...withoutWeight])];
   return sortedArray;
 };
+
 ```
 
 ---
@@ -10029,6 +10109,7 @@ const taxonomyFilter = (posts: any[], name: string, key: string) =>
   );
 
 export default taxonomyFilter;
+
 ```
 
 ---
@@ -10090,6 +10171,7 @@ const htmlEntityDecoder = (htmlWithEntities: string) => {
   );
   return htmlWithoutEntities;
 };
+
 ```
 
 ---
@@ -10124,6 +10206,7 @@ import Base from "@/layouts/Base.astro";
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10178,6 +10261,7 @@ if (aboutIndex.data.draft) {
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10205,6 +10289,7 @@ import AdminDashboard from "@/layouts/helpers/AdminDashboard";
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10243,6 +10328,7 @@ const authors = await getSinglePage("authors");
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10327,6 +10413,7 @@ const postFilterByAuthor = posts.filter(
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10395,6 +10482,7 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10486,6 +10574,7 @@ export async function getStaticPaths() {
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10523,6 +10612,7 @@ const { title, meta_title, description, image } = post.data;
 >
   <PostSingle post={post} />
 </Base>
+
 ```
 
 ---
@@ -10569,6 +10659,7 @@ const allCategories = await getAllTaxonomy(BLOG_FOLDER, "categories");
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10620,6 +10711,7 @@ const sortedPosts = sortByDate(filterByCategories);
     </div>
   </div>
 </Base>
+
 ```
 
 ---
@@ -10699,6 +10791,7 @@ if (contactIndex.data.draft) {
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10891,6 +10984,7 @@ const { banner, features } = homepage.data;
 
   <TawkChat client:only="react" />
 </Base>
+
 ```
 
 ---
@@ -10930,6 +11024,7 @@ const description =
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -10976,6 +11071,7 @@ const allTags = await getAllTaxonomy(BLOG_FOLDER, "tags");
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -11027,6 +11123,7 @@ const sortedPosts = sortByDate(filterByTags);
     </div>
   </div>
 </Base>
+
 ```
 
 ---
@@ -11078,6 +11175,7 @@ const { Content } = await render(page);
     </div>
   </section>
 </Base>
+
 ```
 
 ---
@@ -11167,6 +11265,7 @@ export function initAnimations() {
 
   ScrollTrigger.refresh();
 }
+
 ```
 
 ---
@@ -11192,6 +11291,7 @@ export function initSpotlightButtons() {
 
   document.addEventListener("mousemove", handleMouseMove);
 }
+
 ```
 
 ---
@@ -11262,6 +11362,7 @@ blockquote > p {
 button {
   @apply cursor-pointer;
 }
+
 ```
 
 ---
@@ -11321,6 +11422,7 @@ button {
 .dark .btn-outline-primary {
   --spotlight-color: var(--color-darkmode-primary);
 }
+
 ```
 
 ---
@@ -11489,6 +11591,7 @@ button {
   @apply prose-tr:border-border dark:prose-tr:border-darkmode-border;
   @apply prose-td:relative prose-td:z-10 prose-td:px-3 prose-td:py-[18px] dark:prose-td:text-darkmode-text;
 }
+
 ```
 
 ---
@@ -11517,6 +11620,7 @@ button {
   @import "./buttons.css";
   @import "./search.css";
 }
+
 ```
 
 ---
@@ -11588,6 +11692,7 @@ button {
     }
   }
 }
+
 ```
 
 ---
@@ -11611,6 +11716,7 @@ input#nav-toggle:checked ~ #nav-menu {
 .swiper-pagination-bullet-active {
   @apply !w-8 !bg-primary dark:!bg-primary;
 }
+
 ```
 
 ---
@@ -11715,6 +11821,7 @@ input#nav-toggle:checked ~ #nav-menu {
 .search-result-item:hover .search-result-item-taxonomies {
   @apply text-white/90;
 }
+
 ```
 
 ---
@@ -11748,6 +11855,7 @@ input#nav-toggle:checked ~ #nav-menu {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
 ```
 
 ---
@@ -11853,6 +11961,7 @@ module.exports = plugin.withOptions(() => {
     );
   };
 });
+
 ```
 
 ---
@@ -11995,6 +12104,7 @@ module.exports = plugin.withOptions(() => {
     );
   };
 });
+
 ```
 
 ---
@@ -12015,6 +12125,7 @@ export type Button = {
   label: string;
   link: string;
 };
+
 ```
 
 ---
@@ -12026,7 +12137,7 @@ export type Button = {
 ```
 ##### Optimize default expiration time - BEGIN
 <IfModule mod_expires.c>
-
+  
   ## Enable expiration control
   ExpiresActive On
 
@@ -12121,7 +12232,7 @@ export type Button = {
 ```
 <?php
 session_start();
-date_default_timezone_set('Asia/Jakarta');
+date_default_timezone_set('Asia/Jakarta'); // Set Timezone Server ke Jakarta
 
 // Proteksi
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -12143,11 +12254,26 @@ try {
     // === HELPER: Format Tanggal Indonesia ===
     function formatTanggalIndo($timestamp)
     {
+        // Asumsi timestamp dari DB adalah UTC, kita konversi ke Jakarta
         try {
             $dt = new DateTime($timestamp, new DateTimeZone('UTC'));
             $dt->setTimezone(new DateTimeZone('Asia/Jakarta'));
 
-            $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            $bulan = [
+                1 => 'Januari',
+                'Februari',
+                'Maret',
+                'April',
+                'Mei',
+                'Juni',
+                'Juli',
+                'Agustus',
+                'September',
+                'Oktober',
+                'November',
+                'Desember'
+            ];
+
             $tgl = $dt->format('d');
             $bln = $bulan[(int)$dt->format('m')];
             $thn = $dt->format('Y');
@@ -12159,10 +12285,11 @@ try {
         }
     }
 
-    // === HELPER: Grafik Harian ===
+    // === HELPER: Grafik Harian (Waktu Jakarta) ===
     function getSafeDailyActivity($db, $table, $days = 30)
     {
         $data = [];
+        // Generate tanggal 30 hari terakhir (Waktu Jakarta)
         for ($i = $days - 1; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-$i days"));
             $data[$date] = 0;
@@ -12172,10 +12299,11 @@ try {
             $check = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$table'");
             if (!$check) return $data;
 
-            // Query Group by Date (WIB)
-            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count
-                      FROM $table
-                      WHERE created_at >= date('now', '-$days days', '-7 hours')
+            // Query dengan penyesuaian Timezone (+7 Jam untuk WIB)
+            // datetime(created_at, '+7 hours') mengubah UTC ke WIB sebelum di-group
+            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count 
+                      FROM $table 
+                      WHERE created_at >= date('now', '-$days days', '-7 hours') 
                       GROUP BY date";
 
             $res = $db->query($query);
@@ -12224,12 +12352,11 @@ try {
             }
         }
 
-        // 4. Activity Trends (Real Data)
+        // 4. Activity Trends
         $activity_feedback = getSafeDailyActivity($db, 'feedback');
         $activity_survey = getSafeDailyActivity($db, 'survey_responses');
-        $activity_visits = getSafeDailyActivity($db, 'traffic_logs'); // [BARU] Data Kunjungan Harian
 
-        // 5. Raw Data Tables
+        // 5. Raw Data (Dikirim Mentah UTC, diformat di Frontend)
         $posts = [];
         if ($total_posts > 0) {
             $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
@@ -12261,8 +12388,7 @@ try {
                 'activity' => [
                     'labels' => array_keys($activity_feedback),
                     'feedback' => array_values($activity_feedback),
-                    'survey' => array_values($activity_survey),
-                    'visits' => array_values($activity_visits) // [BARU] Kirim ke Frontend
+                    'survey' => array_values($activity_survey)
                 ]
             ],
             'tables' => [
@@ -12273,7 +12399,7 @@ try {
         ]);
     }
 
-    // === EXPORT CSV ===
+    // === EXPORT LOGIC (FORMAT INDONESIA) ===
     elseif ($action === 'export') {
         $type = $_GET['type'] ?? '';
         $filename = "laporan_{$type}_" . date('Y-m-d_His') . ".csv";
@@ -12282,7 +12408,8 @@ try {
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $output = fopen('php://output', 'w');
-        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM for Excel
+        // Tambahkan BOM untuk Excel agar bisa baca karakter UTF-8 dengan benar
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         if ($type === 'feedback') {
             fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Rating', 'Pesan', 'IP Address']);
@@ -12482,110 +12609,63 @@ try {
 ```
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Origin: *'); // Sesuaikan domain jika perlu
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
 
+// Path database (menggunakan database yang sama dengan stats)
 $dbPath = __DIR__ . '/../../stats.db';
-
-function getClientIP()
-{
-    // Handle IP jika di belakang proxy/Cloudflare
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
-    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
-    return $_SERVER['REMOTE_ADDR'];
-}
 
 try {
     if (!class_exists('SQLite3')) {
-        throw new Exception("SQLite3 driver not installed.");
+        throw new Exception("Driver SQLite3 belum diaktifkan di PHP server.");
     }
 
     $db = new SQLite3($dbPath);
-    $ip_address = getClientIP();
 
-    // 1. Update Struktur Tabel (Menambahkan kolom ip_address jika belum ada)
-    // Kita cek dulu apakah kolom sudah ada, cara simpel: coba query dummy
-    $checkTable = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='feedback'");
-    if ($checkTable) {
-        $cols = $db->query("PRAGMA table_info(feedback)");
-        $hasIpCol = false;
-        while ($row = $cols->fetchArray()) {
-            if ($row['name'] === 'ip_address') $hasIpCol = true;
-        }
-        if (!$hasIpCol) {
-            $db->exec("ALTER TABLE feedback ADD COLUMN ip_address TEXT");
-        }
-    } else {
-        $query = "CREATE TABLE IF NOT EXISTS feedback (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            rating INTEGER NOT NULL,
-            message TEXT,
-            ip_address TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        $db->exec($query);
-    }
+    // 1. Buat tabel feedback jika belum ada
+    $query = "CREATE TABLE IF NOT EXISTS feedback (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        rating INTEGER NOT NULL,
+        message TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )";
+    $db->exec($query);
 
-    // Fungsi Helper untuk ambil stats
-    function getStats($db)
-    {
-        $row = $db->querySingle("SELECT AVG(rating) as average, COUNT(*) as total FROM feedback", true);
-        return [
-            'average' => round($row['average'] ?? 0, 1),
-            'total' => $row['total'] ?? 0
-        ];
-    }
-
-    // 2. Handle POST (Submit Data)
+    // 2. Tangani Request POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Cek apakah IP sudah pernah submit
-        $checkIp = $db->prepare("SELECT id FROM feedback WHERE ip_address = :ip");
-        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
-        $res = $checkIp->execute();
-
-        if ($res->fetchArray()) {
-            echo json_encode(['status' => 'error', 'message' => 'Anda sudah memberikan penilaian sebelumnya.']);
-            exit;
-        }
-
+        // Ambil data JSON dari body request
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
-        if (!isset($data['rating'])) throw new Exception("Rating wajib diisi.");
+        if (!isset($data['rating'])) {
+            throw new Exception("Rating wajib diisi.");
+        }
 
         $name = isset($data['name']) ? htmlspecialchars(strip_tags($data['name'])) : 'Anonim';
         $rating = (int)$data['rating'];
         $message = isset($data['message']) ? htmlspecialchars(strip_tags($data['message'])) : '';
 
-        $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, ip_address) VALUES (:name, :rating, :message, :ip)");
+        // Validasi rating 1-5
+        if ($rating < 1 || $rating > 5) {
+            throw new Exception("Rating harus antara 1 sampai 5.");
+        }
+
+        // Insert ke Database menggunakan Prepared Statement (Aman dari SQL Injection)
+        $stmt = $db->prepare("INSERT INTO feedback (name, rating, message) VALUES (:name, :rating, :message)");
         $stmt->bindValue(':name', $name, SQLITE3_TEXT);
         $stmt->bindValue(':rating', $rating, SQLITE3_INTEGER);
         $stmt->bindValue(':message', $message, SQLITE3_TEXT);
-        $stmt->bindValue(':ip', $ip_address, SQLITE3_TEXT);
 
         if ($stmt->execute()) {
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Terima kasih atas penilaian Anda!',
-                'stats' => getStats($db)
-            ]);
+            echo json_encode(['status' => 'success', 'message' => 'Terima kasih atas penilaian Anda!']);
         } else {
             throw new Exception("Gagal menyimpan data.");
         }
-    }
-    // 3. Handle GET (Cek Status IP & Ambil Stats)
-    else {
-        $checkIp = $db->prepare("SELECT id FROM feedback WHERE ip_address = :ip");
-        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
-        $res = $checkIp->execute();
-        $hasSubmitted = ($res->fetchArray()) ? true : false;
-
-        echo json_encode([
-            'status' => 'ready',
-            'has_submitted' => $hasSubmitted,
-            'stats' => getStats($db)
-        ]);
+    } else {
+        // Jika dibuka langsung di browser (bukan POST)
+        echo json_encode(['status' => 'ready', 'message' => 'Feedback API is ready.']);
     }
 } catch (Exception $e) {
     http_response_code(500);
@@ -12601,49 +12681,74 @@ try {
 ```
 <?php
 session_start();
-// Matikan display error agar tidak merusak JSON (PENTING)
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
 header('Content-Type: application/json');
 
+// Matikan display error agar tidak merusak JSON (PENTING untuk menghindari Network Error)
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+// 1. Cek Login Admin
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    exit;
+}
+
+$dbPath = __DIR__ . '/../../stats.db';
+
+// Cek permission file DB sebelum lanjut
+if (!is_writable($dbPath)) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => 'File database tidak bisa ditulis (Permission Denied). Hubungi Administrator Server.']);
+    exit;
+}
+
 try {
-    // 1. Cek Login Admin
-    if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-        throw new Exception("Unauthorized access.");
-    }
-
-    // 2. Koneksi Database
-    $dbPath = __DIR__ . '/../../stats.db';
-
-    // Cek Permission File
-    if (file_exists($dbPath) && !is_writable($dbPath)) {
-        throw new Exception("File database terkunci (Permission Denied). Mohon cek izin file stats.db");
-    }
-
-    // Cek Permission Folder (untuk file .wal)
-    if (!is_writable(dirname($dbPath))) {
-        throw new Exception("Folder database terkunci. Mohon cek izin folder root.");
-    }
-
     $db = new SQLite3($dbPath);
+    // Timeout agar tidak error "database is locked"
     $db->busyTimeout(5000);
 
     $action = $_GET['action'] ?? '';
 
-    // === ACTION: IMPORT ===
-    if ($action === 'import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // === ACTION: DOWNLOAD TEMPLATE CSV ===
+    if ($action === 'template') {
+        $type = $_GET['type'] ?? 'feedback';
+        $filename = "template_import_{$type}.csv";
 
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+
+        // Tambahkan BOM untuk Excel Windows agar karakter aman
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        if ($type === 'feedback') {
+            fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
+            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan mantap', date('Y-m-d H:i:s'), '192.168.1.1']);
+        } elseif ($type === 'survey') {
+            fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
+            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Tingkatkan lagi', date('Y-m-d H:i:s'), '192.168.1.2']);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    // === ACTION: IMPORT DATA ===
+    if ($action === 'import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception("Upload failed with error code: " . ($_FILES['file']['error'] ?? 'Unknown'));
+            throw new Exception("File CSV tidak ditemukan atau error upload (Code: " . ($_FILES['file']['error'] ?? 'Unknown') . ")");
         }
 
         $type = $_POST['type'] ?? '';
         $fileTmpPath = $_FILES['file']['tmp_name'];
 
-        // Baca CSV
+        // Deteksi Line Ending untuk kompatibilitas Windows/Mac
         ini_set('auto_detect_line_endings', true);
+
         $handle = fopen($fileTmpPath, "r");
-        if (!$handle) throw new Exception("Tidak bisa membaca file temporary.");
+        if ($handle === FALSE) throw new Exception("Gagal membaca file.");
 
         // Skip Header
         fgetcsv($handle, 1000, ",");
@@ -12653,111 +12758,71 @@ try {
 
         try {
             if ($type === 'feedback') {
-                // Cek kolom ip_address secara dinamis
-                $resCols = $db->query("PRAGMA table_info(feedback)");
-                $hasIp = false;
-                while ($col = $resCols->fetchArray()) {
-                    if ($col['name'] === 'ip_address') $hasIp = true;
-                }
-
-                // Query Adaptif
-                $fields = ['name', 'rating', 'message', 'created_at'];
-                $params = [':name', ':rating', ':message', ':created_at'];
-
-                if ($hasIp) {
-                    $fields[] = 'ip_address';
-                    $params[] = ':ip_address';
-                }
-
-                $sql = "INSERT INTO feedback (" . implode(',', $fields) . ") VALUES (" . implode(',', $params) . ")";
-                $stmt = $db->prepare($sql);
+                $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
 
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    // Bersihkan karakter aneh jika ada
                     $data = array_map('trim', $data);
-                    if (count($data) < 2) continue;
 
-                    $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
-                    $stmt->bindValue(':rating', max(1, min(5, (int)($data[1] ?? 5))), SQLITE3_INTEGER);
-                    $stmt->bindValue(':message', $data[2] ?? '', SQLITE3_TEXT);
-                    $stmt->bindValue(':created_at', $data[3] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT);
-                    if ($hasIp) $stmt->bindValue(':ip_address', $data[4] ?? '127.0.0.1', SQLITE3_TEXT);
+                    if (count($data) < 2) continue; // Skip baris kosong
 
+                    $name = !empty($data[0]) ? $data[0] : 'Anonim';
+                    $rating = isset($data[1]) ? (int)$data[1] : 5;
+                    // Pastikan rating valid
+                    if ($rating < 1) $rating = 1;
+                    if ($rating > 5) $rating = 5;
+
+                    $msg = isset($data[2]) ? $data[2] : '';
+                    $date = !empty($data[3]) ? $data[3] : date('Y-m-d H:i:s');
+                    $ip = !empty($data[4]) ? $data[4] : '127.0.0.1';
+
+                    $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+                    $stmt->bindValue(':rating', $rating, SQLITE3_INTEGER);
+                    $stmt->bindValue(':message', $msg, SQLITE3_TEXT);
+                    $stmt->bindValue(':created_at', $date, SQLITE3_TEXT);
+                    $stmt->bindValue(':ip_address', $ip, SQLITE3_TEXT);
                     $stmt->execute();
                     $successCount++;
                 }
             } elseif ($type === 'survey') {
-                // Cek kolom dinamis
-                $resCols = $db->query("PRAGMA table_info(survey_responses)");
-                $cols = [];
-                while ($col = $resCols->fetchArray()) {
-                    $cols[] = $col['name'];
-                }
-
-                $hasIp = in_array('ip_address', $cols);
-                $hasJson = in_array('details_json', $cols);
-
-                // Build query
-                $fields = ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at'];
-                $params = [':name', ':role', ':zi', ':service', ':acad', ':feedback', ':created'];
-
-                if ($hasIp) {
-                    $fields[] = 'ip_address';
-                    $params[] = ':ip';
-                }
-                if ($hasJson) {
-                    $fields[] = 'details_json';
-                    $params[] = ':json';
-                }
-
-                $sql = "INSERT INTO survey_responses (" . implode(',', $fields) . ") VALUES (" . implode(',', $params) . ")";
-                $stmt = $db->prepare($sql);
+                $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
 
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
                     $data = array_map('trim', $data);
+
                     if (count($data) < 5) continue;
 
-                    $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
-                    $stmt->bindValue(':role', $data[1] ?: 'Umum', SQLITE3_TEXT);
-                    $stmt->bindValue(':zi', (float)($data[2] ?? 0), SQLITE3_FLOAT);
-                    $stmt->bindValue(':service', (float)($data[3] ?? 0), SQLITE3_FLOAT);
-                    $stmt->bindValue(':acad', (float)($data[4] ?? 0), SQLITE3_FLOAT);
-                    $stmt->bindValue(':feedback', $data[5] ?? '', SQLITE3_TEXT);
-                    $stmt->bindValue(':created', $data[6] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT);
+                    $name = !empty($data[0]) ? $data[0] : 'Anonim';
+                    $role = !empty($data[1]) ? $data[1] : 'Umum';
+                    $zi = isset($data[2]) ? (float)$data[2] : 0;
+                    $srv = isset($data[3]) ? (float)$data[3] : 0;
+                    $acd = isset($data[4]) ? (float)$data[4] : 0;
+                    $fb = isset($data[5]) ? $data[5] : '';
+                    $date = !empty($data[6]) ? $data[6] : date('Y-m-d H:i:s');
+                    $ip = !empty($data[7]) ? $data[7] : '127.0.0.1';
 
-                    if ($hasIp) $stmt->bindValue(':ip', $data[7] ?? '127.0.0.1', SQLITE3_TEXT);
-                    if ($hasJson) $stmt->bindValue(':json', '{}', SQLITE3_TEXT);
-
+                    $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+                    $stmt->bindValue(':role', $role, SQLITE3_TEXT);
+                    $stmt->bindValue(':zi', $zi, SQLITE3_FLOAT);
+                    $stmt->bindValue(':service', $srv, SQLITE3_FLOAT);
+                    $stmt->bindValue(':acad', $acd, SQLITE3_FLOAT);
+                    $stmt->bindValue(':feedback', $fb, SQLITE3_TEXT);
+                    $stmt->bindValue(':created', $date, SQLITE3_TEXT);
+                    $stmt->bindValue(':ip', $ip, SQLITE3_TEXT);
                     $stmt->execute();
                     $successCount++;
                 }
+            } else {
+                throw new Exception("Tipe import tidak dikenal.");
             }
 
             $db->exec('COMMIT');
             fclose($handle);
-            echo json_encode(['status' => 'success', 'message' => "Sukses import $successCount data."]);
+            echo json_encode(['status' => 'success', 'message' => "Berhasil mengimport $successCount data."]);
         } catch (Exception $ex) {
             $db->exec('ROLLBACK');
             throw $ex;
         }
-    }
-    // === ACTION: TEMPLATE ===
-    elseif ($action === 'template') {
-        $type = $_GET['type'] ?? 'feedback';
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="template_' . $type . '.csv"');
-        $out = fopen('php://output', 'w');
-        fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM
-
-        if ($type === 'feedback') {
-            fputcsv($out, ['name', 'rating', 'message', 'created_at', 'ip_address']);
-            fputcsv($out, ['Budi', '5', 'Mantap', date('Y-m-d H:i:s'), '127.0.0.1']);
-        } else {
-            fputcsv($out, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
-            fputcsv($out, ['Siti', 'Wali Murid', '5', '4', '5', 'Oke', date('Y-m-d H:i:s'), '127.0.0.1']);
-        }
-        fclose($out);
-    } else {
-        throw new Exception("Invalid Action");
     }
 } catch (Exception $e) {
     http_response_code(500);
@@ -12781,15 +12846,14 @@ date_default_timezone_set('Asia/Jakarta');
 
 // 1. Cek Login
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    die("Akses Ditolak. Silakan Login.");
+    die("Akses Ditolak.");
 }
 
 // 2. Cek Library
-$libPath = __DIR__ . '/lib/fpdf.php';
-if (!file_exists($libPath)) {
-    die("ERROR: Library FPDF tidak ditemukan. Pastikan file uploaded di public/api/lib/fpdf.php");
+if (!file_exists(__DIR__ . '/lib/fpdf.php')) {
+    die("Error: Library FPDF tidak ditemukan.");
 }
-require($libPath);
+require('lib/fpdf.php');
 
 // 3. Database
 $dbPath = __DIR__ . '/../../stats.db';
@@ -12834,40 +12898,60 @@ class PDF extends FPDF
     function ImageRemote($url, $x, $y, $w, $h)
     {
         $tmpFile = sys_get_temp_dir() . '/qr_' . md5($url) . '.png';
-        if (!file_exists($tmpFile) || filesize($tmpFile) == 0) {
-            $ch = curl_init($url);
-            $fp = fopen($tmpFile, 'wb');
-            curl_setopt($ch, CURLOPT_FILE, $fp);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_exec($ch);
-            curl_close($ch);
-            fclose($fp);
+        if (file_exists($tmpFile) && filesize($tmpFile) > 0) {
+            $this->Image($tmpFile, $x, $y, $w, $h);
+            return;
         }
-        if (file_exists($tmpFile) && filesize($tmpFile) > 0) $this->Image($tmpFile, $x, $y, $w, $h);
+        $ch = curl_init($url);
+        $fp = fopen($tmpFile, 'wb');
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        fclose($fp);
+
+        if ($code == 200 && filesize($tmpFile) > 0) {
+            $this->Image($tmpFile, $x, $y, $w, $h);
+        } else {
+            $this->SetXY($x, $y);
+            $this->SetFont('Arial', 'I', 7);
+            $this->Cell($w, $h, 'QR Error', 0, 0, 'C');
+        }
     }
 
     function Header()
     {
         $path = '../images/instansi/';
         $logoSize = 24;
+
         if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 10, 10, $logoSize);
         if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
+
         $this->SetY(12);
+
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 5, 'KEMENTERIAN AGAMA REPUBLIK INDONESIA', 0, 1, 'C');
+
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
+
         $this->SetFont('Arial', 'B', 14);
         $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
+
         $this->SetFont('Arial', '', 9);
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
+
         $this->SetLineWidth(0.5);
         $this->Line(10, 39, 200, 39);
         $this->SetLineWidth(0.2);
         $this->Line(10, 40, 200, 40);
+
         $this->Ln(6);
     }
 
@@ -12895,6 +12979,7 @@ class PDF extends FPDF
         }
         $this->Ln($h);
     }
+
     function CheckPageBreak($h)
     {
         if ($this->GetY() + $h > $this->PageBreakTrigger) $this->AddPage($this->CurOrientation);
@@ -12945,19 +13030,32 @@ try {
     $pdf->SetMargins(10, 10, 10);
     $pdf->AddPage();
 
+    // Queries
     $m = str_pad($month, 2, '0', STR_PAD_LEFT);
     $y = $year;
 
+    // Data Counts
     $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
     $feedbackCount = $db->querySingle("SELECT COUNT(*) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
-    $indices = $db->querySingle("SELECT AVG(score_zi) as zi, AVG(score_service) as service, AVG(score_academic) as academic FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
+    // Hitung Indeks
+    $indices = $db->querySingle("SELECT 
+        AVG(score_zi) as zi, 
+        AVG(score_service) as service, 
+        AVG(score_academic) as academic 
+        FROM survey_responses 
+        WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
+
     $idxZI = $indices ? round($indices['zi'] ?? 0, 2) : 0;
     $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
     $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
-    $ikmValue = ($surveyCount > 0) ? round(($idxZI + $idxService + $idxAcademic) / 3, 2) : 0;
+
+    $ikmValue = 0;
+    if ($surveyCount > 0) {
+        $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
+    }
 
     $avgRatingRaw = $db->querySingle("SELECT AVG(rating) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
     $avgRatingVal = $avgRatingRaw ? round($avgRatingRaw, 2) : 0;
@@ -12973,14 +13071,17 @@ try {
     }
     $ikmText = ($ikmValue > 0) ? "$ikmValue / 5.00 (" . getPredikat($ikmValue) . ")" : "-";
 
-    // Header Laporan
+    // === JUDUL ===
     $pdf->SetFont('Arial', 'B', 12);
     $pdf->Cell(0, 6, 'LAPORAN REKAPITULASI PELAYANAN DIGITAL', 0, 1, 'C');
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(0, 5, 'Periode Laporan: ' . $periodeText, 0, 1, 'C');
     $pdf->Ln(5);
 
+    // ==========================================
     // TABEL 1: RINGKASAN TRAFIK (Kiri) & QR (Kanan)
+    // ==========================================
+
     $startX = 10;
     $startY = $pdf->GetY();
     $rowH = 7;
@@ -12991,60 +13092,79 @@ try {
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell($wTable1, $rowH, ' I. RINGKASAN TRAFIK WEBSITE', 1, 0, 'L', true);
 
+    // QR Code Container
     $pdf->Cell($wQR, $rowH * 4, '', 1, 0, 'C');
     $qrContent = urlencode("MTSN1PDG|{$m}/{$y}|V:{$visits}|A:{$articleViews}|S:{$surveyCount}|F:{$feedbackCount}|IKM:{$ikmValue}");
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={$qrContent}&bgcolor=ffffff";
     $pdf->ImageRemote($qrUrl, ($startX + $wTable1) + 5.5, $startY + 2, 24, 24);
+
     $pdf->Ln($rowH);
 
+    // Data Tabel 1
     $wLabel = 65;
     $wValue = 90;
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
+
     $pdf->Cell($wLabel, $rowH, ' Bulan Pelaporan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . $periodeText, 1, 1, 'L');
+
     $pdf->Cell($wLabel, $rowH, ' Total Kunjungan', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($visits) . ' Pengunjung', 1, 1, 'L');
+
     $pdf->Cell($wLabel, $rowH, ' Total Artikel Dibaca', 1, 0, 'L', true);
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
+
     $pdf->Ln(5);
 
-    // TABEL 2: KUALITAS PELAYANAN (5 Baris Total)
+    // ==========================================
+    // TABEL 2: KUALITAS PELAYANAN (DIPISAH: 6 Baris Total)
+    // ==========================================
+
+    // Baris 1: Header
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
-    $wL = 50;
-    $wV = 45;
 
-    // Baris 2 (Partisipasi - Split)
-    $pdf->Cell($wL, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 0, 'L');
-    $pdf->Cell($wL, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
-    $pdf->Cell($wV, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
+    // Lebar Kolom
+    $wLabelFull = 70;
+    $wValueFull = 120;
 
-    // Baris 3 (Rincian Indeks - Split 3)
+    // Baris 2: Jumlah Responden (Sendiri)
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
+
+    // Baris 3: Jumlah Ulasan (Sendiri)
+    $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
+
+    // Baris 4: Rincian Indeks (Split 3 Kolom)
     $wSub = 190 / 3;
     $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
 
-    // Baris 4 (Rating Ulasan - Full)
-    $pdf->Cell(70, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
-    $pdf->Cell(120, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
+    // Baris 5: Rata-rata Rating Ulasan
+    $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
 
-    // Baris 5 (IKM Total - Full Highlight)
+    // Baris 6: Indeks Kepuasan Masy (IKM)
     $pdf->SetFont('Arial', 'B', 9);
-    $pdf->SetFillColor(240, 240, 240);
-    $pdf->Cell(70, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
-    $pdf->Cell(120, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
+    $pdf->SetFillColor(240, 240, 240); // Highlight background
+    $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
+    $pdf->Cell($wValueFull, $rowH, ' ' . $ikmText, 1, 1, 'L', true);
+
     $pdf->Ln(8);
 
-    // Detail Tables
+    // === BAGIAN A & B (Tabel Detail) Tetap Sama ===
+
+    // A. DATA SURVEI
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
+
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(0, 150, 100);
     $pdf->SetTextColor(255);
@@ -13056,6 +13176,7 @@ try {
     $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
     $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
     $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
+
     $pdf->SetTextColor(0);
     $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
@@ -13066,14 +13187,16 @@ try {
     $found1 = false;
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
         $found1 = true;
-        $idx = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
-        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idx, $row['feedback'] ?: '-']);
+        $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
+        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
     }
-    if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data.', 1, 1, 'C');
+    if (!$found1) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     $pdf->Ln(6);
 
+    // B. DATA ULASAN
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'B. DATA DETAIL ULASAN MASUK', 0, 1, 'L');
+
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->SetFillColor(255, 193, 7);
     $pdf->SetTextColor(0);
@@ -13082,6 +13205,7 @@ try {
     $pdf->Cell(45, 7, 'Nama', 1, 0, 'L', true);
     $pdf->Cell(20, 7, 'Rating', 1, 0, 'C', true);
     $pdf->Cell(82, 7, 'Pesan', 1, 1, 'L', true);
+
     $pdf->SetFont('Arial', '', 8);
     $pdf->SetWidths([8, 35, 45, 20, 82]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L']);
@@ -13093,44 +13217,52 @@ try {
         $found2 = true;
         $pdf->Row([$no++, formatFullTime($row['created_at']), $row['name'] ?: 'Anonim', $row['rating'] . ' / 5', $row['message'] ?: '-']);
     }
-    if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data.', 1, 1, 'C');
+    if (!$found2) $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
 
-    // TTE
+    // === TANDA TANGAN ===
     $pdf->AddPage();
     $pdf->Ln(5);
     $path = '../images/instansi/';
     $tglCetak = getIndonesianDate();
     $qrSize = 18;
     $yStart = $pdf->GetY();
+
     $pdf->SetXY(120, $yStart);
     $pdf->SetFont('Arial', '', 11);
     $pdf->Cell(70, 5, 'Pandeglang, ' . $tglCetak, 0, 1, 'C');
     $pdf->Ln(5);
     $yJabatan = $pdf->GetY();
+
     $pdf->SetXY(20, $yJabatan);
     $pdf->Cell(70, 5, 'Kepala Tata Usaha,', 0, 0, 'C');
     $pdf->SetXY(120, $yJabatan);
     $pdf->Cell(70, 5, 'Koordinator Tim Pusdatin,', 0, 1, 'C');
+
     $yImage = $pdf->GetY() + 1;
     if (file_exists($path . 'tte-kepala-tata-usaha.png')) $pdf->Image($path . 'tte-kepala-tata-usaha.png', 46, $yImage, $qrSize);
     if (file_exists($path . 'tte-koordinator-tim-pusdatin.png')) $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 146, $yImage, $qrSize);
+
     $pdf->SetY($yImage + 19);
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->SetX(20);
     $pdf->Cell(70, 5, "UMAR MU'TAMAR, S.Ag.", 0, 0, 'C');
     $pdf->SetX(120);
     $pdf->Cell(70, 5, 'YAHYA ZULFIKRI', 0, 1, 'C');
+
     $pdf->SetFont('Arial', '', 10);
     $pdf->SetX(20);
     $pdf->Cell(70, 4, 'NIP. 196903061998031004', 0, 0, 'C');
     $pdf->SetX(120);
     $pdf->Cell(70, 4, 'NIP. 200001142025211016', 0, 1, 'C');
+
     $pdf->Ln(8);
     $pdf->SetFont('Arial', '', 11);
     $pdf->Cell(0, 5, 'Mengetahui,', 0, 1, 'C');
     $pdf->Cell(0, 5, 'Kepala Madrasah,', 0, 1, 'C');
+
     $yImageKamad = $pdf->GetY() + 1;
     if (file_exists($path . 'tte-kepala-madrasah.png')) $pdf->Image($path . 'tte-kepala-madrasah.png', 96, $yImageKamad, $qrSize);
+
     $pdf->SetY($yImageKamad + 19);
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->Cell(0, 5, 'H. EMAN SULAIMAN, S.Ag., M.Pd.', 0, 1, 'C');
@@ -13240,16 +13372,9 @@ try {
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Methods: POST');
 
 $dbPath = __DIR__ . '/../../stats.db';
-
-function getClientIP()
-{
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
-    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
-    return $_SERVER['REMOTE_ADDR'];
-}
 
 try {
     if (!class_exists('SQLite3')) {
@@ -13257,82 +13382,46 @@ try {
     }
 
     $db = new SQLite3($dbPath);
-    $ip_address = getClientIP();
 
-    // 1. Update Struktur Tabel (Add ip_address)
-    $checkTable = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'");
-    if ($checkTable) {
-        $cols = $db->query("PRAGMA table_info(survey_responses)");
-        $hasIpCol = false;
-        while ($row = $cols->fetchArray()) {
-            if ($row['name'] === 'ip_address') $hasIpCol = true;
-        }
-        if (!$hasIpCol) {
-            $db->exec("ALTER TABLE survey_responses ADD COLUMN ip_address TEXT");
-        }
-    } else {
-        $query = "CREATE TABLE IF NOT EXISTS survey_responses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            respondent_name TEXT,
-            respondent_role TEXT,
-            score_zi REAL,
-            score_service REAL,
-            score_academic REAL,
-            feedback TEXT,
-            details_json TEXT,
-            ip_address TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        $db->exec($query);
-    }
-
-    // Helper Stats
-    function getSurveyStats($db)
-    {
-        $sql = "SELECT
-            AVG(score_zi) as zi,
-            AVG(score_service) as service,
-            AVG(score_academic) as academic,
-            COUNT(*) as total
-            FROM survey_responses";
-        $row = $db->querySingle($sql, true);
-
-        return [
-            'zi' => round($row['zi'] ?? 0, 1),
-            'service' => round($row['service'] ?? 0, 1),
-            'academic' => round($row['academic'] ?? 0, 1),
-            'total' => $row['total'] ?? 0
-        ];
-    }
+    // 1. Buat tabel survey_responses
+    // Kita simpan skor per kategori untuk memudahkan reporting nanti
+    $query = "CREATE TABLE IF NOT EXISTS survey_responses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        respondent_name TEXT,
+        respondent_role TEXT,
+        score_zi REAL,       -- Skor Zona Integritas
+        score_service REAL,  -- Skor Pelayanan
+        score_academic REAL, -- Skor Akademik
+        feedback TEXT,
+        details_json TEXT,   -- Detail jawaban per butir soal
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )";
+    $db->exec($query);
 
     // 2. Handle POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Cek IP
-        $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
-        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
-        $res = $checkIp->execute();
-
-        if ($res->fetchArray()) {
-            echo json_encode(['status' => 'error', 'message' => 'Anda sudah mengisi survei ini.']);
-            exit;
-        }
-
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
-        if (empty($data['answers'])) throw new Exception("Data jawaban kosong.");
+        // Validasi dasar
+        if (empty($data['answers'])) {
+            throw new Exception("Data jawaban kosong.");
+        }
 
         $name = htmlspecialchars(strip_tags($data['profile']['name'] ?? 'Anonim'));
         $role = htmlspecialchars(strip_tags($data['profile']['role'] ?? 'Umum'));
         $feedback = htmlspecialchars(strip_tags($data['feedback'] ?? ''));
+
+        // Hitung skor rata-rata per kategori dari data yang dikirim frontend
         $scoreZi = $data['scores']['zi'] ?? 0;
         $scoreService = $data['scores']['service'] ?? 0;
         $scoreAcademic = $data['scores']['academic'] ?? 0;
-        $details = json_encode($data['answers']);
 
-        $stmt = $db->prepare("INSERT INTO survey_responses
-            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json, ip_address)
-            VALUES (:name, :role, :zi, :service, :academic, :feedback, :details, :ip)");
+        $details = json_encode($data['answers']); // Simpan detail jawaban mentah
+
+        $stmt = $db->prepare("INSERT INTO survey_responses 
+            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json) 
+            VALUES (:name, :role, :zi, :service, :academic, :feedback, :details)");
 
         $stmt->bindValue(':name', $name, SQLITE3_TEXT);
         $stmt->bindValue(':role', $role, SQLITE3_TEXT);
@@ -13341,30 +13430,12 @@ try {
         $stmt->bindValue(':academic', $scoreAcademic, SQLITE3_FLOAT);
         $stmt->bindValue(':feedback', $feedback, SQLITE3_TEXT);
         $stmt->bindValue(':details', $details, SQLITE3_TEXT);
-        $stmt->bindValue(':ip', $ip_address, SQLITE3_TEXT);
 
         if ($stmt->execute()) {
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Survei berhasil dikirim.',
-                'stats' => getSurveyStats($db)
-            ]);
+            echo json_encode(['status' => 'success', 'message' => 'Survei berhasil dikirim. Terima kasih!']);
         } else {
-            throw new Exception("Gagal menyimpan data.");
+            throw new Exception("Gagal menyimpan data ke database.");
         }
-    }
-    // 3. Handle GET
-    else {
-        $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
-        $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
-        $res = $checkIp->execute();
-        $hasSubmitted = ($res->fetchArray()) ? true : false;
-
-        echo json_encode([
-            'status' => 'ready',
-            'has_submitted' => $hasSubmitted,
-            'stats' => getSurveyStats($db)
-        ]);
     }
 } catch (Exception $e) {
     http_response_code(500);
@@ -13429,6 +13500,7 @@ try {
   ],
   "categories": ["education"]
 }
+
 ```
 
 ---
@@ -13515,6 +13587,7 @@ try {
 } catch (err) {
   console.error(err);
 }
+
 ```
 
 ---
@@ -13610,6 +13683,7 @@ const path = require("path");
     delete currentObj[properties[properties.length - 1]];
   }
 })();
+
 ```
 
 ---
@@ -13750,6 +13824,7 @@ export default defineConfig({
     extendDefaultPlugins: true,
   },
 });
+
 ```
 
 ---
@@ -13880,6 +13955,7 @@ echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
     "workbox-window": "^7.3.0"
   }
 }
+
 ```
 
 ---
@@ -13893,6 +13969,7 @@ echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
 2. Program Guru Tamu
 3. Prestasi Madrasah
 4. Publish kegiatan yang telah lalu.
+
 ```
 
 ---
@@ -13924,72 +14001,8 @@ echo "=== DEPLOYMENT SELESAI & SUKSES! ==="
   "include": [".astro/types.d.ts", "**/*.ts", "**/*.tsx", "**/*.astro"],
   "exclude": ["node_modules", "dist"]
 }
+
 ```
 
 ---
 
-permasalahan yang saya temukan
-error yang saya temukan
-Akses penyimpanan secara otomatis diberikan untuk sumber “about:neterror” di “https://mtsn1pandeglang.sch.id”.
-Server Response: <empty string> <anonymous code>:1:147461
-overrideMethod <anonymous code>:1
-d https://mtsn1pandeglang.sch.id/_astro/AdminDashboard.D8KQHYcJ.js:18
-Kesalahan peta sumber: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
-Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
-\_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1066:22
-SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
-\_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
-
-Sumber URL: https://mtsn1pandeglang.sch.id/admin/%3Canonymous%20code%3E
-URL Peta Sumber: installHook.js.map
-
-XHRPOST
-https://mtsn1pandeglang.sch.id/api/import.php?action=import
-[HTTP/2 500 677ms]
-
-Server Response: <empty string> <anonymous code>:1:147461
-overrideMethod <anonymous code>:1
-d https://mtsn1pandeglang.sch.id/_astro/AdminDashboard.D8KQHYcJ.js:18
-Mv https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
-Qc https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
-qi https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
-Qc https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:32
-kc https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:33
-Xd https://mtsn1pandeglang.sch.id/_astro/client.DCKK-Ipe.js:33
-
-https://mtsn1pandeglang.sch.id/api/admin.php?action=export&type=survey mungkin memiliki masalah sementara atau mungkin telah dipindahkan.
-
-Kode kesalahan: 500 Internal Server Error
-
-code
-Code
-download
-content_copy
-expand_less
-Sementara ini mungkin situs terlalu sibuk atau tidak menyala. Cobalah beberapa saat lagi.
-
-https://mtsn1pandeglang.sch.id/api/admin.php?action=export&type=feedback mungkin memiliki masalah sementara atau mungkin telah dipindahkan.
-
-Kode kesalahan: 500 Internal Server Error
-
-code
-Code
-download
-content_copy
-expand_less
-Sementara ini mungkin situs terlalu sibuk atau tidak menyala. Cobalah beberapa saat lagi.
-
-https://mtsn1pandeglang.sch.id/api/print_pdf.php?month=1&year=2026 mungkin memiliki masalah sementara atau mungkin telah dipindahkan.
-
-Kode kesalahan: 500 Internal Server Error
-
-code
-Code
-download
-content_copy
-expand_less
-Sementara ini mungkin situs terlalu sibuk atau tidak menyala. Cobalah beberapa saat lagi.
-
-library pdf sudah ada dan database saya versi terbaru dan sudah fix permission
-
-masalah di import, export, print pdf

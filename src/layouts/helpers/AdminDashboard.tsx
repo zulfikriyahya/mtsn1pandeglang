@@ -16,10 +16,12 @@ import {
   FaTimes,
   FaExternalLinkAlt,
   FaQuoteLeft,
-  FaTrash, // Ikon Hapus
-  FaExclamationCircle, // Ikon Konfirmasi
-  FaFileUpload, // Ikon Import (BARU)
+  FaTrash,
+  FaExclamationCircle,
+  FaFileUpload,
   FaFileCsv,
+  FaArrowUp,
+  FaArrowRight,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -55,7 +57,6 @@ interface User {
   picture: string;
 }
 
-// --- HELPER: FORMAT TANGGAL ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -82,31 +83,30 @@ const formatDateIndo = (dateString: string) => {
 };
 
 const AdminDashboard = () => {
-  // --- STATE HOOKS ---
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // State Modal Detail
+  // State Modals
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [modalType, setModalType] = useState<"feedback" | "survey" | null>(
     null,
   );
-
-  // State Modal Konfirmasi Delete
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     ids: number[];
     type: "feedback" | "survey";
     count: number;
   }>({ isOpen: false, ids: [], type: "feedback", count: 0 });
-
-  // State Modal Import (BARU)
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [statDetailModal, setStatDetailModal] = useState<{
+    isOpen: boolean;
+    type: "visits" | "posts" | "feedback" | "survey" | null;
+    title: string;
+  }>({ isOpen: false, type: null, title: "" });
 
-  // State Filter PDF
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
   );
@@ -114,7 +114,6 @@ const AdminDashboard = () => {
     new Date().getFullYear(),
   );
 
-  // --- GOOGLE AUTH INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -231,14 +230,8 @@ const AdminDashboard = () => {
     setModalType(null);
   };
 
-  // --- LOGIKA HAPUS DATA (SINGLE & BULK) ---
   const requestDelete = (ids: number[], type: "feedback" | "survey") => {
-    setConfirmModal({
-      isOpen: true,
-      ids,
-      type,
-      count: ids.length,
-    });
+    setConfirmModal({ isOpen: true, ids, type, count: ids.length });
   };
 
   const executeDelete = async () => {
@@ -252,10 +245,8 @@ const AdminDashboard = () => {
         }),
       });
       const json = await res.json();
-
       if (json.status === "success") {
-        fetchStats(); // Refresh data
-        // Tutup modal detail jika item yang dihapus sedang dibuka
+        fetchStats();
         if (
           selectedItem &&
           confirmModal.ids.includes(selectedItem.id) &&
@@ -273,18 +264,18 @@ const AdminDashboard = () => {
     }
   };
 
-  // --- LOGIKA IMPORT DATA (BARU) ---
   const handleImportSuccess = () => {
     fetchStats();
     setImportModalOpen(false);
   };
 
-  // --- RENDER LOGIC ---
   if (loading)
     return (
-      <div className="text-center p-12">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-        Memuat Sistem...
+      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-darkmode-body">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="text-gray-500 animate-pulse">Memuat Dashboard...</p>
+        </div>
       </div>
     );
 
@@ -307,14 +298,14 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen pb-12 relative">
+    <div className="min-h-screen pb-12 relative bg-gray-50 dark:bg-darkmode-body">
       {/* Header */}
-      <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+      <div className="mb-8 flex flex-col xl:flex-row items-center justify-between gap-4 rounded-xl bg-white p-6 border border-border shadow-sm dark:bg-darkmode-light dark:border-darkmode-border sticky top-24 z-30">
         <div className="flex items-center gap-4 w-full md:w-auto">
           <img
             src={user.picture}
             alt={user.name}
-            className="h-12 w-12 rounded-full border border-gray-200 shadow-sm"
+            className="h-12 w-12 rounded-full border-2 border-primary/20 shadow-sm"
           />
           <div>
             <h3 className="h5 mb-0 font-bold">{user.name}</h3>
@@ -322,7 +313,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Action Controls */}
         <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
           <select
             value={selectedMonth}
@@ -363,7 +353,7 @@ const AdminDashboard = () => {
 
           <button
             onClick={() => setImportModalOpen(true)}
-            className="btn btn-sm flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white border-orange-500 whitespace-nowrap"
+            className="btn btn-sm flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white border-orange-500 whitespace-nowrap shadow-md shadow-orange-500/20"
           >
             <FaFileUpload /> Import
           </button>
@@ -376,7 +366,7 @@ const AdminDashboard = () => {
           </button>
           <button
             onClick={handleLogout}
-            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap"
+            className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap shadow-md shadow-red-500/20"
           >
             <FaSignOutAlt /> Keluar
           </button>
@@ -400,41 +390,68 @@ const AdminDashboard = () => {
       )}
 
       {data && (
-        <div className="animate-fade-in">
-          {/* Overview Cards */}
-          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="animate-fade-in space-y-8">
+          {/* Glassmorphism Cards */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Kunjungan"
               value={data.overview.visits.toLocaleString()}
               icon={<FaEye />}
-              color="text-blue-500"
-              bg="bg-blue-50 dark:bg-blue-900/20"
+              color="text-blue-400"
+              gradient="from-blue-500/20 to-cyan-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "visits",
+                  title: "Statistik Kunjungan",
+                })
+              }
             />
             <StatCard
               label="Artikel Dibaca"
               value={data.overview.posts_count.toLocaleString()}
               icon={<FaChartLine />}
-              color="text-green-500"
-              bg="bg-green-50 dark:bg-green-900/20"
+              color="text-emerald-400"
+              gradient="from-emerald-500/20 to-teal-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "posts",
+                  title: "Artikel Terpopuler",
+                })
+              }
             />
             <StatCard
               label="Total Ulasan"
               value={data.overview.feedback_count.toLocaleString()}
               icon={<FaStar />}
-              color="text-yellow-500"
-              bg="bg-yellow-50 dark:bg-yellow-900/20"
+              color="text-yellow-400"
+              gradient="from-yellow-500/20 to-orange-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "feedback",
+                  title: "Ulasan Terbaru",
+                })
+              }
             />
             <StatCard
               label="Responden Survei"
               value={data.overview.survey_count.toLocaleString()}
               icon={<FaPoll />}
-              color="text-purple-500"
-              bg="bg-purple-50 dark:bg-purple-900/20"
+              color="text-purple-400"
+              gradient="from-purple-500/20 to-pink-500/5"
+              onClick={() =>
+                setStatDetailModal({
+                  isOpen: true,
+                  type: "survey",
+                  title: "Ringkasan Survei",
+                })
+              }
             />
           </div>
 
-          {/* Navigation Tabs */}
-          <div className="mb-8 border-b border-border dark:border-darkmode-border">
+          <div className="border-b border-border dark:border-darkmode-border">
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
                 { id: "overview", label: "Ringkasan Grafik" },
@@ -445,7 +462,7 @@ const AdminDashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-gray-500 hover:border-gray-300 dark:text-gray-400"}`}
+                  className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-all ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-gray-500 hover:border-gray-300 dark:text-gray-400 hover:text-gray-700"}`}
                 >
                   {tab.label}
                 </button>
@@ -453,9 +470,8 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* TAB CONTENTS */}
           {activeTab === "overview" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6">Tren Aktivitas (30 Hari Terakhir)</h3>
                 <div className="h-72">
@@ -724,14 +740,14 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* MODAL IMPORT DATA (BARU) */}
+      {/* --- ALL MODALS --- */}
+
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => setImportModalOpen(false)}
         onSuccess={handleImportSuccess}
       />
 
-      {/* CUSTOM CONFIRMATION MODAL */}
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
         title="Konfirmasi Penghapusan"
@@ -740,11 +756,10 @@ const AdminDashboard = () => {
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
 
-      {/* DETAIL MODAL POPUP */}
+      {/* DETAIL ITEM MODAL */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
-            {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
               <div>
                 <h3 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -757,13 +772,11 @@ const AdminDashboard = () => {
               </div>
               <button
                 onClick={closeDetail}
-                className="text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-white/10 p-2 rounded-full shadow-sm"
+                className="text-gray-400 hover:text-red-500 transition-colors p-2"
               >
                 <FaTimes />
               </button>
             </div>
-
-            {/* Modal Content */}
             <div className="p-6">
               <div className="flex items-start gap-4 mb-6">
                 <div className="h-12 w-12 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
@@ -778,7 +791,6 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-500">
                     {selectedItem.respondent_role || "Pengunjung / Wali Murid"}
                   </p>
-
                   {modalType === "feedback" && (
                     <div className="mt-2 flex gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
@@ -795,8 +807,6 @@ const AdminDashboard = () => {
                   )}
                 </div>
               </div>
-
-              {/* Message Box */}
               <div className="relative rounded-xl bg-gray-50 dark:bg-white/5 p-6 border border-gray-100 dark:border-darkmode-border">
                 <FaQuoteLeft className="absolute top-4 left-4 text-gray-200 dark:text-gray-600 text-2xl" />
                 <div className="relative z-10">
@@ -810,8 +820,6 @@ const AdminDashboard = () => {
                   </p>
                 </div>
               </div>
-
-              {/* Stats for Survey */}
               {modalType === "survey" && (
                 <div className="grid grid-cols-3 gap-4 mt-6">
                   <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
@@ -841,8 +849,6 @@ const AdminDashboard = () => {
                 </div>
               )}
             </div>
-
-            {/* Modal Footer */}
             <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-between items-center text-xs text-gray-400 border-t border-gray-100 dark:border-darkmode-border">
               <span>IP: {selectedItem.ip_address}</span>
               <div className="flex gap-2">
@@ -863,13 +869,280 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* STAT DETAIL MODAL (NEW FEATURE - REAL DATA) */}
+      <StatDetailModal
+        isOpen={statDetailModal.isOpen}
+        onClose={() =>
+          setStatDetailModal({ ...statDetailModal, isOpen: false })
+        }
+        title={statDetailModal.title}
+        type={statDetailModal.type}
+        data={data}
+      />
     </div>
   );
 };
 
 // --- SUB COMPONENTS ---
 
-// 1. IMPORT MODAL
+const StatCard = ({ label, value, icon, color, gradient, onClick }: any) => (
+  <div
+    onClick={onClick}
+    className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 dark:bg-white/5 backdrop-blur-lg p-6 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/20 cursor-pointer"
+  >
+    <div
+      className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} blur-2xl opacity-20 transition-all duration-500 group-hover:scale-150 group-hover:opacity-30`}
+    ></div>
+    <div className="relative z-10 flex items-start justify-between">
+      <div>
+        <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+          {label}
+        </p>
+        <h3 className="mt-2 text-3xl font-bold text-gray-800 dark:text-white transition-all group-hover:scale-105 origin-left">
+          {value}
+        </h3>
+        <div className="mt-2 flex items-center gap-1 text-xs font-medium text-green-500 bg-green-500/10 w-fit px-2 py-0.5 rounded-full">
+          <FaArrowUp className="text-[10px]" />
+          <span>Active</span>
+        </div>
+      </div>
+      <div
+        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-xl ${color} shadow-inner transition-transform duration-300 group-hover:rotate-12`}
+      >
+        {icon}
+      </div>
+    </div>
+    <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100"></div>
+    <div className="absolute bottom-4 right-4 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2">
+      <FaArrowRight className="text-gray-400 text-sm" />
+    </div>
+  </div>
+);
+
+const StatDetailModal = ({ isOpen, onClose, title, type, data }: any) => {
+  if (!isOpen || !data) return null;
+
+  // Helper untuk visit stats
+  const getVisitStats = () => {
+    const visits = data.charts.activity.visits || [];
+    const today = visits[visits.length - 1] || 0;
+    const totalPeriod = visits.reduce((a: number, b: number) => a + b, 0);
+    const average =
+      visits.length > 0 ? Math.round(totalPeriod / visits.length) : 0;
+    return { today, average, visits };
+  };
+
+  const visitStats =
+    type === "visits" ? getVisitStats() : { today: 0, average: 0, visits: [] };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fade-in">
+      <div className="bg-white dark:bg-[#1a1d24] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/10 flex flex-col max-h-[85vh]">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
+          <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+            {title}
+          </h3>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+          >
+            <FaTimes />
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+          {type === "visits" && (
+            <div>
+              <div className="mb-6 h-64 w-full bg-gradient-to-b from-blue-50/50 to-transparent rounded-xl p-4 border border-blue-100 dark:border-blue-900/30">
+                <Line
+                  data={{
+                    labels: data.charts.activity.labels,
+                    datasets: [
+                      {
+                        label: "Kunjungan Harian (Realtime)",
+                        data: visitStats.visits,
+                        borderColor: "#3b82f6",
+                        backgroundColor: (context: any) => {
+                          const ctx = context.chart.ctx;
+                          const gradient = ctx.createLinearGradient(
+                            0,
+                            0,
+                            0,
+                            200,
+                          );
+                          gradient.addColorStop(0, "rgba(59, 130, 246, 0.5)");
+                          gradient.addColorStop(1, "rgba(59, 130, 246, 0.0)");
+                          return gradient;
+                        },
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: "#3b82f6",
+                        pointBorderWidth: 2,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        grid: { color: "rgba(0,0,0,0.05)" },
+                      },
+                      x: { grid: { display: false } },
+                    },
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center border border-gray-100 dark:border-white/10">
+                  <p className="text-sm text-gray-500 mb-1">
+                    Kunjungan Hari Ini
+                  </p>
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {visitStats.today.toLocaleString()}
+                  </p>
+                </div>
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 text-center border border-gray-100 dark:border-white/10">
+                  <p className="text-sm text-gray-500 mb-1">Rata-rata / Hari</p>
+                  <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                    {visitStats.average.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {type === "posts" && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                Top 5 Artikel Dibaca
+              </h4>
+              {data.tables.posts.slice(0, 5).map((post: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-white/10"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${idx < 3 ? "bg-yellow-100 text-yellow-700" : "bg-gray-100 text-gray-600"}`}
+                    >
+                      {idx + 1}
+                    </span>
+                    <span className="font-medium text-sm line-clamp-1 max-w-[250px]">
+                      {post.slug.replace(/-/g, " ")}
+                    </span>
+                  </div>
+                  <span className="text-sm font-bold text-green-600 flex items-center gap-1">
+                    <FaEye className="text-xs" /> {post.views}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          {type === "feedback" && (
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                Ulasan Terbaru
+              </h4>
+              {data.tables.feedbacks.slice(0, 5).map((fb: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-xs">
+                        {(fb.name || "A").charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">{fb.name}</p>
+                        <div className="flex text-yellow-400 text-[10px]">
+                          {[...Array(5)].map((_, i) => (
+                            <FaStar
+                              key={i}
+                              className={
+                                i < fb.rating
+                                  ? "text-yellow-400"
+                                  : "text-gray-300"
+                              }
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-gray-400">
+                      {formatDateIndo(fb.created_at)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+                    "{fb.message}"
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+          {type === "survey" && (
+            <div>
+              <div className="h-60 mb-6">
+                <Bar
+                  data={{
+                    labels: ["Zona Integritas", "Pelayanan", "Akademik"],
+                    datasets: [
+                      {
+                        label: "Skor Rata-rata",
+                        data: [
+                          data.charts.survey_avg.zi,
+                          data.charts.survey_avg.service,
+                          data.charts.survey_avg.academic,
+                        ],
+                        backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
+                        borderRadius: 8,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { max: 5 } },
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="text-center p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                  <p className="text-xs text-gray-500">ZI</p>
+                  <p className="font-bold text-blue-600">
+                    {data.charts.survey_avg.zi}
+                  </p>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
+                  <p className="text-xs text-gray-500">Layanan</p>
+                  <p className="font-bold text-green-600">
+                    {data.charts.survey_avg.service}
+                  </p>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                  <p className="text-xs text-gray-500">Akademik</p>
+                  <p className="font-bold text-purple-600">
+                    {data.charts.survey_avg.academic}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="p-4 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5 text-right">
+          <button onClick={onClose} className="btn btn-primary btn-sm">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   const [importType, setImportType] = useState<"feedback" | "survey">(
     "feedback",
@@ -888,19 +1161,16 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
 
   const handleUpload = async () => {
     if (!file) return alert("Pilih file CSV terlebih dahulu.");
-
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", importType);
-
     try {
       const res = await fetch("/api/import.php?action=import", {
         method: "POST",
         body: formData,
       });
       const json = await res.json();
-
       if (json.status === "success") {
         alert(json.message);
         onSuccess();
@@ -924,7 +1194,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
             <FaTimes className="text-gray-400 hover:text-red-500" />
           </button>
         </div>
-
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
             Pilih Tipe Data
@@ -937,7 +1206,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                 value="feedback"
                 checked={importType === "feedback"}
                 onChange={() => setImportType("feedback")}
-              />
+              />{" "}
               Data Ulasan
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
@@ -947,12 +1216,11 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                 value="survey"
                 checked={importType === "survey"}
                 onChange={() => setImportType("survey")}
-              />
+              />{" "}
               Data Survei
             </label>
           </div>
         </div>
-
         <div className="mb-6">
           <label className="block text-sm font-medium mb-2">Upload File</label>
           <div
@@ -987,7 +1255,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
             </a>
           </div>
         </div>
-
         <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
@@ -1009,7 +1276,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   );
 };
 
-// 2. CONFIRMATION MODAL
 const ConfirmationModal = ({
   isOpen,
   title,
@@ -1018,7 +1284,6 @@ const ConfirmationModal = ({
   onCancel,
 }: any) => {
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
@@ -1052,32 +1317,6 @@ const ConfirmationModal = ({
   );
 };
 
-// 3. STAT CARD
-const StatCard = ({ label, value, icon, color, bg }: any) => (
-  <div className="flex items-center justify-between rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:shadow-md dark:bg-darkmode-light dark:border-darkmode-border">
-    <div>
-      <p className="text-sm font-medium text-text-light">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-text-dark dark:text-white">
-        {value}
-      </p>
-    </div>
-    <div
-      className={`flex h-12 w-12 items-center justify-center rounded-lg ${bg} text-xl ${color}`}
-    >
-      {icon}
-    </div>
-  </div>
-);
-
-// 4. DATA TABLE (Dengan Fitur Selection)
-interface Column {
-  key: string;
-  label: string;
-  sortable?: boolean;
-  className?: string;
-  render?: (value: any, row: any) => React.ReactNode;
-}
-
 const DataTable = ({
   title,
   data,
@@ -1086,15 +1325,7 @@ const DataTable = ({
   onDownload,
   enableSelection = false,
   onBulkDelete,
-}: {
-  title: string;
-  data: any[];
-  columns: Column[];
-  searchKeys?: string[];
-  onDownload: () => void;
-  enableSelection?: boolean;
-  onBulkDelete?: (ids: number[]) => void;
-}) => {
+}: any) => {
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -1104,15 +1335,14 @@ const DataTable = ({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  // Reset selection when data changes
   useEffect(() => {
     setSelectedIds([]);
   }, [data, currentPage, search]);
 
   const filteredData = useMemo(() => {
     if (!search) return data;
-    return data.filter((row) =>
-      searchKeys.some((key) =>
+    return data.filter((row: any) =>
+      searchKeys.some((key: any) =>
         String(row[key] || "")
           .toLowerCase()
           .includes(search.toLowerCase()),
@@ -1122,7 +1352,7 @@ const DataTable = ({
 
   const sortedData = useMemo(() => {
     if (!sortConfig) return filteredData;
-    return [...filteredData].sort((a, b) => {
+    return [...filteredData].sort((a: any, b: any) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
       if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
@@ -1136,7 +1366,6 @@ const DataTable = ({
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage,
   );
-
   const requestSort = (key: string) => {
     setSortConfig({
       key,
@@ -1146,17 +1375,13 @@ const DataTable = ({
           : "asc",
     });
   };
-
-  // Selection Logic
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      const currentIds = paginatedData.map((row) => row.id);
-      setSelectedIds(currentIds);
+      setSelectedIds(paginatedData.map((row: any) => row.id));
     } else {
       setSelectedIds([]);
     }
   };
-
   const handleSelectRow = (id: number) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((sid) => sid !== id));
@@ -1170,7 +1395,6 @@ const DataTable = ({
       <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between border-b border-border dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
         <div className="flex items-center gap-3">
           <h3 className="text-lg font-bold">{title}</h3>
-          {/* BULK DELETE BUTTON */}
           {enableSelection && selectedIds.length > 0 && (
             <button
               onClick={() => onBulkDelete && onBulkDelete(selectedIds)}
@@ -1180,7 +1404,6 @@ const DataTable = ({
             </button>
           )}
         </div>
-
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -1206,7 +1429,6 @@ const DataTable = ({
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-100 text-xs uppercase text-gray-500 dark:bg-black/20">
             <tr>
-              {/* CHECKBOX HEADER */}
               {enableSelection && (
                 <th className="px-4 py-3 w-10 text-center">
                   <div className="flex items-center justify-center">
@@ -1216,7 +1438,7 @@ const DataTable = ({
                       onChange={handleSelectAll}
                       checked={
                         paginatedData.length > 0 &&
-                        paginatedData.every((row) =>
+                        paginatedData.every((row: any) =>
                           selectedIds.includes(row.id),
                         )
                       }
@@ -1225,7 +1447,7 @@ const DataTable = ({
                 </th>
               )}
               <th className="px-6 py-3 w-10 text-center">#</th>
-              {columns.map((col) => (
+              {columns.map((col: any) => (
                 <th
                   key={col.key}
                   className={`px-6 py-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-white/10 transition-colors ${col.className || ""}`}
@@ -1255,12 +1477,11 @@ const DataTable = ({
           </thead>
           <tbody className="divide-y divide-border dark:divide-darkmode-border">
             {paginatedData.length > 0 ? (
-              paginatedData.map((row, i) => (
+              paginatedData.map((row: any, i: number) => (
                 <tr
                   key={i}
                   className={`transition-colors ${selectedIds.includes(row.id) ? "bg-blue-50 dark:bg-blue-900/20" : "hover:bg-gray-50 dark:hover:bg-white/5"}`}
                 >
-                  {/* CHECKBOX ROW */}
                   {enableSelection && (
                     <td className="px-4 py-4 text-center">
                       <div className="flex items-center justify-center">
@@ -1276,7 +1497,7 @@ const DataTable = ({
                   <td className="px-6 py-4 text-center text-gray-400">
                     {(currentPage - 1) * rowsPerPage + i + 1}
                   </td>
-                  {columns.map((col) => (
+                  {columns.map((col: any) => (
                     <td
                       key={col.key}
                       className={`px-6 py-4 ${col.className || ""}`}
