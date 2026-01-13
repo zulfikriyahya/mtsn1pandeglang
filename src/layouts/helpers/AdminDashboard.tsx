@@ -704,7 +704,7 @@ const AdminDashboard = () => {
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <div className="w-full max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-xl dark:border-darkmode-border dark:bg-darkmode-light">
           <img
-            src="/images/logo.png"
+            src="/images/brand-lightmode.png"
             alt="Logo"
             className="mx-auto mb-6 h-12"
           />
@@ -1489,7 +1489,7 @@ const AdminDashboard = () => {
                   className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                      {val} ✯
+                      {val} â˜…
                     </span>
                   ),
                 },
