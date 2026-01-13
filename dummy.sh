@@ -2,9 +2,9 @@
 
 # ==============================================================================
 # DUMMY ULTIMATE DATA GENERATOR
-# Version: 3.0 (Final Release)
+# Version: 4.0 (Updated for 6 Categories Survey)
 # Output: ./dummy/
-# Features: Enhanced Database, Strict Formats, Massive Variations
+# Features: Enhanced Database, 6 Survey Categories, Massive Variations
 # ==============================================================================
 
 OUTPUT_DIR="dummy"
@@ -12,7 +12,9 @@ OUTPUT_DIR="dummy"
 # Bersihkan layar dan tampilkan header
 clear
 echo "=================================================================="
-echo "   GENERATOR DATA DUMMY (ULTIMATE EDITION)"
+echo "   GENERATOR DATA DUMMY (ULTIMATE EDITION v4.0)"
+echo "   Support 6 Kategori Survei: ZI, Service, Academic, Facilities,"
+echo "   Management, Culture"
 echo "=================================================================="
 
 # ------------------------------------------------------------------------------
@@ -189,7 +191,7 @@ female_last=(
 )
 
 # ------------------------------------------------------------------------------
-# 3. DATABASE PESAN / KONTEKS (DITINGKATKAN - Lebih Natural)
+# 3. DATABASE PESAN / KONTEKS (DITINGKATKAN)
 # ------------------------------------------------------------------------------
 
 # ULASAN WEBSITE/SEKOLAH (General)
@@ -250,60 +252,137 @@ msg_env=(
 
 ALL_MSGS=("${msg_service[@]}" "${msg_acad[@]}" "${msg_ekskul[@]}" "${msg_env[@]}")
 
-# ROLES & FEEDBACK KHUSUS SURVEI
+# ROLES & FEEDBACK KHUSUS SURVEI (6 KATEGORI)
 roles=(
 "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid"
-"Siswa Kelas 7" "Siswa Kelas 8" "Siswa Kelas 9" "Siswa Kelas 9" "Siswa Kelas 7" "Siswa Kelas 8"
-"Alumni" "Alumni" "Alumni"
-"Mahasiswa PLP UIN Banten" "Mahasiswa PLP" "Mahasiswa Magang"
-"Masyarakat Umum" "Tamu Dinas" "Calon Wali Murid" "Pengawas Madrasah"
+"Siswa" "Siswa" "Siswa" "Siswa"
+"Alumni" "Alumni"
+"Tamu / Masyarakat Umum"
+"Guru / Staf"
 )
 
-fb_parent=(
-"Pelayanan PTSP sangat memuaskan, legalisir ijazah cepat dan gratis sesuai Zona Integritas."
-"Program Kurikulum Berbasis Cinta membuat anak saya lebih bersemangat sekolah."
-"Sangat terbantu dengan sistem tracking berkas via WhatsApp, inovasi yang bagus."
-"Transparansi biaya PPDB sangat jelas, tidak ada pungutan liar."
-"Terima kasih atas program Guest Teacher, anak saya jadi punya wawasan dunia kerja."
-"Website sekolah sangat informatif dan cepat (0.8 detik), mudah pantau berita."
-"Fasilitas ruang tunggu PTSP nyaman, ada charging station dan air minum."
-"Komunikasi Wali Kelas sangat baik, saya merasa dilibatkan dalam pendidikan anak."
-"Program Tahfidz Intensif sangat efektif, hafalan anak saya meningkat pesat."
-"Lingkungan sekolah asri dan aman, satpam sangat ramah membantu."
-"Mohon dipertahankan kebersihan toilet siswanya, anak saya nyaman."
-"Informasi di grup WhatsApp paguyuban sangat update dan jelas."
-"Sistem pembayaran komite yang transparan sangat saya apresiasi."
-"Guru BK sangat proaktif dalam memantau perkembangan mental siswa."
+# Feedback berdasarkan kategori
+fb_zi=(
+"Pelayanan PTSP sangat memuaskan, tidak ada pungli sama sekali."
+"Transparansi biaya dan prosedur sangat jelas, sesuai standar Zona Integritas."
+"Tidak ada pungutan liar, semua sesuai ketentuan resmi."
+"Petugas menolak gratifikasi, sangat profesional dan berintegritas."
+"Sistem pengaduan responsif, keluhan saya ditanggapi dengan baik."
+"Informasi persyaratan ditampilkan secara terbuka dan mudah diakses."
+"Petugas tidak diskriminatif, melayani semua dengan adil."
+"Whistleblowing system tersedia dan aman untuk pelaporan."
+"Tidak ada praktik percaloan, semua urusan langsung dengan petugas resmi."
+"Monitoring internal berjalan baik untuk mencegah penyimpangan."
 )
 
-fb_student=(
-"Bangga banget sama Drumband Gema Nada yang sering juara!"
-"Ekskul Paskibra Satria Pandeglang melatih kedisiplinan saya dengan sangat baik."
-"Fasilitas Kelas Digital keren, belajar pakai tablet jadi nggak bosen."
-"Kantinnya bersih dan sehat, kebijakan Zero Plastic bikin lingkungan sekolah rapi."
-"Senang bisa gabung SISPALA, banyak belajar tentang alam dan survival."
-"Guru-gurunya asik, metode belajarnya nggak kaku dan mudah dimengerti."
-"Wi-Fi sekolah kencang, sangat membantu buat ngerjain tugas di perpus digital."
-"Lapangan Futsal dan Basketnya bagus, sering dipakai tanding antar kelas."
-"Toilet siswa bersih dan wangi, petugas kebersihannya rajin."
-"Kegiatan LDKS OSIS sangat berkesan, melatih jiwa kepemimpinan kami."
-"Perpustakaannya adem, bukunya lengkap, enak buat ngadem pas istirahat."
-"Pak Satpam baik banget, suka bantuin nyebrang jalan."
-"Jadwal pelajaran tersusun rapi, tidak terlalu membebani siswa."
+fb_service=(
+"Petugas melayani dengan ramah dan sopan, 3S benar-benar diterapkan."
+"Ruang tunggu nyaman, bersih, dilengkapi AC dan charging station."
+"Waktu penyelesaian layanan sangat cepat sesuai standar."
+"Petugas sangat kompeten memberikan solusi dan informasi."
+"Sistem antrian tertib dan adil untuk semua pemohon."
+"Informasi alur pelayanan sangat jelas dan mudah dipahami."
+"Fasilitas toilet, mushola, parkir tersedia dan bersih."
+"Petugas sangat responsif menangani pertanyaan dan masalah."
+"Formulir mudah didapat dan dipahami dengan baik."
+"Layanan pengaduan mudah diakses dan ditanggapi dengan cepat."
+"Display monitor antrian berfungsi dengan baik."
+"Tersedia layanan konsultasi yang sangat membantu."
+"Ruang pelayanan memiliki pencahayaan dan AC yang baik."
+"Fasilitas untuk disabilitas tersedia dengan lengkap."
+"Jam pelayanan sesuai dan petugas hadir tepat waktu."
 )
 
-fb_general=(
-"Salut dengan komitmen Zona Integritas menuju WBK/WBBM, pelayanan sangat prima."
-"Sebagai alumni, saya bangga melihat kemajuan madrasah yang pesat."
-"Mahasiswa PLP UIN Banten sangat terbantu dengan bimbingan guru pamong di sini."
-"Website madrasah sangat modern, fitur Dark Mode-nya nyaman di mata."
-"Proses administrasi sangat transparan dan akuntabel."
-"Lingkungan Madrasah Adiwiyata sangat terasa, hijau dan sejuk."
-"Pelayanan satu pintu (PTSP) sangat memudahkan urusan tamu dinas."
-"Tamu disambut dengan ramah, buku tamu digitalnya keren."
-"Fasilitas ibadah (Masjid) sangat bersih dan nyaman untuk tamu."
-"Sebagai masyarakat sekitar, saya tidak terganggu dengan kegiatan sekolah, justru merasa bangga."
-"Kunjungan studi banding kami diterima dengan sangat baik oleh Kepala Madrasah."
+fb_academic=(
+"Guru menguasai materi dan menyampaikannya dengan menarik."
+"Komunikasi guru dengan wali murid sangat lancar dan terbuka."
+"Fasilitas pembelajaran mendukung kebutuhan belajar siswa."
+"Informasi perkembangan akademik disampaikan secara berkala."
+"Metode pembelajaran bervariasi dan sesuai kebutuhan siswa."
+"Guru memberikan perhatian dan bimbingan yang memadai."
+"Penilaian hasil belajar objektif, transparan, dan tepat waktu."
+"Program ekstrakurikuler beragam dan berkualitas."
+"Fasilitas teknologi memadai dan dimanfaatkan dengan baik."
+"Lingkungan sekolah kondusif, aman, dan mendukung pembelajaran."
+"Sekolah melakukan evaluasi dan perbaikan berkelanjutan."
+"Guru menerapkan pendidikan karakter dalam pembelajaran."
+"Kurikulum relevan dengan perkembangan zaman."
+"Guru menggunakan media pembelajaran yang kreatif."
+"Program remedial dan pengayaan sangat membantu siswa."
+"Perpustakaan lengkap dan mudah diakses."
+"Laboratorium memiliki peralatan yang memadai."
+"Tugas proporsional dan bermakna untuk siswa."
+"Bimbingan konseling efektif mendukung perkembangan siswa."
+"Guru memberikan feedback konstruktif yang membangun."
+)
+
+fb_facilities=(
+"Kondisi gedung sekolah terawat dengan baik dan aman."
+"Kebersihan lingkungan sekolah sangat terjaga."
+"Toilet siswa bersih, memadai, dan berfungsi dengan baik."
+"Sistem keamanan sekolah baik dengan satpam dan CCTV."
+"Kantin bersih, sehat, dan menyediakan makanan bergizi."
+"Lapangan olahraga tersedia dan dalam kondisi baik."
+"Fasilitas UKS lengkap dan dikelola dengan baik."
+"Mushola bersih dan nyaman digunakan."
+"Area parkir tertata rapi dan aman."
+"Sistem penerangan di seluruh area berfungsi dengan baik."
+"Sistem sanitasi dan pengelolaan sampah terorganisir."
+"Jalur evakuasi dan sistem penanggulangan bencana jelas."
+"Fasilitas air bersih tersedia dan mudah diakses."
+"Ventilasi dan sirkulasi udara di kelas sangat baik."
+"Area hijau membuat lingkungan sejuk dan asri."
+"Fasilitas untuk disabilitas tersedia dengan lengkap."
+"Aula tersedia untuk kegiatan besar sekolah."
+"Sistem drainase berfungsi baik tanpa genangan."
+"Papan informasi tertata rapi dan selalu diperbarui."
+"Perawatan fasilitas dilakukan rutin dan responsif."
+)
+
+fb_management=(
+"Kepala sekolah menunjukkan kepemimpinan yang visioner."
+"Visi dan misi sekolah jelas dan diimplementasikan dengan baik."
+"Kepala sekolah terbuka menerima masukan dan kritik."
+"Sistem administrasi sekolah tertib dan transparan."
+"Proses PPDB dilakukan secara objektif dan transparan."
+"Informasi kebijakan disampaikan dengan jelas."
+"Program kerja tahunan terstruktur dan terlaksana dengan baik."
+"Komite sekolah aktif dan melibatkan orang tua."
+"Pengelolaan keuangan akuntabel dan dilaporkan berkala."
+"Sekolah responsif menangani keluhan orang tua."
+"Sistem reward and punishment adil untuk siswa dan guru."
+"Kepala sekolah aktif melakukan supervisi pembelajaran."
+"SOP jelas untuk berbagai kegiatan sekolah."
+"Rapat koordinasi rutin berjalan dengan baik."
+"Evaluasi diri dilakukan berkala untuk perbaikan."
+"Dokumentasi dan arsip tertata rapi."
+"Program pengembangan SDM guru terencana dengan baik."
+"Kerjasama dengan stakeholder eksternal berjalan baik."
+"Kepala sekolah memberikan teladan dalam disiplin."
+"Sekolah inovatif menghadapi tantangan dan perubahan."
+)
+
+fb_culture=(
+"Hubungan warga sekolah terjalin harmonis dan saling menghargai."
+"Lingkungan inklusif dan ramah terhadap keberagaman."
+"Tidak ada praktik bullying di lingkungan sekolah."
+"Nilai-nilai religius dan moral diterapkan sehari-hari."
+"Budaya disiplin diterapkan dengan konsisten."
+"Siswa diajarkan menghormati guru dan sesama."
+"Budaya prestasi dan kompetisi sehat didorong."
+"Program pembinaan karakter terintegrasi dengan baik."
+"Tradisi sekolah mempererat kebersamaan warga sekolah."
+"Lingkungan mendukung kreativitas dan inovasi siswa."
+"Budaya gotong royong dan kepedulian sosial kuat."
+"Kampanye gaya hidup sehat dan peduli lingkungan aktif."
+"Guru dan staf menjadi role model yang baik."
+"Apresiasi diberikan kepada siswa berprestasi."
+"Kegiatan spiritual dilaksanakan secara rutin."
+"Siswa bertanggung jawab terhadap tugas mereka."
+"Komunikasi warga sekolah terbuka dan konstruktif."
+"Aturan dan tata tertib jelas, adil, dan ditegakkan."
+"Program parenting membangun kolaborasi keluarga-sekolah."
+"Siswa merasa aman, nyaman, dan bahagia di sekolah."
 )
 
 # USER AGENTS (MODERN 2024-2025 MIX)
@@ -359,6 +438,24 @@ gen_rating() {
     local max=5
     local range=$((max - min + 1))
     echo $((min + RANDOM % range))
+}
+
+# Fungsi untuk generate score desimal (1.00 - 5.00)
+gen_score_decimal() {
+    local min=$INPUT_MIN_STAR
+    local max=5
+    local range=$((max - min + 1))
+    local integer=$((min + RANDOM % range))
+    
+    # Generate decimal 00-99
+    local decimal=$((RANDOM % 100))
+    
+    # Format dengan 2 digit (tambah leading zero jika perlu)
+    if [ $decimal -lt 10 ]; then
+        echo "${integer}.0${decimal}"
+    else
+        echo "${integer}.${decimal}"
+    fi
 }
 
 # ------------------------------------------------------------------------------
@@ -424,13 +521,13 @@ done
 echo -e "\n   [OK] Selesai."
 
 
-# === SECTION 2: SURVEI (STRICT FORMAT) ===
+# === SECTION 2: SURVEI (6 KATEGORI - UPDATED FORMAT) ===
 echo ""
-echo ">>> MEMULAI GENERATE DATA SURVEI..."
-echo "Format: respondent_name,respondent_role,score_zi,score_service,score_academic,feedback,created_at,ip_address"
+echo ">>> MEMULAI GENERATE DATA SURVEI (6 KATEGORI)..."
+echo "Format: respondent_name,respondent_role,score_zi,score_service,score_academic,score_facilities,score_management,score_culture,feedback,created_at,ip_address"
 
 BASE_FILENAME="survei_part"
-HEADER_CSV="respondent_name,respondent_role,score_zi,score_service,score_academic,feedback,created_at,ip_address"
+HEADER_CSV="respondent_name,respondent_role,score_zi,score_service,score_academic,score_facilities,score_management,score_culture,feedback,created_at,ip_address"
 count=0
 file_index=1
 current_file="${OUTPUT_DIR}/${BASE_FILENAME}_${file_index}.csv"
@@ -456,23 +553,32 @@ while [ $count -lt $INPUT_TOTAL ]; do
     fi
     used_names_survei["$fullname"]=1
     
-    # Data Survey
+    # Data Survey - 6 Kategori dengan decimal score
     role=$(get_random roles[@])
-    s_zi=$(gen_rating)
-    s_srv=$(gen_rating)
-    s_aca=$(gen_rating)
+    s_zi=$(gen_score_decimal)
+    s_srv=$(gen_score_decimal)
+    s_aca=$(gen_score_decimal)
+    s_fac=$(gen_score_decimal)
+    s_mgt=$(gen_score_decimal)
+    s_cul=$(gen_score_decimal)
     
-    case "$role" in
-        *"Wali Murid"*|*"Calon"*) msg=$(get_random fb_parent[@]) ;;
-        *"Siswa"*) msg=$(get_random fb_student[@]) ;;
-        *) msg=$(get_random fb_general[@]) ;;
+    # Pilih feedback berdasarkan kategori dengan skor tertinggi
+    # Untuk variasi, ambil dari berbagai kategori feedback
+    feedback_choice=$((RANDOM % 6))
+    case $feedback_choice in
+        0) msg=$(get_random fb_zi[@]) ;;
+        1) msg=$(get_random fb_service[@]) ;;
+        2) msg=$(get_random fb_academic[@]) ;;
+        3) msg=$(get_random fb_facilities[@]) ;;
+        4) msg=$(get_random fb_management[@]) ;;
+        5) msg=$(get_random fb_culture[@]) ;;
     esac
     
     c_at=$(gen_date)
     ip=$(gen_ip)
     
-    # Tulis sesuai format yang diminta
-    echo "$fullname,$role,$s_zi,$s_srv,$s_aca,\"$msg\",$c_at,$ip" >> "$current_file"
+    # Tulis sesuai format yang diminta (6 kategori)
+    echo "$fullname,$role,$s_zi,$s_srv,$s_aca,$s_fac,$s_mgt,$s_cul,\"$msg\",$c_at,$ip" >> "$current_file"
     ((count++))
     
     if (( count % INPUT_BATCH == 0 && count < INPUT_TOTAL )); then
@@ -527,5 +633,14 @@ echo "   SEMUA PROSES BERHASIL!"
 echo "=================================================================="
 echo "Lokasi Folder  : ./$OUTPUT_DIR/"
 echo "Total File     : $((file_index * 3)) File CSV"
+echo ""
+echo "DETAIL FORMAT:"
+echo "1. ULASAN      : name, rating, message, created_at, ip_address"
+echo "2. SURVEI      : respondent_name, respondent_role,"
+echo "                 score_zi, score_service, score_academic,"
+echo "                 score_facilities, score_management, score_culture,"
+echo "                 feedback, created_at, ip_address"
+echo "3. KUNJUNGAN   : ip_address, user_agent, created_at"
+echo ""
 echo "Silakan cek folder '$OUTPUT_DIR' untuk melihat hasilnya."
 echo "=================================================================="
