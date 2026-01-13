@@ -901,11 +901,12 @@ const AdminDashboard = () => {
                 <div className="h-64 flex justify-center">
                   <Pie
                     data={{
-                      labels: ["5 â˜…", "4 â˜…", "3 â˜…", "2 â˜…", "1 â˜…"],
+                      labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
                       datasets: [
                         {
+                          label: "Jumlah",
                           data: [5, 4, 3, 2, 1].map(
-                            (r) => data.charts.stars[r],
+                            (r) => data.charts.stars?.[r] || 0,
                           ),
                           backgroundColor: [
                             "#22c55e",
@@ -918,7 +919,15 @@ const AdminDashboard = () => {
                         },
                       ],
                     }}
-                    options={{ responsive: true, maintainAspectRatio: false }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          position: "right" as const,
+                        },
+                      },
+                    }}
                   />
                 </div>
               </div>
@@ -1232,7 +1241,17 @@ const AdminDashboard = () => {
                 {
                   key: "slug",
                   label: "Judul Artikel",
-                  render: (val: string) => val.replace(/-/g, " ").toUpperCase(),
+                  render: (val: string) => (
+                    <a
+                      href={`/blog/${val}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-primary hover:underline font-medium flex items-center gap-1 group"
+                    >
+                      {val.replace(/-/g, " ").toUpperCase()}
+                      <FaExternalLinkAlt className="text-[10px] opacity-50 group-hover:opacity-100" />
+                    </a>
+                  ),
                 },
                 {
                   key: "views",
