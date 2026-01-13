@@ -7,6 +7,8 @@ PROJECT_DIR="/var/www/mtsn1pandeglang.sch.id"
 BRANCH="static"
 LOG_FILE="/var/log/web_build.log"
 
+sudo chown -R $USER:$USER /var/www/mtsn1pandeglang.sch.id
+
 # Fungsi Logging
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
