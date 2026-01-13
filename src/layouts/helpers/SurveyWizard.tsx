@@ -11,25 +11,46 @@ import {
   FaChartBar,
 } from "react-icons/fa";
 
-// Data Pertanyaan (Sama seperti sebelumnya)
+// Data Pertanyaan Lengkap (Mengacu pada standar Pelayanan Publik & ZI WBK)
 const surveyData = [
   {
     id: "zi",
     title: "Zona Integritas",
     icon: <FaBuilding />,
-    description: "Penilaian terkait transparansi dan anti-korupsi.",
+    description:
+      "Penilaian terkait transparansi, anti-korupsi, dan integritas petugas.",
     questions: [
       {
         id: "zi_1",
-        text: "Tidak ada pungutan liar (pungli) atau gratifikasi dalam layanan.",
+        text: "Tidak ada pungutan liar (pungli) atau permintaan imbalan di luar ketentuan resmi.",
       },
       {
         id: "zi_2",
-        text: "Prosedur pelayanan jelas, transparan, dan mudah dipahami.",
+        text: "Petugas menolak segala bentuk gratifikasi (hadiah/uang pelicin).",
       },
       {
         id: "zi_3",
-        text: "Petugas menolak segala bentuk pemberian imbalan di luar ketentuan.",
+        text: "Prosedur pelayanan transparan, mudah dipahami, dan tidak berbelit-belit.",
+      },
+      {
+        id: "zi_4",
+        text: "Terdapat sarana pengaduan yang jelas dan responsif jika terjadi penyimpangan.",
+      },
+      {
+        id: "zi_5",
+        text: "Informasi persyaratan dan biaya layanan ditampilkan secara terbuka dan mudah diakses.",
+      },
+      {
+        id: "zi_6",
+        text: "Petugas menunjukkan sikap profesional dan tidak diskriminatif dalam memberikan layanan.",
+      },
+      {
+        id: "zi_7",
+        text: "Sistem pengaduan dan penanganan keluhan berjalan efektif dan dapat dipertanggungjawabkan.",
+      },
+      {
+        id: "zi_8",
+        text: "Terdapat keterbukaan informasi publik yang dapat diakses dengan mudah oleh masyarakat.",
       },
     ],
   },
@@ -37,33 +58,105 @@ const surveyData = [
     id: "service",
     title: "Pelayanan PTSP",
     icon: <FaConciergeBell />,
-    description: "Kualitas layanan administrasi di ruang PTSP.",
+    description:
+      "Kualitas layanan administrasi, fasilitas, dan kesigapan petugas di ruang PTSP.",
     questions: [
       {
         id: "srv_1",
-        text: "Petugas melayani dengan ramah, sopan, dan santun.",
+        text: "Petugas melayani dengan sikap ramah, sopan, santun, dan profesional (3S: Senyum, Sapa, Salam).",
       },
-      { id: "srv_2", text: "Ruang tunggu pelayanan nyaman dan bersih." },
+      {
+        id: "srv_2",
+        text: "Ruang tunggu pelayanan nyaman, bersih, dan dilengkapi fasilitas pendukung yang memadai.",
+      },
       {
         id: "srv_3",
-        text: "Layanan selesai tepat waktu sesuai standar yang dijanjikan.",
+        text: "Waktu penyelesaian layanan cepat dan sesuai dengan standar waktu yang dijanjikan.",
+      },
+      {
+        id: "srv_4",
+        text: "Petugas memiliki kompetensi dan pengetahuan yang baik dalam memberikan solusi atau informasi.",
+      },
+      {
+        id: "srv_5",
+        text: "Sistem antrian terorganisir dengan baik dan adil bagi semua pemohon layanan.",
+      },
+      {
+        id: "srv_6",
+        text: "Tersedia informasi yang jelas mengenai alur dan tahapan pelayanan.",
+      },
+      {
+        id: "srv_7",
+        text: "Fasilitas toilet, mushola, dan area parkir tersedia dan dalam kondisi baik.",
+      },
+      {
+        id: "srv_8",
+        text: "Petugas responsif dalam menanggapi pertanyaan dan menyelesaikan masalah yang dihadapi.",
+      },
+      {
+        id: "srv_9",
+        text: "Formulir dan dokumen persyaratan mudah didapatkan dan dipahami.",
+      },
+      {
+        id: "srv_10",
+        text: "Terdapat layanan pengaduan atau kotak saran yang mudah diakses.",
       },
     ],
   },
   {
     id: "academic",
-    title: "Akademik",
+    title: "Akademik & Pembelajaran",
     icon: <FaGraduationCap />,
-    description: "Kualitas pembelajaran dan kompetensi guru.",
+    description:
+      "Kualitas proses belajar mengajar, kompetensi guru, dan fasilitas pendidikan.",
     questions: [
-      { id: "acd_1", text: "Guru menguasai materi pembelajaran dengan baik." },
+      {
+        id: "acd_1",
+        text: "Guru menguasai materi pembelajaran dengan baik dan menyampaikannya secara menarik.",
+      },
       {
         id: "acd_2",
-        text: "Komunikasi antara sekolah dan wali murid berjalan lancar.",
+        text: "Komunikasi antara sekolah (Wali Kelas/Guru) dan Wali Murid berjalan lancar dan terbuka.",
       },
       {
         id: "acd_3",
-        text: "Fasilitas pembelajaran mendukung kebutuhan siswa.",
+        text: "Fasilitas pembelajaran (kelas, lab, perpustakaan) mendukung kebutuhan belajar siswa.",
+      },
+      {
+        id: "acd_4",
+        text: "Sekolah aktif memberikan informasi perkembangan akademik dan karakter siswa secara berkala.",
+      },
+      {
+        id: "acd_5",
+        text: "Metode pembelajaran yang digunakan guru bervariasi dan sesuai dengan kebutuhan siswa.",
+      },
+      {
+        id: "acd_6",
+        text: "Guru memberikan perhatian dan bimbingan yang memadai kepada setiap siswa.",
+      },
+      {
+        id: "acd_7",
+        text: "Penilaian hasil belajar dilakukan secara objektif, transparan, dan tepat waktu.",
+      },
+      {
+        id: "acd_8",
+        text: "Sekolah menyediakan program ekstrakurikuler yang beragam dan berkualitas.",
+      },
+      {
+        id: "acd_9",
+        text: "Fasilitas teknologi (komputer, internet, media pembelajaran digital) memadai dan dimanfaatkan dengan baik.",
+      },
+      {
+        id: "acd_10",
+        text: "Lingkungan sekolah kondusif, aman, dan mendukung proses pembelajaran yang efektif.",
+      },
+      {
+        id: "acd_11",
+        text: "Sekolah melakukan evaluasi dan perbaikan berkelanjutan terhadap kualitas pembelajaran.",
+      },
+      {
+        id: "acd_12",
+        text: "Guru menerapkan pendidikan karakter dan nilai-nilai positif dalam pembelajaran sehari-hari.",
       },
     ],
   },
