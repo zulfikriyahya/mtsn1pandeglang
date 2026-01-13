@@ -1,20 +1,22 @@
 <?php
 session_start();
-header('Content-Type: application/json');
+// Jangan set header JSON global di awal karena kita ada fitur download file binary/text
+// header('Content-Type: application/json');
 
 // 1. Cek Auth & Role (Hanya Super Admin & Operator)
 if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_admin' && $_SESSION['user_role'] !== 'operator')) {
     http_response_code(403);
+    header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit;
 }
 
-// Konfigurasi Path (Relatif dari folder public/api)
+// Konfigurasi Path
 $baseDir = __DIR__ . '/../../';
 $paths = [
     'article' => $baseDir . 'src/content/blog/',
-    'image' => $baseDir . 'public/images/artikel/',
-    'video' => $baseDir . 'public/videos/artikel/'
+    'image'   => $baseDir . 'public/images/artikel/',
+    'video'   => $baseDir . 'public/videos/artikel/'
 ];
 
 // Helper: Format Size
@@ -32,17 +34,18 @@ function formatSizeUnits($bytes)
 try {
     $method = $_SERVER['REQUEST_METHOD'];
     $action = $_GET['action'] ?? '';
-    $type = $_GET['type'] ?? 'article'; // article, image, video
+    $type   = $_GET['type'] ?? 'article'; // article, image, video
 
     $targetDir = $paths[$type] ?? $paths['article'];
 
-    // Pastikan folder ada, jika tidak buat
+    // Pastikan folder ada
     if (!file_exists($targetDir)) {
         mkdir($targetDir, 0775, true);
     }
 
-    // === GET LIST FILES ===
-    if ($method === 'GET') {
+    // === ACTION: GET LIST FILES ===
+    if ($method === 'GET' && $action === '') {
+        header('Content-Type: application/json');
         $files = array_diff(scandir($targetDir), array('.', '..', '-index.md', '.gitkeep'));
         $fileList = [];
 
@@ -57,7 +60,9 @@ try {
                         'name' => $file,
                         'size' => formatSizeUnits(filesize($filePath)),
                         'date' => date("Y-m-d H:i", filemtime($filePath)),
-                        'url' => ($type === 'article') ? null : "/$type" . "s/artikel/" . $file // URL publik untuk preview media
+                        'url'  => ($type === 'article')
+                            ? null // Artikel tidak punya URL publik langsung (harus dibuild)
+                            : "/" . ($type === 'image' ? 'images' : 'videos') . "/artikel/" . $file
                     ];
                 }
             }
@@ -70,8 +75,35 @@ try {
         echo json_encode(['status' => 'success', 'data' => $fileList]);
     }
 
-    // === UPLOAD FILE ===
+    // === ACTION: DOWNLOAD FILE (Untuk Tinjauan Super Admin) ===
+    elseif ($method === 'GET' && $action === 'download') {
+        // Validasi: Hanya Super Admin yang boleh download source code (.mdx)
+        if ($type === 'article' && $_SESSION['user_role'] !== 'super_admin') {
+            die("Access Denied.");
+        }
+
+        $filename = basename($_GET['file']);
+        $filePath = $targetDir . $filename;
+
+        if (file_exists($filePath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+            exit;
+        } else {
+            http_response_code(404);
+            die("File not found.");
+        }
+    }
+
+    // === ACTION: UPLOAD FILE ===
     elseif ($method === 'POST' && $action === 'upload') {
+        header('Content-Type: application/json');
         if (!isset($_FILES['file'])) throw new Exception("File tidak ditemukan.");
 
         $file = $_FILES['file'];
@@ -79,20 +111,19 @@ try {
 
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-        // Validasi Ekstensi per Tipe
+        // Validasi Ekstensi
         $allowed = [
             'article' => ['md', 'mdx'],
-            'image' => ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-            'video' => ['mp4', 'webm']
+            'image'   => ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+            'video'   => ['mp4', 'webm']
         ];
 
         if (!in_array($ext, $allowed[$type])) {
-            throw new Exception("Ekstensi file .$ext tidak diperbolehkan untuk kategori ini.");
+            throw new Exception("Ekstensi file .$ext tidak diperbolehkan.");
         }
 
-        // Sanitasi Nama File (Hanya alfanumerik, dash, dot)
+        // Sanitasi Nama File
         $filename = preg_replace('/[^a-zA-Z0-9\-\.]/', '-', basename($file['name']));
-        // Fix multiple dashes
         $filename = preg_replace('/-+/', '-', $filename);
 
         $targetPath = $targetDir . $filename;
@@ -106,26 +137,26 @@ try {
                 $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . time() . '.' . $ext;
                 $targetPath = $targetDir . $filename;
             }
-            // If behavior === 'overwrite', we just continue and overwrite
+            // behavior 'overwrite' lanjut ke bawah
         }
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            // Set permission agar bisa dibaca/tulis
             chmod($targetPath, 0664);
-            echo json_encode(['status' => 'success', 'message' => "File $filename berhasil diupload."]);
+            echo json_encode(['status' => 'success', 'message' => "File berhasil diupload. Menunggu tinjauan Super Admin untuk Rebuild."]);
         } else {
-            throw new Exception("Gagal memindahkan file ke server.");
+            throw new Exception("Gagal memindahkan file.");
         }
     }
 
-    // === DELETE FILE (SUPER ADMIN ONLY) ===
+    // === ACTION: DELETE FILE (SUPER ADMIN ONLY) ===
     elseif ($method === 'POST' && $action === 'delete') {
+        header('Content-Type: application/json');
         if ($_SESSION['user_role'] !== 'super_admin') {
             throw new Exception("Hanya Super Admin yang dapat menghapus file.");
         }
 
         $input = json_decode(file_get_contents('php://input'), true);
-        $filename = basename($input['filename']); // Security: basename only
+        $filename = basename($input['filename']);
         $targetPath = $targetDir . $filename;
 
         if (file_exists($targetPath)) {
@@ -139,20 +170,22 @@ try {
         }
     }
 
-    // === REBUILD WEBSITE (SUPER ADMIN ONLY) ===
+    // === ACTION: REBUILD WEBSITE (SUPER ADMIN ONLY) ===
     elseif ($method === 'POST' && $action === 'rebuild') {
+        header('Content-Type: application/json');
         if ($_SESSION['user_role'] !== 'super_admin') {
             throw new Exception("Hanya Super Admin yang dapat melakukan Rebuild.");
         }
 
-        // Panggil script rebuild.sh yang sudah dibuat
-        // Pastikan user www-data memiliki hak eksekusi atau sudo NOPASSWD untuk script ini jika perlu
         $cmd = "bash " . $baseDir . "rebuild.sh > /dev/null 2>&1 &";
         shell_exec($cmd);
 
-        echo json_encode(['status' => 'success', 'message' => 'Proses Rebuild sedang berjalan di latar belakang. Perubahan akan muncul dalam 1-2 menit.']);
+        echo json_encode(['status' => 'success', 'message' => 'Proses Rebuild dimulai. Perubahan akan tayang dalam beberapa menit.']);
     }
 } catch (Exception $e) {
-    http_response_code(500);
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+    }
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }

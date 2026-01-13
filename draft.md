@@ -1903,6 +1903,12 @@ import {
   FaFilter,
   FaCalendarAlt,
   FaUserEdit,
+  FaFileAlt,
+  FaImages,
+  FaVideo,
+  FaSyncAlt,
+  FaCloudUploadAlt,
+  FaHammer,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -1949,6 +1955,7 @@ interface UserManagementData {
   created_at: string;
 }
 
+// FORMAT TANGGAL
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -2050,6 +2057,19 @@ const AdminDashboard = () => {
 
   const [importModalOpen, setImportModalOpen] = useState(false);
 
+  // --- STATE CONTENT MANAGER ---
+  const [contentTab, setContentTab] = useState<"article" | "image" | "video">(
+    "article",
+  );
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [uploadConflict, setUploadConflict] = useState<{
+    isOpen: boolean;
+    file: File | null;
+    type: string;
+  }>({ isOpen: false, file: null, type: "" });
+  const [isRebuilding, setIsRebuilding] = useState(false);
+
   // State Filter Header (PDF)
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
@@ -2110,7 +2130,7 @@ const AdminDashboard = () => {
       /* @ts-ignore */
       window.google.accounts.id.initialize({
         client_id: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
-        callback: handleAuthResponse, // MENGGUNAKAN LOGIKA PINTAR
+        callback: handleAuthResponse,
         auto_select: false,
         ui_mode: "popup",
       });
@@ -2133,11 +2153,8 @@ const AdminDashboard = () => {
     if (!user && !loading) renderGoogleBtn();
   }, [isRegisterMode, user, loading]);
 
-  // === SMART AUTH RESPONSE ===
   const handleAuthResponse = async (response: any) => {
     setLoading(true);
-
-    // Coba Login dulu
     if (!isRegisterMode) {
       try {
         const res = await fetch("/api/auth.php?action=login", {
@@ -2151,7 +2168,6 @@ const AdminDashboard = () => {
           fetchStats();
           if (result.user.role === "super_admin") fetchUsers();
         } else if (result.status === "unregistered") {
-          // LOGIKA PINTAR: Tanya user, jika OK langsung daftar
           if (
             window.confirm(
               "Email ini belum terdaftar. Apakah Anda ingin mendaftar sekarang sebagai User baru?",
@@ -2168,14 +2184,11 @@ const AdminDashboard = () => {
         alert("Gagal menghubungi server login.");
       }
     } else {
-      // Jika user memang ada di mode "Register" sejak awal
       await doRegister(response.credential);
     }
-
     setLoading(false);
   };
 
-  // Helper function untuk register otomatis
   const doRegister = async (credential: string) => {
     try {
       const res = await fetch("/api/auth.php?action=register", {
@@ -2185,7 +2198,6 @@ const AdminDashboard = () => {
       const result = await res.json();
 
       if (result.status === "success") {
-        // Auto Login
         setUser(result.user);
         fetchStats();
         setIsRegisterMode(false);
@@ -2228,6 +2240,132 @@ const AdminDashboard = () => {
       const json = await res.json();
       if (json.status === "success") setUserList(json.data);
     } catch (e) {}
+  };
+
+  // --- CONTENT MANAGER FETCH ---
+  useEffect(() => {
+    if (activeTab === "content" && user) {
+      fetchFiles(contentTab);
+    }
+  }, [activeTab, contentTab, refreshTrigger, user]);
+
+  const fetchFiles = async (type: string) => {
+    try {
+      const res = await fetch(`/api/content.php?type=${type}`);
+      const json = await res.json();
+      if (json.status === "success") {
+        setFileList(json.data);
+      }
+    } catch (e) {
+      console.error("Gagal load files", e);
+    }
+  };
+
+  // --- CONTENT ACTIONS ---
+  const handleContentUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    behavior = "ask",
+  ) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("behavior", behavior); // ask, overwrite, rename
+
+    try {
+      const res = await fetch(
+        `/api/content.php?action=upload&type=${contentTab}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      const json = await res.json();
+
+      if (json.status === "conflict") {
+        // Show Conflict Modal
+        setUploadConflict({ isOpen: true, file, type: contentTab });
+      } else if (json.status === "success") {
+        setUploadConflict({ isOpen: false, file: null, type: "" });
+        setRefreshTrigger((prev) => prev + 1); // Refresh list
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "Upload Berhasil",
+          message: json.message,
+        });
+      } else {
+        throw new Error(json.message);
+      }
+    } catch (e: any) {
+      setStatusModal({
+        isOpen: true,
+        status: "error",
+        title: "Upload Gagal",
+        message: e.message || "Terjadi kesalahan upload.",
+      });
+    }
+    // Reset input
+    e.target.value = "";
+  };
+
+  const deleteContent = async (filename: string) => {
+    if (
+      !window.confirm(
+        `Yakin ingin menghapus ${filename}? Aksi ini tidak dapat dibatalkan.`,
+      )
+    )
+      return;
+
+    try {
+      const res = await fetch(
+        `/api/content.php?action=delete&type=${contentTab}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename }),
+        },
+      );
+      const json = await res.json();
+      if (json.status === "success") {
+        setRefreshTrigger((prev) => prev + 1);
+      } else {
+        alert(json.message);
+      }
+    } catch (e) {
+      alert("Gagal menghapus file.");
+    }
+  };
+
+  const triggerRebuild = async () => {
+    if (
+      !window.confirm(
+        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit.",
+      )
+    )
+      return;
+    setIsRebuilding(true);
+    try {
+      const res = await fetch(`/api/content.php?action=rebuild`, {
+        method: "POST",
+      });
+      const json = await res.json();
+      if (json.status === "success") {
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "Rebuild Dimulai",
+          message: json.message,
+        });
+      } else {
+        alert(json.message);
+      }
+    } catch (e) {
+      alert("Gagal menghubungi server.");
+    } finally {
+      setIsRebuilding(false);
+    }
   };
 
   useEffect(() => {
@@ -2333,7 +2471,6 @@ const AdminDashboard = () => {
   };
 
   const executeDelete = async () => {
-    // Handle User Delete via Generic Modal
     if (confirmModal.type === "user" && confirmModal.action) {
       confirmModal.action();
       setConfirmModal((prev) => ({ ...prev, isOpen: false }));
@@ -2443,9 +2580,8 @@ const AdminDashboard = () => {
     "November",
     "Desember",
   ];
-  const yearOptions = [0, 2024, 2025, 2026, 2027]; // 0 = Semua Tahun
+  const yearOptions = [0, 2024, 2025, 2026, 2027];
 
-  // Safe Role Check for UI
   const userRole = user.role || "user";
 
   return (
@@ -2461,7 +2597,6 @@ const AdminDashboard = () => {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="h5 mb-0 font-bold">{user.name}</h3>
-              {/* --- FIX APPLIED HERE: (user.role || "user") --- */}
               <span
                 className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${userRole === "super_admin" ? "bg-red-100 text-red-700" : userRole === "operator" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
               >
@@ -2582,10 +2717,10 @@ const AdminDashboard = () => {
             <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {[
                 { id: "overview", label: "Ringkasan" },
-                { id: "posts", label: "Artikel" },
+                { id: "content", label: "Manajemen Artikel & Media" },
+                { id: "posts", label: "Statistik Artikel" },
                 { id: "feedback", label: "Ulasan" },
                 { id: "surveys", label: "Survei" },
-                // Show Users tab ONLY for Super Admin
                 ...(userRole === "super_admin"
                   ? [{ id: "users", label: "Manajemen User" }]
                   : []),
@@ -2693,7 +2828,180 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* 2. USER MANAGEMENT (SUPER ADMIN ONLY) */}
+          {/* 2. CONTENT MANAGER (NEW) */}
+          {activeTab === "content" &&
+            (userRole === "operator" || userRole === "super_admin") && (
+              <div className="grid grid-cols-1 gap-6">
+                {/* Top Bar Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white dark:bg-darkmode-light p-4 rounded-xl border border-border dark:border-darkmode-border">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setContentTab("article")}
+                      className={`btn btn-sm ${contentTab === "article" ? "btn-primary" : "btn-outline-primary"}`}
+                    >
+                      <FaFileAlt className="mr-2" /> Artikel (.mdx)
+                    </button>
+                    <button
+                      onClick={() => setContentTab("image")}
+                      className={`btn btn-sm ${contentTab === "image" ? "btn-primary" : "btn-outline-primary"}`}
+                    >
+                      <FaImages className="mr-2" /> Gambar
+                    </button>
+                    <button
+                      onClick={() => setContentTab("video")}
+                      className={`btn btn-sm ${contentTab === "video" ? "btn-primary" : "btn-outline-primary"}`}
+                    >
+                      <FaVideo className="mr-2" /> Video
+                    </button>
+                  </div>
+
+                  <div className="flex gap-2 items-center">
+                    {contentTab === "article" && (
+                      <a
+                        href="/template.mdx"
+                        download
+                        className="text-sm text-primary hover:underline flex items-center gap-1 mr-2"
+                      >
+                        <FaDownload /> Unduh Template
+                      </a>
+                    )}
+
+                    <label className="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white border-none cursor-pointer flex items-center gap-2">
+                      <FaCloudUploadAlt /> Upload{" "}
+                      {contentTab === "article"
+                        ? "Artikel"
+                        : contentTab === "image"
+                          ? "Gambar"
+                          : "Video"}
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept={
+                          contentTab === "article"
+                            ? ".md,.mdx"
+                            : contentTab === "image"
+                              ? "image/*"
+                              : "video/*"
+                        }
+                        onChange={(e) => handleContentUpload(e)}
+                      />
+                    </label>
+
+                    {userRole === "super_admin" && (
+                      <button
+                        onClick={triggerRebuild}
+                        disabled={isRebuilding}
+                        className="btn btn-sm bg-purple-600 hover:bg-purple-700 text-white border-none flex items-center gap-2 disabled:opacity-50"
+                      >
+                        <FaHammer
+                          className={isRebuilding ? "animate-spin" : ""}
+                        />{" "}
+                        {isRebuilding ? "Building..." : "Rebuild Website"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* File List */}
+                <div className="bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-darkmode-border overflow-hidden">
+                  <div className="p-4 bg-gray-50 dark:bg-white/5 border-b border-border dark:border-darkmode-border flex justify-between items-center">
+                    <h3 className="font-bold flex items-center gap-2">
+                      File Manager: {contentTab.toUpperCase()}
+                      <span className="text-xs font-normal text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
+                        {fileList.length} files
+                      </span>
+                    </h3>
+                    <button
+                      onClick={() => setRefreshTrigger((prev) => prev + 1)}
+                      className="text-gray-500 hover:text-primary"
+                    >
+                      <FaSyncAlt />
+                    </button>
+                  </div>
+                  <div className="overflow-x-auto max-h-[500px]">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-gray-100 dark:bg-black/20 sticky top-0 z-10">
+                        <tr>
+                          <th className="px-4 py-3">Nama File</th>
+                          <th className="px-4 py-3">Ukuran</th>
+                          <th className="px-4 py-3">Tanggal Upload</th>
+                          <th className="px-4 py-3 text-right">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border dark:divide-darkmode-border">
+                        {fileList.length === 0 ? (
+                          <tr>
+                            <td
+                              colSpan={4}
+                              className="p-8 text-center text-gray-500"
+                            >
+                              Folder kosong.
+                            </td>
+                          </tr>
+                        ) : (
+                          fileList.map((file, idx) => (
+                            <tr
+                              key={idx}
+                              className="hover:bg-gray-50 dark:hover:bg-white/5"
+                            >
+                              <td className="px-4 py-3 font-medium flex items-center gap-2">
+                                {file.url ? (
+                                  <a
+                                    href={file.url}
+                                    target="_blank"
+                                    className="text-primary hover:underline truncate max-w-[200px] md:max-w-md block"
+                                    rel="noreferrer"
+                                  >
+                                    {file.name}{" "}
+                                    <FaExternalLinkAlt className="inline text-[10px] ml-1" />
+                                  </a>
+                                ) : (
+                                  <span className="truncate max-w-[200px] md:max-w-md block">
+                                    {file.name}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="px-4 py-3 text-gray-500">
+                                {file.size}
+                              </td>
+                              <td className="px-4 py-3 text-gray-500">
+                                {file.date}
+                              </td>
+                              <td className="px-4 py-3 text-right flex justify-end gap-2">
+                                {userRole === "super_admin" && (
+                                  <>
+                                    <a
+                                      href={
+                                        file.url ||
+                                        `/api/content.php?action=download&file=${file.name}`
+                                      } // Simplification for MVP
+                                      download={file.name}
+                                      className="p-2 text-green-600 hover:bg-green-50 rounded"
+                                      title="Unduh"
+                                    >
+                                      <FaDownload />
+                                    </a>
+                                    <button
+                                      onClick={() => deleteContent(file.name)}
+                                      className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                      title="Hapus"
+                                    >
+                                      <FaTrash />
+                                    </button>
+                                  </>
+                                )}
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* 3. USER MANAGEMENT (SUPER ADMIN ONLY) */}
           {activeTab === "users" && userRole === "super_admin" && (
             <div className="bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-darkmode-border overflow-hidden">
               <div className="p-6 border-b border-border dark:border-darkmode-border flex justify-between items-center">
@@ -2778,7 +3086,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* 3. POSTS */}
+          {/* 4. POSTS (STATS) */}
           {activeTab === "posts" && (
             <DataTable
               title="Statistik Artikel Populer"
@@ -2801,7 +3109,7 @@ const AdminDashboard = () => {
             />
           )}
 
-          {/* 4. FEEDBACK (DATA ULASAN) */}
+          {/* 5. FEEDBACK (DATA ULASAN) */}
           {activeTab === "feedback" && (
             <DataTable
               title="Data Ulasan Masuk"
@@ -2921,7 +3229,7 @@ const AdminDashboard = () => {
             />
           )}
 
-          {/* 5. SURVEY (DATA SURVEI) */}
+          {/* 6. SURVEY (DATA SURVEI) */}
           {activeTab === "surveys" && (
             <DataTable
               title="Data Survei Kepuasan"
@@ -3067,6 +3375,50 @@ const AdminDashboard = () => {
       )}
 
       {/* --- MODALS --- */}
+
+      {/* Conflict Modal */}
+      {uploadConflict.isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
+            <h3 className="text-lg font-bold mb-2">Konflik File</h3>
+            <p className="text-sm text-gray-500 mb-4">
+              File dengan nama yang sama sudah ada. Apa yang ingin Anda lakukan?
+            </p>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() =>
+                  handleContentUpload(
+                    { target: { files: [uploadConflict.file] } } as any,
+                    "overwrite",
+                  )
+                }
+                className="btn btn-primary w-full bg-red-600 border-red-600"
+              >
+                Timpa (Overwrite)
+              </button>
+              <button
+                onClick={() =>
+                  handleContentUpload(
+                    { target: { files: [uploadConflict.file] } } as any,
+                    "rename",
+                  )
+                }
+                className="btn btn-primary w-full"
+              >
+                Ganti Nama (Rename)
+              </button>
+              <button
+                onClick={() =>
+                  setUploadConflict({ isOpen: false, file: null, type: "" })
+                }
+                className="btn btn-outline-primary w-full"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Import Modal */}
       <ImportModal
@@ -9805,28 +10157,60 @@ if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_a
     exit;
 }
 
-// 2. Konfigurasi Path
-$contentDir = __DIR__ . '/../../src/content/blog/'; // Path relatif ke folder content Astro
+// Konfigurasi Path (Relatif dari folder public/api)
+$baseDir = __DIR__ . '/../../';
+$paths = [
+    'article' => $baseDir . 'src/content/blog/',
+    'image' => $baseDir . 'public/images/artikel/',
+    'video' => $baseDir . 'public/videos/artikel/'
+];
+
+// Helper: Format Size
+function formatSizeUnits($bytes)
+{
+    if ($bytes >= 1073741824) $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+    elseif ($bytes >= 1048576) $bytes = number_format($bytes / 1048576, 2) . ' MB';
+    elseif ($bytes >= 1024) $bytes = number_format($bytes / 1024, 2) . ' KB';
+    elseif ($bytes > 1) $bytes = $bytes . ' bytes';
+    elseif ($bytes == 1) $bytes = $bytes . ' byte';
+    else $bytes = '0 bytes';
+    return $bytes;
+}
 
 try {
     $method = $_SERVER['REQUEST_METHOD'];
     $action = $_GET['action'] ?? '';
+    $type = $_GET['type'] ?? 'article'; // article, image, video
 
-    // === LIST FILES ===
+    $targetDir = $paths[$type] ?? $paths['article'];
+
+    // Pastikan folder ada, jika tidak buat
+    if (!file_exists($targetDir)) {
+        mkdir($targetDir, 0775, true);
+    }
+
+    // === GET LIST FILES ===
     if ($method === 'GET') {
-        $files = array_diff(scandir($contentDir), array('.', '..', '-index.md'));
+        $files = array_diff(scandir($targetDir), array('.', '..', '-index.md', '.gitkeep'));
         $fileList = [];
 
         foreach ($files as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'md' || pathinfo($file, PATHINFO_EXTENSION) === 'mdx') {
-                $fileList[] = [
-                    'name' => $file,
-                    'size' => filesize($contentDir . $file),
-                    'date' => date("Y-m-d H:i:s", filemtime($contentDir . $file))
-                ];
+            $filePath = $targetDir . $file;
+            if (is_file($filePath)) {
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                $validExt = ($type === 'article') ? ['md', 'mdx'] : (($type === 'image') ? ['jpg', 'jpeg', 'png', 'webp', 'gif'] : ['mp4', 'webm']);
+
+                if (in_array($ext, $validExt)) {
+                    $fileList[] = [
+                        'name' => $file,
+                        'size' => formatSizeUnits(filesize($filePath)),
+                        'date' => date("Y-m-d H:i", filemtime($filePath)),
+                        'url' => ($type === 'article') ? null : "/$type" . "s/artikel/" . $file // URL publik untuk preview media
+                    ];
+                }
             }
         }
-        // Sort by date desc
+        // Sort by date desc (Terbaru diatas)
         usort($fileList, function ($a, $b) {
             return strtotime($b['date']) - strtotime($a['date']);
         });
@@ -9839,29 +10223,58 @@ try {
         if (!isset($_FILES['file'])) throw new Exception("File tidak ditemukan.");
 
         $file = $_FILES['file'];
+        $behavior = $_POST['behavior'] ?? 'ask'; // ask, overwrite, rename
+
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-        // Validasi Ekstensi (Keamanan Wajib)
-        if ($ext !== 'md' && $ext !== 'mdx') {
-            throw new Exception("Hanya file .md atau .mdx yang diperbolehkan.");
+        // Validasi Ekstensi per Tipe
+        $allowed = [
+            'article' => ['md', 'mdx'],
+            'image' => ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+            'video' => ['mp4', 'webm']
+        ];
+
+        if (!in_array($ext, $allowed[$type])) {
+            throw new Exception("Ekstensi file .$ext tidak diperbolehkan untuk kategori ini.");
         }
 
-        // Sanitasi Nama File
-        $filename = preg_replace('/[^a-zA-Z0-9\-\.]/', '', basename($file['name']));
-        $targetPath = $contentDir . $filename;
+        // Sanitasi Nama File (Hanya alfanumerik, dash, dot)
+        $filename = preg_replace('/[^a-zA-Z0-9\-\.]/', '-', basename($file['name']));
+        // Fix multiple dashes
+        $filename = preg_replace('/-+/', '-', $filename);
+
+        $targetPath = $targetDir . $filename;
+
+        // Cek Konflik
+        if (file_exists($targetPath)) {
+            if ($behavior === 'ask') {
+                echo json_encode(['status' => 'conflict', 'message' => "File '$filename' sudah ada.", 'filename' => $filename]);
+                exit;
+            } elseif ($behavior === 'rename') {
+                $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . time() . '.' . $ext;
+                $targetPath = $targetDir . $filename;
+            }
+            // If behavior === 'overwrite', we just continue and overwrite
+        }
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+            // Set permission agar bisa dibaca/tulis
+            chmod($targetPath, 0664);
             echo json_encode(['status' => 'success', 'message' => "File $filename berhasil diupload."]);
         } else {
-            throw new Exception("Gagal memindahkan file. Cek permission folder.");
+            throw new Exception("Gagal memindahkan file ke server.");
         }
     }
 
-    // === DELETE FILE ===
+    // === DELETE FILE (SUPER ADMIN ONLY) ===
     elseif ($method === 'POST' && $action === 'delete') {
+        if ($_SESSION['user_role'] !== 'super_admin') {
+            throw new Exception("Hanya Super Admin yang dapat menghapus file.");
+        }
+
         $input = json_decode(file_get_contents('php://input'), true);
-        $filename = preg_replace('/[^a-zA-Z0-9\-\.]/', '', basename($input['filename']));
-        $targetPath = $contentDir . $filename;
+        $filename = basename($input['filename']); // Security: basename only
+        $targetPath = $targetDir . $filename;
 
         if (file_exists($targetPath)) {
             if (unlink($targetPath)) {
@@ -9874,11 +10287,18 @@ try {
         }
     }
 
-    // === REBUILD (Opsional, Lanjutan) ===
+    // === REBUILD WEBSITE (SUPER ADMIN ONLY) ===
     elseif ($method === 'POST' && $action === 'rebuild') {
-        // Ini butuh konfigurasi sudoers khusus
-        // shell_exec('sudo /path/to/rebuild_script.sh > /dev/null 2>&1 &');
-        echo json_encode(['status' => 'success', 'message' => 'Perintah Build dikirim (Proses background).']);
+        if ($_SESSION['user_role'] !== 'super_admin') {
+            throw new Exception("Hanya Super Admin yang dapat melakukan Rebuild.");
+        }
+
+        // Panggil script rebuild.sh yang sudah dibuat
+        // Pastikan user www-data memiliki hak eksekusi atau sudo NOPASSWD untuk script ini jika perlu
+        $cmd = "bash " . $baseDir . "rebuild.sh > /dev/null 2>&1 &";
+        shell_exec($cmd);
+
+        echo json_encode(['status' => 'success', 'message' => 'Proses Rebuild sedang berjalan di latar belakang. Perubahan akan muncul dalam 1-2 menit.']);
     }
 } catch (Exception $e) {
     http_response_code(500);
@@ -11390,47 +11810,34 @@ log() {
 
 log "=== MEMULAI SMART DEPLOYMENT ==="
 
-# 1. Alihkan permission ke user saat ini agar bisa git/yarn
-sudo chown -R $USER:$USER $PROJECT_DIR
-
 cd $PROJECT_DIR || exit
 
-# 2. Setup Git
+# Setup Git
 git config --global --add safe.directory $PROJECT_DIR
 git config user.email "zulfikriyahya@gmail.com"
 git config user.name "Server AutoDeploy"
 
-# 3. AMANKAN PERUBAHAN LOKAL SERVER (Simpan konten baru ke Stash)
-log "--- Menyimpan perubahan lokal (Stash) ---"
+# Stash & Pull
+log "--- Menyimpan perubahan lokal ---"
 git stash save "AutoSave before Pull"
 
-# 4. AMBIL UPDATE DARI GITHUB (Laptop)
 log "--- Pulling dari GitHub ---"
 git pull origin $BRANCH --no-edit
 
-# 5. KEMBALIKAN PERUBAHAN LOKAL SERVER
-log "--- Mengembalikan perubahan lokal (Pop Stash) ---"
+log "--- Mengembalikan perubahan lokal ---"
 git stash pop
 
-# 6. CEK APAKAH ADA FILE BARU DI FOLDER KONTEN?
-# Kita hanya ingin push jika ada perubahan file Markdown/Gambar, bukan node_modules/system
-if [[ -n $(git status -s src/content/ public/images/) ]]; then
-    log "--- Terdeteksi konten baru di Server. Melakukan Sync ke GitHub... ---"
-
-    git add src/content/ public/images/
-    git commit -m "AutoSync: Konten baru dari Server [Skip CI]"
-    # [Skip CI] berguna mencegah looping jika Anda pakai CI/CD pipeline
-
+# Push jika ada konten baru
+if [[ -n $(git status -s) ]]; then
+    log "--- Sync konten ke GitHub ---"
+    git add .
+    git commit -m "AutoSync: Konten baru [Skip CI]"
     git push origin $BRANCH
-    log "--- Sync ke GitHub Berhasil ---"
-else
-    log "--- Tidak ada konten baru di Server untuk di-push ---"
 fi
 
-# 7. BUILD PROCESS (Optimized)
-# Hapus node_modules setiap kali itu lambat. Yarn check-files sudah cukup.
+# Build
 log "--- Installing Dependencies ---"
-yarn install --check-files
+yarn install --check-files || { log "Yarn install gagal!"; exit 1; }
 
 rm -rf dist/
 ATTEMPT=1
@@ -11439,48 +11846,28 @@ SUCCESS=0
 while [ $ATTEMPT -le $MAX_RETRIES ]; do
     log "--- Build Attempt $ATTEMPT of $MAX_RETRIES ---"
     yarn build
-
     if [ $? -eq 0 ]; then
-        log "Build Sukses!"
         SUCCESS=1
         break
     else
-        log "Build Gagal. Retrying..."
         sleep $DELAY
         ATTEMPT=$((ATTEMPT + 1))
     fi
 done
 
 if [ $SUCCESS -eq 0 ]; then
-    log "DEPLOYMENT GAGAL (FATAL ERROR)."
-    # Kembalikan permission meski gagal agar web tetap jalan (jika ada sisa cache)
-    sudo chown -R www-data:www-data $PROJECT_DIR
+    log "DEPLOYMENT GAGAL!"
     exit 1
 fi
 
-# 8. DATABASE SETUP
+# Database
 DB_FILE="$PROJECT_DIR/database.db"
-if [ ! -f "$DB_FILE" ]; then
-    touch "$DB_FILE"
-    log "Database created."
-fi
+[ ! -f "$DB_FILE" ] && touch "$DB_FILE" && chmod 664 "$DB_FILE"
 
-# 9. FINALISASI PERMISSION (PENTING UNTUK API PHP)
-log "--- Mengatur Permission Final ---"
-# Berikan folder project ke www-data
-sudo chown -R www-data:www-data $PROJECT_DIR
+sudo chown www-data:www-data /var/www/mtsn1pandeglang.sch.id/rebuild.sh
+sudo chown www-data:www-data /var/www/mtsn1pandeglang.sch.id/deploy.sh
 
-# Pastikan script deploy tetap milik user kita agar bisa diedit/jalankan manual nanti
-sudo chown $USER:$USER "$PROJECT_DIR/deploy.sh"
-sudo chmod +x "$PROJECT_DIR/deploy.sh"
-
-# Pastikan database bisa ditulisi www-data
-sudo chmod 664 "$DB_FILE"
-
-# Pastikan folder konten bisa ditulisi www-data (untuk fitur upload)
-sudo chmod -R 775 "$PROJECT_DIR/src/content/blog"
-
-log "=== DEPLOYMENT SELESAI & SUKSES! ==="
+log "=== DEPLOYMENT SUKSES! ==="
 ```
 
 ---
@@ -11611,8 +11998,7 @@ log "=== DEPLOYMENT SELESAI & SUKSES! ==="
 1. Data Artikel
 
 - unduh template artikel di path public/template.mdx
-- Upload file artikel konten .mdx ke path src/content/blog/ artikel konten gambar ke public/images/artikel artikel konten video ke public/videos/artikel (super admin, dan operator) (tampilkan modal konfirmasi Timpa atau rename file jika nama file duplikat) -> tampilkan tombol rebuild
-- Delete: Hapus file artikel (super admin) -> tampilkan tombol rebuild
-- Unduh File (super admin)
-- Ketika ada operator yang mengunggah file (jangan langsung rebuild) -> unduh file untuk meninjau (super admin) -> tampilkan tombol rebuild/hapus file
-- build hanya boleh dilakukan oleh super admin
+- Upload file artikel konten .mdx ke path src/content/blog/ artikel konten gambar ke public/images/artikel artikel konten video ke public/videos/artikel (super admin, dan operator) (tampilkan modal konfirmasi Timpa atau rename file jika nama file duplikat) -> hilangkan fungsi rebuild
+- Delete: Hapus file artikel (super admin) -> hilangkan fungsi rebuild
+- Unduh Markdown File (super admin)
+- Ketika ada operator yang mengunggah file -> unduh file untuk meninjau (super admin) -> tampilkan/hapus file

@@ -32,6 +32,7 @@ import {
   FaSyncAlt,
   FaCloudUploadAlt,
   FaHammer,
+  FaSearchPlus,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -411,7 +412,7 @@ const AdminDashboard = () => {
         setUploadConflict({ isOpen: true, file, type: contentTab });
       } else if (json.status === "success") {
         setUploadConflict({ isOpen: false, file: null, type: "" });
-        setRefreshTrigger((prev) => prev + 1); // Refresh list
+        setRefreshTrigger((prev) => prev + 1); // Refresh list ONLY (No Rebuild Trigger)
         setStatusModal({
           isOpen: true,
           status: "success",
@@ -452,7 +453,7 @@ const AdminDashboard = () => {
       );
       const json = await res.json();
       if (json.status === "success") {
-        setRefreshTrigger((prev) => prev + 1);
+        setRefreshTrigger((prev) => prev + 1); // Refresh list ONLY (No Rebuild Trigger)
       } else {
         alert(json.message);
       }
@@ -464,7 +465,7 @@ const AdminDashboard = () => {
   const triggerRebuild = async () => {
     if (
       !window.confirm(
-        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit.",
+        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit. Pastikan Anda telah meninjau semua perubahan file.",
       )
     )
       return;
@@ -900,7 +901,7 @@ const AdminDashboard = () => {
                 <div className="h-64 flex justify-center">
                   <Pie
                     data={{
-                      labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
+                      labels: ["5 â˜…", "4 â˜…", "3 â˜…", "2 â˜…", "1 â˜…"],
                       datasets: [
                         {
                           data: [5, 4, 3, 2, 1].map(
@@ -1091,27 +1092,38 @@ const AdminDashboard = () => {
                                 {file.date}
                               </td>
                               <td className="px-4 py-3 text-right flex justify-end gap-2">
+                                {/* View/Download Button */}
                                 {userRole === "super_admin" && (
-                                  <>
-                                    <a
-                                      href={
-                                        file.url ||
-                                        `/api/content.php?action=download&file=${file.name}`
-                                      } // Simplification for MVP
-                                      download={file.name}
-                                      className="p-2 text-green-600 hover:bg-green-50 rounded"
-                                      title="Unduh"
-                                    >
-                                      <FaDownload />
-                                    </a>
-                                    <button
-                                      onClick={() => deleteContent(file.name)}
-                                      className="p-2 text-red-600 hover:bg-red-50 rounded"
-                                      title="Hapus"
-                                    >
-                                      <FaTrash />
-                                    </button>
-                                  </>
+                                  <a
+                                    href={
+                                      file.url ||
+                                      `/api/content.php?action=download&type=${contentTab}&file=${file.name}`
+                                    }
+                                    target="_blank"
+                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                    title={
+                                      contentTab === "article"
+                                        ? "Unduh / Tinjau Source"
+                                        : "Lihat Media"
+                                    }
+                                  >
+                                    {contentTab === "article" ? (
+                                      <FaSearchPlus />
+                                    ) : (
+                                      <FaEye />
+                                    )}
+                                  </a>
+                                )}
+
+                                {/* Delete Button (Super Admin Only) */}
+                                {userRole === "super_admin" && (
+                                  <button
+                                    onClick={() => deleteContent(file.name)}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                    title="Hapus"
+                                  >
+                                    <FaTrash />
+                                  </button>
                                 )}
                               </td>
                             </tr>
@@ -1239,7 +1251,7 @@ const AdminDashboard = () => {
               data={filteredFeedbacks}
               searchKeys={["name", "message"]}
               enableSelection={userRole === "super_admin"}
-              onBulkDelete={(ids) => requestDelete(ids, "feedback")}
+              onBulkDelete={(ids: any) => requestDelete(ids, "feedback")}
               onDownload={() => downloadReport("feedback")}
               customFilters={
                 <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
@@ -1309,7 +1321,7 @@ const AdminDashboard = () => {
                   className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                      {val} ★
+                      {val} â˜…
                     </span>
                   ),
                 },
@@ -1359,7 +1371,7 @@ const AdminDashboard = () => {
               data={filteredSurveys}
               searchKeys={["respondent_name", "feedback"]}
               enableSelection={userRole === "super_admin"}
-              onBulkDelete={(ids) => requestDelete(ids, "survey")}
+              onBulkDelete={(ids: any) => requestDelete(ids, "survey")}
               onDownload={() => downloadReport("survey")}
               customFilters={
                 <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
