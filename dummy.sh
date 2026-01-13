@@ -2,9 +2,9 @@
 
 # ==============================================================================
 # DUMMY ULTIMATE DATA GENERATOR
-# Version: 4.0 (Updated for 6 Categories Survey)
+# Version: 4.1 (Final Integration)
 # Output: ./dummy/
-# Features: Enhanced Database, 6 Survey Categories, Massive Variations
+# Compatibility: MTsN 1 Pandeglang (6 Survey Indicators)
 # ==============================================================================
 
 OUTPUT_DIR="dummy"
@@ -12,7 +12,7 @@ OUTPUT_DIR="dummy"
 # Bersihkan layar dan tampilkan header
 clear
 echo "=================================================================="
-echo "   GENERATOR DATA DUMMY (ULTIMATE EDITION v4.0)"
+echo "   GENERATOR DATA DUMMY (ULTIMATE EDITION v4.1)"
 echo "   Support 6 Kategori Survei: ZI, Service, Academic, Facilities,"
 echo "   Management, Culture"
 echo "=================================================================="
@@ -22,8 +22,8 @@ echo "=================================================================="
 # ------------------------------------------------------------------------------
 
 # Input Total Data
-read -p "1. Total data per kategori? (Default: 10000): " INPUT_TOTAL
-INPUT_TOTAL=${INPUT_TOTAL:-10000}
+read -p "1. Total data per kategori? (Default: 5000): " INPUT_TOTAL
+INPUT_TOTAL=${INPUT_TOTAL:-5000}
 
 # Input Batch Size
 read -p "2. Maksimal baris per file CSV? (Default: 1000): " INPUT_BATCH
