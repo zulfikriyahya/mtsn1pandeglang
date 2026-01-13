@@ -1344,7 +1344,7 @@ const AdminDashboard = () => {
                   className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                      {val} â˜…
+                      {val} ⍟…
                     </span>
                   ),
                 },
