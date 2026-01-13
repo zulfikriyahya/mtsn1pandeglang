@@ -32,6 +32,7 @@ EXCLUDE_PATTERNS=(
   "./install.sh"
   "./feedback.sh"
   "./survey.sh"
+  "./dummy.sh"
   "./generate.sh"
   "./$OUT" 
   "./config/nginx/*"

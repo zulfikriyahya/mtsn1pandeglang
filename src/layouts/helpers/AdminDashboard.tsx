@@ -259,6 +259,42 @@ const AdminDashboard = () => {
     });
   }, [data, fbFilterMonth, fbFilterYear]);
 
+  // Data Grafik Kunjungan
+  const visitsChartData = useMemo(() => {
+    if (!data?.tables?.visits) return { labels: [], datasets: [] };
+
+    // Group visits by date
+    const visitsByDate: Record<string, number> = {};
+    data.tables.visits.forEach((visit: any) => {
+      const date = new Date(visit.created_at.replace(" ", "T"))
+        .toISOString()
+        .split("T")[0]; // YYYY-MM-DD
+      visitsByDate[date] = (visitsByDate[date] || 0) + 1;
+    });
+
+    // Sort dates
+    const sortedDates = Object.keys(visitsByDate).sort();
+
+    // Filter last 30 days if needed, or based on filter
+    // For simplicity, showing all sorted data
+    return {
+      labels: sortedDates.map((d) => {
+        const [y, m, day] = d.split("-");
+        return `${day}/${m}`;
+      }),
+      datasets: [
+        {
+          label: "Jumlah Kunjungan",
+          data: sortedDates.map((d) => visitsByDate[d]),
+          borderColor: "#3b82f6",
+          backgroundColor: "rgba(59, 130, 246, 0.1)",
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
+  }, [data]);
+
   // --- AUTH & INIT ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
@@ -669,7 +705,7 @@ const AdminDashboard = () => {
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <div className="w-full max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-xl dark:border-darkmode-border dark:bg-darkmode-light">
           <img
-            src="/images/brand-lightmode.png"
+            src="/images/logo.png"
             alt="Logo"
             className="mx-auto mb-6 h-12"
           />
@@ -909,6 +945,18 @@ const AdminDashboard = () => {
                   />
                 </div>
               </div>
+
+              {/* Grafik Kunjungan (Baru) */}
+              <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6">Total Kunjungan Bulanan</h3>
+                <div className="h-72">
+                  <Line
+                    data={visitsChartData}
+                    options={{ responsive: true, maintainAspectRatio: false }}
+                  />
+                </div>
+              </div>
+
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">
                   Distribusi Rating Bintang
@@ -916,7 +964,7 @@ const AdminDashboard = () => {
                 <div className="h-64 flex justify-center">
                   <Pie
                     data={{
-                      labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
+                      labels: ["5 â˜…", "4 â˜…", "3 â˜…", "2 â˜…", "1 â˜…"],
                       datasets: [
                         {
                           label: "Jumlah",
@@ -1423,7 +1471,7 @@ const AdminDashboard = () => {
                   className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                      {val} ✯
+                      {val} â˜…
                     </span>
                   ),
                 },
@@ -2084,7 +2132,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                     checked={importType === "visits"}
                     onChange={() => setImportType("visits")}
                   />
-                  Data Kunjungan (Trafik)
+                  Data Kunjungan
                 </label>
               </div>
             </div>

@@ -15,3 +15,4 @@ package-lock.json
 .astro
 .idea/
 database.db
+*.csv
