@@ -704,7 +704,7 @@ const AdminDashboard = () => {
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <div className="w-full max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-xl dark:border-darkmode-border dark:bg-darkmode-light">
           <img
-            src="/images/brand-lightmode.png"
+            src="/images/logo.png"
             alt="Logo"
             className="mx-auto mb-6 h-12"
           />
