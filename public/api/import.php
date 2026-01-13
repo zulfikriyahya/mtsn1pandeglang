@@ -1,6 +1,7 @@
 <?php
 session_start();
 header('Content-Type: application/json');
+date_default_timezone_set('Asia/Jakarta'); // Tambahkan Timezone
 
 // 1. Cek Login Admin
 if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_admin' && $_SESSION['user_role'] !== 'operator')) {
@@ -9,12 +10,17 @@ if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_a
     exit;
 }
 
+// Konfigurasi untuk handle file besar
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
 $dbPath = __DIR__ . '/../../database.db';
 
 try {
+    if (!class_exists('SQLite3')) {
+        throw new Exception("SQLite3 driver not installed.");
+    }
+
     $db = new SQLite3($dbPath);
     $action = $_GET['action'] ?? '';
 
@@ -62,6 +68,7 @@ try {
         $headers = fgetcsv($handle, 1000, ",");
         if (!$headers) throw new Exception("File CSV kosong atau tidak terbaca.");
 
+        // Bersihkan Header (Trim, Lowercase, Hapus BOM/Karakter aneh dari Excel)
         $cleanHeaders = array_map(function ($h) {
             $h = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h);
             return strtolower(trim($h));
@@ -129,7 +136,7 @@ try {
                     $stmt->execute();
                     $successCount++;
                 }
-                // Update Global Counter setelah import visits
+                // Update Global Counter setelah import visits agar total di dashboard sinkron
                 $db->exec("UPDATE global_stats SET value = value + $successCount WHERE key = 'site_visits'");
             }
 

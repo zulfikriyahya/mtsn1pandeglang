@@ -231,21 +231,28 @@ try {
     $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
-    // Hitung Indeks
+    // Hitung Indeks (6 Kategori)
     $indices = $db->querySingle("SELECT 
         AVG(score_zi) as zi, 
         AVG(score_service) as service, 
-        AVG(score_academic) as academic 
+        AVG(score_academic) as academic,
+        AVG(score_facilities) as facilities,
+        AVG(score_management) as management,
+        AVG(score_culture) as culture 
         FROM survey_responses 
         WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
 
     $idxZI = $indices ? round($indices['zi'] ?? 0, 2) : 0;
     $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
     $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
+    $idxFacilities = $indices ? round($indices['facilities'] ?? 0, 2) : 0;
+    $idxManagement = $indices ? round($indices['management'] ?? 0, 2) : 0;
+    $idxCulture = $indices ? round($indices['culture'] ?? 0, 2) : 0;
 
     $ikmValue = 0;
     if ($surveyCount > 0) {
-        $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
+        // Rata-rata dari 6 kategori
+        $ikmValue = round(($idxZI + $idxService + $idxAcademic + $idxFacilities + $idxManagement + $idxCulture) / 6, 2);
     }
 
     $avgRatingRaw = $db->querySingle("SELECT AVG(rating) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
@@ -303,6 +310,10 @@ try {
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
     $pdf->Ln(5);
 
+    // ==========================================
+    // BAGIAN II: KUALITAS PELAYANAN (Updated Layout)
+    // ==========================================
+
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
@@ -311,16 +322,29 @@ try {
     $pdf->SetFillColor(250, 250, 250);
     $wLabelFull = 70;
     $wValueFull = 120;
+
+    // Baris 1: Ulasan & Rating
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
     $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
+
+    // Baris 2: Jumlah Responden
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
-    $wSub = 190 / 3;
+
+    // Baris 3 & 4: Detail Indeks (6 Kategori)
+    $wSub = 190 / 3; // Bagi 3 kolom
+    // Baris Indeks 1-3
     $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
+    // Baris Indeks 4-6
+    $pdf->Cell($wSub, $rowH, ' Indeks Sarpras: ' . ($idxFacilities > 0 ? $idxFacilities : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Manajemen: ' . ($idxManagement > 0 ? $idxManagement : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Budaya: ' . ($idxCulture > 0 ? $idxCulture : '-'), 1, 1, 'C', true);
+
+    // Baris IKM Total
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(240, 240, 240);
     $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
@@ -328,30 +352,36 @@ try {
     $pdf->Ln(5);
 
     // ==========================================
-    // A. DATA SURVEI
+    // A. DATA SURVEI (Updated Columns)
     // ==========================================
 
     $drawSurveyHeader = function () use ($pdf) {
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetFillColor(0, 150, 100);
         $pdf->SetTextColor(255);
+        // Lebar total = 190
         $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
-        $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-        $pdf->Cell(40, 7, 'Nama Responden', 1, 0, 'L', true);
-        $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
-        $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
-        $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
-        $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
-        $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
+        $pdf->Cell(30, 7, 'Waktu', 1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Nama', 1, 0, 'L', true);
+        // 6 Kategori (Lebar @ 9)
+        $pdf->Cell(9, 7, 'ZI', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'LYN', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'AKD', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'SAR', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'MGT', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'BUD', 1, 0, 'C', true);
+        // Indeks rata-rata individu
+        $pdf->Cell(10, 7, 'IDX', 1, 0, 'C', true);
+        $pdf->Cell(53, 7, 'Masukan', 1, 1, 'L', true);
         $pdf->SetTextColor(0);
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Arial', '', 7); // Font lebih kecil agar muat
     };
 
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
 
-    $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
-    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
+    $pdf->SetWidths([8, 30, 35, 9, 9, 9, 9, 9, 9, 10, 53]);
+    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'L']);
 
     $drawSurveyHeader();
     $pdf->SetTableHeaderCallback($drawSurveyHeader);
@@ -363,8 +393,26 @@ try {
     $found1 = false;
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
         $found1 = true;
-        $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
-        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
+        // Hitung rata-rata per responden (6 kategori)
+        $idxIndividual = round(
+            ($row['score_zi'] + $row['score_service'] + $row['score_academic'] +
+                $row['score_facilities'] + $row['score_management'] + $row['score_culture']) / 6,
+            2
+        );
+
+        $pdf->Row([
+            $no++,
+            formatFullTime($row['created_at']),
+            $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")",
+            $row['score_zi'],
+            $row['score_service'],
+            $row['score_academic'],
+            $row['score_facilities'],
+            $row['score_management'],
+            $row['score_culture'],
+            $idxIndividual,
+            $row['feedback'] ?: '-'
+        ]);
     }
 
     $pdf->isPrintingTable = false;

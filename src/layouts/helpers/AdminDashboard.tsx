@@ -23,7 +23,7 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaSpinner,
-  FaHistory, // Tambahkan icon History
+  FaHistory,
   FaDesktop,
   FaFilter,
   FaCalendarAlt,
@@ -230,17 +230,23 @@ const AdminDashboard = () => {
 
       let matchScore = true;
       if (svFilterScore > 0) {
-        if (svFilterCategory === "zi")
-          matchScore = Math.round(item.score_zi) === svFilterScore;
-        else if (svFilterCategory === "service")
-          matchScore = Math.round(item.score_service) === svFilterScore;
-        else if (svFilterCategory === "academic")
-          matchScore = Math.round(item.score_academic) === svFilterScore;
-        else {
+        // Dinamis check score
+        const cats = [
+          "score_zi",
+          "score_service",
+          "score_academic",
+          "score_facilities",
+          "score_management",
+          "score_culture",
+        ];
+        if (svFilterCategory === "all") {
+          matchScore = cats.some(
+            (c) => Math.round(item[c] || 0) === svFilterScore,
+          );
+        } else {
           matchScore =
-            Math.round(item.score_zi) === svFilterScore ||
-            Math.round(item.score_service) === svFilterScore ||
-            Math.round(item.score_academic) === svFilterScore;
+            Math.round(item[`score_${svFilterCategory}`] || 0) ===
+            svFilterScore;
         }
       }
       return matchMonth && matchYear && matchScore;
@@ -262,21 +268,14 @@ const AdminDashboard = () => {
   // Data Grafik Kunjungan
   const visitsChartData = useMemo(() => {
     if (!data?.tables?.visits) return { labels: [], datasets: [] };
-
-    // Group visits by date
     const visitsByDate: Record<string, number> = {};
     data.tables.visits.forEach((visit: any) => {
       const date = new Date(visit.created_at.replace(" ", "T"))
         .toISOString()
-        .split("T")[0]; // YYYY-MM-DD
+        .split("T")[0];
       visitsByDate[date] = (visitsByDate[date] || 0) + 1;
     });
-
-    // Sort dates
     const sortedDates = Object.keys(visitsByDate).sort();
-
-    // Filter last 30 days if needed, or based on filter
-    // For simplicity, showing all sorted data
     return {
       labels: sortedDates.map((d) => {
         const [y, m, day] = d.split("-");
@@ -705,7 +704,7 @@ const AdminDashboard = () => {
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <div className="w-full max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-xl dark:border-darkmode-border dark:bg-darkmode-light">
           <img
-            src="/images/logo.png"
+            src="/images/brand-lightmode.png"
             alt="Logo"
             className="mx-auto mb-6 h-12"
           />
@@ -964,7 +963,7 @@ const AdminDashboard = () => {
                 <div className="h-64 flex justify-center">
                   <Pie
                     data={{
-                      labels: ["5 ✯", "4 ✯", "3 ✯", "2 ✯", "1 ✯"],
+                      labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
                       datasets: [
                         {
                           label: "Jumlah",
@@ -994,21 +993,40 @@ const AdminDashboard = () => {
                   />
                 </div>
               </div>
+
+              {/* SKOR RATA-RATA SURVEI (6 KATEGORI) */}
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
                 <div className="h-64">
                   <Bar
                     data={{
-                      labels: ["Zona Integritas", "Pelayanan", "Akademik"],
+                      labels: [
+                        "ZI",
+                        "Pelayanan",
+                        "Akademik",
+                        "Sarpras",
+                        "Manajemen",
+                        "Budaya",
+                      ],
                       datasets: [
                         {
                           label: "Skor",
                           data: [
-                            data.charts.survey_avg.zi,
-                            data.charts.survey_avg.service,
-                            data.charts.survey_avg.academic,
+                            data.charts.survey_avg?.zi || 0,
+                            data.charts.survey_avg?.service || 0,
+                            data.charts.survey_avg?.academic || 0,
+                            data.charts.survey_avg?.facilities || 0,
+                            data.charts.survey_avg?.management || 0,
+                            data.charts.survey_avg?.culture || 0,
                           ],
-                          backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
+                          backgroundColor: [
+                            "#3b82f6",
+                            "#10b981",
+                            "#8b5cf6",
+                            "#f59e0b",
+                            "#ef4444",
+                            "#14b8a6",
+                          ],
                           borderRadius: 6,
                         },
                       ],
@@ -1471,7 +1489,7 @@ const AdminDashboard = () => {
                   className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                      {val} ✯
+                      {val} â˜…
                     </span>
                   ),
                 },
@@ -1514,7 +1532,7 @@ const AdminDashboard = () => {
             />
           )}
 
-          {/* 6. SURVEY (DATA SURVEI) */}
+          {/* 6. SURVEY (DATA SURVEI) - UPDATED 6 COLS */}
           {activeTab === "surveys" && (
             <DataTable
               title="Data Survei Kepuasan"
@@ -1562,6 +1580,9 @@ const AdminDashboard = () => {
                       <option value="zi">Zona Integritas (ZI)</option>
                       <option value="service">Pelayanan</option>
                       <option value="academic">Akademik</option>
+                      <option value="facilities">Sarpras</option>
+                      <option value="management">Manajemen</option>
+                      <option value="culture">Budaya</option>
                     </select>
                     <select
                       className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
@@ -1583,18 +1604,20 @@ const AdminDashboard = () => {
                   key: "created_at",
                   label: "Waktu",
                   sortable: true,
-                  className: "w-48 text-sm text-gray-500",
+                  className: "w-32 text-xs text-gray-500",
                   render: (val: string) => formatDateIndo(val),
                 },
                 {
                   key: "respondent_name",
                   label: "Responden",
                   sortable: true,
-                  className: "w-48",
+                  className: "w-40",
                   render: (_: any, row: any) => (
                     <div>
-                      <div className="font-bold">{row.respondent_name}</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="font-bold text-sm">
+                        {row.respondent_name}
+                      </div>
+                      <div className="text-[10px] text-gray-500">
                         {row.respondent_role}
                       </div>
                     </div>
@@ -1603,36 +1626,47 @@ const AdminDashboard = () => {
                 {
                   key: "score_zi",
                   label: "ZI",
-                  sortable: true,
-                  className: "text-center font-semibold text-blue-600 w-16",
+                  className: "text-center w-10 text-xs font-bold",
                 },
                 {
                   key: "score_service",
-                  label: "Layanan",
-                  sortable: true,
-                  className: "text-center font-semibold text-green-600 w-16",
+                  label: "LYN",
+                  className: "text-center w-10 text-xs font-bold",
                 },
                 {
                   key: "score_academic",
-                  label: "Akademik",
-                  sortable: true,
-                  className: "text-center font-semibold text-purple-600 w-16",
+                  label: "AKD",
+                  className: "text-center w-10 text-xs font-bold",
+                },
+                {
+                  key: "score_facilities",
+                  label: "SAR",
+                  className: "text-center w-10 text-xs font-bold",
+                },
+                {
+                  key: "score_management",
+                  label: "MGT",
+                  className: "text-center w-10 text-xs font-bold",
+                },
+                {
+                  key: "score_culture",
+                  label: "BUD",
+                  className: "text-center w-10 text-xs font-bold",
                 },
                 {
                   key: "feedback",
                   label: "Masukan",
                   render: (val: string, row: any) => (
                     <div>
-                      <p className="italic text-gray-500 text-sm line-clamp-1 max-w-xs">
+                      <p className="italic text-gray-500 text-xs line-clamp-1 max-w-xs">
                         {val || "-"}
                       </p>
-                      {val && val.length > 50 && (
+                      {val && val.length > 30 && (
                         <button
                           onClick={() => openDetail(row, "survey")}
-                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                          className="text-[10px] text-primary hover:underline mt-1 flex items-center gap-1"
                         >
-                          Lihat Detail{" "}
-                          <FaExternalLinkAlt className="text-[10px]" />
+                          Lihat <FaExternalLinkAlt className="text-[8px]" />
                         </button>
                       )}
                     </div>
@@ -1641,15 +1675,15 @@ const AdminDashboard = () => {
                 {
                   key: "actions",
                   label: "Aksi",
-                  className: "text-center w-16",
+                  className: "text-center w-10",
                   render: (_: any, row: any) =>
                     userRole === "super_admin" && (
                       <button
                         onClick={() => requestDelete([row.id], "survey")}
-                        className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
+                        className="text-red-500 hover:text-red-700 p-1.5 transition-colors hover:bg-red-50 rounded-full"
                         title="Hapus Data"
                       >
-                        <FaTrash size={14} />
+                        <FaTrash size={12} />
                       </button>
                     ),
                 },
@@ -1705,7 +1739,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* UPDATE IMPORT MODAL */}
+      {/* Import Modal */}
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => setImportModalOpen(false)}
@@ -1858,30 +1892,42 @@ const AdminDashboard = () => {
                 </div>
               </div>
               {modalType === "survey" && (
-                <div className="grid grid-cols-3 gap-4 mt-6">
-                  <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
-                    <div className="text-xs text-blue-600 font-bold uppercase">
+                <div className="grid grid-cols-3 gap-2 mt-4 text-xs">
+                  <div className="p-2 bg-blue-50 rounded text-center dark:bg-blue-900/20">
+                    <div className="font-bold text-blue-700 dark:text-blue-400">
                       ZI
                     </div>
-                    <div className="text-xl font-bold text-blue-700">
-                      {selectedItem.score_zi}
-                    </div>
+                    {selectedItem.score_zi}
                   </div>
-                  <div className="text-center p-3 bg-green-50 rounded-lg dark:bg-green-900/20">
-                    <div className="text-xs text-green-600 font-bold uppercase">
-                      Layanan
+                  <div className="p-2 bg-green-50 rounded text-center dark:bg-green-900/20">
+                    <div className="font-bold text-green-700 dark:text-green-400">
+                      LYN
                     </div>
-                    <div className="text-xl font-bold text-green-700">
-                      {selectedItem.score_service}
-                    </div>
+                    {selectedItem.score_service}
                   </div>
-                  <div className="text-center p-3 bg-purple-50 rounded-lg dark:bg-purple-900/20">
-                    <div className="text-xs text-purple-600 font-bold uppercase">
-                      Akademik
+                  <div className="p-2 bg-purple-50 rounded text-center dark:bg-purple-900/20">
+                    <div className="font-bold text-purple-700 dark:text-purple-400">
+                      AKD
                     </div>
-                    <div className="text-xl font-bold text-purple-700">
-                      {selectedItem.score_academic}
+                    {selectedItem.score_academic}
+                  </div>
+                  <div className="p-2 bg-yellow-50 rounded text-center dark:bg-yellow-900/20">
+                    <div className="font-bold text-yellow-700 dark:text-yellow-400">
+                      SAR
                     </div>
+                    {selectedItem.score_facilities}
+                  </div>
+                  <div className="p-2 bg-red-50 rounded text-center dark:bg-red-900/20">
+                    <div className="font-bold text-red-700 dark:text-red-400">
+                      MGT
+                    </div>
+                    {selectedItem.score_management}
+                  </div>
+                  <div className="p-2 bg-teal-50 rounded text-center dark:bg-teal-900/20">
+                    <div className="font-bold text-teal-700 dark:text-teal-400">
+                      BUD
+                    </div>
+                    {selectedItem.score_culture}
                   </div>
                 </div>
               )}
@@ -2003,7 +2049,7 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
   </div>
 );
 
-// 4. IMPORT MODAL (UPDATED)
+// 4. IMPORT MODAL
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   const [importType, setImportType] = useState<
     "feedback" | "survey" | "visits"
@@ -2282,7 +2328,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   );
 };
 
-// 5. DATA TABLE (UPDATED)
+// 5. DATA TABLE
 const DataTable = ({
   title,
   data,
