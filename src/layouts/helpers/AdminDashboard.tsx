@@ -23,6 +23,8 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaSpinner,
+  FaHistory, // Tambahkan icon History
+  FaDesktop,
   FaFilter,
   FaCalendarAlt,
   FaUserEdit,
@@ -244,6 +246,18 @@ const AdminDashboard = () => {
       return matchMonth && matchYear && matchScore;
     });
   }, [data, svFilterMonth, svFilterYear, svFilterCategory, svFilterScore]);
+
+  const filteredVisits = useMemo(() => {
+    if (!data?.tables?.visits) return [];
+    return data.tables.visits.filter((item: any) => {
+      const matchMonth =
+        fbFilterMonth === 0 ||
+        getMonthFromDate(item.created_at) === fbFilterMonth;
+      const matchYear =
+        fbFilterYear === 0 || getYearFromDate(item.created_at) === fbFilterYear;
+      return matchMonth && matchYear;
+    });
+  }, [data, fbFilterMonth, fbFilterYear]);
 
   // --- AUTH & INIT ---
   const initializeGoogleButton = () => {
@@ -843,6 +857,7 @@ const AdminDashboard = () => {
                 { id: "overview", label: "Ringkasan" },
                 { id: "content", label: "Manajemen Artikel & Media" },
                 { id: "posts", label: "Statistik Artikel" },
+                { id: "visits", label: "Riwayat Kunjungan" },
                 { id: "feedback", label: "Ulasan" },
                 { id: "surveys", label: "Survei" },
                 ...(userRole === "super_admin"
@@ -1029,7 +1044,7 @@ const AdminDashboard = () => {
                         <FaHammer
                           className={isRebuilding ? "animate-spin" : ""}
                         />{" "}
-                        {isRebuilding ? "Building..." : "Rebuild Website"}
+                        {isRebuilding ? "Building..." : "Rebuild"}
                       </button>
                     )}
                   </div>
@@ -1266,7 +1281,71 @@ const AdminDashboard = () => {
               ]}
             />
           )}
-
+          {/* TAB BARU: VISIT HISTORY */}
+          {activeTab === "visits" && (
+            <DataTable
+              title="Riwayat Kunjungan Website"
+              data={filteredVisits}
+              searchKeys={["ip_address", "user_agent"]}
+              enableSelection={false}
+              onDownload={() => downloadReport("visits")}
+              customFilters={
+                <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                  <FaCalendarAlt className="text-gray-400" />
+                  <select
+                    className="text-xs bg-transparent outline-none"
+                    value={fbFilterMonth}
+                    onChange={(e) => setFbFilterMonth(Number(e.target.value))}
+                  >
+                    {monthOptions.map((m, i) => (
+                      <option key={i} value={i}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                    value={fbFilterYear}
+                    onChange={(e) => setFbFilterYear(Number(e.target.value))}
+                  >
+                    <option value={0}>Semua Tahun</option>
+                    {yearOptions.slice(1).map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              }
+              columns={[
+                {
+                  key: "created_at",
+                  label: "Waktu Akses",
+                  sortable: true,
+                  className: "w-48 text-sm text-gray-500",
+                  render: (val: string) => formatDateIndo(val),
+                },
+                {
+                  key: "ip_address",
+                  label: "IP Address",
+                  sortable: true,
+                  className: "font-mono text-xs w-32",
+                },
+                {
+                  key: "user_agent",
+                  label: "Perangkat / Browser",
+                  render: (val: string) => (
+                    <div className="flex items-center gap-2" title={val}>
+                      <FaDesktop className="text-gray-400 flex-shrink-0" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-md block">
+                        {val}
+                      </span>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          )}
           {/* 5. FEEDBACK (DATA ULASAN) */}
           {activeTab === "feedback" && (
             <DataTable
@@ -1578,7 +1657,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Import Modal */}
+      {/* UPDATE IMPORT MODAL */}
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => setImportModalOpen(false)}
@@ -1878,9 +1957,9 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
 
 // 4. IMPORT MODAL (UPDATED)
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
-  const [importType, setImportType] = useState<"feedback" | "survey">(
-    "feedback",
-  );
+  const [importType, setImportType] = useState<
+    "feedback" | "survey" | "visits"
+  >("feedback");
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<
     "idle" | "uploading" | "success" | "error"
@@ -1995,6 +2074,17 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                     onChange={() => setImportType("survey")}
                   />
                   Data Survei
+                </label>
+                {/* Opsi Baru */}
+                <label className="flex items-center gap-2 cursor-pointer mt-1">
+                  <input
+                    type="radio"
+                    name="importType"
+                    value="visits"
+                    checked={importType === "visits"}
+                    onChange={() => setImportType("visits")}
+                  />
+                  Data Kunjungan (Trafik)
                 </label>
               </div>
             </div>

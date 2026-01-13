@@ -3,15 +3,12 @@ session_start();
 header('Content-Type: application/json');
 
 // 1. Cek Login Admin
-// Cek Login & Role (Super Admin OR Operator)
-// User biasa TIDAK BOLEH import
 if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_admin' && $_SESSION['user_role'] !== 'operator')) {
     http_response_code(403);
     echo json_encode(['status' => 'error', 'message' => 'Akses Ditolak: User biasa tidak bisa melakukan import.']);
     exit;
 }
 
-// Konfigurasi untuk handle file besar
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
@@ -37,6 +34,10 @@ try {
         } elseif ($type === 'survey') {
             fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
             fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Pertahankan kualitas.', '2024-01-02 14:30:00', '192.168.1.2']);
+        } elseif ($type === 'visits') {
+            // Template Baru: Kunjungan
+            fputcsv($output, ['ip_address', 'user_agent', 'created_at']);
+            fputcsv($output, ['192.168.1.10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)...', '2024-02-01 08:00:00']);
         }
         fclose($output);
         exit;
@@ -51,45 +52,40 @@ try {
         $type = $_POST['type'] ?? '';
         $fileTmpPath = $_FILES['file']['tmp_name'];
 
-        // Validasi Ekstensi
         $fileExt = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
-        if ($fileExt !== 'csv') {
-            throw new Exception("Format file harus .csv");
-        }
+        if ($fileExt !== 'csv') throw new Exception("Format file harus .csv");
 
         $handle = fopen($fileTmpPath, "r");
         if ($handle === FALSE) throw new Exception("Gagal membaca file.");
 
-        // --- VALIDASI HEADER CSV (FITUR BARU) ---
-        // Baca baris pertama (Header)
+        // --- VALIDASI HEADER ---
         $headers = fgetcsv($handle, 1000, ",");
-
         if (!$headers) throw new Exception("File CSV kosong atau tidak terbaca.");
 
-        // Bersihkan Header (Trim, Lowercase, Hapus BOM/Karakter aneh dari Excel)
         $cleanHeaders = array_map(function ($h) {
-            // Menghapus karakter non-printable (BOM utf-8 sering muncul di awal file Excel)
             $h = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h);
             return strtolower(trim($h));
         }, $headers);
 
-        // Logika Pengecekan Kecocokan Kolom
         if ($type === 'feedback') {
-            // Pastikan ada kolom 'rating' dan 'message' (Ciri khas Feedback)
             if (!in_array('rating', $cleanHeaders) || !in_array('message', $cleanHeaders)) {
                 fclose($handle);
-                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Ulasan', tetapi file CSV ini tampaknya bukan template Ulasan (Kolom 'rating'/'message' tidak ditemukan).");
+                throw new Exception("Template salah. Kolom 'rating'/'message' tidak ditemukan.");
             }
         } elseif ($type === 'survey') {
-            // Pastikan ada kolom 'score_zi' dan 'respondent_role' (Ciri khas Survey)
             if (!in_array('score_zi', $cleanHeaders) || !in_array('respondent_role', $cleanHeaders)) {
                 fclose($handle);
-                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Survei', tetapi file CSV ini tampaknya bukan template Survei (Kolom 'score_zi'/'respondent_role' tidak ditemukan).");
+                throw new Exception("Template salah. Kolom 'score_zi'/'respondent_role' tidak ditemukan.");
+            }
+        } elseif ($type === 'visits') {
+            // Validasi Header Kunjungan
+            if (!in_array('ip_address', $cleanHeaders) || !in_array('user_agent', $cleanHeaders)) {
+                fclose($handle);
+                throw new Exception("Template salah. Kolom 'ip_address'/'user_agent' tidak ditemukan.");
             }
         } else {
             throw new Exception("Tipe import tidak dikenal.");
         }
-        // --- AKHIR VALIDASI ---
 
         $successCount = 0;
         $db->exec('BEGIN TRANSACTION');
@@ -97,11 +93,8 @@ try {
         try {
             if ($type === 'feedback') {
                 $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
-
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
-                    // Validasi jumlah kolom minimal agar tidak error index offset
                     if (count($data) < 5) continue;
-
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':rating', (int)$data[1], SQLITE3_INTEGER);
                     $stmt->bindValue(':message', $data[2] ?: '', SQLITE3_TEXT);
@@ -112,10 +105,8 @@ try {
                 }
             } elseif ($type === 'survey') {
                 $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
-
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
                     if (count($data) < 8) continue;
-
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':role', $data[1] ?: 'Umum', SQLITE3_TEXT);
                     $stmt->bindValue(':zi', (float)$data[2], SQLITE3_FLOAT);
@@ -127,6 +118,19 @@ try {
                     $stmt->execute();
                     $successCount++;
                 }
+            } elseif ($type === 'visits') {
+                // Import Data Kunjungan
+                $stmt = $db->prepare("INSERT INTO site_visit_logs (ip_address, user_agent, created_at) VALUES (:ip, :ua, :created)");
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    if (count($data) < 3) continue;
+                    $stmt->bindValue(':ip', $data[0] ?: '127.0.0.1', SQLITE3_TEXT);
+                    $stmt->bindValue(':ua', $data[1] ?: 'Imported Agent', SQLITE3_TEXT);
+                    $stmt->bindValue(':created', $data[2] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT);
+                    $stmt->execute();
+                    $successCount++;
+                }
+                // Update Global Counter setelah import visits
+                $db->exec("UPDATE global_stats SET value = value + $successCount WHERE key = 'site_visits'");
             }
 
             $db->exec('COMMIT');
