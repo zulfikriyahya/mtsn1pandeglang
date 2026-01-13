@@ -22,8 +22,8 @@ echo "=================================================================="
 # ------------------------------------------------------------------------------
 
 # Input Total Data
-read -p "1. Total data per kategori? (Default: 5000): " INPUT_TOTAL
-INPUT_TOTAL=${INPUT_TOTAL:-5000}
+read -p "1. Total data per kategori? (Default: 10000): " INPUT_TOTAL
+INPUT_TOTAL=${INPUT_TOTAL:-10000}
 
 # Input Batch Size
 read -p "2. Maksimal baris per file CSV? (Default: 1000): " INPUT_BATCH
@@ -33,8 +33,8 @@ INPUT_BATCH=${INPUT_BATCH:-1000}
 read -p "3. Tanggal Mulai (YYYY-MM-DD) [Def: 2024-01-01]: " INPUT_START_DATE
 INPUT_START_DATE=${INPUT_START_DATE:-"2024-01-01"}
 
-read -p "4. Tanggal Selesai (YYYY-MM-DD) [Def: 2025-12-31]: " INPUT_END_DATE
-INPUT_END_DATE=${INPUT_END_DATE:-"2025-12-31"}
+read -p "4. Tanggal Selesai (YYYY-MM-DD) [Def: 2026-12-31]: " INPUT_END_DATE
+INPUT_END_DATE=${INPUT_END_DATE:-"2026-12-31"}
 
 # Input Rating
 read -p "5. Minimal Rating Bintang (1-5)? [Def: 4]: " INPUT_MIN_STAR
