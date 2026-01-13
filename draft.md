@@ -1900,6 +1900,8 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaSpinner,
+  FaHistory,
+  FaDesktop,
   FaFilter,
   FaCalendarAlt,
   FaUserEdit,
@@ -1909,6 +1911,7 @@ import {
   FaSyncAlt,
   FaCloudUploadAlt,
   FaHammer,
+  FaSearchPlus,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -2104,22 +2107,69 @@ const AdminDashboard = () => {
 
       let matchScore = true;
       if (svFilterScore > 0) {
-        if (svFilterCategory === "zi")
-          matchScore = Math.round(item.score_zi) === svFilterScore;
-        else if (svFilterCategory === "service")
-          matchScore = Math.round(item.score_service) === svFilterScore;
-        else if (svFilterCategory === "academic")
-          matchScore = Math.round(item.score_academic) === svFilterScore;
-        else {
+        // Dinamis check score
+        const cats = [
+          "score_zi",
+          "score_service",
+          "score_academic",
+          "score_facilities",
+          "score_management",
+          "score_culture",
+        ];
+        if (svFilterCategory === "all") {
+          matchScore = cats.some(
+            (c) => Math.round(item[c] || 0) === svFilterScore,
+          );
+        } else {
           matchScore =
-            Math.round(item.score_zi) === svFilterScore ||
-            Math.round(item.score_service) === svFilterScore ||
-            Math.round(item.score_academic) === svFilterScore;
+            Math.round(item[`score_${svFilterCategory}`] || 0) ===
+            svFilterScore;
         }
       }
       return matchMonth && matchYear && matchScore;
     });
   }, [data, svFilterMonth, svFilterYear, svFilterCategory, svFilterScore]);
+
+  const filteredVisits = useMemo(() => {
+    if (!data?.tables?.visits) return [];
+    return data.tables.visits.filter((item: any) => {
+      const matchMonth =
+        fbFilterMonth === 0 ||
+        getMonthFromDate(item.created_at) === fbFilterMonth;
+      const matchYear =
+        fbFilterYear === 0 || getYearFromDate(item.created_at) === fbFilterYear;
+      return matchMonth && matchYear;
+    });
+  }, [data, fbFilterMonth, fbFilterYear]);
+
+  // Data Grafik Kunjungan
+  const visitsChartData = useMemo(() => {
+    if (!data?.tables?.visits) return { labels: [], datasets: [] };
+    const visitsByDate: Record<string, number> = {};
+    data.tables.visits.forEach((visit: any) => {
+      const date = new Date(visit.created_at.replace(" ", "T"))
+        .toISOString()
+        .split("T")[0];
+      visitsByDate[date] = (visitsByDate[date] || 0) + 1;
+    });
+    const sortedDates = Object.keys(visitsByDate).sort();
+    return {
+      labels: sortedDates.map((d) => {
+        const [y, m, day] = d.split("-");
+        return `${day}/${m}`;
+      }),
+      datasets: [
+        {
+          label: "Jumlah Kunjungan",
+          data: sortedDates.map((d) => visitsByDate[d]),
+          borderColor: "#3b82f6",
+          backgroundColor: "rgba(59, 130, 246, 0.1)",
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
+  }, [data]);
 
   // --- AUTH & INIT ---
   const initializeGoogleButton = () => {
@@ -2288,7 +2338,7 @@ const AdminDashboard = () => {
         setUploadConflict({ isOpen: true, file, type: contentTab });
       } else if (json.status === "success") {
         setUploadConflict({ isOpen: false, file: null, type: "" });
-        setRefreshTrigger((prev) => prev + 1); // Refresh list
+        setRefreshTrigger((prev) => prev + 1); // Refresh list ONLY (No Rebuild Trigger)
         setStatusModal({
           isOpen: true,
           status: "success",
@@ -2329,7 +2379,7 @@ const AdminDashboard = () => {
       );
       const json = await res.json();
       if (json.status === "success") {
-        setRefreshTrigger((prev) => prev + 1);
+        setRefreshTrigger((prev) => prev + 1); // Refresh list ONLY (No Rebuild Trigger)
       } else {
         alert(json.message);
       }
@@ -2341,7 +2391,7 @@ const AdminDashboard = () => {
   const triggerRebuild = async () => {
     if (
       !window.confirm(
-        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit.",
+        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit. Pastikan Anda telah meninjau semua perubahan file.",
       )
     )
       return;
@@ -2719,6 +2769,7 @@ const AdminDashboard = () => {
                 { id: "overview", label: "Ringkasan" },
                 { id: "content", label: "Manajemen Artikel & Media" },
                 { id: "posts", label: "Statistik Artikel" },
+                { id: "visits", label: "Riwayat Kunjungan" },
                 { id: "feedback", label: "Ulasan" },
                 { id: "surveys", label: "Survei" },
                 ...(userRole === "super_admin"
@@ -2770,6 +2821,18 @@ const AdminDashboard = () => {
                   />
                 </div>
               </div>
+
+              {/* Grafik Kunjungan (Baru) */}
+              <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
+                <h3 className="h6 mb-6">Total Kunjungan Bulanan</h3>
+                <div className="h-72">
+                  <Line
+                    data={visitsChartData}
+                    options={{ responsive: true, maintainAspectRatio: false }}
+                  />
+                </div>
+              </div>
+
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">
                   Distribusi Rating Bintang
@@ -2780,8 +2843,9 @@ const AdminDashboard = () => {
                       labels: ["5 ★", "4 ★", "3 ★", "2 ★", "1 ★"],
                       datasets: [
                         {
+                          label: "Jumlah",
                           data: [5, 4, 3, 2, 1].map(
-                            (r) => data.charts.stars[r],
+                            (r) => data.charts.stars?.[r] || 0,
                           ),
                           backgroundColor: [
                             "#22c55e",
@@ -2794,25 +2858,52 @@ const AdminDashboard = () => {
                         },
                       ],
                     }}
-                    options={{ responsive: true, maintainAspectRatio: false }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          position: "right" as const,
+                        },
+                      },
+                    }}
                   />
                 </div>
               </div>
+
+              {/* SKOR RATA-RATA SURVEI (6 KATEGORI) */}
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
                 <div className="h-64">
                   <Bar
                     data={{
-                      labels: ["Zona Integritas", "Pelayanan", "Akademik"],
+                      labels: [
+                        "ZI",
+                        "Pelayanan",
+                        "Akademik",
+                        "Sarpras",
+                        "Manajemen",
+                        "Budaya",
+                      ],
                       datasets: [
                         {
                           label: "Skor",
                           data: [
-                            data.charts.survey_avg.zi,
-                            data.charts.survey_avg.service,
-                            data.charts.survey_avg.academic,
+                            data.charts.survey_avg?.zi || 0,
+                            data.charts.survey_avg?.service || 0,
+                            data.charts.survey_avg?.academic || 0,
+                            data.charts.survey_avg?.facilities || 0,
+                            data.charts.survey_avg?.management || 0,
+                            data.charts.survey_avg?.culture || 0,
                           ],
-                          backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
+                          backgroundColor: [
+                            "#3b82f6",
+                            "#10b981",
+                            "#8b5cf6",
+                            "#f59e0b",
+                            "#ef4444",
+                            "#14b8a6",
+                          ],
                           borderRadius: 6,
                         },
                       ],
@@ -2896,7 +2987,7 @@ const AdminDashboard = () => {
                         <FaHammer
                           className={isRebuilding ? "animate-spin" : ""}
                         />{" "}
-                        {isRebuilding ? "Building..." : "Rebuild Website"}
+                        {isRebuilding ? "Building..." : "Rebuild"}
                       </button>
                     )}
                   </div>
@@ -2968,27 +3059,38 @@ const AdminDashboard = () => {
                                 {file.date}
                               </td>
                               <td className="px-4 py-3 text-right flex justify-end gap-2">
+                                {/* View/Download Button */}
                                 {userRole === "super_admin" && (
-                                  <>
-                                    <a
-                                      href={
-                                        file.url ||
-                                        `/api/content.php?action=download&file=${file.name}`
-                                      } // Simplification for MVP
-                                      download={file.name}
-                                      className="p-2 text-green-600 hover:bg-green-50 rounded"
-                                      title="Unduh"
-                                    >
-                                      <FaDownload />
-                                    </a>
-                                    <button
-                                      onClick={() => deleteContent(file.name)}
-                                      className="p-2 text-red-600 hover:bg-red-50 rounded"
-                                      title="Hapus"
-                                    >
-                                      <FaTrash />
-                                    </button>
-                                  </>
+                                  <a
+                                    href={
+                                      file.url ||
+                                      `/api/content.php?action=download&type=${contentTab}&file=${file.name}`
+                                    }
+                                    target="_blank"
+                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                    title={
+                                      contentTab === "article"
+                                        ? "Unduh / Tinjau Source"
+                                        : "Lihat Media"
+                                    }
+                                  >
+                                    {contentTab === "article" ? (
+                                      <FaSearchPlus />
+                                    ) : (
+                                      <FaEye />
+                                    )}
+                                  </a>
+                                )}
+
+                                {/* Delete Button (Super Admin Only) */}
+                                {userRole === "super_admin" && (
+                                  <button
+                                    onClick={() => deleteContent(file.name)}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                    title="Hapus"
+                                  >
+                                    <FaTrash />
+                                  </button>
                                 )}
                               </td>
                             </tr>
@@ -3097,7 +3199,21 @@ const AdminDashboard = () => {
                 {
                   key: "slug",
                   label: "Judul Artikel",
-                  render: (val: string) => val.replace(/-/g, " ").toUpperCase(),
+                  render: (val: string) => {
+                    const urlSlug = val.replace(/_/g, "-");
+                    const displayTitle = val.replace(/_/g, " ").toUpperCase();
+                    return (
+                      <a
+                        href={`/blog/${urlSlug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary hover:underline font-medium flex items-center gap-1 group"
+                      >
+                        {displayTitle}
+                        <FaExternalLinkAlt className="text-[10px] opacity-50 group-hover:opacity-100" />
+                      </a>
+                    );
+                  },
                 },
                 {
                   key: "views",
@@ -3108,7 +3224,71 @@ const AdminDashboard = () => {
               ]}
             />
           )}
-
+          {/* TAB BARU: VISIT HISTORY */}
+          {activeTab === "visits" && (
+            <DataTable
+              title="Riwayat Kunjungan Website"
+              data={filteredVisits}
+              searchKeys={["ip_address", "user_agent"]}
+              enableSelection={false}
+              onDownload={() => downloadReport("visits")}
+              customFilters={
+                <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                  <FaCalendarAlt className="text-gray-400" />
+                  <select
+                    className="text-xs bg-transparent outline-none"
+                    value={fbFilterMonth}
+                    onChange={(e) => setFbFilterMonth(Number(e.target.value))}
+                  >
+                    {monthOptions.map((m, i) => (
+                      <option key={i} value={i}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                    value={fbFilterYear}
+                    onChange={(e) => setFbFilterYear(Number(e.target.value))}
+                  >
+                    <option value={0}>Semua Tahun</option>
+                    {yearOptions.slice(1).map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              }
+              columns={[
+                {
+                  key: "created_at",
+                  label: "Waktu Akses",
+                  sortable: true,
+                  className: "w-48 text-sm text-gray-500",
+                  render: (val: string) => formatDateIndo(val),
+                },
+                {
+                  key: "ip_address",
+                  label: "IP Address",
+                  sortable: true,
+                  className: "font-mono text-xs w-32",
+                },
+                {
+                  key: "user_agent",
+                  label: "Perangkat / Browser",
+                  render: (val: string) => (
+                    <div className="flex items-center gap-2" title={val}>
+                      <FaDesktop className="text-gray-400 flex-shrink-0" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-md block">
+                        {val}
+                      </span>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          )}
           {/* 5. FEEDBACK (DATA ULASAN) */}
           {activeTab === "feedback" && (
             <DataTable
@@ -3116,7 +3296,7 @@ const AdminDashboard = () => {
               data={filteredFeedbacks}
               searchKeys={["name", "message"]}
               enableSelection={userRole === "super_admin"}
-              onBulkDelete={(ids) => requestDelete(ids, "feedback")}
+              onBulkDelete={(ids: any) => requestDelete(ids, "feedback")}
               onDownload={() => downloadReport("feedback")}
               customFilters={
                 <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
@@ -3186,7 +3366,7 @@ const AdminDashboard = () => {
                   className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                      {val} ★
+                      {val} ✯
                     </span>
                   ),
                 },
@@ -3229,14 +3409,14 @@ const AdminDashboard = () => {
             />
           )}
 
-          {/* 6. SURVEY (DATA SURVEI) */}
+          {/* 6. SURVEY (DATA SURVEI) - UPDATED 6 COLS */}
           {activeTab === "surveys" && (
             <DataTable
               title="Data Survei Kepuasan"
               data={filteredSurveys}
               searchKeys={["respondent_name", "feedback"]}
               enableSelection={userRole === "super_admin"}
-              onBulkDelete={(ids) => requestDelete(ids, "survey")}
+              onBulkDelete={(ids: any) => requestDelete(ids, "survey")}
               onDownload={() => downloadReport("survey")}
               customFilters={
                 <div className="flex flex-wrap gap-2 items-center mb-2 md:mb-0">
@@ -3277,6 +3457,9 @@ const AdminDashboard = () => {
                       <option value="zi">Zona Integritas (ZI)</option>
                       <option value="service">Pelayanan</option>
                       <option value="academic">Akademik</option>
+                      <option value="facilities">Sarpras</option>
+                      <option value="management">Manajemen</option>
+                      <option value="culture">Budaya</option>
                     </select>
                     <select
                       className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
@@ -3298,18 +3481,20 @@ const AdminDashboard = () => {
                   key: "created_at",
                   label: "Waktu",
                   sortable: true,
-                  className: "w-48 text-sm text-gray-500",
+                  className: "w-32 text-xs text-gray-500",
                   render: (val: string) => formatDateIndo(val),
                 },
                 {
                   key: "respondent_name",
                   label: "Responden",
                   sortable: true,
-                  className: "w-48",
+                  className: "w-40",
                   render: (_: any, row: any) => (
                     <div>
-                      <div className="font-bold">{row.respondent_name}</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="font-bold text-sm">
+                        {row.respondent_name}
+                      </div>
+                      <div className="text-[10px] text-gray-500">
                         {row.respondent_role}
                       </div>
                     </div>
@@ -3318,36 +3503,47 @@ const AdminDashboard = () => {
                 {
                   key: "score_zi",
                   label: "ZI",
-                  sortable: true,
-                  className: "text-center font-semibold text-blue-600 w-16",
+                  className: "text-center w-10 text-xs font-bold",
                 },
                 {
                   key: "score_service",
-                  label: "Layanan",
-                  sortable: true,
-                  className: "text-center font-semibold text-green-600 w-16",
+                  label: "LYN",
+                  className: "text-center w-10 text-xs font-bold",
                 },
                 {
                   key: "score_academic",
-                  label: "Akademik",
-                  sortable: true,
-                  className: "text-center font-semibold text-purple-600 w-16",
+                  label: "AKD",
+                  className: "text-center w-10 text-xs font-bold",
+                },
+                {
+                  key: "score_facilities",
+                  label: "SAR",
+                  className: "text-center w-10 text-xs font-bold",
+                },
+                {
+                  key: "score_management",
+                  label: "MGT",
+                  className: "text-center w-10 text-xs font-bold",
+                },
+                {
+                  key: "score_culture",
+                  label: "BUD",
+                  className: "text-center w-10 text-xs font-bold",
                 },
                 {
                   key: "feedback",
                   label: "Masukan",
                   render: (val: string, row: any) => (
                     <div>
-                      <p className="italic text-gray-500 text-sm line-clamp-1 max-w-xs">
+                      <p className="italic text-gray-500 text-xs line-clamp-1 max-w-xs">
                         {val || "-"}
                       </p>
-                      {val && val.length > 50 && (
+                      {val && val.length > 30 && (
                         <button
                           onClick={() => openDetail(row, "survey")}
-                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
+                          className="text-[10px] text-primary hover:underline mt-1 flex items-center gap-1"
                         >
-                          Lihat Detail{" "}
-                          <FaExternalLinkAlt className="text-[10px]" />
+                          Lihat <FaExternalLinkAlt className="text-[8px]" />
                         </button>
                       )}
                     </div>
@@ -3356,15 +3552,15 @@ const AdminDashboard = () => {
                 {
                   key: "actions",
                   label: "Aksi",
-                  className: "text-center w-16",
+                  className: "text-center w-10",
                   render: (_: any, row: any) =>
                     userRole === "super_admin" && (
                       <button
                         onClick={() => requestDelete([row.id], "survey")}
-                        className="text-red-500 hover:text-red-700 p-2 transition-colors hover:bg-red-50 rounded-full"
+                        className="text-red-500 hover:text-red-700 p-1.5 transition-colors hover:bg-red-50 rounded-full"
                         title="Hapus Data"
                       >
-                        <FaTrash size={14} />
+                        <FaTrash size={12} />
                       </button>
                     ),
                 },
@@ -3573,30 +3769,42 @@ const AdminDashboard = () => {
                 </div>
               </div>
               {modalType === "survey" && (
-                <div className="grid grid-cols-3 gap-4 mt-6">
-                  <div className="text-center p-3 bg-blue-50 rounded-lg dark:bg-blue-900/20">
-                    <div className="text-xs text-blue-600 font-bold uppercase">
+                <div className="grid grid-cols-3 gap-2 mt-4 text-xs">
+                  <div className="p-2 bg-blue-50 rounded text-center dark:bg-blue-900/20">
+                    <div className="font-bold text-blue-700 dark:text-blue-400">
                       ZI
                     </div>
-                    <div className="text-xl font-bold text-blue-700">
-                      {selectedItem.score_zi}
-                    </div>
+                    {selectedItem.score_zi}
                   </div>
-                  <div className="text-center p-3 bg-green-50 rounded-lg dark:bg-green-900/20">
-                    <div className="text-xs text-green-600 font-bold uppercase">
-                      Layanan
+                  <div className="p-2 bg-green-50 rounded text-center dark:bg-green-900/20">
+                    <div className="font-bold text-green-700 dark:text-green-400">
+                      LYN
                     </div>
-                    <div className="text-xl font-bold text-green-700">
-                      {selectedItem.score_service}
-                    </div>
+                    {selectedItem.score_service}
                   </div>
-                  <div className="text-center p-3 bg-purple-50 rounded-lg dark:bg-purple-900/20">
-                    <div className="text-xs text-purple-600 font-bold uppercase">
-                      Akademik
+                  <div className="p-2 bg-purple-50 rounded text-center dark:bg-purple-900/20">
+                    <div className="font-bold text-purple-700 dark:text-purple-400">
+                      AKD
                     </div>
-                    <div className="text-xl font-bold text-purple-700">
-                      {selectedItem.score_academic}
+                    {selectedItem.score_academic}
+                  </div>
+                  <div className="p-2 bg-yellow-50 rounded text-center dark:bg-yellow-900/20">
+                    <div className="font-bold text-yellow-700 dark:text-yellow-400">
+                      SAR
                     </div>
+                    {selectedItem.score_facilities}
+                  </div>
+                  <div className="p-2 bg-red-50 rounded text-center dark:bg-red-900/20">
+                    <div className="font-bold text-red-700 dark:text-red-400">
+                      MGT
+                    </div>
+                    {selectedItem.score_management}
+                  </div>
+                  <div className="p-2 bg-teal-50 rounded text-center dark:bg-teal-900/20">
+                    <div className="font-bold text-teal-700 dark:text-teal-400">
+                      BUD
+                    </div>
+                    {selectedItem.score_culture}
                   </div>
                 </div>
               )}
@@ -3718,11 +3926,11 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
   </div>
 );
 
-// 4. IMPORT MODAL (UPDATED)
+// 4. IMPORT MODAL
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
-  const [importType, setImportType] = useState<"feedback" | "survey">(
-    "feedback",
-  );
+  const [importType, setImportType] = useState<
+    "feedback" | "survey" | "visits"
+  >("feedback");
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<
     "idle" | "uploading" | "success" | "error"
@@ -3837,6 +4045,17 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                     onChange={() => setImportType("survey")}
                   />
                   Data Survei
+                </label>
+                {/* Opsi Baru */}
+                <label className="flex items-center gap-2 cursor-pointer mt-1">
+                  <input
+                    type="radio"
+                    name="importType"
+                    value="visits"
+                    checked={importType === "visits"}
+                    onChange={() => setImportType("visits")}
+                  />
+                  Data Kunjungan
                 </label>
               </div>
             </div>
@@ -3986,7 +4205,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   );
 };
 
-// 5. DATA TABLE (UPDATED)
+// 5. DATA TABLE
 const DataTable = ({
   title,
   data,
@@ -5733,7 +5952,6 @@ export default ServiceRating;
 ```tsx
 import React, { useState, useEffect } from "react";
 import {
-  FaCheck,
   FaChevronLeft,
   FaChevronRight,
   FaUser,
@@ -5744,25 +5962,93 @@ import {
   FaChartBar,
 } from "react-icons/fa";
 
-// Data Pertanyaan (Sama seperti sebelumnya)
 const surveyData = [
   {
     id: "zi",
     title: "Zona Integritas",
     icon: <FaBuilding />,
-    description: "Penilaian terkait transparansi dan anti-korupsi.",
+    description:
+      "Penilaian terkait transparansi, anti-korupsi, dan integritas petugas.",
     questions: [
       {
         id: "zi_1",
-        text: "Tidak ada pungutan liar (pungli) atau gratifikasi dalam layanan.",
+        text: "Tidak ada pungutan liar (pungli) atau permintaan imbalan di luar ketentuan resmi.",
       },
       {
         id: "zi_2",
-        text: "Prosedur pelayanan jelas, transparan, dan mudah dipahami.",
+        text: "Petugas menolak segala bentuk gratifikasi (hadiah/uang pelicin).",
       },
       {
         id: "zi_3",
-        text: "Petugas menolak segala bentuk pemberian imbalan di luar ketentuan.",
+        text: "Prosedur pelayanan transparan, mudah dipahami, dan tidak berbelit-belit.",
+      },
+      {
+        id: "zi_4",
+        text: "Terdapat sarana pengaduan yang jelas dan responsif jika terjadi penyimpangan.",
+      },
+      {
+        id: "zi_5",
+        text: "Informasi persyaratan dan biaya layanan ditampilkan secara terbuka dan mudah diakses.",
+      },
+      {
+        id: "zi_6",
+        text: "Petugas menunjukkan sikap profesional dan tidak diskriminatif dalam memberikan layanan.",
+      },
+      {
+        id: "zi_7",
+        text: "Sistem pengaduan dan penanganan keluhan berjalan efektif dan dapat dipertanggungjawabkan.",
+      },
+      {
+        id: "zi_8",
+        text: "Terdapat keterbukaan informasi publik yang dapat diakses dengan mudah oleh masyarakat.",
+      },
+      {
+        id: "zi_9",
+        text: "Petugas tidak melakukan praktik diskriminasi berdasarkan SARA, status sosial, atau faktor lainnya.",
+      },
+      {
+        id: "zi_10",
+        text: "Terdapat kode etik dan standar perilaku yang jelas dan diterapkan secara konsisten.",
+      },
+      {
+        id: "zi_11",
+        text: "Proses pengambilan keputusan pelayanan dilakukan secara objektif dan dapat dipertanggungjawabkan.",
+      },
+      {
+        id: "zi_12",
+        text: "Terdapat mekanisme whistleblowing system (pelaporan pelanggaran) yang aman dan terlindungi.",
+      },
+      {
+        id: "zi_13",
+        text: "Setiap petugas menggunakan identitas diri (name tag) yang jelas dan mudah terlihat.",
+      },
+      {
+        id: "zi_14",
+        text: "Tidak ada praktik percaloan atau perantara tidak resmi dalam pengurusan layanan.",
+      },
+      {
+        id: "zi_15",
+        text: "Terdapat papan pengumuman atau media informasi yang menampilkan standar pelayanan dan pengaduan.",
+      },
+      {
+        id: "zi_16",
+        text: "Instansi menerapkan sistem merit dalam pengelolaan SDM (promosi berdasarkan kinerja, bukan KKN).",
+      },
+      {
+        id: "zi_17",
+        text: "Terdapat aturan pemberian hadiah/rewards dan punishment yang jelas dan adil.",
+      },
+      {
+        id: "zi_18",
+        text: "Instansi melakukan sosialisasi dan edukasi anti-korupsi secara berkala kepada pegawai dan masyarakat.",
+      },
+      {
+        id: "zi_19",
+        text: "Terdapat laporan kinerja dan penggunaan anggaran yang dapat diakses publik secara berkala.",
+      },
+      {
+        id: "zi_20",
+        text: "Sistem monitoring dan evaluasi internal berjalan efektif untuk mencegah penyimpangan.",
       },
     ],
   },
@@ -5770,33 +6056,564 @@ const surveyData = [
     id: "service",
     title: "Pelayanan PTSP",
     icon: <FaConciergeBell />,
-    description: "Kualitas layanan administrasi di ruang PTSP.",
+    description:
+      "Kualitas layanan administrasi, fasilitas, dan kesigapan petugas di ruang PTSP.",
     questions: [
       {
         id: "srv_1",
-        text: "Petugas melayani dengan ramah, sopan, dan santun.",
+        text: "Petugas melayani dengan sikap ramah, sopan, santun, dan profesional (3S: Senyum, Sapa, Salam).",
       },
-      { id: "srv_2", text: "Ruang tunggu pelayanan nyaman dan bersih." },
+      {
+        id: "srv_2",
+        text: "Ruang tunggu pelayanan nyaman, bersih, dan dilengkapi fasilitas pendukung yang memadai.",
+      },
       {
         id: "srv_3",
-        text: "Layanan selesai tepat waktu sesuai standar yang dijanjikan.",
+        text: "Waktu penyelesaian layanan cepat dan sesuai dengan standar waktu yang dijanjikan.",
+      },
+      {
+        id: "srv_4",
+        text: "Petugas memiliki kompetensi dan pengetahuan yang baik dalam memberikan solusi atau informasi.",
+      },
+      {
+        id: "srv_5",
+        text: "Sistem antrian terorganisir dengan baik dan adil bagi semua pemohon layanan.",
+      },
+      {
+        id: "srv_6",
+        text: "Tersedia informasi yang jelas mengenai alur dan tahapan pelayanan.",
+      },
+      {
+        id: "srv_7",
+        text: "Fasilitas toilet, mushola, dan area parkir tersedia dan dalam kondisi baik.",
+      },
+      {
+        id: "srv_8",
+        text: "Petugas responsif dalam menanggapi pertanyaan dan menyelesaikan masalah yang dihadapi.",
+      },
+      {
+        id: "srv_9",
+        text: "Formulir dan dokumen persyaratan mudah didapatkan dan dipahami.",
+      },
+      {
+        id: "srv_10",
+        text: "Terdapat layanan pengaduan atau kotak saran yang mudah diakses.",
+      },
+      {
+        id: "srv_11",
+        text: "Loket pelayanan tertata rapi dan dilengkapi dengan teknologi pendukung yang memadai.",
+      },
+      {
+        id: "srv_12",
+        text: "Tersedia layanan konsultasi atau helpdesk untuk membantu masyarakat yang membutuhkan informasi.",
+      },
+      {
+        id: "srv_13",
+        text: "Petugas menggunakan bahasa yang mudah dipahami dan tidak menggunakan istilah teknis yang rumit.",
+      },
+      {
+        id: "srv_14",
+        text: "Terdapat display monitor atau papan informasi yang menampilkan nomor antrian dan status layanan.",
+      },
+      {
+        id: "srv_15",
+        text: "Ruang pelayanan memiliki pencahayaan dan sirkulasi udara (AC/ventilasi) yang baik.",
+      },
+      {
+        id: "srv_16",
+        text: "Tersedia fasilitas bagi penyandang disabilitas dan lansia (kursi roda, jalur khusus, dll).",
+      },
+      {
+        id: "srv_17",
+        text: "Area tunggu dilengkapi dengan tempat duduk yang cukup dan nyaman.",
+      },
+      {
+        id: "srv_18",
+        text: "Tersedia layanan pengaduan online atau hotline yang responsif.",
+      },
+      {
+        id: "srv_19",
+        text: "Petugas memberikan konfirmasi atau tanda bukti atas setiap transaksi layanan.",
+      },
+      {
+        id: "srv_20",
+        text: "Terdapat survei kepuasan pelanggan yang dilakukan secara berkala.",
+      },
+      {
+        id: "srv_21",
+        text: "Jam pelayanan sesuai dengan yang diinformasikan dan petugas hadir tepat waktu.",
+      },
+      {
+        id: "srv_22",
+        text: "Tersedia fasilitas wifi gratis dan charging station untuk kenyamanan pengunjung.",
+      },
+      {
+        id: "srv_23",
+        text: "Petugas memberikan penjelasan yang lengkap jika terdapat penolakan atau revisi dokumen.",
+      },
+      {
+        id: "srv_24",
+        text: "Terdapat sistem tracking atau monitoring status permohonan yang dapat diakses pemohon.",
+      },
+      {
+        id: "srv_25",
+        text: "Ruang pelayanan memiliki tata letak yang jelas dengan signage/penunjuk arah yang mudah dipahami.",
+      },
+      {
+        id: "srv_26",
+        text: "Tersedia area khusus untuk konsultasi privat atau penanganan kasus sensitif.",
+      },
+      {
+        id: "srv_27",
+        text: "Petugas melakukan verifikasi dokumen dengan teliti namun tidak mempersulit proses.",
+      },
+      {
+        id: "srv_28",
+        text: "Tersedia informasi biaya layanan yang transparan tanpa ada biaya tersembunyi.",
+      },
+      {
+        id: "srv_29",
+        text: "Sistem pembayaran mudah, modern (tunai, transfer, QRIS), dan dilengkapi dengan bukti pembayaran resmi.",
+      },
+      {
+        id: "srv_30",
+        text: "Terdapat inovasi layanan digital/online yang memudahkan masyarakat tanpa harus datang langsung.",
       },
     ],
   },
   {
     id: "academic",
-    title: "Akademik",
+    title: "Akademik & Pembelajaran",
     icon: <FaGraduationCap />,
-    description: "Kualitas pembelajaran dan kompetensi guru.",
+    description:
+      "Kualitas proses belajar mengajar, kompetensi guru, dan fasilitas pendidikan.",
     questions: [
-      { id: "acd_1", text: "Guru menguasai materi pembelajaran dengan baik." },
+      {
+        id: "acd_1",
+        text: "Guru menguasai materi pembelajaran dengan baik dan menyampaikannya secara menarik.",
+      },
       {
         id: "acd_2",
-        text: "Komunikasi antara sekolah dan wali murid berjalan lancar.",
+        text: "Komunikasi antara sekolah (Wali Kelas/Guru) dan Wali Murid berjalan lancar dan terbuka.",
       },
       {
         id: "acd_3",
-        text: "Fasilitas pembelajaran mendukung kebutuhan siswa.",
+        text: "Fasilitas pembelajaran (kelas, lab, perpustakaan) mendukung kebutuhan belajar siswa.",
+      },
+      {
+        id: "acd_4",
+        text: "Sekolah aktif memberikan informasi perkembangan akademik dan karakter siswa secara berkala.",
+      },
+      {
+        id: "acd_5",
+        text: "Metode pembelajaran yang digunakan guru bervariasi dan sesuai dengan kebutuhan siswa.",
+      },
+      {
+        id: "acd_6",
+        text: "Guru memberikan perhatian dan bimbingan yang memadai kepada setiap siswa.",
+      },
+      {
+        id: "acd_7",
+        text: "Penilaian hasil belajar dilakukan secara objektif, transparan, dan tepat waktu.",
+      },
+      {
+        id: "acd_8",
+        text: "Sekolah menyediakan program ekstrakurikuler yang beragam dan berkualitas.",
+      },
+      {
+        id: "acd_9",
+        text: "Fasilitas teknologi (komputer, internet, media pembelajaran digital) memadai dan dimanfaatkan dengan baik.",
+      },
+      {
+        id: "acd_10",
+        text: "Lingkungan sekolah kondusif, aman, dan mendukung proses pembelajaran yang efektif.",
+      },
+      {
+        id: "acd_11",
+        text: "Sekolah melakukan evaluasi dan perbaikan berkelanjutan terhadap kualitas pembelajaran.",
+      },
+      {
+        id: "acd_12",
+        text: "Guru menerapkan pendidikan karakter dan nilai-nilai positif dalam pembelajaran sehari-hari.",
+      },
+      {
+        id: "acd_13",
+        text: "Kurikulum yang diterapkan relevan dengan perkembangan zaman dan kebutuhan masa depan siswa.",
+      },
+      {
+        id: "acd_14",
+        text: "Guru menggunakan media pembelajaran yang kreatif dan inovatif (video, gamifikasi, dll).",
+      },
+      {
+        id: "acd_15",
+        text: "Terdapat program remedial dan pengayaan bagi siswa yang membutuhkan.",
+      },
+      {
+        id: "acd_16",
+        text: "Sekolah memberikan kesempatan siswa untuk aktif berpartisipasi dalam kegiatan lomba dan kompetisi.",
+      },
+      {
+        id: "acd_17",
+        text: "Perpustakaan sekolah memiliki koleksi buku yang lengkap, update, dan mudah diakses.",
+      },
+      {
+        id: "acd_18",
+        text: "Laboratorium (IPA, Komputer, Bahasa) memiliki peralatan yang memadai dan berfungsi dengan baik.",
+      },
+      {
+        id: "acd_19",
+        text: "Guru memberikan tugas dan pekerjaan rumah yang proporsional dan bermakna.",
+      },
+      {
+        id: "acd_20",
+        text: "Sekolah menyediakan bimbingan konseling yang efektif untuk mendukung perkembangan siswa.",
+      },
+      {
+        id: "acd_21",
+        text: "Terdapat program pengembangan bakat dan minat siswa di luar akademik.",
+      },
+      {
+        id: "acd_22",
+        text: "Guru memberikan umpan balik (feedback) yang konstruktif terhadap hasil kerja siswa.",
+      },
+      {
+        id: "acd_23",
+        text: "Sekolah menerapkan pembelajaran berbasis proyek dan pemecahan masalah (HOTS).",
+      },
+      {
+        id: "acd_24",
+        text: "Terdapat kerjasama dengan pihak eksternal (universitas, industri) untuk memperkaya pembelajaran.",
+      },
+      {
+        id: "acd_25",
+        text: "Guru aktif mengikuti pelatihan dan pengembangan profesional untuk meningkatkan kompetensi.",
+      },
+      {
+        id: "acd_26",
+        text: "Sistem penjadwalan pelajaran teratur dan tidak sering terjadi pergantian jadwal mendadak.",
+      },
+      {
+        id: "acd_27",
+        text: "Sekolah memiliki program literasi dan numerasi yang kuat dan berkelanjutan.",
+      },
+      {
+        id: "acd_28",
+        text: "Terdapat sistem pembelajaran daring/hybrid yang efektif sebagai alternatif atau pendukung.",
+      },
+      {
+        id: "acd_29",
+        text: "Guru mendorong siswa untuk berpikir kritis, kreatif, dan mandiri.",
+      },
+      {
+        id: "acd_30",
+        text: "Sekolah menyediakan ruang kelas yang nyaman dengan fasilitas yang mendukung (proyektor, AC, papan tulis interaktif).",
+      },
+      {
+        id: "acd_31",
+        text: "Terdapat kegiatan studi lapangan atau kunjungan edukatif yang memperkaya wawasan siswa.",
+      },
+      {
+        id: "acd_32",
+        text: "Guru menerapkan pembelajaran diferensiasi sesuai dengan kebutuhan dan gaya belajar siswa.",
+      },
+      {
+        id: "acd_33",
+        text: "Sekolah memiliki standar kelulusan dan kompetensi yang jelas dan terukur.",
+      },
+      {
+        id: "acd_34",
+        text: "Terdapat program pendampingan untuk siswa berprestasi dan siswa yang membutuhkan perhatian khusus.",
+      },
+      {
+        id: "acd_35",
+        text: "Guru menghargai pendapat dan kreativitas siswa dalam proses pembelajaran.",
+      },
+      {
+        id: "acd_36",
+        text: "Sekolah melakukan parent-teacher conference secara rutin untuk membahas perkembangan siswa.",
+      },
+      {
+        id: "acd_37",
+        text: "Terdapat sistem raport digital yang memudahkan akses informasi perkembangan siswa.",
+      },
+      {
+        id: "acd_38",
+        text: "Sekolah menyediakan fasilitas olahraga dan seni yang memadai untuk pengembangan non-akademik.",
+      },
+      {
+        id: "acd_39",
+        text: "Guru memberikan motivasi dan inspirasi kepada siswa untuk meraih cita-cita mereka.",
+      },
+      {
+        id: "acd_40",
+        text: "Sekolah memiliki program persiapan ujian nasional/asesmen yang terstruktur dan efektif.",
+      },
+    ],
+  },
+  {
+    id: "facilities",
+    title: "Sarana & Prasarana",
+    icon: <FaBuilding />,
+    description:
+      "Kondisi fisik bangunan, kebersihan, keamanan, dan fasilitas penunjang sekolah.",
+    questions: [
+      {
+        id: "fac_1",
+        text: "Kondisi gedung sekolah terawat dengan baik dan aman untuk kegiatan pembelajaran.",
+      },
+      {
+        id: "fac_2",
+        text: "Kebersihan lingkungan sekolah terjaga (kelas, toilet, halaman, kantin).",
+      },
+      {
+        id: "fac_3",
+        text: "Toilet siswa bersih, jumlahnya memadai, dan berfungsi dengan baik.",
+      },
+      {
+        id: "fac_4",
+        text: "Sistem keamanan sekolah baik (satpam, CCTV, pagar, akses keluar-masuk terkontrol).",
+      },
+      {
+        id: "fac_5",
+        text: "Kantin sekolah bersih, sehat, dan menyediakan makanan bergizi dengan harga terjangkau.",
+      },
+      {
+        id: "fac_6",
+        text: "Lapangan olahraga dan area bermain tersedia dan dalam kondisi baik.",
+      },
+      {
+        id: "fac_7",
+        text: "Fasilitas UKS (Unit Kesehatan Sekolah) lengkap dan dikelola dengan baik.",
+      },
+      {
+        id: "fac_8",
+        text: "Mushola atau tempat ibadah tersedia, bersih, dan nyaman digunakan.",
+      },
+      {
+        id: "fac_9",
+        text: "Area parkir kendaraan siswa dan tamu tertata rapi dan aman.",
+      },
+      {
+        id: "fac_10",
+        text: "Sistem penerangan (listrik) di seluruh area sekolah berfungsi dengan baik.",
+      },
+      {
+        id: "fac_11",
+        text: "Sistem sanitasi dan pengelolaan sampah terorganisir dengan baik.",
+      },
+      {
+        id: "fac_12",
+        text: "Terdapat jalur evakuasi dan sistem penanggulangan bencana yang jelas.",
+      },
+      {
+        id: "fac_13",
+        text: "Fasilitas air bersih tersedia dan mudah diakses di berbagai titik sekolah.",
+      },
+      {
+        id: "fac_14",
+        text: "Ventilasi dan sirkulasi udara di ruang kelas baik dan mendukung kenyamanan belajar.",
+      },
+      {
+        id: "fac_15",
+        text: "Sekolah memiliki area hijau atau taman yang membuat lingkungan sejuk dan asri.",
+      },
+      {
+        id: "fac_16",
+        text: "Fasilitas untuk penyandang disabilitas tersedia (ramp, toilet khusus, dll).",
+      },
+      {
+        id: "fac_17",
+        text: "Aula atau ruang serbaguna tersedia untuk kegiatan besar sekolah.",
+      },
+      {
+        id: "fac_18",
+        text: "Sistem drainase dan penanganan air hujan berfungsi baik tanpa genangan.",
+      },
+      {
+        id: "fac_19",
+        text: "Papan informasi dan mading sekolah tertata rapi dan selalu diperbarui.",
+      },
+      {
+        id: "fac_20",
+        text: "Sekolah melakukan perawatan dan perbaikan fasilitas secara rutin dan responsif.",
+      },
+    ],
+  },
+  {
+    id: "management",
+    title: "Manajemen & Kepemimpinan",
+    icon: <FaUser />,
+    description:
+      "Tata kelola sekolah, kepemimpinan kepala sekolah, dan sistem administrasi.",
+    questions: [
+      {
+        id: "mgt_1",
+        text: "Kepala sekolah menunjukkan kepemimpinan yang visioner dan inspiratif.",
+      },
+      {
+        id: "mgt_2",
+        text: "Visi dan misi sekolah jelas, dipahami oleh warga sekolah, dan diimplementasikan dengan baik.",
+      },
+      {
+        id: "mgt_3",
+        text: "Kepala sekolah terbuka menerima masukan dan kritik dari warga sekolah dan orang tua.",
+      },
+      {
+        id: "mgt_4",
+        text: "Sistem administrasi sekolah (absensi, nilai, keuangan) tertib dan transparan.",
+      },
+      {
+        id: "mgt_5",
+        text: "Proses penerimaan siswa baru dilakukan secara objektif dan transparan.",
+      },
+      {
+        id: "mgt_6",
+        text: "Informasi kebijakan sekolah disampaikan dengan jelas kepada orang tua dan siswa.",
+      },
+      {
+        id: "mgt_7",
+        text: "Sekolah memiliki program kerja tahunan yang terstruktur dan terlaksana dengan baik.",
+      },
+      {
+        id: "mgt_8",
+        text: "Terdapat komite sekolah yang aktif dan melibatkan peran orang tua secara optimal.",
+      },
+      {
+        id: "mgt_9",
+        text: "Pengelolaan keuangan sekolah akuntabel dan dilaporkan secara berkala.",
+      },
+      {
+        id: "mgt_10",
+        text: "Sekolah responsif dalam menangani keluhan atau masalah yang disampaikan orang tua.",
+      },
+      {
+        id: "mgt_11",
+        text: "Terdapat sistem reward and punishment yang adil untuk siswa dan guru.",
+      },
+      {
+        id: "mgt_12",
+        text: "Kepala sekolah aktif melakukan supervisi dan monitoring kualitas pembelajaran.",
+      },
+      {
+        id: "mgt_13",
+        text: "Sekolah memiliki SOP (Standar Operasional Prosedur) yang jelas untuk berbagai kegiatan.",
+      },
+      {
+        id: "mgt_14",
+        text: "Terdapat rapat koordinasi rutin antara guru, staf, dan pimpinan sekolah.",
+      },
+      {
+        id: "mgt_15",
+        text: "Sekolah melakukan evaluasi diri secara berkala untuk perbaikan berkelanjutan.",
+      },
+      {
+        id: "mgt_16",
+        text: "Sistem dokumentasi dan arsip sekolah tertata rapi dan mudah diakses saat dibutuhkan.",
+      },
+      {
+        id: "mgt_17",
+        text: "Terdapat program pengembangan SDM guru dan tenaga kependidikan yang terencana.",
+      },
+      {
+        id: "mgt_18",
+        text: "Sekolah memiliki kerjasama dengan stakeholder eksternal (pemda, dinas, komunitas).",
+      },
+      {
+        id: "mgt_19",
+        text: "Kepala sekolah memberikan contoh teladan dalam disiplin, integritas, dan etos kerja.",
+      },
+      {
+        id: "mgt_20",
+        text: "Sekolah inovatif dalam menghadapi tantangan dan beradaptasi dengan perubahan.",
+      },
+    ],
+  },
+  {
+    id: "culture",
+    title: "Budaya & Iklim Sekolah",
+    icon: <FaUser />,
+    description:
+      "Suasana sekolah, hubungan antarwarga sekolah, dan nilai-nilai yang diterapkan.",
+    questions: [
+      {
+        id: "cul_1",
+        text: "Hubungan antara siswa, guru, dan staf terjalin harmonis dan saling menghargai.",
+      },
+      {
+        id: "cul_2",
+        text: "Sekolah menciptakan lingkungan yang inklusif dan ramah terhadap keberagaman.",
+      },
+      {
+        id: "cul_3",
+        text: "Tidak ada praktik bullying atau kekerasan di lingkungan sekolah.",
+      },
+      {
+        id: "cul_4",
+        text: "Sekolah menerapkan nilai-nilai religius dan moral dalam kehidupan sehari-hari.",
+      },
+      {
+        id: "cul_5",
+        text: "Budaya disiplin (tepat waktu, tertib, bertanggung jawab) diterapkan dengan konsisten.",
+      },
+      {
+        id: "cul_6",
+        text: "Siswa diajarkan untuk menghormati guru, orang tua, dan sesama.",
+      },
+      {
+        id: "cul_7",
+        text: "Sekolah mendorong budaya prestasi dan kompetisi yang sehat.",
+      },
+      {
+        id: "cul_8",
+        text: "Terdapat program pembinaan karakter yang terintegrasi dalam kehidupan sekolah.",
+      },
+      {
+        id: "cul_9",
+        text: "Sekolah memiliki tradisi atau kegiatan khas yang mempererat kebersamaan warga sekolah.",
+      },
+      {
+        id: "cul_10",
+        text: "Lingkungan sekolah mendukung kreativitas dan inovasi siswa.",
+      },
+      {
+        id: "cul_11",
+        text: "Terdapat budaya gotong royong dan kepedulian sosial di kalangan warga sekolah.",
+      },
+      {
+        id: "cul_12",
+        text: "Sekolah aktif mengkampanyekan gaya hidup sehat dan peduli lingkungan.",
+      },
+      {
+        id: "cul_13",
+        text: "Guru dan staf menjadi role model yang baik dalam perilaku dan tutur kata.",
+      },
+      {
+        id: "cul_14",
+        text: "Sekolah memberikan apresiasi kepada siswa yang berprestasi akademik dan non-akademik.",
+      },
+      {
+        id: "cul_15",
+        text: "Terdapat kegiatan spiritual atau keagamaan yang rutin dilaksanakan.",
+      },
+      {
+        id: "cul_16",
+        text: "Sekolah mengajarkan siswa untuk bertanggung jawab terhadap tugas dan kewajiban mereka.",
+      },
+      {
+        id: "cul_17",
+        text: "Komunikasi antarwarga sekolah berlangsung terbuka, jujur, dan konstruktif.",
+      },
+      {
+        id: "cul_18",
+        text: "Sekolah memiliki aturan dan tata tertib yang jelas, adil, dan ditegakkan secara konsisten.",
+      },
+      {
+        id: "cul_19",
+        text: "Terdapat kegiatan parenting atau sekolah orang tua untuk membangun kolaborasi keluarga-sekolah.",
+      },
+      {
+        id: "cul_20",
+        text: "Siswa merasa aman, nyaman, dan bahagia berada di lingkungan sekolah.",
       },
     ],
   },
@@ -5810,29 +6627,20 @@ const SurveyWizard = () => {
   const [status, setStatus] = useState<
     "idle" | "loading" | "submitting" | "success" | "submitted" | "error"
   >("loading");
-  const [stats, setStats] = useState({
-    zi: 0,
-    service: 0,
-    academic: 0,
-    total: 0,
-  });
+
+  // State stats dinamis
+  const [stats, setStats] = useState<any>({ total: 0 });
 
   const totalSteps = surveyData.length + 2;
 
-  // 1. Fetch Status & Stats
   useEffect(() => {
     const fetchSurveyData = async () => {
       try {
         const res = await fetch("/api/survey.php");
         const data = await res.json();
-
         if (data.stats) setStats(data.stats);
-
-        if (data.has_submitted) {
-          setStatus("submitted");
-        } else {
-          setStatus("idle");
-        }
+        if (data.has_submitted) setStatus("submitted");
+        else setStatus("idle");
       } catch (error) {
         setStatus("error");
       }
@@ -5876,7 +6684,7 @@ const SurveyWizard = () => {
       const result = await res.json();
       if (res.ok && result.status === "success") {
         if (result.stats) setStats(result.stats);
-        setStatus("submitted"); // Switch ke tampilan hasil
+        setStatus("submitted");
       } else {
         setStatus("error");
       }
@@ -5885,8 +6693,29 @@ const SurveyWizard = () => {
     }
   };
 
-  // Tampilan Hasil Survei (Statistik)
+  const isProfileStep = step === 0;
+  const isFeedbackStep = step === totalSteps - 1;
+  const isSurveyStep = step > 0 && step < totalSteps - 1;
+  const currentSection = isSurveyStep ? surveyData[step - 1] : null;
+
+  const canProceed = () => {
+    if (isProfileStep) return profile.name.length > 2;
+    if (isSurveyStep && currentSection) {
+      return currentSection.questions.every((q) => answers[q.id]);
+    }
+    return true;
+  };
+
   if (status === "submitted" || status === "success") {
+    const colors = [
+      "bg-blue-500",
+      "bg-green-500",
+      "bg-purple-500",
+      "bg-orange-500",
+      "bg-pink-500",
+      "bg-teal-500",
+    ];
+
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-darkmode-light rounded-xl p-8 border border-border dark:border-darkmode-border shadow-lg animate-fade-in">
         <div className="text-center mb-10">
@@ -5900,63 +6729,32 @@ const SurveyWizard = () => {
           </p>
         </div>
 
-        <div className="space-y-8">
-          {/* Result Item: ZI */}
-          <div>
-            <div className="flex justify-between items-end mb-2">
-              <h4 className="text-lg flex items-center gap-2">
-                <FaBuilding className="text-primary" /> Zona Integritas
-              </h4>
-              <span className="font-bold text-2xl text-primary">
-                {stats.zi}
-                <span className="text-sm text-gray-400 font-normal">/5</span>
-              </span>
-            </div>
-            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
-              <div
-                className="h-full bg-blue-500 transition-all duration-1000"
-                style={{ width: `${(stats.zi / 5) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Result Item: Service */}
-          <div>
-            <div className="flex justify-between items-end mb-2">
-              <h4 className="text-lg flex items-center gap-2">
-                <FaConciergeBell className="text-primary" /> Pelayanan PTSP
-              </h4>
-              <span className="font-bold text-2xl text-primary">
-                {stats.service}
-                <span className="text-sm text-gray-400 font-normal">/5</span>
-              </span>
-            </div>
-            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
-              <div
-                className="h-full bg-green-500 transition-all duration-1000"
-                style={{ width: `${(stats.service / 5) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Result Item: Academic */}
-          <div>
-            <div className="flex justify-between items-end mb-2">
-              <h4 className="text-lg flex items-center gap-2">
-                <FaGraduationCap className="text-primary" /> Akademik
-              </h4>
-              <span className="font-bold text-2xl text-primary">
-                {stats.academic}
-                <span className="text-sm text-gray-400 font-normal">/5</span>
-              </span>
-            </div>
-            <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
-              <div
-                className="h-full bg-purple-500 transition-all duration-1000"
-                style={{ width: `${(stats.academic / 5) * 100}%` }}
-              ></div>
-            </div>
-          </div>
+        <div className="space-y-6">
+          {surveyData.map((section, idx) => {
+            const score = stats[section.id] || 0;
+            return (
+              <div key={section.id}>
+                <div className="flex justify-between items-end mb-2">
+                  <h4 className="text-lg flex items-center gap-2">
+                    <span className="text-primary">{section.icon}</span>{" "}
+                    {section.title}
+                  </h4>
+                  <span className="font-bold text-2xl text-primary">
+                    {score}
+                    <span className="text-sm text-gray-400 font-normal">
+                      /5
+                    </span>
+                  </span>
+                </div>
+                <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+                  <div
+                    className={`h-full ${colors[idx % colors.length]} transition-all duration-1000`}
+                    style={{ width: `${(score / 5) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="text-center mt-12">
@@ -5971,31 +6769,12 @@ const SurveyWizard = () => {
   if (status === "loading")
     return <div className="text-center p-12">Memuat survei...</div>;
 
-  // Render Logic Form (Sama seperti sebelumnya)
-  const isProfileStep = step === 0;
-  const isFeedbackStep = step === totalSteps - 1;
-  const isSurveyStep = step > 0 && step < totalSteps - 1;
-  const currentSection = isSurveyStep ? surveyData[step - 1] : null;
-
-  const canProceed = () => {
-    if (isProfileStep) return profile.name.length > 2;
-    if (isSurveyStep && currentSection) {
-      return currentSection.questions.every((q) => answers[q.id]);
-    }
-    return true;
-  };
-
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex justify-between mb-2 text-xs font-semibold uppercase text-text-light dark:text-darkmode-text-light tracking-wide">
           <span>Data Diri</span>
-          {surveyData.map((s) => (
-            <span key={s.id} className="hidden sm:inline">
-              {s.title}
-            </span>
-          ))}
+          <span className="hidden sm:inline">Pertanyaan</span>
           <span>Selesai</span>
         </div>
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
@@ -6007,7 +6786,6 @@ const SurveyWizard = () => {
       </div>
 
       <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border border-border dark:border-darkmode-border overflow-hidden">
-        {/* Header Section */}
         <div className="bg-light dark:bg-darkmode-body px-8 py-6 border-b border-border dark:border-darkmode-border">
           <h2 className="h4 flex items-center gap-3">
             {isProfileStep && (
@@ -6034,9 +6812,7 @@ const SurveyWizard = () => {
           )}
         </div>
 
-        {/* Content Body */}
         <div className="p-8">
-          {/* STEP 1: PROFILE */}
           {isProfileStep && (
             <div className="space-y-6 animate-fade-in">
               <div>
@@ -6070,7 +6846,6 @@ const SurveyWizard = () => {
             </div>
           )}
 
-          {/* STEP 2..N: SURVEY QUESTIONS */}
           {isSurveyStep && currentSection && (
             <div className="space-y-8 animate-fade-in">
               {currentSection.questions.map((q, idx) => (
@@ -6086,14 +6861,7 @@ const SurveyWizard = () => {
                       <button
                         key={val}
                         onClick={() => handleScore(q.id, val)}
-                        className={`
-                          w-10 h-10 sm:w-12 sm:h-12 rounded-full font-bold text-sm sm:text-base transition-all
-                          ${
-                            answers[q.id] === val
-                              ? "bg-primary text-white scale-110 shadow-lg shadow-primary/40"
-                              : "bg-white dark:bg-darkmode-body border border-border dark:border-darkmode-border text-text-light hover:border-primary hover:text-primary"
-                          }
-                        `}
+                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full font-bold text-sm sm:text-base transition-all ${answers[q.id] === val ? "bg-primary text-white scale-110 shadow-lg shadow-primary/40" : "bg-white dark:bg-darkmode-body border border-border dark:border-darkmode-border text-text-light hover:border-primary hover:text-primary"}`}
                       >
                         {val}
                       </button>
@@ -6108,7 +6876,6 @@ const SurveyWizard = () => {
             </div>
           )}
 
-          {/* STEP FINAL: FEEDBACK */}
           {isFeedbackStep && (
             <div className="animate-fade-in">
               <label className="form-label">
@@ -6124,16 +6891,13 @@ const SurveyWizard = () => {
             </div>
           )}
 
-          {/* Error Message */}
           {status === "error" && (
             <div className="mt-4 p-3 bg-red-100 text-red-700 rounded text-sm text-center">
-              Terjadi kesalahan (mungkin Anda sudah mengisi atau koneksi
-              terputus).
+              Terjadi kesalahan.
             </div>
           )}
         </div>
 
-        {/* Footer Navigation */}
         <div className="bg-light dark:bg-darkmode-body px-8 py-4 border-t border-border dark:border-darkmode-border flex justify-between items-center">
           <button
             onClick={() => setStep((prev) => prev - 1)}
@@ -6142,7 +6906,6 @@ const SurveyWizard = () => {
           >
             <FaChevronLeft className="text-xs" /> Kembali
           </button>
-
           {isFeedbackStep ? (
             <button
               onClick={handleSubmit}
@@ -9745,9 +10508,8 @@ export type Button = {
 ```
 <?php
 session_start();
-date_default_timezone_set('Asia/Jakarta'); // Set Timezone Server ke Jakarta
+date_default_timezone_set('Asia/Jakarta');
 
-// Proteksi
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('HTTP/1.1 403 Forbidden');
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
@@ -9764,67 +10526,34 @@ try {
     $db = new SQLite3($dbPath);
     $action = $_GET['action'] ?? 'stats';
 
-    // === HELPER: Format Tanggal Indonesia ===
     function formatTanggalIndo($timestamp)
     {
-        // Asumsi timestamp dari DB adalah UTC, kita konversi ke Jakarta
         try {
             $dt = new DateTime($timestamp, new DateTimeZone('UTC'));
             $dt->setTimezone(new DateTimeZone('Asia/Jakarta'));
-
-            $bulan = [
-                1 => 'Januari',
-                'Februari',
-                'Maret',
-                'April',
-                'Mei',
-                'Juni',
-                'Juli',
-                'Agustus',
-                'September',
-                'Oktober',
-                'November',
-                'Desember'
-            ];
-
-            $tgl = $dt->format('d');
-            $bln = $bulan[(int)$dt->format('m')];
-            $thn = $dt->format('Y');
-            $jam = $dt->format('H:i');
-
-            return "$tgl $bln $thn, $jam WIB";
+            $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            return $dt->format('d') . ' ' . $bulan[(int)$dt->format('m')] . ' ' . $dt->format('Y') . ', ' . $dt->format('H:i');
         } catch (Exception $e) {
             return $timestamp;
         }
     }
 
-    // === HELPER: Grafik Harian (Waktu Jakarta) ===
+    // Helper: Daily Activity
     function getSafeDailyActivity($db, $table, $days = 30)
     {
         $data = [];
-        // Generate tanggal 30 hari terakhir (Waktu Jakarta)
         for ($i = $days - 1; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-$i days"));
             $data[$date] = 0;
         }
-
         try {
             $check = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='$table'");
             if (!$check) return $data;
-
-            // Query dengan penyesuaian Timezone (+7 Jam untuk WIB)
-            // datetime(created_at, '+7 hours') mengubah UTC ke WIB sebelum di-group
-            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count
-                      FROM $table
-                      WHERE created_at >= date('now', '-$days days', '-7 hours')
-                      GROUP BY date";
-
+            $query = "SELECT substr(datetime(created_at, '+7 hours'), 1, 10) as date, COUNT(*) as count FROM $table WHERE created_at >= date('now', '-$days days', '-7 hours') GROUP BY date";
             $res = $db->query($query);
             if ($res) {
                 while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-                    if (isset($data[$row['date']])) {
-                        $data[$row['date']] = $row['count'];
-                    }
+                    if (isset($data[$row['date']])) $data[$row['date']] = $row['count'];
                 }
             }
         } catch (Exception $e) {
@@ -9835,85 +10564,97 @@ try {
     if ($action === 'stats') {
         header('Content-Type: application/json');
 
-        // 1. Overview Count
+        // Overview
         $visits = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'") ?: 0;
+        $total_posts = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='post_stats'") ? ($db->querySingle("SELECT COUNT(*) FROM post_stats") ?: 0) : 0;
+        $total_feedback = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='feedback'") ? ($db->querySingle("SELECT COUNT(*) FROM feedback") ?: 0) : 0;
+        $total_survey = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'") ? ($db->querySingle("SELECT COUNT(*) FROM survey_responses") ?: 0) : 0;
 
-        $total_posts = 0;
-        if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='post_stats'")) {
-            $total_posts = $db->querySingle("SELECT COUNT(*) FROM post_stats") ?: 0;
-        }
-
-        $total_feedback = 0;
+        // Charts data
         $stars = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
-        if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='feedback'")) {
-            $total_feedback = $db->querySingle("SELECT COUNT(*) FROM feedback") ?: 0;
+        if ($total_feedback > 0) {
             $resStar = $db->query("SELECT rating, COUNT(*) as count FROM feedback GROUP BY rating");
-            while ($row = $resStar->fetchArray(SQLITE3_ASSOC)) {
-                $stars[$row['rating']] = $row['count'];
-            }
+            while ($row = $resStar->fetchArray(SQLITE3_ASSOC)) $stars[$row['rating']] = $row['count'];
         }
 
-        $total_survey = 0;
-        $survey_avg = ['zi' => 0, 'service' => 0, 'academic' => 0];
-        if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'")) {
-            $total_survey = $db->querySingle("SELECT COUNT(*) FROM survey_responses") ?: 0;
-            $avgQuery = $db->querySingle("SELECT AVG(score_zi) as zi, AVG(score_service) as service, AVG(score_academic) as academic FROM survey_responses", true);
+        // PERBAIKAN: Menambahkan 3 kategori baru ke rata-rata survei
+        $survey_avg = [
+            'zi' => 0,
+            'service' => 0,
+            'academic' => 0,
+            'facilities' => 0,
+            'management' => 0,
+            'culture' => 0
+        ];
+
+        if ($total_survey > 0) {
+            // Cek apakah kolom baru sudah ada sebelum query agar tidak error jika migrasi belum jalan
+            $cols = [];
+            $resCol = $db->query("PRAGMA table_info(survey_responses)");
+            while ($rowC = $resCol->fetchArray(SQLITE3_ASSOC)) $cols[] = $rowC['name'];
+
+            // Build query dinamis
+            $selects = ["AVG(score_zi) as zi", "AVG(score_service) as service", "AVG(score_academic) as academic"];
+
+            if (in_array('score_facilities', $cols)) $selects[] = "AVG(score_facilities) as facilities";
+            if (in_array('score_management', $cols)) $selects[] = "AVG(score_management) as management";
+            if (in_array('score_culture', $cols)) $selects[] = "AVG(score_culture) as culture";
+
+            $sql = "SELECT " . implode(', ', $selects) . " FROM survey_responses";
+            $avgQuery = $db->querySingle($sql, true);
+
             if ($avgQuery) {
                 $survey_avg['zi'] = round($avgQuery['zi'] ?? 0, 2);
                 $survey_avg['service'] = round($avgQuery['service'] ?? 0, 2);
                 $survey_avg['academic'] = round($avgQuery['academic'] ?? 0, 2);
+                // Tambahkan mapping untuk kolom baru
+                $survey_avg['facilities'] = round($avgQuery['facilities'] ?? 0, 2);
+                $survey_avg['management'] = round($avgQuery['management'] ?? 0, 2);
+                $survey_avg['culture'] = round($avgQuery['culture'] ?? 0, 2);
             }
         }
 
-        // 4. Activity Trends
         $activity_feedback = getSafeDailyActivity($db, 'feedback');
         $activity_survey = getSafeDailyActivity($db, 'survey_responses');
 
-        // 5. Raw Data (Dikirim Mentah UTC, diformat di Frontend)
+        // Tables Data
         $posts = [];
         if ($total_posts > 0) {
-            $resPost = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
-            while ($row = $resPost->fetchArray(SQLITE3_ASSOC)) $posts[] = $row;
+            $res = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) $posts[] = $row;
         }
-
         $feedbacks = [];
         if ($total_feedback > 0) {
-            $resFeed = $db->query("SELECT * FROM feedback ORDER BY created_at DESC");
-            while ($row = $resFeed->fetchArray(SQLITE3_ASSOC)) $feedbacks[] = $row;
+            $res = $db->query("SELECT * FROM feedback ORDER BY created_at DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) $feedbacks[] = $row;
         }
-
         $surveys = [];
         if ($total_survey > 0) {
-            $resSurv = $db->query("SELECT * FROM survey_responses ORDER BY created_at DESC");
-            while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) $surveys[] = $row;
+            $res = $db->query("SELECT * FROM survey_responses ORDER BY created_at DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) $surveys[] = $row;
+        }
+
+        $visit_logs = [];
+        if ($db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='site_visit_logs'")) {
+            $res = $db->query("SELECT * FROM site_visit_logs ORDER BY created_at DESC LIMIT 1000");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) $visit_logs[] = $row;
         }
 
         echo json_encode([
-            'overview' => [
-                'visits' => $visits,
-                'posts_count' => $total_posts,
-                'feedback_count' => $total_feedback,
-                'survey_count' => $total_survey
-            ],
+            'overview' => ['visits' => $visits, 'posts_count' => $total_posts, 'feedback_count' => $total_feedback, 'survey_count' => $total_survey],
             'charts' => [
                 'stars' => $stars,
                 'survey_avg' => $survey_avg,
-                'activity' => [
-                    'labels' => array_keys($activity_feedback),
-                    'feedback' => array_values($activity_feedback),
-                    'survey' => array_values($activity_survey)
-                ]
+                'activity' => ['labels' => array_keys($activity_feedback), 'feedback' => array_values($activity_feedback), 'survey' => array_values($activity_survey)]
             ],
             'tables' => [
                 'posts' => $posts,
                 'feedbacks' => $feedbacks,
-                'surveys' => $surveys
+                'surveys' => $surveys,
+                'visits' => $visit_logs
             ]
         ]);
-    }
-
-    // === EXPORT LOGIC (FORMAT INDONESIA) ===
-    elseif ($action === 'export') {
+    } elseif ($action === 'export') {
         $type = $_GET['type'] ?? '';
         $filename = "laporan_{$type}_" . date('Y-m-d_His') . ".csv";
 
@@ -9921,7 +10662,6 @@ try {
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $output = fopen('php://output', 'w');
-        // Tambahkan BOM untuk Excel agar bisa baca karakter UTF-8 dengan benar
         fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         if ($type === 'feedback') {
@@ -9932,8 +10672,28 @@ try {
                 fputcsv($output, $row);
             }
         } elseif ($type === 'survey') {
-            fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Peran', 'Skor ZI', 'Skor Pelayanan', 'Skor Akademik', 'Masukan', 'IP Address']);
-            $res = $db->query("SELECT id, created_at, respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, ip_address FROM survey_responses ORDER BY created_at DESC");
+            // PERBAIKAN: Export mendukung 6 kategori
+            // Cek kolom dulu
+            $cols = [];
+            $resCol = $db->query("PRAGMA table_info(survey_responses)");
+            while ($rowC = $resCol->fetchArray(SQLITE3_ASSOC)) $cols[] = $rowC['name'];
+
+            // Build Select
+            $selectFields = "id, created_at, respondent_name, respondent_role, score_zi, score_service, score_academic";
+            if (in_array('score_facilities', $cols)) $selectFields .= ", score_facilities";
+            else $selectFields .= ", 0 as score_facilities";
+
+            if (in_array('score_management', $cols)) $selectFields .= ", score_management";
+            else $selectFields .= ", 0 as score_management";
+
+            if (in_array('score_culture', $cols)) $selectFields .= ", score_culture";
+            else $selectFields .= ", 0 as score_culture";
+
+            $selectFields .= ", feedback, ip_address";
+
+            fputcsv($output, ['ID', 'Waktu (WIB)', 'Nama', 'Peran', 'ZI', 'Pelayanan', 'Akademik', 'Sarpras', 'Manajemen', 'Budaya', 'Masukan', 'IP Address']);
+
+            $res = $db->query("SELECT $selectFields FROM survey_responses ORDER BY created_at DESC");
             while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                 $row['created_at'] = formatTanggalIndo($row['created_at']);
                 fputcsv($output, $row);
@@ -9942,6 +10702,13 @@ try {
             fputcsv($output, ['Judul Artikel / Slug', 'Jumlah Pembaca']);
             $res = $db->query("SELECT slug, views FROM post_stats ORDER BY views DESC");
             while ($row = $res->fetchArray(SQLITE3_ASSOC)) fputcsv($output, $row);
+        } elseif ($type === 'visits') {
+            fputcsv($output, ['ID', 'Waktu (WIB)', 'IP Address', 'User Agent / Perangkat']);
+            $res = $db->query("SELECT id, created_at, ip_address, user_agent FROM site_visit_logs ORDER BY created_at DESC");
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $row['created_at'] = formatTanggalIndo($row['created_at']);
+                fputcsv($output, $row);
+            }
         }
         fclose($output);
         exit;
@@ -10148,21 +10915,23 @@ try {
 ```
 <?php
 session_start();
-header('Content-Type: application/json');
+// Jangan set header JSON global di awal karena kita ada fitur download file binary/text
+// header('Content-Type: application/json');
 
 // 1. Cek Auth & Role (Hanya Super Admin & Operator)
 if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_admin' && $_SESSION['user_role'] !== 'operator')) {
     http_response_code(403);
+    header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit;
 }
 
-// Konfigurasi Path (Relatif dari folder public/api)
+// Konfigurasi Path
 $baseDir = __DIR__ . '/../../';
 $paths = [
     'article' => $baseDir . 'src/content/blog/',
-    'image' => $baseDir . 'public/images/artikel/',
-    'video' => $baseDir . 'public/videos/artikel/'
+    'image'   => $baseDir . 'public/images/artikel/',
+    'video'   => $baseDir . 'public/videos/artikel/'
 ];
 
 // Helper: Format Size
@@ -10180,17 +10949,18 @@ function formatSizeUnits($bytes)
 try {
     $method = $_SERVER['REQUEST_METHOD'];
     $action = $_GET['action'] ?? '';
-    $type = $_GET['type'] ?? 'article'; // article, image, video
+    $type   = $_GET['type'] ?? 'article'; // article, image, video
 
     $targetDir = $paths[$type] ?? $paths['article'];
 
-    // Pastikan folder ada, jika tidak buat
+    // Pastikan folder ada
     if (!file_exists($targetDir)) {
         mkdir($targetDir, 0775, true);
     }
 
-    // === GET LIST FILES ===
-    if ($method === 'GET') {
+    // === ACTION: GET LIST FILES ===
+    if ($method === 'GET' && $action === '') {
+        header('Content-Type: application/json');
         $files = array_diff(scandir($targetDir), array('.', '..', '-index.md', '.gitkeep'));
         $fileList = [];
 
@@ -10205,7 +10975,9 @@ try {
                         'name' => $file,
                         'size' => formatSizeUnits(filesize($filePath)),
                         'date' => date("Y-m-d H:i", filemtime($filePath)),
-                        'url' => ($type === 'article') ? null : "/$type" . "s/artikel/" . $file // URL publik untuk preview media
+                        'url'  => ($type === 'article')
+                            ? null // Artikel tidak punya URL publik langsung (harus dibuild)
+                            : "/" . ($type === 'image' ? 'images' : 'videos') . "/artikel/" . $file
                     ];
                 }
             }
@@ -10218,8 +10990,35 @@ try {
         echo json_encode(['status' => 'success', 'data' => $fileList]);
     }
 
-    // === UPLOAD FILE ===
+    // === ACTION: DOWNLOAD FILE (Untuk Tinjauan Super Admin) ===
+    elseif ($method === 'GET' && $action === 'download') {
+        // Validasi: Hanya Super Admin yang boleh download source code (.mdx)
+        if ($type === 'article' && $_SESSION['user_role'] !== 'super_admin') {
+            die("Access Denied.");
+        }
+
+        $filename = basename($_GET['file']);
+        $filePath = $targetDir . $filename;
+
+        if (file_exists($filePath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+            exit;
+        } else {
+            http_response_code(404);
+            die("File not found.");
+        }
+    }
+
+    // === ACTION: UPLOAD FILE ===
     elseif ($method === 'POST' && $action === 'upload') {
+        header('Content-Type: application/json');
         if (!isset($_FILES['file'])) throw new Exception("File tidak ditemukan.");
 
         $file = $_FILES['file'];
@@ -10227,20 +11026,19 @@ try {
 
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-        // Validasi Ekstensi per Tipe
+        // Validasi Ekstensi
         $allowed = [
             'article' => ['md', 'mdx'],
-            'image' => ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-            'video' => ['mp4', 'webm']
+            'image'   => ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+            'video'   => ['mp4', 'webm']
         ];
 
         if (!in_array($ext, $allowed[$type])) {
-            throw new Exception("Ekstensi file .$ext tidak diperbolehkan untuk kategori ini.");
+            throw new Exception("Ekstensi file .$ext tidak diperbolehkan.");
         }
 
-        // Sanitasi Nama File (Hanya alfanumerik, dash, dot)
+        // Sanitasi Nama File
         $filename = preg_replace('/[^a-zA-Z0-9\-\.]/', '-', basename($file['name']));
-        // Fix multiple dashes
         $filename = preg_replace('/-+/', '-', $filename);
 
         $targetPath = $targetDir . $filename;
@@ -10254,26 +11052,26 @@ try {
                 $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . time() . '.' . $ext;
                 $targetPath = $targetDir . $filename;
             }
-            // If behavior === 'overwrite', we just continue and overwrite
+            // behavior 'overwrite' lanjut ke bawah
         }
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            // Set permission agar bisa dibaca/tulis
             chmod($targetPath, 0664);
-            echo json_encode(['status' => 'success', 'message' => "File $filename berhasil diupload."]);
+            echo json_encode(['status' => 'success', 'message' => "File berhasil diupload. Menunggu tinjauan Super Admin untuk Rebuild."]);
         } else {
-            throw new Exception("Gagal memindahkan file ke server.");
+            throw new Exception("Gagal memindahkan file.");
         }
     }
 
-    // === DELETE FILE (SUPER ADMIN ONLY) ===
+    // === ACTION: DELETE FILE (SUPER ADMIN ONLY) ===
     elseif ($method === 'POST' && $action === 'delete') {
+        header('Content-Type: application/json');
         if ($_SESSION['user_role'] !== 'super_admin') {
             throw new Exception("Hanya Super Admin yang dapat menghapus file.");
         }
 
         $input = json_decode(file_get_contents('php://input'), true);
-        $filename = basename($input['filename']); // Security: basename only
+        $filename = basename($input['filename']);
         $targetPath = $targetDir . $filename;
 
         if (file_exists($targetPath)) {
@@ -10287,21 +11085,23 @@ try {
         }
     }
 
-    // === REBUILD WEBSITE (SUPER ADMIN ONLY) ===
+    // === ACTION: REBUILD WEBSITE (SUPER ADMIN ONLY) ===
     elseif ($method === 'POST' && $action === 'rebuild') {
+        header('Content-Type: application/json');
         if ($_SESSION['user_role'] !== 'super_admin') {
             throw new Exception("Hanya Super Admin yang dapat melakukan Rebuild.");
         }
 
-        // Panggil script rebuild.sh yang sudah dibuat
-        // Pastikan user www-data memiliki hak eksekusi atau sudo NOPASSWD untuk script ini jika perlu
         $cmd = "bash " . $baseDir . "rebuild.sh > /dev/null 2>&1 &";
         shell_exec($cmd);
 
-        echo json_encode(['status' => 'success', 'message' => 'Proses Rebuild sedang berjalan di latar belakang. Perubahan akan muncul dalam 1-2 menit.']);
+        echo json_encode(['status' => 'success', 'message' => 'Proses Rebuild dimulai. Perubahan akan tayang dalam beberapa menit.']);
     }
 } catch (Exception $e) {
-    http_response_code(500);
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+    }
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
 
@@ -10511,17 +11311,15 @@ try {
 <?php
 session_start();
 header('Content-Type: application/json');
+date_default_timezone_set('Asia/Jakarta');
 
 // 1. Cek Login Admin
-// Cek Login & Role (Super Admin OR Operator)
-// User biasa TIDAK BOLEH import
 if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_admin' && $_SESSION['user_role'] !== 'operator')) {
     http_response_code(403);
     echo json_encode(['status' => 'error', 'message' => 'Akses Ditolak: User biasa tidak bisa melakukan import.']);
     exit;
 }
 
-// Konfigurasi untuk handle file besar
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
@@ -10545,8 +11343,36 @@ try {
             fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
             fputcsv($output, ['Budi Santoso', '5', 'Pelayanan sangat memuaskan.', '2024-01-01 10:00:00', '192.168.1.1']);
         } elseif ($type === 'survey') {
-            fputcsv($output, ['respondent_name', 'respondent_role', 'score_zi', 'score_service', 'score_academic', 'feedback', 'created_at', 'ip_address']);
-            fputcsv($output, ['Siti Aminah', 'Wali Murid', '5', '4', '5', 'Pertahankan kualitas.', '2024-01-02 14:30:00', '192.168.1.2']);
+            // PERBAIKAN: Template header disesuaikan dengan 6 kategori
+            fputcsv($output, [
+                'respondent_name',
+                'respondent_role',
+                'score_zi',
+                'score_service',
+                'score_academic',
+                'score_facilities',
+                'score_management',
+                'score_culture',
+                'feedback',
+                'created_at',
+                'ip_address'
+            ]);
+            fputcsv($output, [
+                'Siti Aminah',
+                'Wali Murid',
+                '5.0',
+                '4.5',
+                '5.0',
+                '4.8',
+                '5.0',
+                '4.9',
+                'Fasilitas sangat lengkap, pertahankan.',
+                '2024-01-02 14:30:00',
+                '192.168.1.2'
+            ]);
+        } elseif ($type === 'visits') {
+            fputcsv($output, ['ip_address', 'user_agent', 'created_at']);
+            fputcsv($output, ['192.168.1.10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)...', '2024-02-01 08:00:00']);
         }
         fclose($output);
         exit;
@@ -10561,57 +11387,27 @@ try {
         $type = $_POST['type'] ?? '';
         $fileTmpPath = $_FILES['file']['tmp_name'];
 
-        // Validasi Ekstensi
-        $fileExt = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
-        if ($fileExt !== 'csv') {
-            throw new Exception("Format file harus .csv");
-        }
-
         $handle = fopen($fileTmpPath, "r");
         if ($handle === FALSE) throw new Exception("Gagal membaca file.");
 
-        // --- VALIDASI HEADER CSV (FITUR BARU) ---
-        // Baca baris pertama (Header)
+        // Validasi Header
         $headers = fgetcsv($handle, 1000, ",");
+        if (!$headers) throw new Exception("File CSV kosong.");
 
-        if (!$headers) throw new Exception("File CSV kosong atau tidak terbaca.");
-
-        // Bersihkan Header (Trim, Lowercase, Hapus BOM/Karakter aneh dari Excel)
         $cleanHeaders = array_map(function ($h) {
-            // Menghapus karakter non-printable (BOM utf-8 sering muncul di awal file Excel)
-            $h = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h);
-            return strtolower(trim($h));
+            return strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $h)));
         }, $headers);
-
-        // Logika Pengecekan Kecocokan Kolom
-        if ($type === 'feedback') {
-            // Pastikan ada kolom 'rating' dan 'message' (Ciri khas Feedback)
-            if (!in_array('rating', $cleanHeaders) || !in_array('message', $cleanHeaders)) {
-                fclose($handle);
-                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Ulasan', tetapi file CSV ini tampaknya bukan template Ulasan (Kolom 'rating'/'message' tidak ditemukan).");
-            }
-        } elseif ($type === 'survey') {
-            // Pastikan ada kolom 'score_zi' dan 'respondent_role' (Ciri khas Survey)
-            if (!in_array('score_zi', $cleanHeaders) || !in_array('respondent_role', $cleanHeaders)) {
-                fclose($handle);
-                throw new Exception("VALIDASI GAGAL: Anda memilih import 'Data Survei', tetapi file CSV ini tampaknya bukan template Survei (Kolom 'score_zi'/'respondent_role' tidak ditemukan).");
-            }
-        } else {
-            throw new Exception("Tipe import tidak dikenal.");
-        }
-        // --- AKHIR VALIDASI ---
 
         $successCount = 0;
         $db->exec('BEGIN TRANSACTION');
 
         try {
             if ($type === 'feedback') {
+                // ... (Logic Feedback tetap sama) ...
+                if (!in_array('rating', $cleanHeaders)) throw new Exception("Format salah.");
                 $stmt = $db->prepare("INSERT INTO feedback (name, rating, message, created_at, ip_address) VALUES (:name, :rating, :message, :created_at, :ip_address)");
-
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
-                    // Validasi jumlah kolom minimal agar tidak error index offset
                     if (count($data) < 5) continue;
-
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':rating', (int)$data[1], SQLITE3_INTEGER);
                     $stmt->bindValue(':message', $data[2] ?: '', SQLITE3_TEXT);
@@ -10621,27 +11417,54 @@ try {
                     $successCount++;
                 }
             } elseif ($type === 'survey') {
-                $stmt = $db->prepare("INSERT INTO survey_responses (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, created_at, ip_address, details_json) VALUES (:name, :role, :zi, :service, :acad, :feedback, :created, :ip, '{}')");
+                // PERBAIKAN: Query Insert untuk 6 Kategori
+                // Memastikan urutan kolom CSV:
+                // 0:Name, 1:Role, 2:ZI, 3:Srv, 4:Acd, 5:Fac, 6:Mgt, 7:Cul, 8:Msg, 9:Date, 10:IP
+
+                $stmt = $db->prepare("INSERT INTO survey_responses
+                    (respondent_name, respondent_role, score_zi, score_service, score_academic, score_facilities, score_management, score_culture, feedback, created_at, ip_address, details_json)
+                    VALUES (:name, :role, :zi, :service, :acad, :fac, :mgt, :cul, :feedback, :created, :ip, '{}')");
 
                 while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
-                    if (count($data) < 8) continue;
+                    // Validasi jumlah kolom minimal (minimal 11 kolom sesuai generator)
+                    if (count($data) < 11) continue;
 
                     $stmt->bindValue(':name', $data[0] ?: 'Anonim', SQLITE3_TEXT);
                     $stmt->bindValue(':role', $data[1] ?: 'Umum', SQLITE3_TEXT);
+
+                    // Mapping Nilai Skor (Float)
                     $stmt->bindValue(':zi', (float)$data[2], SQLITE3_FLOAT);
                     $stmt->bindValue(':service', (float)$data[3], SQLITE3_FLOAT);
                     $stmt->bindValue(':acad', (float)$data[4], SQLITE3_FLOAT);
-                    $stmt->bindValue(':feedback', $data[5] ?: '', SQLITE3_TEXT);
-                    $stmt->bindValue(':created', $data[6] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT);
-                    $stmt->bindValue(':ip', $data[7] ?: '127.0.0.1', SQLITE3_TEXT);
+                    $stmt->bindValue(':fac', (float)$data[5], SQLITE3_FLOAT);
+                    $stmt->bindValue(':mgt', (float)$data[6], SQLITE3_FLOAT);
+                    $stmt->bindValue(':cul', (float)$data[7], SQLITE3_FLOAT);
+
+                    // Mapping Teks
+                    $stmt->bindValue(':feedback', $data[8] ?: '', SQLITE3_TEXT); // Index 8 adalah Pesan
+                    $stmt->bindValue(':created', $data[9] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT); // Index 9 adalah Waktu
+                    $stmt->bindValue(':ip', $data[10] ?: '127.0.0.1', SQLITE3_TEXT); // Index 10 adalah IP
+
                     $stmt->execute();
                     $successCount++;
                 }
+            } elseif ($type === 'visits') {
+                // ... (Logic Visits tetap sama) ...
+                $stmt = $db->prepare("INSERT INTO site_visit_logs (ip_address, user_agent, created_at) VALUES (:ip, :ua, :created)");
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    if (count($data) < 3) continue;
+                    $stmt->bindValue(':ip', $data[0] ?: '127.0.0.1', SQLITE3_TEXT);
+                    $stmt->bindValue(':ua', $data[1] ?: 'Imported', SQLITE3_TEXT);
+                    $stmt->bindValue(':created', $data[2] ?: date('Y-m-d H:i:s'), SQLITE3_TEXT);
+                    $stmt->execute();
+                    $successCount++;
+                }
+                $db->exec("UPDATE global_stats SET value = value + $successCount WHERE key = 'site_visits'");
             }
 
             $db->exec('COMMIT');
             fclose($handle);
-            echo json_encode(['status' => 'success', 'message' => "Validasi Sukses! Berhasil mengimport $successCount data."]);
+            echo json_encode(['status' => 'success', 'message' => "Berhasil mengimport $successCount data."]);
         } catch (Exception $ex) {
             $db->exec('ROLLBACK');
             throw $ex;
@@ -10892,21 +11715,28 @@ try {
     $surveyCount = $db->querySingle("SELECT COUNT(*) FROM survey_responses WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'") ?: 0;
     $articleViews = $db->querySingle("SELECT SUM(views) FROM post_stats") ?: 0;
 
-    // Hitung Indeks
+    // Hitung Indeks (6 Kategori)
     $indices = $db->querySingle("SELECT
         AVG(score_zi) as zi,
         AVG(score_service) as service,
-        AVG(score_academic) as academic
+        AVG(score_academic) as academic,
+        AVG(score_facilities) as facilities,
+        AVG(score_management) as management,
+        AVG(score_culture) as culture
         FROM survey_responses
         WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'", true);
 
     $idxZI = $indices ? round($indices['zi'] ?? 0, 2) : 0;
     $idxService = $indices ? round($indices['service'] ?? 0, 2) : 0;
     $idxAcademic = $indices ? round($indices['academic'] ?? 0, 2) : 0;
+    $idxFacilities = $indices ? round($indices['facilities'] ?? 0, 2) : 0;
+    $idxManagement = $indices ? round($indices['management'] ?? 0, 2) : 0;
+    $idxCulture = $indices ? round($indices['culture'] ?? 0, 2) : 0;
 
     $ikmValue = 0;
     if ($surveyCount > 0) {
-        $ikmValue = round(($idxZI + $idxService + $idxAcademic) / 3, 2);
+        // Rata-rata dari 6 kategori
+        $ikmValue = round(($idxZI + $idxService + $idxAcademic + $idxFacilities + $idxManagement + $idxCulture) / 6, 2);
     }
 
     $avgRatingRaw = $db->querySingle("SELECT AVG(rating) FROM feedback WHERE strftime('%m', created_at) = '$m' AND strftime('%Y', created_at) = '$y'");
@@ -10964,6 +11794,10 @@ try {
     $pdf->Cell($wValue, $rowH, '  ' . number_format($articleViews) . ' Kali Dibaca', 1, 1, 'L');
     $pdf->Ln(5);
 
+    // ==========================================
+    // BAGIAN II: KUALITAS PELAYANAN (Updated Layout)
+    // ==========================================
+
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, $rowH, ' II. KUALITAS PELAYANAN & PARTISIPASI PUBLIK', 1, 1, 'L', true);
@@ -10972,16 +11806,29 @@ try {
     $pdf->SetFillColor(250, 250, 250);
     $wLabelFull = 70;
     $wValueFull = 120;
+
+    // Baris 1: Ulasan & Rating
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Ulasan Masuk', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($feedbackCount) . ' Pesan', 1, 1, 'L');
     $pdf->Cell($wLabelFull, $rowH, ' Rata-rata Rating Ulasan', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . $avgRatingText, 1, 1, 'L');
+
+    // Baris 2: Jumlah Responden
     $pdf->Cell($wLabelFull, $rowH, ' Jumlah Responden Survei', 1, 0, 'L', true);
     $pdf->Cell($wValueFull, $rowH, ' ' . number_format($surveyCount) . ' Orang', 1, 1, 'L');
-    $wSub = 190 / 3;
+
+    // Baris 3 & 4: Detail Indeks (6 Kategori)
+    $wSub = 190 / 3; // Bagi 3 kolom
+    // Baris Indeks 1-3
     $pdf->Cell($wSub, $rowH, ' Indeks ZI: ' . ($idxZI > 0 ? $idxZI : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Layanan: ' . ($idxService > 0 ? $idxService : '-'), 1, 0, 'C', true);
     $pdf->Cell($wSub, $rowH, ' Indeks Akademik: ' . ($idxAcademic > 0 ? $idxAcademic : '-'), 1, 1, 'C', true);
+    // Baris Indeks 4-6
+    $pdf->Cell($wSub, $rowH, ' Indeks Sarpras: ' . ($idxFacilities > 0 ? $idxFacilities : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Manajemen: ' . ($idxManagement > 0 ? $idxManagement : '-'), 1, 0, 'C', true);
+    $pdf->Cell($wSub, $rowH, ' Indeks Budaya: ' . ($idxCulture > 0 ? $idxCulture : '-'), 1, 1, 'C', true);
+
+    // Baris IKM Total
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(240, 240, 240);
     $pdf->Cell($wLabelFull, $rowH, ' Indeks Kepuasan Masy. (IKM)', 1, 0, 'L', true);
@@ -10989,30 +11836,36 @@ try {
     $pdf->Ln(5);
 
     // ==========================================
-    // A. DATA SURVEI
+    // A. DATA SURVEI (Updated Columns)
     // ==========================================
 
     $drawSurveyHeader = function () use ($pdf) {
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetFillColor(0, 150, 100);
         $pdf->SetTextColor(255);
+        // Lebar total = 190
         $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
-        $pdf->Cell(35, 7, 'Waktu', 1, 0, 'C', true);
-        $pdf->Cell(40, 7, 'Nama Responden', 1, 0, 'L', true);
-        $pdf->Cell(14, 7, 'ZI', 1, 0, 'C', true);
-        $pdf->Cell(14, 7, 'LYN', 1, 0, 'C', true);
-        $pdf->Cell(14, 7, 'AKD', 1, 0, 'C', true);
-        $pdf->Cell(14, 7, 'IDX', 1, 0, 'C', true);
-        $pdf->Cell(51, 7, 'Masukan', 1, 1, 'L', true);
+        $pdf->Cell(30, 7, 'Waktu', 1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Nama', 1, 0, 'L', true);
+        // 6 Kategori (Lebar @ 9)
+        $pdf->Cell(9, 7, 'ZI', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'LYN', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'AKD', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'SAR', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'MGT', 1, 0, 'C', true);
+        $pdf->Cell(9, 7, 'BUD', 1, 0, 'C', true);
+        // Indeks rata-rata individu
+        $pdf->Cell(10, 7, 'IDX', 1, 0, 'C', true);
+        $pdf->Cell(53, 7, 'Masukan', 1, 1, 'L', true);
         $pdf->SetTextColor(0);
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Arial', '', 7); // Font lebih kecil agar muat
     };
 
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'A. DATA DETAIL SURVEI KEPUASAN', 0, 1, 'L');
 
-    $pdf->SetWidths([8, 35, 40, 14, 14, 14, 14, 51]);
-    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'L']);
+    $pdf->SetWidths([8, 30, 35, 9, 9, 9, 9, 9, 9, 10, 53]);
+    $pdf->SetAligns(['C', 'C', 'L', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'L']);
 
     $drawSurveyHeader();
     $pdf->SetTableHeaderCallback($drawSurveyHeader);
@@ -11024,8 +11877,26 @@ try {
     $found1 = false;
     while ($row = $resSurv->fetchArray(SQLITE3_ASSOC)) {
         $found1 = true;
-        $idxIndividual = round(($row['score_zi'] + $row['score_service'] + $row['score_academic']) / 3, 2);
-        $pdf->Row([$no++, formatFullTime($row['created_at']), $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")", $row['score_zi'], $row['score_service'], $row['score_academic'], $idxIndividual, $row['feedback'] ?: '-']);
+        // Hitung rata-rata per responden (6 kategori)
+        $idxIndividual = round(
+            ($row['score_zi'] + $row['score_service'] + $row['score_academic'] +
+                $row['score_facilities'] + $row['score_management'] + $row['score_culture']) / 6,
+            2
+        );
+
+        $pdf->Row([
+            $no++,
+            formatFullTime($row['created_at']),
+            $row['respondent_name'] . "\n(" . $row['respondent_role'] . ")",
+            $row['score_zi'],
+            $row['score_service'],
+            $row['score_academic'],
+            $row['score_facilities'],
+            $row['score_management'],
+            $row['score_culture'],
+            $idxIndividual,
+            $row['feedback'] ?: '-'
+        ]);
     }
 
     $pdf->isPrintingTable = false;
@@ -11149,35 +12020,67 @@ try {
 ```
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: https://mtsn1pandeglang.sch.id');
+header('Access-Control-Allow-Origin: *'); // Sesuaikan dengan domain produksi nanti
 header('Access-Control-Allow-Methods: GET, POST');
 session_start();
 $dbPath = __DIR__ . '/../../database.db';
+
+function getClientIP()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    return $_SERVER['REMOTE_ADDR'];
+}
 
 try {
     if (!class_exists('SQLite3')) {
         throw new Exception("SQLite3 driver not installed on PHP");
     }
     $db = new SQLite3($dbPath);
+
+    // Tabel Counter Global (Ringkasan)
     $db->exec("CREATE TABLE IF NOT EXISTS global_stats (key TEXT PRIMARY KEY, value INTEGER DEFAULT 0)");
+
+    // Tabel Detail Log Kunjungan (Baru)
+    $db->exec("CREATE TABLE IF NOT EXISTS site_visit_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT,
+        user_agent TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
     $db->exec("CREATE TABLE IF NOT EXISTS post_stats (slug TEXT PRIMARY KEY, views INTEGER DEFAULT 0)");
     $db->exec("INSERT OR IGNORE INTO global_stats (key, value) VALUES ('site_visits', 0)");
+
     $action = $_GET['action'] ?? '';
     $slug   = $_GET['slug'] ?? '';
     $method = $_SERVER['REQUEST_METHOD'];
 
     $response = ['value' => 0];
+
     if ($action === 'visit') {
         if ($method === 'POST') {
+            // Logika Session untuk mencegah F5 spamming counter global
             if (!isset($_SESSION['has_visited_site'])) {
+                // 1. Update Counter Global
                 $db->exec("UPDATE global_stats SET value = value + 1 WHERE key = 'site_visits'");
+
+                // 2. Catat Detail Log Kunjungan (IP & Browser)
+                $ip = getClientIP();
+                $ua = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
+
+                $stmt = $db->prepare("INSERT INTO site_visit_logs (ip_address, user_agent) VALUES (:ip, :ua)");
+                $stmt->bindValue(':ip', $ip, SQLITE3_TEXT);
+                $stmt->bindValue(':ua', $ua, SQLITE3_TEXT);
+                $stmt->execute();
+
                 $_SESSION['has_visited_site'] = true;
             }
         }
         $result = $db->querySingle("SELECT value FROM global_stats WHERE key = 'site_visits'");
         $response['value'] = $result ? $result : 0;
     } elseif ($action === 'view' && !empty($slug)) {
-        $slug = preg_replace('/[^a-zA-Z0-9_-]/', '', $slug);
+        $slug = preg_replace('/[^a-zA-Z0-9_-]/', '', $slug); // Sanitasi
         $sessionKey = 'viewed_' . $slug;
         if ($method === 'POST') {
             if (!isset($_SESSION[$sessionKey])) {
@@ -11228,60 +12131,68 @@ try {
     $db = new SQLite3($dbPath);
     $ip_address = getClientIP();
 
-    // 1. Update Struktur Tabel (Add ip_address)
-    $checkTable = $db->querySingle("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='survey_responses'");
-    if ($checkTable) {
-        $cols = $db->query("PRAGMA table_info(survey_responses)");
-        $hasIpCol = false;
-        while ($row = $cols->fetchArray()) {
-            if ($row['name'] === 'ip_address') $hasIpCol = true;
-        }
-        if (!$hasIpCol) {
-            $db->exec("ALTER TABLE survey_responses ADD COLUMN ip_address TEXT");
-        }
-    } else {
-        $query = "CREATE TABLE IF NOT EXISTS survey_responses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            respondent_name TEXT,
-            respondent_role TEXT,
-            score_zi REAL,
-            score_service REAL,
-            score_academic REAL,
-            feedback TEXT,
-            details_json TEXT,
-            ip_address TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        $db->exec($query);
+    // 1. AUTO MIGRATION: Cek & Tambah Kolom jika belum ada
+    $db->exec("CREATE TABLE IF NOT EXISTS survey_responses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        respondent_name TEXT,
+        respondent_role TEXT,
+        feedback TEXT,
+        details_json TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
+    $requiredCols = [
+        'score_zi' => 'REAL',
+        'score_service' => 'REAL',
+        'score_academic' => 'REAL',
+        'score_facilities' => 'REAL',
+        'score_management' => 'REAL',
+        'score_culture' => 'REAL',
+        'ip_address' => 'TEXT'
+    ];
+
+    $existingCols = [];
+    $resCols = $db->query("PRAGMA table_info(survey_responses)");
+    while ($row = $resCols->fetchArray(SQLITE3_ASSOC)) {
+        $existingCols[] = $row['name'];
     }
 
-    // Helper Stats
+    foreach ($requiredCols as $col => $type) {
+        if (!in_array($col, $existingCols)) {
+            $db->exec("ALTER TABLE survey_responses ADD COLUMN $col $type DEFAULT 0");
+        }
+    }
+
+    // Helper Stats (Updated for 6 categories)
     function getSurveyStats($db)
     {
         $sql = "SELECT
             AVG(score_zi) as zi,
             AVG(score_service) as service,
             AVG(score_academic) as academic,
+            AVG(score_facilities) as facilities,
+            AVG(score_management) as management,
+            AVG(score_culture) as culture,
             COUNT(*) as total
             FROM survey_responses";
         $row = $db->querySingle($sql, true);
 
         return [
-            'zi' => round($row['zi'] ?? 0, 1),
-            'service' => round($row['service'] ?? 0, 1),
-            'academic' => round($row['academic'] ?? 0, 1),
+            'zi' => round($row['zi'] ?? 0, 2),
+            'service' => round($row['service'] ?? 0, 2),
+            'academic' => round($row['academic'] ?? 0, 2),
+            'facilities' => round($row['facilities'] ?? 0, 2),
+            'management' => round($row['management'] ?? 0, 2),
+            'culture' => round($row['culture'] ?? 0, 2),
             'total' => $row['total'] ?? 0
         ];
     }
 
     // 2. Handle POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Cek IP
         $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
         $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
-        $res = $checkIp->execute();
-
-        if ($res->fetchArray()) {
+        if ($checkIp->execute()->fetchArray()) {
             echo json_encode(['status' => 'error', 'message' => 'Anda sudah mengisi survei ini.']);
             exit;
         }
@@ -11294,30 +12205,28 @@ try {
         $name = htmlspecialchars(strip_tags($data['profile']['name'] ?? 'Anonim'));
         $role = htmlspecialchars(strip_tags($data['profile']['role'] ?? 'Umum'));
         $feedback = htmlspecialchars(strip_tags($data['feedback'] ?? ''));
-        $scoreZi = $data['scores']['zi'] ?? 0;
-        $scoreService = $data['scores']['service'] ?? 0;
-        $scoreAcademic = $data['scores']['academic'] ?? 0;
+
+        $s = $data['scores'] ?? [];
         $details = json_encode($data['answers']);
 
         $stmt = $db->prepare("INSERT INTO survey_responses
-            (respondent_name, respondent_role, score_zi, score_service, score_academic, feedback, details_json, ip_address)
-            VALUES (:name, :role, :zi, :service, :academic, :feedback, :details, :ip)");
+            (respondent_name, respondent_role, score_zi, score_service, score_academic, score_facilities, score_management, score_culture, feedback, details_json, ip_address)
+            VALUES (:name, :role, :zi, :service, :acd, :fac, :mgt, :cul, :feedback, :details, :ip)");
 
         $stmt->bindValue(':name', $name, SQLITE3_TEXT);
         $stmt->bindValue(':role', $role, SQLITE3_TEXT);
-        $stmt->bindValue(':zi', $scoreZi, SQLITE3_FLOAT);
-        $stmt->bindValue(':service', $scoreService, SQLITE3_FLOAT);
-        $stmt->bindValue(':academic', $scoreAcademic, SQLITE3_FLOAT);
+        $stmt->bindValue(':zi', $s['zi'] ?? 0, SQLITE3_FLOAT);
+        $stmt->bindValue(':service', $s['service'] ?? 0, SQLITE3_FLOAT);
+        $stmt->bindValue(':acd', $s['academic'] ?? 0, SQLITE3_FLOAT);
+        $stmt->bindValue(':fac', $s['facilities'] ?? 0, SQLITE3_FLOAT);
+        $stmt->bindValue(':mgt', $s['management'] ?? 0, SQLITE3_FLOAT);
+        $stmt->bindValue(':cul', $s['culture'] ?? 0, SQLITE3_FLOAT);
         $stmt->bindValue(':feedback', $feedback, SQLITE3_TEXT);
         $stmt->bindValue(':details', $details, SQLITE3_TEXT);
         $stmt->bindValue(':ip', $ip_address, SQLITE3_TEXT);
 
         if ($stmt->execute()) {
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Survei berhasil dikirim.',
-                'stats' => getSurveyStats($db)
-            ]);
+            echo json_encode(['status' => 'success', 'message' => 'Survei berhasil dikirim.', 'stats' => getSurveyStats($db)]);
         } else {
             throw new Exception("Gagal menyimpan data.");
         }
@@ -11326,14 +12235,8 @@ try {
     else {
         $checkIp = $db->prepare("SELECT id FROM survey_responses WHERE ip_address = :ip");
         $checkIp->bindValue(':ip', $ip_address, SQLITE3_TEXT);
-        $res = $checkIp->execute();
-        $hasSubmitted = ($res->fetchArray()) ? true : false;
-
-        echo json_encode([
-            'status' => 'ready',
-            'has_submitted' => $hasSubmitted,
-            'stats' => getSurveyStats($db)
-        ]);
+        $hasSubmitted = ($checkIp->execute()->fetchArray()) ? true : false;
+        echo json_encode(['status' => 'ready', 'has_submitted' => $hasSubmitted, 'stats' => getSurveyStats($db)]);
     }
 } catch (Exception $e) {
     http_response_code(500);
@@ -11803,6 +12706,8 @@ PROJECT_DIR="/var/www/mtsn1pandeglang.sch.id"
 BRANCH="static"
 LOG_FILE="/var/log/web_build.log"
 
+sudo chown -R $USER:$USER /var/www/mtsn1pandeglang.sch.id
+
 # Fungsi Logging
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
@@ -11864,8 +12769,9 @@ fi
 DB_FILE="$PROJECT_DIR/database.db"
 [ ! -f "$DB_FILE" ] && touch "$DB_FILE" && chmod 664 "$DB_FILE"
 
-sudo chown www-data:www-data /var/www/mtsn1pandeglang.sch.id/rebuild.sh
-sudo chown www-data:www-data /var/www/mtsn1pandeglang.sch.id/deploy.sh
+sudo chown -R www-data:www-data /var/www/mtsn1pandeglang.sch.id
+sudo chown $USER:$USER /var/www/mtsn1pandeglang.sch.id/deploy.sh
+chmod +x /var/www/mtsn1pandeglang.sch.id/deploy.sh
 
 log "=== DEPLOYMENT SUKSES! ==="
 ```
@@ -11990,15 +12896,3 @@ log "=== DEPLOYMENT SUKSES! ==="
 ```
 
 ---
-
-# Admin Dashboard - Perbaikan & Fitur Baru
-
-(Astro SSG)
-
-1. Data Artikel
-
-- unduh template artikel di path public/template.mdx
-- Upload file artikel konten .mdx ke path src/content/blog/ artikel konten gambar ke public/images/artikel artikel konten video ke public/videos/artikel (super admin, dan operator) (tampilkan modal konfirmasi Timpa atau rename file jika nama file duplikat) -> hilangkan fungsi rebuild
-- Delete: Hapus file artikel (super admin) -> hilangkan fungsi rebuild
-- Unduh Markdown File (super admin)
-- Ketika ada operator yang mengunggah file -> unduh file untuk meninjau (super admin) -> tampilkan/hapus file
