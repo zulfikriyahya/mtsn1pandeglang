@@ -1241,17 +1241,21 @@ const AdminDashboard = () => {
                 {
                   key: "slug",
                   label: "Judul Artikel",
-                  render: (val: string) => (
-                    <a
-                      href={`/blog/${val}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-primary hover:underline font-medium flex items-center gap-1 group"
-                    >
-                      {val.replace(/-/g, " ").toUpperCase()}
-                      <FaExternalLinkAlt className="text-[10px] opacity-50 group-hover:opacity-100" />
-                    </a>
-                  ),
+                  render: (val: string) => {
+                    const urlSlug = val.replace(/_/g, "-");
+                    const displayTitle = val.replace(/_/g, " ").toUpperCase();
+                    return (
+                      <a
+                        href={`/blog/${urlSlug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary hover:underline font-medium flex items-center gap-1 group"
+                      >
+                        {displayTitle}
+                        <FaExternalLinkAlt className="text-[10px] opacity-50 group-hover:opacity-100" />
+                      </a>
+                    );
+                  },
                 },
                 {
                   key: "views",
