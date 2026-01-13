@@ -445,12 +445,21 @@ gen_score_decimal() {
     local min=$INPUT_MIN_STAR
     local max=5
     local range=$((max - min + 1))
+    
+    # 1. Generate angka bulat (misal: 4 atau 5)
     local integer=$((min + RANDOM % range))
     
-    # Generate decimal 00-99
-    local decimal=$((RANDOM % 100))
+    local decimal
     
-    # Format dengan 2 digit (tambah leading zero jika perlu)
+    # 2. Logika Pembatasan: Jika angka bulat sudah 5, desimal wajib 0
+    if [ "$integer" -eq 5 ]; then
+        decimal=0
+    else
+        # Jika belum 5, boleh acak 0-99
+        decimal=$((RANDOM % 100))
+    fi
+    
+    # 3. Format Output
     if [ $decimal -lt 10 ]; then
         echo "${integer}.0${decimal}"
     else
