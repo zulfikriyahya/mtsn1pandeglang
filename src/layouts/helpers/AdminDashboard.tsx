@@ -964,7 +964,7 @@ const AdminDashboard = () => {
                 <div className="h-64 flex justify-center">
                   <Pie
                     data={{
-                      labels: ["5 â˜…", "4 â˜…", "3 â˜…", "2 â˜…", "1 â˜…"],
+                      labels: ["5 ✯", "4 ✯", "3 ✯", "2 ✯", "1 ✯"],
                       datasets: [
                         {
                           label: "Jumlah",
@@ -1471,7 +1471,7 @@ const AdminDashboard = () => {
                   className: "w-24",
                   render: (val: number) => (
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">
-                      {val} â˜…
+                      {val} ✯
                     </span>
                   ),
                 },
