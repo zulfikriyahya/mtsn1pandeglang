@@ -48,9 +48,9 @@ TS_END=$(date -d "$INPUT_END_DATE" +%s 2>/dev/null)
 
 # Fallback jika date gagal (untuk kompatibilitas sistem)
 if [[ -z "$TS_START" || -z "$TS_END" ]]; then
-    echo "Warning: Format tanggal tidak dikenali. Menggunakan default 2024-2025."
-    TS_START=1704067200
-    TS_END=1767225600
+    echo "Warning: Format tanggal tidak dikenali. Menggunakan default 2024-2026."
+    TS_START=1704067200 # 1 Jan 2024
+    TS_END=1798761600   # 31 Des 2026
 fi
 
 # Buat Folder Output
