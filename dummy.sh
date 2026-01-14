@@ -224,7 +224,6 @@ msg_acad=(
 )
 
 msg_ekskul=(
-"Bangga sekali melihat Drumband Gema Nada yang selalu juara di tingkat provinsi."
 "Ekskul Paskibra Satria Pandeglang benar-benar membentuk mental disiplin anak."
 "SISPALA mengajarkan kemandirian dan kepedulian lingkungan yang nyata."
 "Tim Futsal MTs Negeri 1 Pandeglang FC mainnya taktis dan sportif, fasilitas lapangannya juga oke."
