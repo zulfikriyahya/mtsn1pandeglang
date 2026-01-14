@@ -14,5 +14,5 @@ package-lock.json
 .DS_Store
 .astro
 .idea/
-database.db
+database.db*
 *.csv
