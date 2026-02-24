@@ -1,14 +1,16 @@
 <?php
 session_start();
 date_default_timezone_set('Asia/Jakarta');
+header('Content-Type: application/json');
 require_once __DIR__ . '/config.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('HTTP/1.1 403 Forbidden');
-    header('Content-Type: application/json');
+    http_response_code(403);
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit;
 }
+
+$userRole = $_SESSION['user_role'] ?? 'user';
 
 function initPengaduanTable($pdo)
 {
@@ -31,26 +33,6 @@ function initPengaduanTable($pdo)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 }
 
-function formatTanggalIndo($dateString)
-{
-    if (!$dateString) return "-";
-    try {
-        $date = new DateTime(
-            $dateString . includes("Z")
-                ? $dateString
-                : $dateString . replace(" ", "T") . "Z"
-        );
-        return (new IntlDateFormatter(
-            'id_ID',
-            IntlDateFormatter::LONG,
-            IntlDateFormatter::SHORT,
-            'Asia/Jakarta'
-        ))->format($date);
-    } catch (Exception $e) {
-        return $dateString;
-    }
-}
-
 try {
     $pdo = getDBConnection();
     initPengaduanTable($pdo);
@@ -58,83 +40,68 @@ try {
     $action = $_GET['action'] ?? 'list';
 
     if ($action === 'list') {
-        header('Content-Type: application/json');
-
         $stmt = $pdo->query("SELECT * FROM pengaduan ORDER BY created_at DESC");
         $pengaduan = $stmt->fetchAll();
 
-        $stats = [
-            'total' => count($pengaduan),
-            'menunggu' => 0,
-            'proses' => 0,
-            'selesai' => 0,
-            'ditolak' => 0
-        ];
-
+        $stats = ['total' => 0, 'menunggu' => 0, 'proses' => 0, 'selesai' => 0, 'ditolak' => 0];
         foreach ($pengaduan as $p) {
-            $status = strtolower($p['status']);
-            if (isset($stats[$status])) {
-                $stats[$status]++;
-            }
+            $stats['total']++;
+            $key = strtolower($p['status']);
+            if (isset($stats[$key])) $stats[$key]++;
         }
 
-        echo json_encode([
-            'status' => 'success',
-            'data' => $pengaduan,
-            'stats' => $stats
-        ]);
+        echo json_encode(['status' => 'success', 'data' => $pengaduan, 'stats' => $stats]);
     } elseif ($action === 'update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+        // user biasa tidak boleh update
+        if ($userRole === 'user') {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'Akses ditolak: minimal role Operator.']);
+            exit;
+        }
 
-        $id = (int)$data['id'];
-        $status = $data['status'];
+        $data = json_decode(file_get_contents('php://input'), true);
+        $id       = (int)($data['id'] ?? 0);
+        $status   = htmlspecialchars(strip_tags($data['status'] ?? ''));
         $tanggapan = htmlspecialchars(strip_tags($data['tanggapan'] ?? ''));
 
-        $stmt = $pdo->prepare("UPDATE pengaduan 
-            SET status = :status, tanggapan = :tanggapan 
-            WHERE id = :id");
-        $stmt->execute([
-            ':status' => $status,
-            ':tanggapan' => $tanggapan,
-            ':id' => $id
-        ]);
+        if (!$id) throw new Exception('ID tidak valid.');
 
-        echo json_encode(['status' => 'success', 'message' => 'Pengaduan diupdate']);
+        $validStatus = ['Menunggu', 'Proses', 'Selesai', 'Ditolak'];
+        if (!in_array($status, $validStatus)) throw new Exception('Status tidak valid.');
+
+        $stmt = $pdo->prepare("UPDATE pengaduan SET status = :status, tanggapan = :tanggapan WHERE id = :id");
+        $stmt->execute([':status' => $status, ':tanggapan' => $tanggapan, ':id' => $id]);
+
+        echo json_encode(['status' => 'success', 'message' => 'Pengaduan berhasil diperbarui.']);
     } elseif ($action === 'delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        if ($_SESSION['user_role'] !== 'super_admin') {
-            throw new Exception("Hanya Super Admin yang dapat menghapus pengaduan.");
+        if ($userRole !== 'super_admin') {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'Akses ditolak: hanya Super Admin.']);
+            exit;
         }
 
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+        $data = json_decode(file_get_contents('php://input'), true);
+        $ids = array_map('intval', $data['ids'] ?? []);
 
-        $ids = $data['ids'] ?? [];
-        if (empty($ids)) throw new Exception("ID tidak valid.");
+        if (empty($ids)) throw new Exception('Tidak ada data yang dipilih.');
 
-        $sanitized_ids = array_map('intval', $ids);
-        $placeholders = implode(',', array_fill(0, count($sanitized_ids), '?'));
-
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
         $stmt = $pdo->prepare("DELETE FROM pengaduan WHERE id IN ($placeholders)");
-        $stmt->execute($sanitized_ids);
+        $stmt->execute($ids);
 
-        echo json_encode([
-            'status' => 'success',
-            'message' => count($sanitized_ids) . ' pengaduan dihapus'
-        ]);
+        echo json_encode(['status' => 'success', 'message' => $stmt->rowCount() . ' pengaduan berhasil dihapus.']);
     } elseif ($action === 'export') {
-        $filename = "laporan_pengaduan_" . date('Y-m-d_His') . ".csv";
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Disposition: attachment; filename="laporan_pengaduan_' . date('Y-m-d_His') . '.csv"');
 
-        $output = fopen('php://output', 'w');
-        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        $out = fopen('php://output', 'w');
+        fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM UTF-8
 
-        fputcsv($output, ['ID', 'Tanggal', 'Nama', 'Email', 'Telepon', 'Kategori', 'Judul', 'Isi Pengaduan', 'Status', 'Tanggapan', 'IP Address']);
+        fputcsv($out, ['ID', 'Tanggal', 'Nama', 'Email', 'Telepon', 'Kategori', 'Judul', 'Isi Pengaduan', 'Status', 'Tanggapan', 'IP Address']);
 
         $stmt = $pdo->query("SELECT * FROM pengaduan ORDER BY created_at DESC");
         while ($row = $stmt->fetch()) {
-            fputcsv($output, [
+            fputcsv($out, [
                 $row['id'],
                 $row['created_at'],
                 $row['nama'],
@@ -145,15 +112,16 @@ try {
                 $row['isi_pengaduan'],
                 $row['status'],
                 $row['tanggapan'] ?: '-',
-                $row['ip_address']
+                $row['ip_address'],
             ]);
         }
 
-        fclose($output);
+        fclose($out);
         exit;
+    } else {
+        throw new Exception('Action tidak dikenali.');
     }
 } catch (Exception $e) {
     http_response_code(500);
-    header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }

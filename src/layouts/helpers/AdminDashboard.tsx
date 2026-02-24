@@ -1,56 +1,55 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
 import AdminPengaduanDashboard from "@/layouts/helpers/AdminPengaduanDashboard";
 import {
-  FaDownload,
-  FaSignOutAlt,
-  FaEye,
-  FaStar,
-  FaChartLine,
-  FaPoll,
-  FaSort,
-  FaSortUp,
-  FaSortDown,
-  FaSearch,
-  FaChevronLeft,
-  FaChevronRight,
-  FaExclamationTriangle,
-  FaTimes,
-  FaExternalLinkAlt,
-  FaQuoteLeft,
-  FaTrash,
-  FaExclamationCircle,
-  FaFileUpload,
-  FaFileCsv,
-  FaCheckCircle,
-  FaTimesCircle,
-  FaSpinner,
-  FaHistory,
-  FaDesktop,
-  FaFilter,
-  FaCalendarAlt,
-  FaUserEdit,
-  FaFileAlt,
-  FaImages,
-  FaVideo,
-  FaSyncAlt,
-  FaCloudUploadAlt,
-  FaHammer,
-  FaSearchPlus,
-} from "react-icons/fa";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
   ArcElement,
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
-  Legend,
-  Filler,
 } from "chart.js";
-import { Bar, Pie, Line } from "react-chartjs-2";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Bar, Line, Pie } from "react-chartjs-2";
+import {
+  FaCalendarAlt,
+  FaChartLine,
+  FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCloudUploadAlt,
+  FaDesktop,
+  FaDownload,
+  FaExclamationCircle,
+  FaExclamationTriangle,
+  FaExternalLinkAlt,
+  FaEye,
+  FaFileAlt,
+  FaFileCsv,
+  FaFileUpload,
+  FaFilter,
+  FaHammer,
+  FaImages,
+  FaPoll,
+  FaQuoteLeft,
+  FaSearch,
+  FaSearchPlus,
+  FaSignOutAlt,
+  FaSort,
+  FaSortDown,
+  FaSortUp,
+  FaSpinner,
+  FaStar,
+  FaSyncAlt,
+  FaTimes,
+  FaTimesCircle,
+  FaTrash,
+  FaUserEdit,
+  FaVideo,
+} from "react-icons/fa";
 
 ChartJS.register(
   CategoryScale,
@@ -65,7 +64,7 @@ ChartJS.register(
   Filler,
 );
 
-// --- HELPER & INTERFACES ---
+// --- INTERFACES ---
 interface User {
   name: string;
   email: string;
@@ -82,7 +81,7 @@ interface UserManagementData {
   created_at: string;
 }
 
-// FORMAT TANGGAL
+// --- HELPERS ---
 const formatDateIndo = (dateString: string) => {
   if (!dateString) return "-";
   try {
@@ -134,6 +133,9 @@ const getYearFromDate = (dateString: string) => {
   }
 };
 
+// ================================================================
+// MAIN COMPONENT
+// ================================================================
 const AdminDashboard = () => {
   // --- STATE UTAMA ---
   const [user, setUser] = useState<User | null>(null);
@@ -197,7 +199,7 @@ const AdminDashboard = () => {
   }>({ isOpen: false, file: null, type: "" });
   const [isRebuilding, setIsRebuilding] = useState(false);
 
-  // State Filter Header (PDF)
+  // --- STATE PDF FILTER ---
   const [selectedMonth, setSelectedMonth] = useState(
     () => new Date().getMonth() + 1,
   );
@@ -205,7 +207,7 @@ const AdminDashboard = () => {
     new Date().getFullYear(),
   );
 
-  // --- LOGIKA FILTER DATA ---
+  // --- COMPUTED DATA ---
   const filteredFeedbacks = useMemo(() => {
     if (!data?.tables?.feedbacks) return [];
     return data.tables.feedbacks.filter((item: any) => {
@@ -228,10 +230,8 @@ const AdminDashboard = () => {
         getMonthFromDate(item.created_at) === svFilterMonth;
       const matchYear =
         svFilterYear === 0 || getYearFromDate(item.created_at) === svFilterYear;
-
       let matchScore = true;
       if (svFilterScore > 0) {
-        // Dinamis check score
         const cats = [
           "score_zi",
           "score_service",
@@ -254,38 +254,37 @@ const AdminDashboard = () => {
     });
   }, [data, svFilterMonth, svFilterYear, svFilterCategory, svFilterScore]);
 
-  const filteredVisits = useMemo(() => {
-    if (!data?.tables?.visits) return [];
-    return data.tables.visits.filter((item: any) => {
-      const matchMonth =
-        fbFilterMonth === 0 ||
-        getMonthFromDate(item.created_at) === fbFilterMonth;
-      const matchYear =
-        fbFilterYear === 0 || getYearFromDate(item.created_at) === fbFilterYear;
-      return matchMonth && matchYear;
-    });
-  }, [data, fbFilterMonth, fbFilterYear]);
+  // const filteredVisits = useMemo(() => {
+  //   if (!data?.tables?.visits) return [];
+  //   return data.tables.visits.filter((item: any) => {
+  //     const matchMonth =
+  //       fbFilterMonth === 0 ||
+  //       getMonthFromDate(item.created_at) === fbFilterMonth;
+  //     const matchYear =
+  //       fbFilterYear === 0 || getYearFromDate(item.created_at) === fbFilterYear;
+  //     return matchMonth && matchYear;
+  //   });
+  // }, [data, fbFilterMonth, fbFilterYear]);
 
-  // Data Grafik Kunjungan
   const visitsChartData = useMemo(() => {
     if (!data?.tables?.visits) return { labels: [], datasets: [] };
-    const visitsByDate: Record<string, number> = {};
-    data.tables.visits.forEach((visit: any) => {
-      const date = new Date(visit.created_at.replace(" ", "T"))
+    const byDate: Record<string, number> = {};
+    data.tables.visits.forEach((v: any) => {
+      const d = new Date(v.created_at.replace(" ", "T"))
         .toISOString()
         .split("T")[0];
-      visitsByDate[date] = (visitsByDate[date] || 0) + 1;
+      byDate[d] = (byDate[d] || 0) + 1;
     });
-    const sortedDates = Object.keys(visitsByDate).sort();
+    const sorted = Object.keys(byDate).sort();
     return {
-      labels: sortedDates.map((d) => {
-        const [y, m, day] = d.split("-");
+      labels: sorted.map((d) => {
+        const [, m, day] = d.split("-");
         return `${day}/${m}`;
       }),
       datasets: [
         {
           label: "Jumlah Kunjungan",
-          data: sortedDates.map((d) => visitsByDate[d]),
+          data: sorted.map((d) => byDate[d]),
           borderColor: "#3b82f6",
           backgroundColor: "rgba(59, 130, 246, 0.1)",
           fill: true,
@@ -295,7 +294,7 @@ const AdminDashboard = () => {
     };
   }, [data]);
 
-  // --- AUTH & INIT ---
+  // --- AUTH ---
   const initializeGoogleButton = () => {
     const btnContainer = document.getElementById("googleBtn");
     if (!btnContainer) return;
@@ -336,7 +335,6 @@ const AdminDashboard = () => {
           body: JSON.stringify({ credential: response.credential }),
         });
         const result = await res.json();
-
         if (result.status === "success") {
           setUser(result.user);
           fetchStats();
@@ -348,8 +346,6 @@ const AdminDashboard = () => {
             )
           ) {
             await doRegister(response.credential);
-          } else {
-            alert("Login dibatalkan.");
           }
         } else {
           alert(result.message);
@@ -370,7 +366,6 @@ const AdminDashboard = () => {
         body: JSON.stringify({ credential }),
       });
       const result = await res.json();
-
       if (result.status === "success") {
         setUser(result.user);
         fetchStats();
@@ -395,10 +390,14 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchStats = async () => {
+  const fetchStats = async (visitMonth = 0, visitYear = 0) => {
     setErrorMsg(null);
     try {
-      const res = await fetch("/api/admin.php?action=stats");
+      const params = new URLSearchParams({ action: "stats" });
+      if (visitMonth > 0) params.set("visit_month", String(visitMonth));
+      if (visitYear > 0) params.set("visit_year", String(visitYear));
+
+      const res = await fetch(`/api/admin.php?${params.toString()}`);
       if (!res.ok) throw new Error(`Server Error: ${res.status}`);
       const json = await res.json();
       if (json.status === "error") throw new Error(json.message);
@@ -416,37 +415,36 @@ const AdminDashboard = () => {
     } catch (e) {}
   };
 
-  // --- CONTENT MANAGER FETCH ---
+  // --- CONTENT MANAGER ---
   useEffect(() => {
-    if (activeTab === "content" && user) {
-      fetchFiles(contentTab);
-    }
+    if (activeTab === "content" && user) fetchFiles(contentTab);
   }, [activeTab, contentTab, refreshTrigger, user]);
+
+  useEffect(() => {
+    if (activeTab === "visits" && user) {
+      fetchStats(fbFilterMonth, fbFilterYear);
+    }
+  }, [fbFilterMonth, fbFilterYear, activeTab]);
 
   const fetchFiles = async (type: string) => {
     try {
       const res = await fetch(`/api/content.php?type=${type}`);
       const json = await res.json();
-      if (json.status === "success") {
-        setFileList(json.data);
-      }
+      if (json.status === "success") setFileList(json.data);
     } catch (e) {
       console.error("Gagal load files", e);
     }
   };
 
-  // --- CONTENT ACTIONS ---
   const handleContentUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     behavior = "ask",
   ) => {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
-
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("behavior", behavior); // ask, overwrite, rename
-
+    formData.append("behavior", behavior);
     try {
       const res = await fetch(
         `/api/content.php?action=upload&type=${contentTab}`,
@@ -456,13 +454,11 @@ const AdminDashboard = () => {
         },
       );
       const json = await res.json();
-
       if (json.status === "conflict") {
-        // Show Conflict Modal
         setUploadConflict({ isOpen: true, file, type: contentTab });
       } else if (json.status === "success") {
         setUploadConflict({ isOpen: false, file: null, type: "" });
-        setRefreshTrigger((prev) => prev + 1); // Refresh list ONLY (No Rebuild Trigger)
+        setRefreshTrigger((p) => p + 1);
         setStatusModal({
           isOpen: true,
           status: "success",
@@ -480,7 +476,6 @@ const AdminDashboard = () => {
         message: e.message || "Terjadi kesalahan upload.",
       });
     }
-    // Reset input
     e.target.value = "";
   };
 
@@ -491,7 +486,6 @@ const AdminDashboard = () => {
       )
     )
       return;
-
     try {
       const res = await fetch(
         `/api/content.php?action=delete&type=${contentTab}`,
@@ -503,7 +497,7 @@ const AdminDashboard = () => {
       );
       const json = await res.json();
       if (json.status === "success") {
-        setRefreshTrigger((prev) => prev + 1); // Refresh list ONLY (No Rebuild Trigger)
+        setRefreshTrigger((p) => p + 1);
       } else {
         alert(json.message);
       }
@@ -515,7 +509,7 @@ const AdminDashboard = () => {
   const triggerRebuild = async () => {
     if (
       !window.confirm(
-        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit. Pastikan Anda telah meninjau semua perubahan file.",
+        "Yakin ingin melakukan Rebuild Website? Proses ini memakan waktu 1-2 menit.",
       )
     )
       return;
@@ -542,13 +536,14 @@ const AdminDashboard = () => {
     }
   };
 
+  // --- INIT ---
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
     const init = async () => {
       try {
-        const authRes = await fetch("/api/auth.php?action=check");
-        const authData = await authRes.json();
-        if (isMounted) {
+        const res = await fetch("/api/auth.php?action=check");
+        const authData = await res.json();
+        if (mounted) {
           if (authData.status === "authenticated") {
             setUser(authData.user);
             fetchStats();
@@ -568,13 +563,13 @@ const AdminDashboard = () => {
           setLoading(false);
         }
       } catch (e) {
-        if (isMounted) setErrorMsg("Gagal menghubungi server autentikasi.");
+        if (mounted) setErrorMsg("Gagal menghubungi server autentikasi.");
         setLoading(false);
       }
     };
     init();
     return () => {
-      isMounted = false;
+      mounted = false;
     };
   }, []);
 
@@ -585,7 +580,12 @@ const AdminDashboard = () => {
   };
 
   const downloadReport = (type: string) => {
-    window.open(`/api/admin.php?action=export&type=${type}`, "_blank");
+    const params = new URLSearchParams({ action: "export", type });
+    if (type === "visits") {
+      if (fbFilterMonth > 0) params.set("month", String(fbFilterMonth));
+      if (fbFilterYear > 0) params.set("year", String(fbFilterYear));
+    }
+    window.open(`/api/admin.php?${params.toString()}`, "_blank");
   };
 
   const printPDF = () => {
@@ -595,21 +595,39 @@ const AdminDashboard = () => {
     );
   };
 
-  // --- LOGIC USER MANAGEMENT ---
+  // --- USER MANAGEMENT ---
   const updateUser = async (id: number, role: string, status: string) => {
     try {
       const res = await fetch(`/api/users.php?action=update`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, role, status }),
       });
       const json = await res.json();
       if (json.status === "success") {
         fetchUsers();
         setEditUserModal({ isOpen: false, user: null });
-        alert("User updated!");
-      } else alert(json.message);
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "User Diperbarui",
+          message: "Role dan status user berhasil disimpan.",
+        });
+      } else {
+        setStatusModal({
+          isOpen: true,
+          status: "error",
+          title: "Gagal Memperbarui",
+          message: json.message,
+        });
+      }
     } catch (e) {
-      alert("Gagal update user");
+      setStatusModal({
+        isOpen: true,
+        status: "error",
+        title: "Gagal Memperbarui",
+        message: "Terjadi kesalahan saat menghubungi server.",
+      });
     }
   };
 
@@ -617,15 +635,33 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`/api/users.php?action=delete`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
       const json = await res.json();
       if (json.status === "success") {
         fetchUsers();
-        alert("User deleted!");
-      } else alert(json.message);
+        setStatusModal({
+          isOpen: true,
+          status: "success",
+          title: "User Dihapus",
+          message: "User berhasil dihapus dari sistem.",
+        });
+      } else {
+        setStatusModal({
+          isOpen: true,
+          status: "error",
+          title: "Gagal Menghapus",
+          message: json.message,
+        });
+      }
     } catch (e) {
-      alert("Gagal hapus user");
+      setStatusModal({
+        isOpen: true,
+        status: "error",
+        title: "Gagal Menghapus",
+        message: "Terjadi kesalahan saat menghubungi server.",
+      });
     }
   };
 
@@ -636,22 +672,16 @@ const AdminDashboard = () => {
   };
 
   const requestDelete = (ids: number[], type: "feedback" | "survey") => {
-    setConfirmModal({
-      isOpen: true,
-      ids,
-      type,
-      count: ids.length,
-    });
+    setConfirmModal({ isOpen: true, ids, type, count: ids.length });
   };
 
   const executeDelete = async () => {
     if (confirmModal.type === "user" && confirmModal.action) {
       confirmModal.action();
-      setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      setConfirmModal((p) => ({ ...p, isOpen: false }));
       return;
     }
-
-    setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    setConfirmModal((p) => ({ ...p, isOpen: false }));
     try {
       const res = await fetch("/api/crud.php?action=delete", {
         method: "POST",
@@ -662,7 +692,6 @@ const AdminDashboard = () => {
         }),
       });
       const json = await res.json();
-
       if (json.status === "success") {
         fetchStats();
         if (
@@ -692,6 +721,9 @@ const AdminDashboard = () => {
     }
   };
 
+  // ----------------------------------------------------------------
+  // LOADING & GUEST STATE
+  // ----------------------------------------------------------------
   if (loading)
     return (
       <div className="text-center p-12">
@@ -755,9 +787,11 @@ const AdminDashboard = () => {
     "Desember",
   ];
   const yearOptions = [0, 2024, 2025, 2026, 2027];
-
   const userRole = user.role || "user";
 
+  // ----------------------------------------------------------------
+  // RENDER UTAMA
+  // ----------------------------------------------------------------
   return (
     <div className="min-h-screen pb-12 relative">
       {/* Header Panel */}
@@ -781,7 +815,6 @@ const AdminDashboard = () => {
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
-          {/* PDF Filter & Actions (Only Operator & Admin) */}
           {(userRole === "operator" || userRole === "super_admin") && (
             <>
               <div className="flex items-center gap-2 bg-gray-50 dark:bg-white/5 p-1.5 rounded-lg border border-border dark:border-darkmode-border mr-2">
@@ -809,7 +842,6 @@ const AdminDashboard = () => {
                   ))}
                 </select>
               </div>
-
               <button
                 onClick={() => setImportModalOpen(true)}
                 className="btn btn-sm flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white border-orange-500 whitespace-nowrap"
@@ -825,10 +857,7 @@ const AdminDashboard = () => {
             </>
           )}
           <button
-            onClick={async () => {
-              await fetch("/api/auth.php?action=logout");
-              window.location.reload();
-            }}
+            onClick={handleLogout}
             className="btn btn-primary btn-sm flex items-center gap-2 bg-red-500 border-red-500 hover:bg-red-600 print:hidden whitespace-nowrap"
           >
             <FaSignOutAlt /> Keluar
@@ -912,7 +941,7 @@ const AdminDashboard = () => {
             </nav>
           </div>
 
-          {/* === CONTENT TABS === */}
+          {/* === TAB CONTENT === */}
 
           {/* 1. OVERVIEW */}
           {activeTab === "overview" && (
@@ -947,7 +976,6 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Grafik Kunjungan (Baru) */}
               <div className="lg:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6">Total Kunjungan Bulanan</h3>
                 <div className="h-72">
@@ -986,17 +1014,12 @@ const AdminDashboard = () => {
                     options={{
                       responsive: true,
                       maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          position: "right" as const,
-                        },
-                      },
+                      plugins: { legend: { position: "right" as const } },
                     }}
                   />
                 </div>
               </div>
 
-              {/* SKOR RATA-RATA SURVEI (6 KATEGORI) */}
               <div className="rounded-xl border border-border bg-white p-6 shadow-sm dark:bg-darkmode-light dark:border-darkmode-border">
                 <h3 className="h6 mb-6 text-center">Skor Rata-rata Survei</h3>
                 <div className="h-64">
@@ -1044,9 +1067,9 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* 2. CONTENT MANAGER (NEW) */}
+          {/* 2. CONTENT MANAGER */}
           {activeTab === "content" &&
-            (userRole === "operator" || userRole === "super_admin") && (
+            (userRole === "operator" || userRole === "super_admin" ? (
               <div className="grid grid-cols-1 gap-6">
                 {/* Top Bar Actions */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white dark:bg-darkmode-light p-4 rounded-xl border border-border dark:border-darkmode-border">
@@ -1081,7 +1104,6 @@ const AdminDashboard = () => {
                         <FaDownload /> Unduh Template
                       </a>
                     )}
-
                     <label className="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white border-none cursor-pointer flex items-center gap-2">
                       <FaCloudUploadAlt /> Upload{" "}
                       {contentTab === "article"
@@ -1102,7 +1124,6 @@ const AdminDashboard = () => {
                         onChange={(e) => handleContentUpload(e)}
                       />
                     </label>
-
                     {userRole === "super_admin" && (
                       <button
                         onClick={triggerRebuild}
@@ -1111,7 +1132,7 @@ const AdminDashboard = () => {
                       >
                         <FaHammer
                           className={isRebuilding ? "animate-spin" : ""}
-                        />{" "}
+                        />
                         {isRebuilding ? "Building..." : "Rebuild"}
                       </button>
                     )}
@@ -1123,13 +1144,14 @@ const AdminDashboard = () => {
                   <div className="p-4 bg-gray-50 dark:bg-white/5 border-b border-border dark:border-darkmode-border flex justify-between items-center">
                     <h3 className="font-bold flex items-center gap-2">
                       File Manager: {contentTab.toUpperCase()}
-                      <span className="text-xs font-normal text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-normal text-gray-500 bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full">
                         {fileList.length} files
                       </span>
                     </h3>
                     <button
-                      onClick={() => setRefreshTrigger((prev) => prev + 1)}
+                      onClick={() => setRefreshTrigger((p) => p + 1)}
                       className="text-gray-500 hover:text-primary"
+                      title="Refresh"
                     >
                       <FaSyncAlt />
                     </button>
@@ -1160,16 +1182,16 @@ const AdminDashboard = () => {
                               key={idx}
                               className="hover:bg-gray-50 dark:hover:bg-white/5"
                             >
-                              <td className="px-4 py-3 font-medium flex items-center gap-2">
+                              <td className="px-4 py-3 font-medium">
                                 {file.url ? (
                                   <a
                                     href={file.url}
                                     target="_blank"
-                                    className="text-primary hover:underline truncate max-w-[200px] md:max-w-md block"
                                     rel="noreferrer"
+                                    className="text-primary hover:underline truncate max-w-[200px] md:max-w-md flex items-center gap-1"
                                   >
-                                    {file.name}{" "}
-                                    <FaExternalLinkAlt className="inline text-[10px] ml-1" />
+                                    {file.name}
+                                    <FaExternalLinkAlt className="text-[10px] opacity-50" />
                                   </a>
                                 ) : (
                                   <span className="truncate max-w-[200px] md:max-w-md block">
@@ -1183,40 +1205,40 @@ const AdminDashboard = () => {
                               <td className="px-4 py-3 text-gray-500">
                                 {file.date}
                               </td>
-                              <td className="px-4 py-3 text-right flex justify-end gap-2">
-                                {/* View/Download Button */}
-                                {userRole === "super_admin" && (
-                                  <a
-                                    href={
-                                      file.url ||
-                                      `/api/content.php?action=download&type=${contentTab}&file=${file.name}`
-                                    }
-                                    target="_blank"
-                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded"
-                                    title={
-                                      contentTab === "article"
-                                        ? "Unduh / Tinjau Source"
-                                        : "Lihat Media"
-                                    }
-                                  >
-                                    {contentTab === "article" ? (
-                                      <FaSearchPlus />
-                                    ) : (
-                                      <FaEye />
-                                    )}
-                                  </a>
-                                )}
-
-                                {/* Delete Button (Super Admin Only) */}
-                                {userRole === "super_admin" && (
-                                  <button
-                                    onClick={() => deleteContent(file.name)}
-                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
-                                    title="Hapus"
-                                  >
-                                    <FaTrash />
-                                  </button>
-                                )}
+                              <td className="px-4 py-3 text-right">
+                                <div className="flex justify-end gap-2">
+                                  {userRole === "super_admin" && (
+                                    <>
+                                      <a
+                                        href={
+                                          file.url ||
+                                          `/api/content.php?action=download&type=${contentTab}&file=${file.name}`
+                                        }
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                        title={
+                                          contentTab === "article"
+                                            ? "Tinjau Source"
+                                            : "Lihat Media"
+                                        }
+                                      >
+                                        {contentTab === "article" ? (
+                                          <FaSearchPlus />
+                                        ) : (
+                                          <FaEye />
+                                        )}
+                                      </a>
+                                      <button
+                                        onClick={() => deleteContent(file.name)}
+                                        className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                        title="Hapus"
+                                      >
+                                        <FaTrash />
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
                               </td>
                             </tr>
                           ))
@@ -1226,94 +1248,127 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </div>
-            )}
+            ) : (
+              <AccessDenied requiredRole="operator" />
+            ))}
 
-          {/* 3. USER MANAGEMENT (SUPER ADMIN ONLY) */}
-          {activeTab === "users" && userRole === "super_admin" && (
-            <div className="bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-darkmode-border overflow-hidden">
-              <div className="p-6 border-b border-border dark:border-darkmode-border flex justify-between items-center">
-                <h3 className="text-lg font-bold">Daftar Pengguna</h3>
-                <button
-                  onClick={fetchUsers}
-                  className="text-sm text-primary hover:underline"
-                >
-                  Refresh Data
-                </button>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-gray-50 dark:bg-white/5 uppercase text-xs">
-                    <tr>
-                      <th className="px-6 py-3">User</th>
-                      <th className="px-6 py-3">Role</th>
-                      <th className="px-6 py-3">Status</th>
-                      <th className="px-6 py-3">Terdaftar</th>
-                      <th className="px-6 py-3 text-center">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border dark:divide-darkmode-border">
-                    {userList.map((u) => (
-                      <tr key={u.id}>
-                        <td className="px-6 py-4">
-                          <div className="font-bold">{u.name}</div>
-                          <div className="text-xs text-gray-500">{u.email}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`px-2 py-1 rounded text-xs font-bold ${u.role === "super_admin" ? "bg-red-100 text-red-700" : u.role === "operator" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
-                          >
-                            {u.role}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`px-2 py-1 rounded text-xs font-bold ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}
-                          >
-                            {u.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-xs text-gray-500">
-                          {formatDateIndo(u.created_at)}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex justify-center gap-2">
-                            <button
-                              onClick={() =>
-                                setEditUserModal({ isOpen: true, user: u })
-                              }
-                              className="p-2 bg-blue-50 text-blue-600 rounded hover:bg-blue-100"
-                              title="Edit Role/Status"
-                            >
-                              <FaUserEdit />
-                            </button>
-                            {u.role !== "super_admin" && (
-                              <button
-                                onClick={() =>
-                                  setConfirmModal({
-                                    isOpen: true,
-                                    ids: [u.id],
-                                    type: "user",
-                                    count: 1,
-                                    action: () => deleteUser(u.id),
-                                  })
-                                }
-                                className="p-2 bg-red-50 text-red-600 rounded hover:bg-red-100"
-                                title="Hapus User"
-                              >
-                                <FaTrash />
-                              </button>
-                            )}
-                          </div>
-                        </td>
+          {/* 3. USER MANAGEMENT */}
+          {activeTab === "users" &&
+            (userRole === "super_admin" ? (
+              <div className="bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-darkmode-border overflow-hidden">
+                <div className="p-6 border-b border-border dark:border-darkmode-border flex justify-between items-center">
+                  <h3 className="text-lg font-bold">Daftar Pengguna</h3>
+                  <button
+                    onClick={fetchUsers}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    Refresh Data
+                  </button>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-gray-50 dark:bg-white/5 uppercase text-xs">
+                      <tr>
+                        <th className="px-6 py-3">User</th>
+                        <th className="px-6 py-3">Role</th>
+                        <th className="px-6 py-3">Status</th>
+                        <th className="px-6 py-3">Terdaftar</th>
+                        <th className="px-6 py-3 text-center">Aksi</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-border dark:divide-darkmode-border">
+                      {userList.length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan={5}
+                            className="px-6 py-10 text-center text-gray-500"
+                          >
+                            Belum ada pengguna terdaftar.
+                          </td>
+                        </tr>
+                      ) : (
+                        userList.map((u) => (
+                          <tr
+                            key={u.id}
+                            className="hover:bg-gray-50 dark:hover:bg-white/5"
+                          >
+                            <td className="px-6 py-4">
+                              <div className="font-bold">{u.name}</div>
+                              <div className="text-xs text-gray-500">
+                                {u.email}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span
+                                className={`px-2 py-1 rounded text-xs font-bold ${
+                                  u.role === "super_admin"
+                                    ? "bg-red-100 text-red-700"
+                                    : u.role === "operator"
+                                      ? "bg-blue-100 text-blue-700"
+                                      : "bg-gray-100 text-gray-700"
+                                }`}
+                              >
+                                {u.role.replace("_", " ")}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span
+                                className={`px-2 py-1 rounded text-xs font-bold ${
+                                  u.status === "active"
+                                    ? "bg-green-100 text-green-700"
+                                    : u.status === "inactive"
+                                      ? "bg-red-100 text-red-700"
+                                      : "bg-yellow-100 text-yellow-700"
+                                }`}
+                              >
+                                {u.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-xs text-gray-500">
+                              {formatDateIndo(u.created_at)}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <div className="flex justify-center gap-2">
+                                <button
+                                  onClick={() =>
+                                    setEditUserModal({ isOpen: true, user: u })
+                                  }
+                                  className="p-2 bg-blue-50 text-blue-600 rounded hover:bg-blue-100"
+                                  title="Edit Role/Status"
+                                >
+                                  <FaUserEdit />
+                                </button>
+                                {u.role !== "super_admin" && (
+                                  <button
+                                    onClick={() =>
+                                      setConfirmModal({
+                                        isOpen: true,
+                                        ids: [u.id],
+                                        type: "user",
+                                        count: 1,
+                                        action: () => deleteUser(u.id),
+                                      })
+                                    }
+                                    className="p-2 bg-red-50 text-red-600 rounded hover:bg-red-100"
+                                    title="Hapus User"
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          )}
+            ) : (
+              <AccessDenied requiredRole="super_admin" />
+            ))}
 
-          {/* 4. POSTS (STATS) */}
+          {/* 4. POSTS */}
           {activeTab === "posts" && (
             <DataTable
               title="Statistik Artikel Populer"
@@ -1326,7 +1381,6 @@ const AdminDashboard = () => {
                   label: "Judul Artikel",
                   render: (val: string) => {
                     const urlSlug = val.replace(/_/g, "-");
-                    const displayTitle = val.replace(/_/g, " ").toUpperCase();
                     return (
                       <a
                         href={`/blog/${urlSlug}`}
@@ -1334,7 +1388,7 @@ const AdminDashboard = () => {
                         rel="noreferrer"
                         className="text-primary hover:underline font-medium flex items-center gap-1 group"
                       >
-                        {displayTitle}
+                        {val.replace(/_/g, " ").toUpperCase()}
                         <FaExternalLinkAlt className="text-[10px] opacity-50 group-hover:opacity-100" />
                       </a>
                     );
@@ -1349,72 +1403,101 @@ const AdminDashboard = () => {
               ]}
             />
           )}
-          {/* TAB BARU: VISIT HISTORY */}
+
+          {/* 5. VISITS */}
           {activeTab === "visits" && (
-            <DataTable
-              title="Riwayat Kunjungan Website"
-              data={filteredVisits}
-              searchKeys={["ip_address", "user_agent"]}
-              enableSelection={false}
-              onDownload={() => downloadReport("visits")}
-              customFilters={
-                <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
-                  <FaCalendarAlt className="text-gray-400" />
-                  <select
-                    className="text-xs bg-transparent outline-none"
-                    value={fbFilterMonth}
-                    onChange={(e) => setFbFilterMonth(Number(e.target.value))}
-                  >
-                    {monthOptions.map((m, i) => (
-                      <option key={i} value={i}>
-                        {m}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
-                    value={fbFilterYear}
-                    onChange={(e) => setFbFilterYear(Number(e.target.value))}
-                  >
-                    <option value={0}>Semua Tahun</option>
-                    {yearOptions.slice(1).map((y) => (
-                      <option key={y} value={y}>
-                        {y}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              }
-              columns={[
-                {
-                  key: "created_at",
-                  label: "Waktu Akses",
-                  sortable: true,
-                  className: "w-48 text-sm text-gray-500",
-                  render: (val: string) => formatDateIndo(val),
-                },
-                {
-                  key: "ip_address",
-                  label: "IP Address",
-                  sortable: true,
-                  className: "font-mono text-xs w-32",
-                },
-                {
-                  key: "user_agent",
-                  label: "Perangkat / Browser",
-                  render: (val: string) => (
-                    <div className="flex items-center gap-2" title={val}>
-                      <FaDesktop className="text-gray-400 flex-shrink-0" />
-                      <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-md block">
-                        {val}
+            <>
+              {/* Info banner filter aktif */}
+              {data?.tables?.visits_meta &&
+                (() => {
+                  const m = data.tables.visits_meta;
+                  const isFiltered = m.filter_month > 0 || m.filter_year > 0;
+                  if (!isFiltered) return null;
+                  return (
+                    <div className="mb-4 flex items-center gap-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 px-4 py-2 text-sm text-blue-700 dark:text-blue-400">
+                      <FaCalendarAlt className="flex-shrink-0" />
+                      <span>
+                        Menampilkan{" "}
+                        <strong>{m.total_filtered.toLocaleString()}</strong>{" "}
+                        kunjungan
+                        {m.filter_month > 0 && ` bulan ke-${m.filter_month}`}
+                        {m.filter_year > 0 && ` tahun ${m.filter_year}`}
+                        {m.total_filtered > m.limit && (
+                          <span className="ml-1 text-orange-500 font-medium">
+                            — dibatasi {m.limit.toLocaleString()} baris terakhir
+                          </span>
+                        )}
                       </span>
                     </div>
-                  ),
-                },
-              ]}
-            />
+                  );
+                })()}
+
+              <DataTable
+                title="Riwayat Kunjungan Website"
+                data={data?.tables?.visits ?? []}
+                searchKeys={["ip_address", "user_agent"]}
+                enableSelection={false}
+                onDownload={() => downloadReport("visits")}
+                customFilters={
+                  <div className="flex items-center gap-2 border border-border rounded-lg px-2 py-1.5 bg-white dark:bg-darkmode-body dark:border-darkmode-border">
+                    <FaCalendarAlt className="text-gray-400" />
+                    <select
+                      className="text-xs bg-transparent outline-none"
+                      value={fbFilterMonth}
+                      onChange={(e) => setFbFilterMonth(Number(e.target.value))}
+                    >
+                      {monthOptions.map((m, i) => (
+                        <option key={i} value={i}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className="text-xs bg-transparent outline-none border-l border-gray-200 pl-2 ml-1"
+                      value={fbFilterYear}
+                      onChange={(e) => setFbFilterYear(Number(e.target.value))}
+                    >
+                      <option value={0}>Semua Tahun</option>
+                      {yearOptions.slice(1).map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                }
+                columns={[
+                  {
+                    key: "created_at",
+                    label: "Waktu Akses",
+                    sortable: true,
+                    className: "w-48 text-sm text-gray-500",
+                    render: (val: string) => formatDateIndo(val),
+                  },
+                  {
+                    key: "ip_address",
+                    label: "IP Address",
+                    sortable: true,
+                    className: "font-mono text-xs w-32",
+                  },
+                  {
+                    key: "user_agent",
+                    label: "Perangkat / Browser",
+                    render: (val: string) => (
+                      <div className="flex items-center gap-2" title={val}>
+                        <FaDesktop className="text-gray-400 flex-shrink-0" />
+                        <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-md block">
+                          {val}
+                        </span>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
+            </>
           )}
-          {/* 5. FEEDBACK (DATA ULASAN) */}
+
+          {/* 6. FEEDBACK */}
           {activeTab === "feedback" && (
             <DataTable
               title="Data Ulasan Masuk"
@@ -1499,7 +1582,7 @@ const AdminDashboard = () => {
                   key: "message",
                   label: "Pesan / Kritik",
                   render: (val: string, row: any) => (
-                    <div className="group relative">
+                    <div>
                       <p className="italic text-gray-600 dark:text-gray-400 line-clamp-1 max-w-xs">
                         {val || "-"}
                       </p>
@@ -1534,7 +1617,7 @@ const AdminDashboard = () => {
             />
           )}
 
-          {/* 6. SURVEY (DATA SURVEI) - UPDATED 6 COLS */}
+          {/* 7. SURVEYS */}
           {activeTab === "surveys" && (
             <DataTable
               title="Data Survei Kepuasan"
@@ -1693,15 +1776,18 @@ const AdminDashboard = () => {
             />
           )}
 
+          {/* 8. PENGADUAN */}
           {activeTab === "pengaduan" && (
             <AdminPengaduanDashboard userRole={userRole} />
           )}
         </div>
       )}
 
-      {/* --- MODALS --- */}
+      {/* ============================================================ */}
+      {/* MODALS */}
+      {/* ============================================================ */}
 
-      {/* Conflict Modal */}
+      {/* Conflict Upload Modal */}
       {uploadConflict.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl shadow-2xl p-6 border border-gray-100 dark:border-darkmode-border">
@@ -1759,12 +1845,12 @@ const AdminDashboard = () => {
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
         title="Konfirmasi Hapus"
-        message={`Yakin ingin menghapus ${confirmModal.count} data terpilih?`}
+        message={`Yakin ingin menghapus ${confirmModal.count} data terpilih? Aksi ini tidak dapat dibatalkan.`}
         onConfirm={executeDelete}
-        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+        onCancel={() => setConfirmModal((p) => ({ ...p, isOpen: false }))}
       />
 
-      {/* Status Modal (Success/Fail Delete) */}
+      {/* Status Modal */}
       <StatusModal
         isOpen={statusModal.isOpen}
         status={statusModal.status}
@@ -1773,67 +1859,19 @@ const AdminDashboard = () => {
         onClose={() => setStatusModal({ ...statusModal, isOpen: false })}
       />
 
-      {/* Edit User Modal */}
-      {editUserModal.isOpen && editUserModal.user && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl p-6 shadow-xl">
-            <h3 className="text-lg font-bold mb-4">
-              Edit User: {editUserModal.user.name}
-            </h3>
-            <div className="mb-4">
-              <label className="block text-sm mb-1">Role</label>
-              <select
-                id="editRole"
-                defaultValue={editUserModal.user.role}
-                className="w-full border p-2 rounded bg-gray-50 dark:bg-white/10 dark:text-white"
-              >
-                <option value="user">User (View Only)</option>
-                <option value="operator">Operator (View + Export)</option>
-                <option value="super_admin">Super Admin (Full Access)</option>
-              </select>
-            </div>
-            <div className="mb-6">
-              <label className="block text-sm mb-1">Status</label>
-              <select
-                id="editStatus"
-                defaultValue={editUserModal.user.status}
-                className="w-full border p-2 rounded bg-gray-50 dark:bg-white/10 dark:text-white"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive (Banned)</option>
-                <option value="unverified">Unverified</option>
-              </select>
-            </div>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setEditUserModal({ isOpen: false, user: null })}
-                className="btn btn-outline-primary btn-sm"
-              >
-                Batal
-              </button>
-              <button
-                onClick={() => {
-                  const role = (
-                    document.getElementById("editRole") as HTMLSelectElement
-                  ).value;
-                  const status = (
-                    document.getElementById("editStatus") as HTMLSelectElement
-                  ).value;
-                  updateUser(editUserModal.user!.id, role, status);
-                }}
-                className="btn btn-primary btn-sm"
-              >
-                Simpan
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Edit User Modal — pakai komponen, bukan inline DOM */}
+      <EditUserModal
+        isOpen={editUserModal.isOpen}
+        user={editUserModal.user}
+        currentUserEmail={user?.email ?? ""}
+        onClose={() => setEditUserModal({ isOpen: false, user: null })}
+        onSave={updateUser}
+      />
 
-      {/* Detail Modal */}
+      {/* Detail Modal (Feedback / Survey) */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transform transition-all scale-100">
+          <div className="bg-white dark:bg-darkmode-body w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border">
             <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-white/5">
               <div>
                 <h3 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -1862,7 +1900,7 @@ const AdminDashboard = () => {
                     .toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-bold text-lg text-gray-800 dark:text-white">
+                  <p className="font-bold text-lg">
                     {selectedItem.name || selectedItem.respondent_name}
                   </p>
                   <p className="text-sm text-gray-500">
@@ -1899,42 +1937,26 @@ const AdminDashboard = () => {
               </div>
               {modalType === "survey" && (
                 <div className="grid grid-cols-3 gap-2 mt-4 text-xs">
-                  <div className="p-2 bg-blue-50 rounded text-center dark:bg-blue-900/20">
-                    <div className="font-bold text-blue-700 dark:text-blue-400">
-                      ZI
+                  {[
+                    { key: "score_zi", label: "ZI", color: "blue" },
+                    { key: "score_service", label: "LYN", color: "green" },
+                    { key: "score_academic", label: "AKD", color: "purple" },
+                    { key: "score_facilities", label: "SAR", color: "yellow" },
+                    { key: "score_management", label: "MGT", color: "red" },
+                    { key: "score_culture", label: "BUD", color: "teal" },
+                  ].map(({ key, label, color }) => (
+                    <div
+                      key={key}
+                      className={`p-2 bg-${color}-50 rounded text-center dark:bg-${color}-900/20`}
+                    >
+                      <div
+                        className={`font-bold text-${color}-700 dark:text-${color}-400`}
+                      >
+                        {label}
+                      </div>
+                      {selectedItem[key]}
                     </div>
-                    {selectedItem.score_zi}
-                  </div>
-                  <div className="p-2 bg-green-50 rounded text-center dark:bg-green-900/20">
-                    <div className="font-bold text-green-700 dark:text-green-400">
-                      LYN
-                    </div>
-                    {selectedItem.score_service}
-                  </div>
-                  <div className="p-2 bg-purple-50 rounded text-center dark:bg-purple-900/20">
-                    <div className="font-bold text-purple-700 dark:text-purple-400">
-                      AKD
-                    </div>
-                    {selectedItem.score_academic}
-                  </div>
-                  <div className="p-2 bg-yellow-50 rounded text-center dark:bg-yellow-900/20">
-                    <div className="font-bold text-yellow-700 dark:text-yellow-400">
-                      SAR
-                    </div>
-                    {selectedItem.score_facilities}
-                  </div>
-                  <div className="p-2 bg-red-50 rounded text-center dark:bg-red-900/20">
-                    <div className="font-bold text-red-700 dark:text-red-400">
-                      MGT
-                    </div>
-                    {selectedItem.score_management}
-                  </div>
-                  <div className="p-2 bg-teal-50 rounded text-center dark:bg-teal-900/20">
-                    <div className="font-bold text-teal-700 dark:text-teal-400">
-                      BUD
-                    </div>
-                    {selectedItem.score_culture}
-                  </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -1967,9 +1989,11 @@ const AdminDashboard = () => {
   );
 };
 
-// --- SUB COMPONENTS ---
+// ================================================================
+// SUB COMPONENTS
+// ================================================================
 
-// 1. STATUS MODAL (NEW)
+// 1. STATUS MODAL
 const StatusModal = ({ isOpen, status, title, message, onClose }: any) => {
   if (!isOpen) return null;
   return (
@@ -1984,9 +2008,7 @@ const StatusModal = ({ isOpen, status, title, message, onClose }: any) => {
             <FaTimesCircle className="text-4xl" />
           )}
         </div>
-        <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">
-          {title}
-        </h3>
+        <h3 className="text-xl font-bold mb-2">{title}</h3>
         <p className="text-gray-500 mb-6 text-sm">{message}</p>
         <button onClick={onClose} className="btn btn-primary w-full">
           OK, Mengerti
@@ -2012,12 +2034,8 @@ const ConfirmationModal = ({
           <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 mb-4 text-red-600">
             <FaExclamationCircle className="text-3xl" />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-            {title}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-            {message}
-          </p>
+          <h3 className="text-lg font-bold mb-2">{title}</h3>
+          <p className="text-sm text-gray-500 mb-6">{message}</p>
           <div className="flex gap-3 justify-center">
             <button
               onClick={onCancel}
@@ -2055,7 +2073,106 @@ const StatCard = ({ label, value, icon, color, bg }: any) => (
   </div>
 );
 
-// 4. IMPORT MODAL
+// 4. EDIT USER MODAL — menggunakan useState, bukan getElementById
+interface EditUserModalProps {
+  isOpen: boolean;
+  user: UserManagementData | null;
+  currentUserEmail: string;
+  onClose: () => void;
+  onSave: (id: number, role: string, status: string) => void;
+}
+
+const EditUserModal = ({
+  isOpen,
+  user,
+  currentUserEmail,
+  onClose,
+  onSave,
+}: EditUserModalProps) => {
+  const [role, setRole] = useState("");
+  const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      setRole(user.role);
+      setStatus(user.status);
+    }
+  }, [user]);
+
+  if (!isOpen || !user) return null;
+
+  const isSelf = user.email === currentUserEmail;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-sm rounded-xl p-6 shadow-xl border border-gray-100 dark:border-darkmode-border">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="text-lg font-bold">{user.name}</h3>
+            <p className="text-xs text-gray-400">{user.email}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-red-500 p-1.5 rounded-full"
+          >
+            <FaTimes />
+          </button>
+        </div>
+
+        {isSelf && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-3 py-2 text-xs text-yellow-700 dark:text-yellow-400">
+            <FaExclamationTriangle className="flex-shrink-0" />
+            Anda sedang mengedit akun sendiri. Role dan status tidak dapat
+            diubah.
+          </div>
+        )}
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1.5">Role</label>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            disabled={isSelf}
+            className="w-full border border-border rounded-lg p-2 text-sm bg-gray-50 dark:bg-white/10 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="user">User — Lihat saja</option>
+            <option value="operator">Operator — Lihat &amp; Export</option>
+            <option value="super_admin">Super Admin — Akses Penuh</option>
+          </select>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-1.5">Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            disabled={isSelf}
+            className="w-full border border-border rounded-lg p-2 text-sm bg-gray-50 dark:bg-white/10 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive (Banned)</option>
+            <option value="unverified">Unverified</option>
+          </select>
+        </div>
+
+        <div className="flex justify-end gap-2">
+          <button onClick={onClose} className="btn btn-outline-primary btn-sm">
+            Batal
+          </button>
+          <button
+            onClick={() => onSave(user.id, role, status)}
+            disabled={isSelf}
+            className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 5. IMPORT MODAL
 const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   const [importType, setImportType] = useState<
     "feedback" | "survey" | "visits"
@@ -2082,7 +2199,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (uploadStatus === "success" && countdown > 0) {
-      timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
+      timer = setTimeout(() => setCountdown((p) => p - 1), 1000);
     } else if (uploadStatus === "success" && countdown === 0) {
       window.location.reload();
     }
@@ -2090,14 +2207,6 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   }, [uploadStatus, countdown]);
 
   if (!isOpen) return null;
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setProgress(0);
-      setResultMessage("");
-    }
-  };
 
   const handleUpload = () => {
     if (!file) return;
@@ -2107,9 +2216,9 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
     formData.append("file", file);
     formData.append("type", importType);
     const xhr = new XMLHttpRequest();
-    xhr.upload.addEventListener("progress", (event) => {
-      if (event.lengthComputable)
-        setProgress(Math.round((event.loaded / event.total) * 100));
+    xhr.upload.addEventListener("progress", (e) => {
+      if (e.lengthComputable)
+        setProgress(Math.round((e.loaded / e.total) * 100));
     });
     xhr.addEventListener("load", () => {
       if (xhr.status >= 200 && xhr.status < 300) {
@@ -2141,7 +2250,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border transition-all duration-300">
+      <div className="bg-white dark:bg-darkmode-body w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-gray-100 dark:border-darkmode-border">
         {uploadStatus === "idle" && (
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -2154,38 +2263,26 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
               <label className="block text-sm font-medium mb-2">
                 Pilih Tipe Data
               </label>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="importType"
-                    value="feedback"
-                    checked={importType === "feedback"}
-                    onChange={() => setImportType("feedback")}
-                  />
-                  Data Ulasan
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="importType"
-                    value="survey"
-                    checked={importType === "survey"}
-                    onChange={() => setImportType("survey")}
-                  />
-                  Data Survei
-                </label>
-                {/* Opsi Baru */}
-                <label className="flex items-center gap-2 cursor-pointer mt-1">
-                  <input
-                    type="radio"
-                    name="importType"
-                    value="visits"
-                    checked={importType === "visits"}
-                    onChange={() => setImportType("visits")}
-                  />
-                  Data Kunjungan
-                </label>
+              <div className="flex gap-4 flex-wrap">
+                {(["feedback", "survey", "visits"] as const).map((t) => (
+                  <label
+                    key={t}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="importType"
+                      value={t}
+                      checked={importType === t}
+                      onChange={() => setImportType(t)}
+                    />
+                    {t === "feedback"
+                      ? "Data Ulasan"
+                      : t === "survey"
+                        ? "Data Survei"
+                        : "Data Kunjungan"}
+                  </label>
+                ))}
               </div>
             </div>
             <div className="mb-6">
@@ -2201,10 +2298,16 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
                   accept=".csv"
                   ref={fileInputRef}
                   className="hidden"
-                  onChange={handleFileChange}
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      setFile(e.target.files[0]);
+                      setProgress(0);
+                      setResultMessage("");
+                    }
+                  }}
                 />
                 {file ? (
-                  <div className="flex flex-col items-center justify-center gap-2 text-green-600 font-medium animate-fade-in">
+                  <div className="flex flex-col items-center gap-2 text-green-600 font-medium">
                     <FaFileCsv size={32} />
                     <span className="truncate max-w-[200px] text-sm">
                       {file.name}
@@ -2238,8 +2341,8 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
               </button>
               <button
                 onClick={handleUpload}
-                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={!file}
+                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Mulai Import
               </button>
@@ -2247,23 +2350,20 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
           </div>
         )}
         {uploadStatus === "uploading" && (
-          <div className="p-8 text-center animate-fade-in">
-            <div className="mb-4">
-              <FaSpinner className="mx-auto text-4xl text-primary animate-spin" />
-            </div>
+          <div className="p-8 text-center">
+            <FaSpinner className="mx-auto text-4xl text-primary animate-spin mb-4" />
             <h3 className="text-lg font-bold mb-2">Mengupload Data...</h3>
             <p className="text-sm text-gray-500 mb-6">
               Mohon jangan tutup halaman ini.
             </p>
-            <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden relative">
+            <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden">
               <div
-                className="bg-primary h-4 rounded-full transition-all duration-300 ease-out flex items-center justify-center"
+                className="bg-primary h-4 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
-              ></div>
+              />
             </div>
-            <div className="flex justify-between text-xs mt-2 font-mono text-gray-600 dark:text-gray-400">
-              <span>{progress}%</span>
-              <span>100%</span>
+            <div className="flex justify-between text-xs mt-2 font-mono text-gray-600">
+              {progress}%<span>100%</span>
             </div>
             {progress === 100 && (
               <p className="text-xs text-orange-500 mt-4 animate-pulse">
@@ -2273,23 +2373,18 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
           </div>
         )}
         {uploadStatus === "success" && (
-          <div className="p-8 text-center animate-fade-in">
+          <div className="p-8 text-center">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-              <FaCheckCircle className="text-5xl text-green-600 dark:text-green-400 animate-bounce" />
+              <FaCheckCircle className="text-5xl text-green-600 animate-bounce" />
             </div>
-            <h3 className="text-xl font-bold text-green-700 dark:text-green-400 mb-2">
+            <h3 className="text-xl font-bold text-green-700 mb-2">
               Import Berhasil!
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              {resultMessage}
-            </p>
+            <p className="text-gray-600 mb-6">{resultMessage}</p>
             <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-darkmode-border">
               <p className="text-sm text-gray-500">
                 Halaman akan dimuat ulang dalam{" "}
-                <span className="font-bold text-dark dark:text-white">
-                  {countdown}
-                </span>{" "}
-                detik.
+                <span className="font-bold">{countdown}</span> detik.
               </p>
             </div>
             <button
@@ -2301,15 +2396,15 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
           </div>
         )}
         {uploadStatus === "error" && (
-          <div className="p-8 text-center animate-fade-in">
+          <div className="p-8 text-center">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-              <FaTimesCircle className="text-5xl text-red-600 dark:text-red-400" />
+              <FaTimesCircle className="text-5xl text-red-600" />
             </div>
-            <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
+            <h3 className="text-xl font-bold text-red-700 mb-2">
               Import Gagal
             </h3>
-            <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-lg border border-red-100 dark:border-red-900/30 mb-6 overflow-y-auto max-h-40">
-              <p className="text-sm text-red-600 dark:text-red-300 break-words">
+            <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-lg border border-red-100 mb-6 overflow-y-auto max-h-40">
+              <p className="text-sm text-red-600 break-words">
                 {resultMessage}
               </p>
             </div>
@@ -2334,7 +2429,7 @@ const ImportModal = ({ isOpen, onClose, onSuccess }: any) => {
   );
 };
 
-// 5. DATA TABLE
+// 6. DATA TABLE
 const DataTable = ({
   title,
   data,
@@ -2372,8 +2467,8 @@ const DataTable = ({
   const sortedData = useMemo(() => {
     if (!sortConfig) return filteredData;
     return [...filteredData].sort((a, b) => {
-      let aVal = a[sortConfig.key];
-      let bVal = b[sortConfig.key];
+      const aVal = a[sortConfig.key];
+      const bVal = b[sortConfig.key];
       if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
       if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
       return 0;
@@ -2397,20 +2492,13 @@ const DataTable = ({
   };
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      const currentIds = paginatedData.map((row: any) => row.id);
-      setSelectedIds(currentIds);
-    } else {
-      setSelectedIds([]);
-    }
+    setSelectedIds(e.target.checked ? paginatedData.map((r: any) => r.id) : []);
   };
 
   const handleSelectRow = (id: number) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((sid) => sid !== id));
-    } else {
-      setSelectedIds([...selectedIds, id]);
-    }
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id],
+    );
   };
 
   return (
@@ -2421,13 +2509,12 @@ const DataTable = ({
           {enableSelection && selectedIds.length > 0 && (
             <button
               onClick={() => onBulkDelete && onBulkDelete(selectedIds)}
-              className="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 rounded text-xs font-bold flex items-center gap-2 animate-fade-in transition-all"
+              className="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 rounded text-xs font-bold flex items-center gap-2 animate-fade-in"
             >
               <FaTrash /> Hapus ({selectedIds.length})
             </button>
           )}
         </div>
-
         <div className="flex flex-col md:flex-row gap-3 md:items-center">
           {customFilters}
           <div className="relative">
@@ -2456,19 +2543,17 @@ const DataTable = ({
             <tr>
               {enableSelection && (
                 <th className="px-4 py-3 w-10 text-center">
-                  <div className="flex items-center justify-center">
-                    <input
-                      type="checkbox"
-                      className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
-                      onChange={handleSelectAll}
-                      checked={
-                        paginatedData.length > 0 &&
-                        paginatedData.every((row: any) =>
-                          selectedIds.includes(row.id),
-                        )
-                      }
-                    />
-                  </div>
+                  <input
+                    type="checkbox"
+                    className="rounded border-gray-300 text-primary h-4 w-4 cursor-pointer"
+                    onChange={handleSelectAll}
+                    checked={
+                      paginatedData.length > 0 &&
+                      paginatedData.every((r: any) =>
+                        selectedIds.includes(r.id),
+                      )
+                    }
+                  />
                 </th>
               )}
               <th className="px-6 py-3 w-10 text-center">#</th>
@@ -2509,14 +2594,12 @@ const DataTable = ({
                 >
                   {enableSelection && (
                     <td className="px-4 py-4 text-center">
-                      <div className="flex items-center justify-center">
-                        <input
-                          type="checkbox"
-                          className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
-                          checked={selectedIds.includes(row.id)}
-                          onChange={() => handleSelectRow(row.id)}
-                        />
-                      </div>
+                      <input
+                        type="checkbox"
+                        className="rounded border-gray-300 text-primary h-4 w-4 cursor-pointer"
+                        checked={selectedIds.includes(row.id)}
+                        onChange={() => handleSelectRow(row.id)}
+                      />
                     </td>
                   )}
                   <td className="px-6 py-4 text-center text-gray-400">
@@ -2572,13 +2655,11 @@ const DataTable = ({
               setCurrentPage(1);
             }}
           >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-            <option value={500}>500</option>
-            <option value={1000}>1000</option>
+            {[5, 10, 20, 50, 100, 500, 1000].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
           </select>
           <div className="flex rounded border border-border bg-white dark:bg-darkmode-body dark:border-darkmode-border">
             <button
@@ -2601,6 +2682,30 @@ const DataTable = ({
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const AccessDenied = ({ requiredRole }: { requiredRole: string }) => {
+  const labelMap: Record<string, string> = {
+    operator: "Operator atau Super Admin",
+    super_admin: "Super Admin",
+  };
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20 mb-5">
+        <FaExclamationTriangle className="text-4xl text-red-400" />
+      </div>
+      <h3 className="text-lg font-bold text-gray-700 dark:text-gray-200 mb-2">
+        Akses Dibatasi
+      </h3>
+      <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+        Halaman ini hanya dapat diakses oleh{" "}
+        <span className="font-semibold text-gray-700 dark:text-gray-300">
+          {labelMap[requiredRole] ?? requiredRole}
+        </span>
+        . Hubungi Super Admin untuk mengubah role akun Anda.
+      </p>
     </div>
   );
 };

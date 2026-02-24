@@ -1,23 +1,66 @@
 <?php
 function getDBConnection()
 {
-    $host = getenv('DB_HOST') ?: '192.168.1.100';
-    $port = getenv('DB_PORT') ?: '3306';
+    $host   = getenv('DB_HOST')     ?: '192.168.1.100';
+    $port   = getenv('DB_PORT')     ?: '3306';
     $dbname = getenv('DB_DATABASE') ?: 'mtsn1pandeglang';
-    $user = getenv('DB_USERNAME') ?: 'mtsn1pandeglang';
-    $pass = getenv('DB_PASSWORD') ?: '18012000';
+    $user   = getenv('DB_USERNAME') ?: 'mtsn1pandeglang';
+    $pass   = getenv('DB_PASSWORD') ?: '18012000';
 
     try {
         $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
         $pdo = new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
+            PDO::ATTR_EMULATE_PREPARES   => false,
         ]);
         return $pdo;
     } catch (PDOException $e) {
         throw new Exception("Database connection failed: " . $e->getMessage());
     }
+}
+
+/**
+ * Kembalikan data penandatangan laporan PDF.
+ * Semua nilai bisa di-override via environment variable.
+ *
+ * Env vars yang didukung:
+ *   SIGN_TU_NAME      — Nama Kepala Tata Usaha
+ *   SIGN_TU_NIP       — NIP Kepala Tata Usaha
+ *   SIGN_TU_IMG       — Path file TTE (relatif dari public/images/instansi/)
+ *   SIGN_PUSDATIN_NAME — Nama Koordinator Tim Pusdatin
+ *   SIGN_PUSDATIN_NIP  — NIP Koordinator Tim Pusdatin
+ *   SIGN_PUSDATIN_IMG  — Path file TTE Pusdatin
+ *   SIGN_KAMAD_NAME   — Nama Kepala Madrasah
+ *   SIGN_KAMAD_NIP    — NIP Kepala Madrasah
+ *   SIGN_KAMAD_IMG    — Path file TTE Kepala Madrasah
+ *   SIGN_CITY         — Kota untuk baris penandatanganan (default: Pandeglang)
+ */
+function getSignatories(): array
+{
+    $imgBase = '../images/instansi/';
+
+    return [
+        'tu' => [
+            'name' => getenv('SIGN_TU_NAME') ?: "UMAR MU'TAMAR, S.Ag.",
+            'nip'  => getenv('SIGN_TU_NIP')  ?: '196903061998031004',
+            'role' => 'Kepala Tata Usaha,',
+            'img'  => $imgBase . (getenv('SIGN_TU_IMG') ?: 'tte-kepala-tata-usaha.png'),
+        ],
+        'pusdatin' => [
+            'name' => getenv('SIGN_PUSDATIN_NAME') ?: 'YAHYA ZULFIKRI',
+            'nip'  => getenv('SIGN_PUSDATIN_NIP')  ?: '200001142025211016',
+            'role' => 'Koordinator Tim Pusdatin,',
+            'img'  => $imgBase . (getenv('SIGN_PUSDATIN_IMG') ?: 'tte-koordinator-tim-pusdatin.png'),
+        ],
+        'kamad' => [
+            'name' => getenv('SIGN_KAMAD_NAME') ?: 'H. EMAN SULAIMAN, S.Ag., M.Pd.',
+            'nip'  => getenv('SIGN_KAMAD_NIP')  ?: '197006032000031002',
+            'role' => 'Kepala Madrasah,',
+            'img'  => $imgBase . (getenv('SIGN_KAMAD_IMG') ?: 'tte-kepala-madrasah.png'),
+        ],
+        'city' => getenv('SIGN_CITY') ?: 'Pandeglang',
+    ];
 }
 
 function initializeTables($pdo)
@@ -77,13 +120,11 @@ function initializeTables($pdo)
         INDEX idx_created_at (created_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
-    $stmt = $pdo->prepare("INSERT IGNORE INTO global_stats (`key`, value) VALUES ('site_visits', 0)");
-    $stmt->execute();
+    $pdo->prepare("INSERT IGNORE INTO global_stats (`key`, value) VALUES ('site_visits', 0)")->execute();
 }
 
 function initializeComplaintsTables($pdo)
 {
-    // Tabel untuk pengaduan
     $pdo->exec("CREATE TABLE IF NOT EXISTS complaints (
         id INT AUTO_INCREMENT PRIMARY KEY,
         ticket_number VARCHAR(50) UNIQUE NOT NULL,
@@ -107,20 +148,14 @@ function initializeComplaintsTables($pdo)
         INDEX idx_category (category),
         INDEX idx_created (created_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-
-    // Generate ticket number function
 }
 
-// Helper untuk generate nomor tiket
 function generateTicketNumber($pdo)
 {
-    $prefix = 'ADU';
     $date = date('Ymd');
-
     $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM complaints WHERE DATE(created_at) = CURDATE()");
     $stmt->execute();
-    $row = $stmt->fetch();
+    $row      = $stmt->fetch();
     $sequence = str_pad(($row['total'] ?? 0) + 1, 4, '0', STR_PAD_LEFT);
-
-    return "{$prefix}{$date}{$sequence}";
+    return "ADU{$date}{$sequence}";
 }

@@ -19,63 +19,104 @@ try {
     die("Error DB: " . $e->getMessage());
 }
 
-$month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
-$year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
-$status = isset($_GET['status']) ? $_GET['status'] : 'all';
+$month  = isset($_GET['month'])  ? (int)$_GET['month']        : (int)date('m');
+$year   = isset($_GET['year'])   ? (int)$_GET['year']         : (int)date('Y');
+$status = isset($_GET['status']) ? trim($_GET['status'])       : 'all';
 
-$bulanIndo = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+$bulanIndo   = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 $periodeText = strtoupper($bulanIndo[$month] . ' ' . $year);
 
-function getIndonesianDate($timestamp = null)
+// Whitelist status untuk keamanan
+$validStatus = ['all', 'Menunggu', 'Proses', 'Selesai', 'Ditolak'];
+if (!in_array($status, $validStatus)) $status = 'all';
+
+// --- HELPERS ---
+function getIndonesianDate(?string $timestamp = null): string
 {
-    $dt = new DateTime($timestamp ?? 'now');
+    $dt    = new DateTime($timestamp ?? 'now');
     $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     return $dt->format('d') . ' ' . $bulan[(int)$dt->format('m')] . ' ' . $dt->format('Y');
 }
 
-function formatFullTime($timestamp)
+function formatFullTime(string $timestamp): string
 {
     return getIndonesianDate($timestamp) . ' ' . date('H:i', strtotime($timestamp)) . ' WIB';
 }
 
+function renderSignatureBlock(object $pdf, array $signs, string $tglCetak): void
+{
+    $qrSize = 18;
+
+    $pdf->Cell(95, 5, '', 0, 0);
+    $pdf->Cell(95, 5, $signs['city'] . ', ' . $tglCetak, 0, 1, 'C');
+    $pdf->Ln(5);
+
+    $pdf->Cell(95, 5, $signs['tu']['role'],       0, 0, 'C');
+    $pdf->Cell(95, 5, $signs['pusdatin']['role'],  0, 1, 'C');
+
+    $yImg = $pdf->GetY() + 1;
+    if (file_exists($signs['tu']['img']))       $pdf->Image($signs['tu']['img'],       46,  $yImg, $qrSize);
+    if (file_exists($signs['pusdatin']['img'])) $pdf->Image($signs['pusdatin']['img'], 146, $yImg, $qrSize);
+
+    $pdf->SetY($yImg + 19);
+    $pdf->SetFont('Arial', 'B', 11);
+    $pdf->Cell(95, 5, $signs['tu']['name'],       0, 0, 'C');
+    $pdf->Cell(95, 5, $signs['pusdatin']['name'], 0, 1, 'C');
+
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(95, 4, 'NIP. ' . $signs['tu']['nip'],       0, 0, 'C');
+    $pdf->Cell(95, 4, 'NIP. ' . $signs['pusdatin']['nip'], 0, 1, 'C');
+    $pdf->Ln(8);
+
+    $pdf->SetFont('Arial', '', 11);
+    $pdf->Cell(0, 5, 'Mengetahui,',          0, 1, 'C');
+    $pdf->Cell(0, 5, $signs['kamad']['role'], 0, 1, 'C');
+
+    $yKamad = $pdf->GetY() + 1;
+    if (file_exists($signs['kamad']['img'])) $pdf->Image($signs['kamad']['img'], 96, $yKamad, $qrSize);
+
+    $pdf->SetY($yKamad + 19);
+    $pdf->SetFont('Arial', 'B', 11);
+    $pdf->Cell(0, 5, $signs['kamad']['name'], 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->Cell(0, 4, 'NIP. ' . $signs['kamad']['nip'], 0, 1, 'C');
+}
+
+// --- PDF CLASS ---
 class PDF extends FPDF
 {
-    var $widths;
-    var $aligns;
-    var $tableHeaderCallback = null;
-    var $isPrintingTable = false;
+    public array $widths  = [];
+    public array $aligns  = [];
+    public       $tableHeaderCallback = null;
+    public bool  $isPrintingTable     = false;
 
-    function setPageBreakTrigger($val)
+    public function setPageBreakTrigger(float $val): void
     {
         $this->PageBreakTrigger = $val;
     }
-
-    function getPageBreakTrigger()
+    public function getPageBreakTrigger(): float
     {
         return $this->PageBreakTrigger;
     }
-
-    function SetWidths($w)
+    public function SetWidths(array $w): void
     {
         $this->widths = $w;
     }
-
-    function SetAligns($a)
+    public function SetAligns(array $a): void
     {
         $this->aligns = $a;
     }
-
-    function SetTableHeaderCallback($callback)
+    public function SetTableHeaderCallback(callable $cb): void
     {
-        $this->tableHeaderCallback = $callback;
+        $this->tableHeaderCallback = $cb;
     }
 
-    function Header()
+    public function Header(): void
     {
         $path = '../images/instansi/';
-        $logoSize = 24;
-        if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 10, 10, $logoSize);
-        if (file_exists($path . 'logo-instansi.png')) $this->Image($path . 'logo-instansi.png', 176, 10, $logoSize);
+        $sz   = 24;
+        if (file_exists($path . 'logo-institusi.png')) $this->Image($path . 'logo-institusi.png', 10,  10, $sz);
+        if (file_exists($path . 'logo-instansi.png'))  $this->Image($path . 'logo-instansi.png',  176, 10, $sz);
 
         $this->SetY(12);
         $this->SetFont('Arial', 'B', 10);
@@ -84,7 +125,7 @@ class PDF extends FPDF
         $this->Cell(0, 6, 'KANTOR KEMENTERIAN AGAMA KABUPATEN PANDEGLANG', 0, 1, 'C');
         $this->SetFont('Arial', 'B', 14);
         $this->Cell(0, 6, 'MADRASAH TSANAWIYAH NEGERI 1 PANDEGLANG', 0, 1, 'C');
-        $this->SetFont('Arial', '', 9);
+        $this->SetFont('Arial', '',   9);
         $this->Cell(0, 4, 'Jl. Raya Labuan Km. 5,7 Palurahan, Kaduhejo, Pandeglang - Banten 42253', 0, 1, 'C');
         $this->Cell(0, 4, 'Website: https://mtsn1pandeglang.sch.id | Email: adm@mtsn1pandeglang.sch.id', 0, 1, 'C');
 
@@ -95,25 +136,24 @@ class PDF extends FPDF
         $this->Ln(6);
     }
 
-    function Footer()
+    public function Footer(): void
     {
         $this->SetY(-15);
         $this->SetFont('Arial', 'I', 8);
-        $this->Cell(0, 10, 'Hal ' . $this->PageNo() . '/{nb} | Dicetak: ' . date('d/m/Y H:i') . ' WIB', 0, 0, 'C');
+        $this->Cell(0, 10, 'Hal ' . $this->PageNo() . '/{nb} | Sistem Informasi MTsN 1 Pandeglang | Dicetak: ' . date('d/m/Y H:i') . ' WIB', 0, 0, 'C');
     }
 
-    function Row($data, $fill = false)
+    public function Row(array $data, bool $fill = false): void
     {
         $nb = 0;
-        for ($i = 0; $i < count($data); $i++)
+        for ($i = 0; $i < count($data); $i++) {
             $nb = max($nb, $this->NbLines($this->widths[$i], $data[$i]));
-
+        }
         $h = 5 * $nb;
         $this->CheckPageBreak($h);
-
         for ($i = 0; $i < count($data); $i++) {
             $w = $this->widths[$i];
-            $a = isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+            $a = $this->aligns[$i] ?? 'L';
             $x = $this->GetX();
             $y = $this->GetY();
             $this->Rect($x, $y, $w, $h, $fill ? 'DF' : 'D');
@@ -123,7 +163,7 @@ class PDF extends FPDF
         $this->Ln($h);
     }
 
-    function CheckPageBreak($h)
+    public function CheckPageBreak(float $h): void
     {
         if ($this->GetY() + $h > $this->PageBreakTrigger) {
             $this->AddPage($this->CurOrientation);
@@ -133,13 +173,13 @@ class PDF extends FPDF
         }
     }
 
-    function NbLines($w, $txt)
+    public function NbLines(float $w, string $txt): int
     {
-        $cw = &$this->CurrentFont['cw'];
+        $cw   = &$this->CurrentFont['cw'];
         if ($w == 0) $w = $this->w - $this->rMargin - $this->x;
         $wmax = ($w - 2 * $this->cMargin) * 1000 / $this->FontSize;
-        $s = str_replace("\r", '', $txt);
-        $nb = strlen($s);
+        $s    = str_replace("\r", '', $txt);
+        $nb   = strlen($s);
         if ($nb > 0 && $s[$nb - 1] == "\n") $nb--;
         $sep = -1;
         $i = 0;
@@ -172,6 +212,7 @@ class PDF extends FPDF
     }
 }
 
+// --- GENERATE PDF ---
 try {
     $pdf = new PDF();
     $pdf->AliasNbPages();
@@ -180,85 +221,87 @@ try {
     $pdf->setPageBreakTrigger(277);
     $pdf->AddPage();
 
-    // Filter query
+    // --- QUERY DENGAN FILTER ---
     $whereClause = "WHERE MONTH(created_at) = :month AND YEAR(created_at) = :year";
-    $params = [':month' => $month, ':year' => $year];
+    $params      = [':month' => $month, ':year' => $year];
 
     if ($status !== 'all') {
-        $whereClause .= " AND status = :status";
-        $params[':status'] = $status;
+        $whereClause       .= " AND status = :status";
+        $params[':status']  = $status;
     }
 
-    // Stats
-    $totalQuery = $pdo->prepare("SELECT COUNT(*) FROM pengaduan $whereClause");
-    $totalQuery->execute($params);
-    $totalPengaduan = $totalQuery->fetchColumn();
+    // Stats — satu query GROUP BY, lebih efisien dari 4 query terpisah
+    $statsStmt = $pdo->prepare(
+        "SELECT
+            COUNT(*) as total,
+            SUM(status = 'Menunggu') as menunggu,
+            SUM(status = 'Proses')   as proses,
+            SUM(status = 'Selesai')  as selesai,
+            SUM(status = 'Ditolak')  as ditolak
+         FROM pengaduan $whereClause"
+    );
+    $statsStmt->execute($params);
+    $stats = $statsStmt->fetch();
 
-    $menunggu = $pdo->prepare("SELECT COUNT(*) FROM pengaduan $whereClause AND status = 'Menunggu'");
-    $menunggu->execute($params);
-    $jmlMenunggu = $menunggu->fetchColumn();
-
-    $proses = $pdo->prepare("SELECT COUNT(*) FROM pengaduan $whereClause AND status = 'Proses'");
-    $proses->execute($params);
-    $jmlProses = $proses->fetchColumn();
-
-    $selesai = $pdo->prepare("SELECT COUNT(*) FROM pengaduan $whereClause AND status = 'Selesai'");
-    $selesai->execute($params);
-    $jmlSelesai = $selesai->fetchColumn();
-
-    // Header
+    // --- JUDUL ---
     $pdf->SetFont('Arial', 'B', 12);
     $pdf->Cell(0, 6, 'LAPORAN PENGADUAN MASYARAKAT', 0, 1, 'C');
     $pdf->SetFont('Arial', '', 10);
     $pdf->Cell(0, 5, 'Periode: ' . $periodeText, 0, 1, 'C');
     if ($status !== 'all') {
-        $pdf->Cell(0, 5, 'Status: ' . strtoupper($status), 0, 1, 'C');
+        $pdf->Cell(0, 5, 'Filter Status: ' . strtoupper($status), 0, 1, 'C');
     }
     $pdf->Ln(5);
 
-    // Statistik
+    // --- RINGKASAN STATISTIK ---
     $pdf->SetFont('Arial', 'B', 9);
     $pdf->SetFillColor(230, 230, 230);
     $pdf->Cell(190, 7, ' RINGKASAN STATISTIK', 1, 1, 'L', true);
 
     $pdf->SetFont('Arial', '', 9);
     $pdf->SetFillColor(250, 250, 250);
-    $wLabel = 95;
-    $wValue = 95;
+    $wL = 95;
+    $wV = 95;
 
-    $pdf->Cell($wLabel, 7, ' Total Pengaduan', 1, 0, 'L', true);
-    $pdf->Cell($wValue, 7, ' ' . $totalPengaduan . ' Pengaduan', 1, 1, 'L');
-
-    $pdf->Cell($wLabel, 7, ' Status Menunggu', 1, 0, 'L', true);
-    $pdf->Cell($wValue, 7, ' ' . $jmlMenunggu . ' Pengaduan', 1, 1, 'L');
-
-    $pdf->Cell($wLabel, 7, ' Status Proses', 1, 0, 'L', true);
-    $pdf->Cell($wValue, 7, ' ' . $jmlProses . ' Pengaduan', 1, 1, 'L');
-
-    $pdf->Cell($wLabel, 7, ' Status Selesai', 1, 0, 'L', true);
-    $pdf->Cell($wValue, 7, ' ' . $jmlSelesai . ' Pengaduan', 1, 1, 'L');
-
+    foreach (
+        [
+            [' Total Pengaduan',   $stats['total']    . ' Pengaduan'],
+            [' Status Menunggu',   $stats['menunggu'] . ' Pengaduan'],
+            [' Status Proses',     $stats['proses']   . ' Pengaduan'],
+            [' Status Selesai',    $stats['selesai']  . ' Pengaduan'],
+            [' Status Ditolak',    $stats['ditolak']  . ' Pengaduan'],
+        ] as [$label, $value]
+    ) {
+        $pdf->Cell($wL, 7, $label,        1, 0, 'L', true);
+        $pdf->Cell($wV, 7, ' ' . $value,  1, 1, 'L');
+    }
     $pdf->Ln(5);
 
-    // Table Header Function
+    // --- TABEL DETAIL ---
     $drawHeader = function () use ($pdf) {
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetFillColor(0, 120, 215);
         $pdf->SetTextColor(255);
-        $pdf->Cell(8, 7, 'No', 1, 0, 'C', true);
-        $pdf->Cell(28, 7, 'Tanggal', 1, 0, 'C', true);
-        $pdf->Cell(35, 7, 'Nama', 1, 0, 'L', true);
-        $pdf->Cell(25, 7, 'Kategori', 1, 0, 'C', true);
-        $pdf->Cell(40, 7, 'Judul', 1, 0, 'L', true);
-        $pdf->Cell(20, 7, 'Status', 1, 0, 'C', true);
-        $pdf->Cell(34, 7, 'Tanggapan', 1, 1, 'L', true);
+        foreach (
+            [
+                [8,  'No',        'C'],
+                [28, 'Tanggal',   'C'],
+                [35, 'Nama',      'L'],
+                [25, 'Kategori',  'C'],
+                [40, 'Judul',     'L'],
+                [20, 'Status',    'C'],
+                [34, 'Tanggapan', 'L'],
+            ] as [$w, $label, $align]
+        ) {
+            $pdf->Cell($w, 7, $label, 1, 0, $align, true);
+        }
+        $pdf->Ln(7);
         $pdf->SetTextColor(0);
         $pdf->SetFont('Arial', '', 7);
     };
 
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, 'DETAIL PENGADUAN', 0, 1, 'L');
-
     $pdf->SetWidths([8, 28, 35, 25, 40, 20, 34]);
     $pdf->SetAligns(['C', 'C', 'L', 'C', 'L', 'C', 'L']);
     $drawHeader();
@@ -279,43 +322,20 @@ try {
             $row['kategori'],
             $row['judul'],
             $row['status'],
-            $row['tanggapan'] ?: '-'
+            $row['tanggapan'] ?: '-',
         ]);
     }
-
     $pdf->isPrintingTable = false;
+
     if (!$found) {
         $pdf->Cell(190, 8, 'Tidak ada data pada periode ini.', 1, 1, 'C');
     }
-
     $pdf->Ln(8);
 
-    // Tanda Tangan
-    $path = '../images/instansi/';
-    $tglCetak = getIndonesianDate();
-    $qrSize = 18;
-
-    $pdf->Cell(95, 5, '', 0, 0);
-    $pdf->Cell(95, 5, 'Pandeglang, ' . $tglCetak, 0, 1, 'C');
-    $pdf->Ln(5);
-
-    $pdf->Cell(95, 5, 'Kepala Tata Usaha,', 0, 0, 'C');
-    $pdf->Cell(95, 5, 'Koordinator Tim Pusdatin,', 0, 1, 'C');
-
-    $yImage = $pdf->GetY() + 1;
-    if (file_exists($path . 'tte-kepala-tata-usaha.png'))
-        $pdf->Image($path . 'tte-kepala-tata-usaha.png', 46, $yImage, $qrSize);
-    if (file_exists($path . 'tte-koordinator-tim-pusdatin.png'))
-        $pdf->Image($path . 'tte-koordinator-tim-pusdatin.png', 146, $yImage, $qrSize);
-
-    $pdf->SetY($yImage + 19);
-    $pdf->SetFont('Arial', 'B', 11);
-    $pdf->Cell(95, 5, "UMAR MU'TAMAR, S.Ag.", 0, 0, 'C');
-    $pdf->Cell(95, 5, 'YAHYA ZULFIKRI', 0, 1, 'C');
-
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->Cell(95, 4, 'NIP. 196903061998031004', 0, 0, 'C');
-    $pdf->Cell(95, 4, 'NIP. 200001142025211016', 0, 1, 'C');
+    // --- TANDA TANGAN ---
+    if ($pdf->GetY() + 80 > $pdf->getPageBreakTrigger()) $pdf->AddPage();
+    $signs = getSignatories();
+    renderSignatureBlock($pdf, $signs, getIndonesianDate());
 
     $pdf->Output('I', 'Laporan_Pengaduan_' . $month . '_' . $year . '.pdf');
 } catch (Exception $e) {
