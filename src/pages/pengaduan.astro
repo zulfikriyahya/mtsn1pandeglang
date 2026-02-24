@@ -1,0 +1,33 @@
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import PengaduanForm from "@/layouts/helpers/PengaduanForm";
+
+const title = "Pengaduan Masyarakat";
+const description =
+  "Sampaikan keluhan, kritik, atau saran Anda terkait pelayanan dan kegiatan di MTs Negeri 1 Pandeglang.";
+---
+
+<Base title={title} meta_title={title} description={description}>
+  <PageHeader title={title} />
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="lg:col-10">
+          <div class="mb-10 text-center">
+            <p class="text-lg">
+              Sistem pengaduan ini dirancang untuk menerima masukan, keluhan,
+              dan saran dari masyarakat terkait pelayanan di <strong
+                >MTs Negeri 1 Pandeglang</strong
+              >. Kami berkomitmen untuk menindaklanjuti setiap pengaduan dengan
+              serius dan profesional.
+            </p>
+          </div>
+
+          <PengaduanForm client:only="react" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

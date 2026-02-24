@@ -119,6 +119,10 @@
           "url": "/survei-kepuasan"
         },
         {
+          "name": "Pengaduan",
+          "url": "/pengaduan"
+        },
+        {
           "name": "Pertanyaan Umum (FAQ)",
           "url": "/faq"
         },

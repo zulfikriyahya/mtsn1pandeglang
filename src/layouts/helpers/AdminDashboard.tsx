@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
+import AdminPengaduanDashboard from "@/layouts/helpers/AdminPengaduanDashboard";
 import {
   FaDownload,
   FaSignOutAlt,
@@ -895,6 +896,7 @@ const AdminDashboard = () => {
                 { id: "visits", label: "Riwayat Kunjungan" },
                 { id: "feedback", label: "Ulasan" },
                 { id: "surveys", label: "Survei" },
+                { id: "pengaduan", label: "Pengaduan Masyarakat" },
                 ...(userRole === "super_admin"
                   ? [{ id: "users", label: "Manajemen User" }]
                   : []),
@@ -1689,6 +1691,10 @@ const AdminDashboard = () => {
                 },
               ]}
             />
+          )}
+
+          {activeTab === "pengaduan" && (
+            <AdminPengaduanDashboard userRole={userRole} />
           )}
         </div>
       )}

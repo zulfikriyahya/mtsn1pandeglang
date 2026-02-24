@@ -2,7 +2,7 @@
 
 # ==============================================================================
 # DUMMY ULTIMATE DATA GENERATOR
-# Version: 4.1 (Final Integration)
+# Version: 4.2 (Modular Rating & Expanded Data)
 # Output: ./dummy/
 # Compatibility: MTsN 1 Pandeglang (6 Survey Indicators)
 # ==============================================================================
@@ -12,9 +12,8 @@ OUTPUT_DIR="dummy"
 # Bersihkan layar dan tampilkan header
 clear
 echo "=================================================================="
-echo "   GENERATOR DATA DUMMY (ULTIMATE EDITION v4.1)"
-echo "   Support 6 Kategori Survei: ZI, Service, Academic, Facilities,"
-echo "   Management, Culture"
+echo "   GENERATOR DATA DUMMY (MODULAR EDITION v4.2)"
+echo "   Fitur: Pesan/Kalimat menyesuaikan Nilai Rating (1-5)"
 echo "=================================================================="
 
 # ------------------------------------------------------------------------------
@@ -46,14 +45,12 @@ fi
 TS_START=$(date -d "$INPUT_START_DATE" +%s 2>/dev/null)
 TS_END=$(date -d "$INPUT_END_DATE" +%s 2>/dev/null)
 
-# Fallback jika date gagal (untuk kompatibilitas sistem)
 if [[ -z "$TS_START" || -z "$TS_END" ]]; then
     echo "Warning: Format tanggal tidak dikenali. Menggunakan default 2024-2026."
     TS_START=1704067200 # 1 Jan 2024
     TS_END=1798761600   # 31 Des 2026
 fi
 
-# Buat Folder Output
 if [ ! -d "$OUTPUT_DIR" ]; then
     mkdir -p "$OUTPUT_DIR"
 fi
@@ -63,16 +60,16 @@ echo "SUMMARY KONFIGURASI:"
 echo "------------------------------------------------------------------"
 echo "Target Folder : ./$OUTPUT_DIR/"
 echo "Total Data    : $(printf "%'.f\n" $INPUT_TOTAL) baris per tipe"
-echo "Pecahan File  : $(printf "%'.f\n" $INPUT_BATCH) baris/file"
 echo "Periode       : $INPUT_START_DATE s/d $INPUT_END_DATE"
 echo "Rating Range  : $INPUT_MIN_STAR - 5 Bintang"
 echo "------------------------------------------------------------------"
 read -p "Tekan ENTER untuk memulai proses generation..."
 
 # ------------------------------------------------------------------------------
-# 2. DATABASE NAMA (DITINGKATKAN - 100+ Item per Array)
+# 2. DATABASE NAMA (DITAMBAHKAN AGAR LEBIH BANYAK)
 # ------------------------------------------------------------------------------
 
+# Data asli tetap ada, ditambahkan data baru di bawahnya
 male_first=(
 "Tb" "Tubagus" "Entol" "Agus" "Asep" "Cecep" "Dadang" "Deden" "Endang" "Jajang" 
 "Maman" "Nana" "Opik" "Sopian" "Tegar" "Ujang" "Yayat" "Usep" "Iwan" "Eep"
@@ -102,6 +99,32 @@ male_first=(
 "Xavier"
 "Yassar" "Yoga" "Yuda" "Yudi" "Yusuf" "Yosep" "Yanuar"
 "Zainul" "Zaki" "Zidan" "Zulfikar" "Zaenal"
+# --- TAMBAHAN BARU ---
+"Abimanyu" "Adnan" "Affandi" "Agung" "Aji" "Alfons" "Andre" "Andi" "Angga" "Anjas" "Anton" "Arjuna" "Arman" "Arnold" "Aswin" "Atta"
+"Bahrul" "Bakri" "Banu" "Bastian" "Bisma" "Bobby" "Bonar" "Boris" "Bryan"
+"Cahyo" "Cepi" "Christian" "Cornelius"
+"Damar" "Dandi" "Darto" "Davin" "Dendi" "Denny" "Dewa" "Didik" "Dito" "Doddy" "Donny"
+"Edi" "Edo" "Edwin" "Efan" "Eky" "Elvan" "Erik" "Erlanda" "Ersya"
+"Fahri" "Fandi" "Farid" "Fatih" "Fendi" "Ferdi" "Fian" "Fino" "Frans" "Fredy"
+"Gagah" "Geri" "Gito" "Glenn" "Gofar" "Gugun"
+"Hafiz" "Hamdani" "Hary" "Hasbi" "Helmi" "Hendri" "Hery" "Husen"
+"Idham" "Iksan" "Iman" "Iqbal" "Irham" "Ivan"
+"Jalal" "Jamal" "Januar" "Jefri" "Jerry" "Jimmy" "Johan" "Juhri"
+"Kadir" "Kaleb" "Karim" "Karta" "Kunto"
+"Luki" "Luqman"
+"Mahdi" "Mamat" "Maman" "Marwan" "Miko" "Mirza" "Muis" "Mukti" "Munir"
+"Nasir" "Nino" "Nofal" "Novri"
+"Oman" "Opick"
+"Parto" "Pepen" "Permadi" "Pian" "Pujiono"
+"Qosim"
+"Rahmat" "Raihan" "Randi" "Rasya" "Reno" "Reynaldi" "Rifki" "Rijal" "Rizky" "Rochman" "Roy" "Rusdi" "Ruslan"
+"Sabri" "Sadam" "Saiful" "Sakti" "Sam" "Samsudin" "Sandy" "Saepul" "Sidik" "Subhan" "Sugeng" "Suhardi" "Sulaeman" "Sutrisno" "Syahrul"
+"Taufan" "Tedy" "Teguh" "Thoriq" "Toni" "Totok" "Trisno"
+"Ucup" "Udin" "Unang"
+"Valen" "Vian"
+"Wandi" "Wardi" "Wibie" "Widi" "Wiji" "Winarso"
+"Yadi" "Yahya" "Yance" "Yasin" "Yayan" "Yogi" "Yono" "Yudha" "Yusril"
+"Zacky" "Zain" "Zainudin" "Zamzam" "Zikri"
 )
 
 male_last=(
@@ -130,6 +153,31 @@ male_last=(
 "Wahyu" "Wardana" "Wibisono" "Wibowo" "Wicaksono" "Widodo" "Wijaya" "Wiraatmadja" "Wirawan" "Wibakso"
 "Yuda" "Yudhistira" "Yulianto" "Yusuf" "Yamin"
 "Zaelani" "Zain" "Zakaria" "Zulkarnain" "Zuhri"
+# --- TAMBAHAN BARU ---
+"Adikusuma" "Admaja" "Afnan" "Alam" "Alfarizi" "Alamsyah" "Amiruddin" "Anggoro" "Apandi" "Ardianto" "Assegaf" "Atmaja" "Azhar"
+"Bahtiar" "Barus" "Baskara" "Batubara" "Budiarto" "Bustomi"
+"Caniago" "Chaniago"
+"Dahlan" "Dalimunthe" "Damara" "Darma" "Darwis" "Dermawan" "Deswanto" "Dewanto" "Djamal" "Djoyo"
+"Ependi"
+"Fachrezi" "Falah" "Farid" "Fathoni" "Fauzan" "Febrianto" "Firdaus"
+"Gani" "Ghozali" "Gultom" "Gunadi" "Gustaman"
+"Habibi" "Hafiz" "Halim" "Hamid" "Harahap" "Haris" "Hartanto" "Haryadi" "Hasibuan" "Hendra" "Hermansyah" "Hidayatullah" "Huda"
+"Idris" "Ikhsan" "Irawadi" "Isman"
+"Jaelani" "Jatmiko" "Johan" "Juanda"
+"Kamil" "Karim" "Kertarajasa" "Khaerudin" "Kholil" "Kristanto" "Kuswara"
+"Leman" "Lumbanraja" "Lutfi"
+"Madani" "Mahfud" "Makarim" "Manaf" "Mansur" "Marbun" "Mardiansyah" "Maryanto" "Misbah" "Muchtar" "Mulyanto" "Munandar" "Murti" "Mustaqim"
+"Naim" "Nandana" "Nawawi" "Nazir" "Nugraha" "Nurrahman"
+"Octora"
+"Pahlevi" "Panjaitan" "Pangaribuan" "Pasaribu" "Perdana" "Pohan" "Prabowo" "Pramana" "Pramono" "Prasetya" "Prawira" "Prihantoro" "Purnawan" "Purwanto"
+"Quraish"
+"Rahardjo" "Rahmadi" "Rahmatullah" "Ramlan" "Rifai" "Rinaldi" "Rismanto" "Rizal" "Rizky" "Rohendi" "Rosadi" "Rustandi"
+"Sabarudin" "Sadikin" "Safrizal" "Sahid" "Salimin" "Samudra" "Sani" "Saragih" "Sasmita" "Sastro" "Setiadi" "Siagian" "Silitonga" "Sinaga" "Sitepu" "Situmorang" "Sobari" "Sofyan" "Sucipto" "Sudarso" "Sugandi" "Sugiyanto" "Suhadi" "Suhendar" "Suherman" "Sukma" "Sulistyo" "Sumantri" "Sunardi" "Supandi" "Suparman" "Suprapto" "Suryadi" "Suseno" "Sutanto" "Syah" "Syarif" "Syarifuddin"
+"Tamba" "Tambunan" "Tarigan" "Tobing" "Triadi"
+"Umar" "Usman"
+"Wahyudi" "Waluyo" "Wardana" "Wibowo" "Widjaja" "Widodo" "Wiguna" "Winata" "Winarno" "Wiryawan"
+"Yahya" "Yasin" "Yudha" "Yunarto" "Yusuf"
+"Zaenudin" "Zahran" "Zainal" "Zuhdi"
 )
 
 female_first=(
@@ -160,6 +208,32 @@ female_first=(
 "Xena" "Xaviera"
 "Yanti" "Yasmin" "Yola" "Yulia" "Yuliana" "Yuni" "Yusra" "Yuki"
 "Zahra" "Zahwa" "Zakia" "Zalfa" "Zaskia" "Zia" "Ziva"
+# --- TAMBAHAN BARU ---
+"Ade" "Adeline" "Afra" "Ainun" "Ajeng" "Alana" "Aletha" "Alfiah" "Alicia" "Alin" "Almira" "Alya" "Amara" "Aminah" "Anastasya" "Angel" "Anindya" "Anis" "Anisa" "Anna" "Arumi" "Aryani" "Asih" "Asma" "Asri" "Astin" "Astri" "Atik" "Audrey" "Avril" "Ayudia" "Azka"
+"Badriyah" "Baiq" "Bunga"
+"Calista" "Carla" "Celine" "Chelsea" "Chintya" "Christy" "Cika" "Clara" "Cut"
+"Danita" "Darla" "Dea" "Dedeh" "Delia" "Della" "Denisa" "Desy" "Dhara" "Dini" "Diyah" "Dwi"
+"Eca" "Eli" "Elly" "Ely" "Ema" "Emilia" "Endang" "Erika" "Eriska"
+"Fabiola" "Fadila" "Fahira" "Fairuz" "Faradina" "Fathia" "Fatma" "Fatmawati" "Feby" "Feni" "Fina" "Fira" "Frida"
+"Gadis" "Gita" "Gwen"
+"Hafsah" "Halwa" "Hana" "Hanifa" "Hasna" "Helma" "Hera" "Hikmah"
+"Ida" "Ifa" "Iis" "Ika" "Ilma" "Imel" "Indi" "Ines" "Inggit" "Intan" "Ipeh" "Isma" "Ita"
+"Jihan" "Jinan" "Juwita"
+"Kania" "Karin" "Karolin" "Khadijah" "Khalisa" "Khansa" "Kinar" "Klara" "Komalasari"
+"Lala" "Lastri" "Latifah" "Lela" "Leni" "Lia" "Liana" "Lily" "Lina" "Lisa" "Lola" "Lusi" "Lydia"
+"Maesaroh" "Magda" "Maida" "Maimunah" "Manda" "Maria" "Marina" "Marissa" "Marlin" "Martha" "Maryam" "Mei" "Meilda" "Melani" "Mey" "Mila" "Mimi" "Mira" "Mirna" "Monica" "Murni" "Mutiara"
+"Nabila" "Nada" "Nadya" "Nafisa" "Nahla" "Nana" "Nani" "Nara" "Narti" "Nasya" "Nelly" "Neni" "Nesia" "Niken" "Nike" "Nila" "Nilam" "Nimas" "Ningrum" "Ningsih" "Nining" "Nisa" "Nona" "Nova" "Nurbaeti" "Nurlelasari"
+"Okta"
+"Peni" "Pita" "Popy" "Priscila" "Puji"
+"Qonita" "Queen"
+"Rachel" "Rahmi" "Ratih" "Ratna" "Ratu" "Rina" "Rinda" "Rini" "Ririn" "Riska" "Risti" "Rita" "Rizka" "Rohmah" "Rona" "Rosa" "Rosita" "Rumi" "Ruth"
+"Sabila" "Sadia" "Safina" "Sakina" "Salwa" "Sana" "Sania" "Sany" "Sartika" "Saskia" "Selly" "Septi" "Shabrina" "Shafa" "Shinta" "Shofi" "Sila" "Silvia" "Sindy" "Sofi" "Sofia" "Sonia" "Sonya" "Soraya" "Sri" "Stefani" "Sukaesih" "Sumarni" "Sumi" "Susi" "Syahla"
+"Talitha" "Tamara" "Tami" "Tantri" "Tari" "Tasia" "Taty" "Tika" "Tini" "Titin" "Tri" "Trisna" "Tuti" "Tyas"
+"Ulfah" "Uli" "Umi" "Una" "Uni" "Uti"
+"Valen" "Vania" "Vani" "Vanya" "Velin" "Veny" "Vera" "Vika" "Vina" "Viola" "Vita"
+"Warda" "Wina" "Windi" "Wuri"
+"Yana" "Yani" "Yara" "Yasmin" "Yati" "Yeyen" "Yulia" "Yuyun"
+"Zafira" "Zahra" "Zainab" "Zaskia" "Zea" "Zeline" "Zoya" "Zulfa"
 )
 
 female_last=(
@@ -188,70 +262,174 @@ female_last=(
 "Wahyuni" "Wardani" "Wati" "Widya" "Wijayanti" "Wulandari" "Wulansari" "Winarsih" "Wulandari"
 "Yulia" "Yuliana" "Yuliani" "Yuniar" "Yusnita"
 "Zahira" "Zahra" "Zainab"
+# --- TAMBAHAN BARU ---
+"Adelina" "Afriani" "Agustine" "Aisyah" "Alfiani" "Aliya" "Amira" "Anastasia" "Anggraeni" "Anisa" "Antania" "Ardiana" "Arifiani" "Arum" "Aryanti" "Asmara" "Asri" "Aulia" "Ayuningtyas" "Azwar"
+"Cahaya" "Chandra" "Christiana"
+"Damanik" "Damayanti" "Daniati" "Darmawati" "Dewanti" "Dhewanti"
+"Ekawati" "Elviana" "Erlin" "Ermawati"
+"Fadhila" "Fahira" "Fairuz" "Fajri" "Fauziah" "Febriana" "Ferawati" "Fitria"
+"Ginting" "Gunawan"
+"Habsari" "Hadi" "Halimah" "Hamidah" "Handayani" "Hanifah" "Hartini" "Haryani" "Hastuti" "Hayati" "Hidayati" "Humaira"
+"Ika" "Ilhami" "Imaniar" "Indah" "Indrawati" "Inayah" "Irawati" "Iskandar" "Ismi" "Istiqomah"
+"Jayanti" "Juwita"
+"Kamilia" "Kania" "Karina" "Karmila" "Khasanah" "Kholifah" "Kirana" "Kristiani" "Kurniasari" "Kusumawardani"
+"Laila" "Laras" "Lestari" "Lestia" "Lubis"
+"Maheswari" "Maimun" "Malahayati" "Manalu" "Manurung" "Marliana" "Marsela" "Maryati" "Mawar" "Mawarni" "Mayangsari" "Meliana" "Melinda" "Mulia" "Mulyasari" "Munawaroh" "Mustika"
+"Nabila" "Nadapdap" "Nadia" "Nafisah" "Nainggolan" "Natalia" "Ningsih" "Nirmala" "Nisrina" "Noviana" "Novita" "Nur" "Nuraeni" "Nurazizah" "Nurhaliza" "Nurjannah" "Nurmalasari"
+"Oktavia"
+"Pandjaitan" "Panggabean" "Paramita" "Pertiwi" "Pitaloka" "Pradita" "Pramesti" "Prasetia" "Prastika" "Pratama" "Prawiro" "Pujiastuti" "Purnamasari" "Purwanti" "Puspa" "Puspitasari" "Puteri"
+"Qoriah"
+"Rahmi" "Ramadhani" "Rania" "Raras" "Ratih" "Ratnawati" "Restu" "Rianti" "Ristiani" "Rizki" "Rohmawati" "Rosida" "Rosita" "Rozalina" "Rukmana"
+"Sabrina" "Safira" "Sagita" "Sahara" "Sakinah" "Salim" "Salsabilla" "Sanjaya" "Santoso" "Saputri" "Saras" "Sari" "Sasmita" "Septia" "Setiani" "Setyawati" "Shaleha" "Shalihah" "Shinta" "Siburian" "Simbolon" "Siregar" "Siroj" "Siska" "Situmorang" "Soedjono" "Sofiani" "Soleha" "Suci" "Sugiarti" "Suharti" "Sukmawati" "Sulastri" "Sumarni" "Sundari" "Suprihatin" "Surbakti" "Surya" "Susana" "Susilowati" "Syafitri" "Syahputri"
+"Tambunan" "Tania" "Tarigan" "Tiana" "Tiara" "Trianingsih" "Tristiani"
+"Utami"
+"Vivi"
+"Wahyuni" "Wardah" "Wati" "Widiani" "Widiastuti" "Widya" "Wijaya" "Wulandari"
+"Yanti" "Yuliani" "Yuniarti" "Yunita" "Yusri"
+"Zahro" "Zain" "Zulaikha" "Zulfikar"
 )
 
 # ------------------------------------------------------------------------------
-# 3. DATABASE PESAN / KONTEKS (DITINGKATKAN)
+# 3. DATABASE PESAN (MODULAR PER BINTANG)
 # ------------------------------------------------------------------------------
 
-# ULASAN WEBSITE/SEKOLAH (General)
-msg_service=(
+# PESAN BINTANG 5 (Sangat Puas, Sempurna, Memuji)
+star_5_msgs=(
 "Pelayanan PTSP sangat cepat, legalisir ijazah selesai dalam 15 menit tanpa biaya."
 "Gedung PTSP nyaman dan petugasnya ramah, benar-benar Zona Integritas."
 "Transparansi biaya PPDB sangat jelas, tidak ada pungli di madrasah ini."
-"Sistem antrian di PTSP tertib, ruang tunggunya adem ada AC."
-"Apresiasi untuk Pak Umar Mu'tamar dan staf TU yang sangat membantu administrasi anak saya."
-"Tracking berkas lewat WhatsApp sangat inovatif, memudahkan wali murid."
-"Pelayanan satu pintu yang profesional, satpamnya juga sangat membantu mengarahkan."
-"Respon admin di WhatsApp sangat cepat, saya terbantu saat lupa password akun PPDB."
-"Pengambilan raport berjalan tertib, tidak berdesak-desakan."
-"Satpam di gerbang depan sangat ramah dan selalu tersenyum menyapa tamu."
-"Parkiran tamu tertata rapi, pelayanan dari awal masuk sampai keluar sangat baik."
+"Luar biasa, anak saya sangat senang sekolah di sini karena gurunya perhatian."
+"Fasilitas lengkap, dari lab komputer sampai masjidnya sangat bersih dan wangi."
+"Satpam sangat ramah dan membantu mengarahkan parkir dengan baik."
+"Sistem digital madrasah sangat maju, pantau nilai anak jadi mudah."
+"Kantin sehat dan higienis, sangat tenang melepaskan anak jajan di sekolah."
+"Program tahfidz-nya juara, hafalan anak saya meningkat pesat."
+"Toilet siswa bersih sekali, air lancar. Jempolan untuk kebersihannya."
+"Respon admin WhatsApp sangat cepat dan solutif. Pertahankan!"
+"Lingkungan sekolah sangat asri dan hijau, bikin betah belajar."
+"Tidak ada diskriminasi, semua dilayani dengan senyum dan sapa."
+"Proses administrasi tidak berbelit-belit, sangat efisien."
+"Sangat merekomendasikan MTsN 1 Pandeglang untuk pendidikan karakter anak."
 )
 
-msg_acad=(
-"Program Kurikulum Berbasis Cinta membuat anak saya senang berangkat sekolah."
-"Alhamdulillah hafalan Juz 30 anak saya lancar berkat program Tahfidz Intensif."
-"Kelas Unggulan Sains sangat membantu persiapan anak menghadapi KSN."
-"Sangat terkesan dengan Guest Teacher Session, memberikan wawasan dunia kerja."
-"Guru-guru menerapkan metode mengajar yang humanis, anak tidak merasa tertekan."
-"Program Bilingual Arab-Inggris melatih kepercayaan diri siswa tampil di depan umum."
-"Kelas Digital dengan tablet sangat relevan untuk persiapan masa depan anak."
-"Klinik Riset sangat bagus untuk melatih anak berpikir kritis dan menulis karya ilmiah."
-"Anak saya jadi lebih disiplin sholat dhuha dan dzuhur berjamaah."
-"Metode pembelajaran di MTs Negeri 1 Pandeglang tidak membosankan, banyak praktik langsung."
-"Tugas-tugas yang diberikan guru sangat mendidik dan tidak memberatkan siswa."
+# PESAN BINTANG 4 (Puas, Bagus, Ada Sedikit Saran)
+star_4_msgs=(
+"Pelayanan sudah sangat baik, hanya perlu ditingkatkan kecepatan WiFi di ruang tunggu."
+"Sekolah yang bagus, anak saya betah. Parkiran tamu mungkin bisa diperluas lagi."
+"Secara umum memuaskan, petugas ramah, tapi antrian pagi agak panjang."
+"Fasilitas oke, AC di ruang pelayanan dingin. Cuma proses fotokopi agak jauh."
+"Program akademik mantap, tapi komunikasi wali kelas mohon lebih intens."
+"Lingkungan bersih, tapi tong sampah di area belakang perlu ditambah."
+"Sudah bagus, Zona Integritas terasa. Tinggal pertahankan konsistensinya."
+"Website informatif, tapi kadang agak lambat diakses saat jam sibuk."
+"Guru-guru kompeten. Saran: perbanyak kegiatan outing class."
+"Prosedur jelas dan transparan. Waktu tunggu standar, tidak terlalu lama."
+"Kantin bersih, variasi menu makanannya bisa ditambah lagi."
+"Keamanan bagus. Cuma akses masuk saat jam pulang agak macet."
+"Perpustakaan lengkap, anak saya suka. Jam bukanya kalau bisa diperpanjang."
+"Pelayanan PTSP ramah, ruang tunggunya nyaman. Good job."
+"Bagus sekali, tapi sosialisasi program sekolah ke orang tua perlu lebih sering."
 )
 
-msg_ekskul=(
-"Ekskul Paskibra Satria Pandeglang benar-benar membentuk mental disiplin anak."
-"SISPALA mengajarkan kemandirian dan kepedulian lingkungan yang nyata."
-"Tim Futsal MTs Negeri 1 Pandeglang FC mainnya taktis dan sportif, fasilitas lapangannya juga oke."
-"Anak saya jadi lebih percaya diri setelah gabung di OSIM dan ikut LDKS."
-"PMR Madya sangat sigap dalam pertolongan pertama, kegiatannya sangat positif."
-"Marawis dan Hadroh sekolah ini suaranya merdu, sering diundang acara masyarakat."
-"Ekskul Jurnalistik melatih anak saya jadi kritis dan jago menulis berita."
-"Kegiatan Pramuka di sini sangat seru, kemah benerannya mantap."
-"Paduan suara sekolah suaranya harmonis, bikin merinding kalau pas upacara."
+# PESAN BINTANG 3 (Netral, Standar, Biasa Saja)
+star_3_msgs=(
+"Pelayanan standar, sesuai prosedur saja. Tidak ada yang istimewa."
+"Cukup baik, tapi proses legalisir hari ini lumayan lama."
+"Fasilitas sekolah lumayan, ada beberapa yang perlu perbaikan ringan."
+"Program sekolah biasa saja seperti madrasah pada umumnya."
+"Kadang respon cepat, kadang lambat. Perlu konsistensi pelayanan."
+"Kebersihan oke, tapi kadang masih lihat sampah plastik di selokan."
+"Guru mengajar cukup baik, tugas ke siswa rasanya cukup banyak."
+"Parkiran sempit jadi susah keluar masuk kalau lagi ramai."
+"Website sekolah sering maintenance pas mau cek info."
+"Pelayanan buka jam 8, tapi petugas baru siap jam 8.15."
+"Kantin cukup bersih, harganya standar."
+"Sistem informasi nilai cukup membantu, walau tampilannya kaku."
+"Ruang tunggu tamu biasa saja, kipas anginnya kurang terasa."
+"Satpam cukup tegas, tapi kurang senyum hari ini."
+"Proses administrasi lancar, cuma form-nya terlalu banyak yang harus diisi."
 )
 
-msg_env=(
-"Suasana madrasah sangat asri dan hijau, program Adiwiyata benar-benar jalan."
-"Kebijakan Zero Plastic di kantin sangat bagus untuk edukasi lingkungan."
-"Bank Sampah Berhias mengajarkan siswa memilah sampah jadi berkah."
-"Toilet siswa bersih dan airnya lancar, sangat nyaman."
-"Masjid sekolah luas dan bersih, kegiatan sholat Dhuha berjalannya tertib."
-"Website sekolah super cepat (0.8 detik), cari info PPDB jadi gampang."
-"Perpustakaan digitalnya lengkap, anak saya betah baca buku di sana."
-"Kantin sehatnya bersih, jajanan aman dan tidak pakai pengawet."
-"Taman sekolah terawat dengan baik, banyak spot foto yang instagramable."
-"Akses Wi-Fi di area perpustakaan sangat kencang, membantu siswa cari referensi."
-"Kebersihan lingkungan sekolah patut diacungi jempol, tidak ada sampah berserakan."
+# PESAN BINTANG 2 (Kecewa, Kurang, Ada Keluhan)
+star_2_msgs=(
+"Pelayanan agak mengecewakan, saya menunggu 1 jam hanya untuk stempel."
+"Toilet siswa baunya kurang sedap, mohon petugas kebersihan lebih rajin."
+"Website PPDB error terus saat diakses, sangat menyulitkan."
+"Petugas di loket kurang ramah dan main HP saat melayani."
+"Lingkungan sekolah banyak genangan air kalau hujan."
+"Komunikasi guru ke orang tua sangat minim."
+"Fasilitas lab komputer banyak yang rusak mouse-nya."
+"Katanya Zona Integritas, tapi infonya masih membingungkan."
+"Jadwal pelajaran sering berubah mendadak tanpa pemberitahuan."
+"Kantin jorok, banyak lalat. Mohon diperhatikan."
+"Ruang kelas panas, kipas angin mati."
+"Sistem pengaduan tidak ada respon sudah 3 hari."
+"Buku paket di perpustakaan stoknya sedikit."
+"Satpam kurang kooperatif saat ditanya lokasi."
+"Wi-Fi sekolah tidak bisa dipakai siswa."
 )
 
-ALL_MSGS=("${msg_service[@]}" "${msg_acad[@]}" "${msg_ekskul[@]}" "${msg_env[@]}")
+# PESAN BINTANG 1 (Sangat Buruk, Marah, Kritik Pedas)
+star_1_msgs=(
+"Sangat kecewa! Pelayanan sangat lambat dan tidak profesional."
+"Toilet kotor sekali, air mati total. Sangat tidak layak."
+"Petugas membentak wali murid saat bertanya. Tidak sopan!"
+"Masih ada pungutan yang tidak jelas peruntukannya."
+"Sistem sekolah berantakan, data anak saya hilang."
+"Fasilitas buruk, plafon kelas mau rubuh."
+"Tidak ada transparansi sama sekali."
+"Guru sering kosong tidak masuk kelas."
+"Website mati total berhari-hari."
+"Lingkungan sekolah kumuh dan tidak terawat."
+"Pengaduan saya dicuekin total."
+"Parkiran tidak aman, helm hilang."
+"Sangat tidak merekomendasikan sekolah ini."
+"Diskriminasi pelayanan sangat terasa."
+"Kebersihan nol besar, sampah berserakan."
+)
 
-# ROLES & FEEDBACK KHUSUS SURVEI (6 KATEGORI)
+# Array Survey Feedback (Modular berdasarkan sentiment/skor)
+# Kita akan menggunakan array ini untuk feedbcak survei agar sesuai skor
+fb_positive=(
+"Pelayanan sangat memuaskan, pertahankan!"
+"Sangat transparan dan akuntabel."
+"Fasilitas lengkap dan mendukung pembelajaran."
+"Manajemen sekolah sangat profesional."
+"Lingkungan sekolah sangat kondusif dan nyaman."
+"Guru-guru sangat kompeten dan inspiratif."
+"Program unggulan sekolah sangat bermanfaat."
+"Tidak ada pungli, semua gratis dan cepat."
+"Respon pengaduan sangat cepat ditangani."
+"Budaya sekolah sangat positif dan religius."
+)
+
+fb_neutral=(
+"Pelayanan cukup baik, namun perlu ditingkatkan lagi."
+"Fasilitas sudah memadai meski ada beberapa yang rusak."
+"Proses administrasi standar, tidak cepat tidak lambat."
+"Perlu perbaikan di sektor kebersihan toilet."
+"Komunikasi sekolah dengan orang tua cukup lancar."
+"Program sekolah berjalan baik, perlu inovasi lagi."
+"Sistem antrian perlu diperbaiki agar lebih tertib."
+"Parkiran perlu diperluas untuk kenyamanan."
+"Kadang petugas kurang ramah, mohon dibina."
+"Website perlu update berita terbaru."
+)
+
+fb_negative=(
+"Pelayanan lambat dan berbelit-belit."
+"Fasilitas banyak yang rusak dan tidak terawat."
+"Kurang transparan dalam biaya."
+"Lingkungan kurang bersih dan tidak nyaman."
+"Respon terhadap keluhan sangat lambat."
+"Sistem birokrasi sekolah menyulitkan."
+"Guru sering tidak ada di tempat saat dicari."
+"Toilet kotor dan bau, air sering mati."
+"Website sering down dan tidak bisa diakses."
+"Keamanan kurang, helm sering hilang."
+)
+
+# ROLES & USER AGENTS TETAP SAMA
 roles=(
 "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid" "Wali Murid"
 "Siswa" "Siswa" "Siswa" "Siswa"
@@ -260,151 +438,21 @@ roles=(
 "Guru / Staf"
 )
 
-# Feedback berdasarkan kategori
-fb_zi=(
-"Pelayanan PTSP sangat memuaskan, tidak ada pungli sama sekali."
-"Transparansi biaya dan prosedur sangat jelas, sesuai standar Zona Integritas."
-"Tidak ada pungutan liar, semua sesuai ketentuan resmi."
-"Petugas menolak gratifikasi, sangat profesional dan berintegritas."
-"Sistem pengaduan responsif, keluhan saya ditanggapi dengan baik."
-"Informasi persyaratan ditampilkan secara terbuka dan mudah diakses."
-"Petugas tidak diskriminatif, melayani semua dengan adil."
-"Whistleblowing system tersedia dan aman untuk pelaporan."
-"Tidak ada praktik percaloan, semua urusan langsung dengan petugas resmi."
-"Monitoring internal berjalan baik untuk mencegah penyimpangan."
-)
-
-fb_service=(
-"Petugas melayani dengan ramah dan sopan, 3S benar-benar diterapkan."
-"Ruang tunggu nyaman, bersih, dilengkapi AC dan charging station."
-"Waktu penyelesaian layanan sangat cepat sesuai standar."
-"Petugas sangat kompeten memberikan solusi dan informasi."
-"Sistem antrian tertib dan adil untuk semua pemohon."
-"Informasi alur pelayanan sangat jelas dan mudah dipahami."
-"Fasilitas toilet, mushola, parkir tersedia dan bersih."
-"Petugas sangat responsif menangani pertanyaan dan masalah."
-"Formulir mudah didapat dan dipahami dengan baik."
-"Layanan pengaduan mudah diakses dan ditanggapi dengan cepat."
-"Display monitor antrian berfungsi dengan baik."
-"Tersedia layanan konsultasi yang sangat membantu."
-"Ruang pelayanan memiliki pencahayaan dan AC yang baik."
-"Fasilitas untuk disabilitas tersedia dengan lengkap."
-"Jam pelayanan sesuai dan petugas hadir tepat waktu."
-)
-
-fb_academic=(
-"Guru menguasai materi dan menyampaikannya dengan menarik."
-"Komunikasi guru dengan wali murid sangat lancar dan terbuka."
-"Fasilitas pembelajaran mendukung kebutuhan belajar siswa."
-"Informasi perkembangan akademik disampaikan secara berkala."
-"Metode pembelajaran bervariasi dan sesuai kebutuhan siswa."
-"Guru memberikan perhatian dan bimbingan yang memadai."
-"Penilaian hasil belajar objektif, transparan, dan tepat waktu."
-"Program ekstrakurikuler beragam dan berkualitas."
-"Fasilitas teknologi memadai dan dimanfaatkan dengan baik."
-"Lingkungan sekolah kondusif, aman, dan mendukung pembelajaran."
-"Sekolah melakukan evaluasi dan perbaikan berkelanjutan."
-"Guru menerapkan pendidikan karakter dalam pembelajaran."
-"Kurikulum relevan dengan perkembangan zaman."
-"Guru menggunakan media pembelajaran yang kreatif."
-"Program remedial dan pengayaan sangat membantu siswa."
-"Perpustakaan lengkap dan mudah diakses."
-"Laboratorium memiliki peralatan yang memadai."
-"Tugas proporsional dan bermakna untuk siswa."
-"Bimbingan konseling efektif mendukung perkembangan siswa."
-"Guru memberikan feedback konstruktif yang membangun."
-)
-
-fb_facilities=(
-"Kondisi gedung sekolah terawat dengan baik dan aman."
-"Kebersihan lingkungan sekolah sangat terjaga."
-"Toilet siswa bersih, memadai, dan berfungsi dengan baik."
-"Sistem keamanan sekolah baik dengan satpam dan CCTV."
-"Kantin bersih, sehat, dan menyediakan makanan bergizi."
-"Lapangan olahraga tersedia dan dalam kondisi baik."
-"Fasilitas UKS lengkap dan dikelola dengan baik."
-"Mushola bersih dan nyaman digunakan."
-"Area parkir tertata rapi dan aman."
-"Sistem penerangan di seluruh area berfungsi dengan baik."
-"Sistem sanitasi dan pengelolaan sampah terorganisir."
-"Jalur evakuasi dan sistem penanggulangan bencana jelas."
-"Fasilitas air bersih tersedia dan mudah diakses."
-"Ventilasi dan sirkulasi udara di kelas sangat baik."
-"Area hijau membuat lingkungan sejuk dan asri."
-"Fasilitas untuk disabilitas tersedia dengan lengkap."
-"Aula tersedia untuk kegiatan besar sekolah."
-"Sistem drainase berfungsi baik tanpa genangan."
-"Papan informasi tertata rapi dan selalu diperbarui."
-"Perawatan fasilitas dilakukan rutin dan responsif."
-)
-
-fb_management=(
-"Kepala sekolah menunjukkan kepemimpinan yang visioner."
-"Visi dan misi sekolah jelas dan diimplementasikan dengan baik."
-"Kepala sekolah terbuka menerima masukan dan kritik."
-"Sistem administrasi sekolah tertib dan transparan."
-"Proses PPDB dilakukan secara objektif dan transparan."
-"Informasi kebijakan disampaikan dengan jelas."
-"Program kerja tahunan terstruktur dan terlaksana dengan baik."
-"Komite sekolah aktif dan melibatkan orang tua."
-"Pengelolaan keuangan akuntabel dan dilaporkan berkala."
-"Sekolah responsif menangani keluhan orang tua."
-"Sistem reward and punishment adil untuk siswa dan guru."
-"Kepala sekolah aktif melakukan supervisi pembelajaran."
-"SOP jelas untuk berbagai kegiatan sekolah."
-"Rapat koordinasi rutin berjalan dengan baik."
-"Evaluasi diri dilakukan berkala untuk perbaikan."
-"Dokumentasi dan arsip tertata rapi."
-"Program pengembangan SDM guru terencana dengan baik."
-"Kerjasama dengan stakeholder eksternal berjalan baik."
-"Kepala sekolah memberikan teladan dalam disiplin."
-"Sekolah inovatif menghadapi tantangan dan perubahan."
-)
-
-fb_culture=(
-"Hubungan warga sekolah terjalin harmonis dan saling menghargai."
-"Lingkungan inklusif dan ramah terhadap keberagaman."
-"Tidak ada praktik bullying di lingkungan sekolah."
-"Nilai-nilai religius dan moral diterapkan sehari-hari."
-"Budaya disiplin diterapkan dengan konsisten."
-"Siswa diajarkan menghormati guru dan sesama."
-"Budaya prestasi dan kompetisi sehat didorong."
-"Program pembinaan karakter terintegrasi dengan baik."
-"Tradisi sekolah mempererat kebersamaan warga sekolah."
-"Lingkungan mendukung kreativitas dan inovasi siswa."
-"Budaya gotong royong dan kepedulian sosial kuat."
-"Kampanye gaya hidup sehat dan peduli lingkungan aktif."
-"Guru dan staf menjadi role model yang baik."
-"Apresiasi diberikan kepada siswa berprestasi."
-"Kegiatan spiritual dilaksanakan secara rutin."
-"Siswa bertanggung jawab terhadap tugas mereka."
-"Komunikasi warga sekolah terbuka dan konstruktif."
-"Aturan dan tata tertib jelas, adil, dan ditegakkan."
-"Program parenting membangun kolaborasi keluarga-sekolah."
-"Siswa merasa aman, nyaman, dan bahagia di sekolah."
-)
-
-# USER AGENTS (MODERN 2024-2025 MIX)
 user_agents=(
-# Android High-End
 "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.193 Mobile Safari/537.36"
 "Mozilla/5.0 (Linux; Android 13; SM-A546E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36"
 "Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Mobile Safari/537.36"
-# Android Mid-Range (Common in ID)
 "Mozilla/5.0 (Linux; Android 12; Redmi Note 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Mobile Safari/537.36"
 "Mozilla/5.0 (Linux; Android 13; CPH2477) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Mobile Safari/537.36"
 "Mozilla/5.0 (Linux; Android 11; V2111) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36"
 "Mozilla/5.0 (Linux; Android 10; SM-A125F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Mobile Safari/537.36"
-# iOS / iPhone
 "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1"
 "Mozilla/5.0 (iPhone; CPU iPhone OS 16_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.7 Mobile/15E148 Safari/604.1"
 "Mozilla/5.0 (iPhone; CPU iPhone OS 15_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/120.0.6099.119 Mobile/15E148 Safari/604.1"
-# Desktop
 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 "Mozilla/5.0 (Windows NT 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
 "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_2_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
 "Mozilla/5.0 (X11; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0"
-# Bots
 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"
 "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)"
@@ -439,35 +487,24 @@ gen_rating() {
     echo $((min + RANDOM % range))
 }
 
-# Fungsi untuk generate score desimal (1.00 - 5.00)
-gen_score_decimal() {
-    local min=$INPUT_MIN_STAR
-    local max=5
-    local range=$((max - min + 1))
-    
-    # 1. Generate angka bulat (misal: 4 atau 5)
-    local integer=$((min + RANDOM % range))
-    
-    local decimal
-    
-    # 2. Logika Pembatasan: Jika angka bulat sudah 5, desimal wajib 0
-    if [ "$integer" -eq 5 ]; then
-        decimal=0
+# Fungsi Helper baru untuk generate score yang match dengan rating
+gen_score_from_rating() {
+    local rating=$1
+    local decimal=$((RANDOM % 100))
+    # Jika rating 5, limit desimal agar tidak lewat 5.0
+    if [ "$rating" -eq 5 ]; then
+        echo "5.00"
     else
-        # Jika belum 5, boleh acak 0-99
-        decimal=$((RANDOM % 100))
-    fi
-    
-    # 3. Format Output
-    if [ $decimal -lt 10 ]; then
-        echo "${integer}.0${decimal}"
-    else
-        echo "${integer}.${decimal}"
+        if [ $decimal -lt 10 ]; then
+            echo "${rating}.0${decimal}"
+        else
+            echo "${rating}.${decimal}"
+        fi
     fi
 }
 
 # ------------------------------------------------------------------------------
-# 5. GENERATOR LOGIC
+# 5. GENERATOR LOGIC (UPDATED WITH MODULAR LOGIC)
 # ------------------------------------------------------------------------------
 
 # === SECTION 1: ULASAN ===
@@ -496,7 +533,6 @@ while [ $count -lt $INPUT_TOTAL ]; do
     fi
     fullname="$fname $lname"
     
-    # Retry logic simple jika nama sudah ada, tambahkan nama tengah
     if [[ -n "${used_names_ulasan[$fullname]}" ]]; then 
         if [ $gender -eq 0 ]; then
             mname=$(get_random male_first[@])
@@ -507,9 +543,17 @@ while [ $count -lt $INPUT_TOTAL ]; do
     fi
     used_names_ulasan["$fullname"]=1
     
-    # Data lain
+    # MODULAR LOGIC: Message follows Rating
     rating=$(gen_rating)
-    message=$(get_random ALL_MSGS[@])
+    case $rating in
+        5) message=$(get_random star_5_msgs[@]) ;;
+        4) message=$(get_random star_4_msgs[@]) ;;
+        3) message=$(get_random star_3_msgs[@]) ;;
+        2) message=$(get_random star_2_msgs[@]) ;;
+        1) message=$(get_random star_1_msgs[@]) ;;
+        *) message=$(get_random star_4_msgs[@]) ;; # Default fallback
+    esac
+    
     created_at=$(gen_date)
     ip_address=$(gen_ip)
     
@@ -529,7 +573,7 @@ done
 echo -e "\n   [OK] Selesai."
 
 
-# === SECTION 2: SURVEI (6 KATEGORI - UPDATED FORMAT) ===
+# === SECTION 2: SURVEI (MODULAR FEEDBACK) ===
 echo ""
 echo ">>> MEMULAI GENERATE DATA SURVEI (6 KATEGORI)..."
 echo "Format: respondent_name,respondent_role,score_zi,score_service,score_academic,score_facilities,score_management,score_culture,feedback,created_at,ip_address"
@@ -544,7 +588,7 @@ declare -A used_names_survei
 echo "$HEADER_CSV" > "$current_file"
 
 while [ $count -lt $INPUT_TOTAL ]; do
-    # Generate Name (Boleh sama dengan ulasan, tapi unik di tabel survei)
+    # Generate Name
     gender=$((RANDOM % 2))
     if [ $gender -eq 0 ]; then
         fname=$(get_random male_first[@])
@@ -561,31 +605,39 @@ while [ $count -lt $INPUT_TOTAL ]; do
     fi
     used_names_survei["$fullname"]=1
     
-    # Data Survey - 6 Kategori dengan decimal score
+    # MODULAR LOGIC FOR SURVEY
+    # Kita tentukan dulu "Rating Dasar" baris ini agar skor dan feedback sinkron
+    base_rating=$(gen_rating)
+
     role=$(get_random roles[@])
-    s_zi=$(gen_score_decimal)
-    s_srv=$(gen_score_decimal)
-    s_aca=$(gen_score_decimal)
-    s_fac=$(gen_score_decimal)
-    s_mgt=$(gen_score_decimal)
-    s_cul=$(gen_score_decimal)
     
-    # Pilih feedback berdasarkan kategori dengan skor tertinggi
-    # Untuk variasi, ambil dari berbagai kategori feedback
-    feedback_choice=$((RANDOM % 6))
-    case $feedback_choice in
-        0) msg=$(get_random fb_zi[@]) ;;
-        1) msg=$(get_random fb_service[@]) ;;
-        2) msg=$(get_random fb_academic[@]) ;;
-        3) msg=$(get_random fb_facilities[@]) ;;
-        4) msg=$(get_random fb_management[@]) ;;
-        5) msg=$(get_random fb_culture[@]) ;;
-    esac
+    # Generate skor 6 kategori berdasarkan base_rating agar konsisten
+    # Contoh: Jika base 5, semua skor berkisar 5.0 - 5.xx (max 5)
+    # Jika base 2, semua skor 2.xx
+    s_zi=$(gen_score_from_rating $base_rating)
+    s_srv=$(gen_score_from_rating $base_rating)
+    s_aca=$(gen_score_from_rating $base_rating)
+    s_fac=$(gen_score_from_rating $base_rating)
+    s_mgt=$(gen_score_from_rating $base_rating)
+    s_cul=$(gen_score_from_rating $base_rating)
+    
+    # Pilih feedback text yang sesuai dengan base_rating (Sentiment Analysis simulation)
+    if [ "$base_rating" -ge 5 ]; then
+        msg=$(get_random fb_positive[@])
+    elif [ "$base_rating" -eq 4 ]; then
+        # Acak antara positif dan sedikit netral
+        if [ $((RANDOM%2)) -eq 0 ]; then msg=$(get_random fb_positive[@]); else msg=$(get_random fb_neutral[@]); fi
+    elif [ "$base_rating" -eq 3 ]; then
+        msg=$(get_random fb_neutral[@])
+    else
+        # 1 dan 2 masuk negatif
+        msg=$(get_random fb_negative[@])
+    fi
     
     c_at=$(gen_date)
     ip=$(gen_ip)
     
-    # Tulis sesuai format yang diminta (6 kategori)
+    # Tulis
     echo "$fullname,$role,$s_zi,$s_srv,$s_aca,$s_fac,$s_mgt,$s_cul,\"$msg\",$c_at,$ip" >> "$current_file"
     ((count++))
     
@@ -643,12 +695,7 @@ echo "Lokasi Folder  : ./$OUTPUT_DIR/"
 echo "Total File     : $((file_index * 3)) File CSV"
 echo ""
 echo "DETAIL FORMAT:"
-echo "1. ULASAN      : name, rating, message, created_at, ip_address"
-echo "2. SURVEI      : respondent_name, respondent_role,"
-echo "                 score_zi, score_service, score_academic,"
-echo "                 score_facilities, score_management, score_culture,"
-echo "                 feedback, created_at, ip_address"
+echo "1. ULASAN      : name, rating, message (Sesuai Rating), created_at..."
+echo "2. SURVEI      : Score & Feedback (Sesuai Sentiment)..."
 echo "3. KUNJUNGAN   : ip_address, user_agent, created_at"
-echo ""
-echo "Silakan cek folder '$OUTPUT_DIR' untuk melihat hasilnya."
 echo "=================================================================="

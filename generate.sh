@@ -5,45 +5,53 @@ set -euo pipefail
 OUT="draft.md"
 ROOT="."
 
-# Pola eksklusi disesuaikan dengan struktur Astro project
-EXCLUDE_PATTERNS=( 
-  "./.git/*" 
-  "./.astro/*" 
-  "./.yarn/*" 
-  "./.json/*" 
-  "./.vscode/*" 
+EXCLUDE_PATTERNS=(
+  "./.git/*"
+  "./.astro/*"
+  "./.yarn/*"
+  "./.json/*"
+  "./.vscode/*"
   "./.gitignore"
   "./.env"
   "./todo.md"
   "./.gitattributes"
   "./.yarnrc.yml"
   "./.DS_Store"
-  "./node_modules/*" 
+  "./node_modules/*"
   "./dist/*"
   "./public/images/*"
   "./public/videos/*"
   "./public/icons/*"
   "./public/api/lib/*"
-  "./package-lock.json" 
+  "./public/manifest.json"
+  "./public/robots.txt"
+  "./public/template.mdx"
+  "./package-lock.json"
   "./pnpm-lock.yaml"
   "./.prettierrc"
   "./.markdownlint.json"
   "./LICENSE"
+  "./README.mdx"
+  "./skills.md"
   "./install.sh"
-  "./feedback.sh"
-  "./survey.sh"
   "./dummy.sh"
+  "./dummy-pengaduan.sh"
+  "./deploy.sh"
+  "./rebuild.sh"
   "./generate.sh"
-  "./$OUT" 
+  "./$OUT"
   "./config/nginx/*"
-  # Eksklusi file media
+  # Konten artikel/halaman (tidak relevan untuk blueprint teknis)
+  "./src/content/*"
+  # Media & font
   "*.png" "*.jpg" "*.jpeg" "*.webp" "*.ico" "*.gif" "*.svg" "*.avif"
   "*.woff" "*.woff2" "*.ttf" "*.otf" "*.eot"
   "*.mp3" "*.mp4" "*.wav" "*.avi"
-  "*.db" "*.csv" "*.htaccess" "*.txt" "*.mdx" "*.lock"
+  "*.db" "*.csv" "*.htaccess"
+  # Markup content (bukan code)
+  "*.md" "*.mdx" "*.txt" "*.lock"
 )
 
-# Fungsi untuk menentukan bahasa berdasarkan ekstensi file
 lang_for_ext() {
   case "$1" in
     astro)      printf "astro" ;;
@@ -54,42 +62,33 @@ lang_for_ext() {
     js)         printf "javascript" ;;
     jsx)        printf "jsx" ;;
     json)       printf "json" ;;
-    md)         printf "markdown" ;;
-    mdx)        printf "markdown" ;;
     html)       printf "html" ;;
     css)        printf "css" ;;
     scss)       printf "scss" ;;
-    txt)        printf "text" ;;
     yml|yaml)   printf "yaml" ;;
     sh)         printf "bash" ;;
     conf)       printf "nginx" ;;
+    php)        printf "php" ;;
     Dockerfile) printf "dockerfile" ;;
     Makefile)   printf "makefile" ;;
     *)          printf "" ;;
   esac
 }
 
-# Fungsi untuk menghitung jumlah backticks maksimal dalam file
 count_max_backticks() {
   local file="$1"
   local max=3
-  
   while IFS= read -r line; do
     if [[ "$line" =~ ^[[:space:]]*(\`+) ]]; then
       local count=${#BASH_REMATCH[1]}
-      if [ "$count" -ge "$max" ]; then
-        max=$((count + 1))
-      fi
+      [ "$count" -ge "$max" ] && max=$((count + 1))
     fi
   done < "$file"
-  
   echo "$max"
 }
 
-# Inisialisasi file output
 : > "$OUT"
 
-# Kumpulkan semua file
 files=()
 while IFS= read -r -d '' f; do
   skip=false
@@ -108,7 +107,6 @@ if [ "${#files[@]}" -eq 0 ]; then
   exit 0
 fi
 
-# Kelompokkan file berdasarkan direktori utama
 declare -A groups
 for f in "${files[@]}"; do
   p="${f#./}"
@@ -125,97 +123,40 @@ for f in "${files[@]}"; do
   fi
 done
 
-# Urutan prioritas direktori untuk Astro project
-priority_dirs=("src" "public" "config" "scripts" "ROOT")
+# Urutan sesuai struktur project: layer paling penting duluan
+priority_dirs=("src" "public" "scripts" "config" "ROOT")
 processed_dirs=()
 
-# Proses direktori berdasarkan prioritas
+write_group() {
+  local top="$1"
+  printf "## Direktori: %s\n\n" "$top" >> "$OUT"
+  mapfile -t flist < <(printf '%s\n' "${groups[$top]}" | sort -V)
+  for file in "${flist[@]}"; do
+    filename="$(basename -- "$file")"
+    ext="${filename##*.}"
+    [ "$filename" = "$ext" ] && ext="$filename"  # file tanpa ekstensi
+    lang="$(lang_for_ext "$ext")"
+    printf "### File: \`%s\`\n\n" "$file" >> "$OUT"
+    bc=$(count_max_backticks "$file")
+    bt=$(printf '`%.0s' $(seq 1 "$bc"))
+    [ -n "$lang" ] && printf '%s%s\n' "$bt" "$lang" >> "$OUT" || printf '%s\n' "$bt" >> "$OUT"
+    sed 's/\r$//' "$file" >> "$OUT"
+    printf '\n%s\n\n---\n\n' "$bt" >> "$OUT"
+  done
+}
+
 for priority in "${priority_dirs[@]}"; do
-  if [ -n "${groups[$priority]:-}" ]; then
-    printf "## Direktori: %s\n\n" "$priority" >> "$OUT"
-    
-    mapfile -t flist < <(printf '%s\n' "${groups[$priority]}" | sort -V)
-    
-    for file in "${flist[@]}"; do
-      case "$file" in
-        "./$OUT" | "$OUT" | "./generate.sh" | "generate.sh") continue ;;
-      esac
-      
-      filename="$(basename -- "$file")"
-      if [[ "$filename" == *.* ]]; then
-        ext="${filename##*.}"
-      else
-        ext="$filename"
-      fi
-      
-      lang="$(lang_for_ext "$ext")"
-      
-      printf "### File: \`%s\`\n\n" "$file" >> "$OUT"
-      
-      # Hitung jumlah backticks yang dibutuhkan
-      backtick_count=$(count_max_backticks "$file")
-      backticks=$(printf '`%.0s' $(seq 1 "$backtick_count"))
-      
-      if [ -n "$lang" ]; then
-        printf '%s%s\n' "$backticks" "$lang" >> "$OUT"
-      else
-        printf '%s\n' "$backticks" >> "$OUT"
-      fi
-      
-      sed 's/\r$//' "$file" >> "$OUT"
-      printf '\n%s\n\n---\n\n' "$backticks" >> "$OUT"
-    done
-    
-    processed_dirs+=("$priority")
-  fi
+  [ -n "${groups[$priority]:-}" ] && write_group "$priority" && processed_dirs+=("$priority")
 done
 
-# Proses direktori lainnya yang tidak ada dalam prioritas
 IFS=$'\n'
 for top in $(printf '%s\n' "${!groups[@]}" | sort -V); do
-  # Skip jika sudah diproses
   skip=false
   for pd in "${processed_dirs[@]}"; do
-    if [ "$top" == "$pd" ]; then
-      skip=true
-      break
-    fi
+    [ "$top" = "$pd" ] && skip=true && break
   done
   $skip && continue
-  
-  printf "## Direktori: %s\n\n" "$top" >> "$OUT"
-  
-  mapfile -t flist < <(printf '%s\n' "${groups[$top]}" | sort -V)
-  
-  for file in "${flist[@]}"; do
-    case "$file" in
-      "./$OUT" | "$OUT" | "./generate.sh" | "generate.sh") continue ;;
-    esac
-    
-    filename="$(basename -- "$file")"
-    if [[ "$filename" == *.* ]]; then
-      ext="${filename##*.}"
-    else
-      ext="$filename"
-    fi
-    
-    lang="$(lang_for_ext "$ext")"
-    
-    printf "### File: \`%s\`\n\n" "$file" >> "$OUT"
-    
-    # Hitung jumlah backticks yang dibutuhkan
-    backtick_count=$(count_max_backticks "$file")
-    backticks=$(printf '`%.0s' $(seq 1 "$backtick_count"))
-    
-    if [ -n "$lang" ]; then
-      printf '%s%s\n' "$backticks" "$lang" >> "$OUT"
-    else
-      printf '%s\n' "$backticks" >> "$OUT"
-    fi
-    
-    sed 's/\r$//' "$file" >> "$OUT"
-    printf '\n%s\n\n---\n\n' "$backticks" >> "$OUT"
-  done
+  write_group "$top"
 done
 
 echo "Selesai! File '$OUT' telah dibuat (Mode: Astro Project)"

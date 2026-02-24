@@ -10,8 +10,8 @@ if (!isset($_SESSION['admin_logged_in']) || ($_SESSION['user_role'] !== 'super_a
     exit;
 }
 
-set_time_limit(0);
-ini_set('memory_limit', '512M');
+set_time_limit(2);
+ini_set('memory_limit', '2048M');
 
 try {
     $pdo = getDBConnection();
@@ -28,7 +28,7 @@ try {
 
         if ($type === 'feedback') {
             fputcsv($output, ['name', 'rating', 'message', 'created_at', 'ip_address']);
-            fputcsv($output, ['Budi Santoso', '5', 'Pelayanan sangat memuaskan.', '2024-01-01 10:00:00', '192.168.1.1']);
+            fputcsv($output, ['Yahya Zulfikri', '5', 'Pelayanan sangat memuaskan.', '2022-07-01 08:00:00', '192.168.1.1']);
         } elseif ($type === 'survey') {
             fputcsv($output, [
                 'respondent_name',

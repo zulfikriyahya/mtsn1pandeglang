@@ -1,207 +1,94 @@
-# MTs Negeri 1 Pandeglang
+# MTsN 1 Pandeglang — Website Resmi
 
-Portal resmi **Madrasah Tsanawiyah Negeri 1 Pandeglang** yang dibangun dengan arsitektur **Hybrid (Modern SSG + Lightweight Backend)**. Platform ini mengintegrasikan kecepatan website statis dengan fleksibilitas sistem manajemen konten dan data yang dinamis.
+> **Mandiri, Takwa, Peduli Lingkungan, Prestasi**
 
-## Deskripsi Proyek
-
-Website ini bukan sekadar profil sekolah, melainkan ekosistem digital yang mencakup:
-
-1.  **Front-end Super Cepat:** Dibangun dengan Astro untuk performa maksimal bagi pengunjung.
-2.  **Admin Dashboard Terintegrasi:** Sistem manajemen internal untuk memantau trafik, mengelola artikel, dan menganalisis survei kepuasan masyarakat.
-3.  **Layanan Digital:** Pelayanan Terpadu Satu Pintu (PTSP) digital, survei kepuasan pelanggan, dan kotak saran.
-
-**Moto:** _Mandiri, Takwa, Peduli Lingkungan, Prestasi_
+Website resmi MTsN 1 Pandeglang dibangun dengan [Astro](https://astro.build/) sebagai static site generator, React untuk komponen interaktif, dan Tailwind CSS untuk styling. Dilengkapi fitur PWA, CMS berbasis PHP, sistem pengaduan, dan survei kepuasan layanan.
 
 ---
 
-## Teknologi Utama
+## Tech Stack
 
-### Frontend (High Performance)
-
-- **Astro 5.16.6** - Islands Architecture untuk performa optimal.
-- **React 19.2.0** - Komponen interaktif (Admin Dashboard, Survey Wizard).
-- **TailwindCSS 4.1.14** - Utility-first CSS framework.
-- **TypeScript** - Type-safe development.
-- **Vite PWA** - Dukungan Progressive Web App (Offline ready).
-
-### Backend & Data (Lightweight & Portable)
-
-- **PHP 8.x** - API endpoint (Native) untuk logika server-side.
-- **SQLite3** - Database berbasis file yang ringan, cepat, dan mudah di-backup.
-- **Chart.js** - Visualisasi data statistik dan survei.
-- **FPDF** - Generate laporan PDF otomatis.
+| Layer | Teknologi |
+|---|---|
+| Framework | Astro 5, React 19 |
+| Styling | Tailwind CSS 4, GSAP, Lenis |
+| Content | MDX, Giscus (komentar) |
+| Backend API | PHP (CRUD, auth, PDF export) |
+| PWA | Vite PWA Plugin, Workbox |
+| Package Manager | Yarn 3 (Berry) |
 
 ---
 
-## Fitur Unggulan
+## Prasyarat
 
-### Portal Publik
-
-- **Profil & Akademik:** Visi misi, sejarah, kurikulum, dan program unggulan.
-- **Blog & Berita:** Artikel dengan kategori, tag, dan estimasi waktu baca.
-- **Galeri Digital:** Integrasi foto dan video kegiatan siswa.
-- **PWA Support:** Dapat diinstal di HP/Desktop layaknya aplikasi native.
-- **Dark Mode:** Dukungan tema gelap otomatis/manual.
-- **SEO & Performa:** Skor Lighthouse 97-100.
-
-### Admin Dashboard (New)
-
-Panel admin aman yang dilindungi login **Google OAuth** dengan fitur:
-
-- **Ringkasan Real-time:** Grafik kunjungan bulanan, tren aktivitas, dan rating bintang.
-- **Manajemen Artikel:** Upload artikel `.mdx`, gambar, dan video langsung dari dashboard.
-- **Analisis Survei (6 Indikator):**
-  1. Zona Integritas (ZI)
-  2. Pelayanan PTSP
-  3. Akademik
-  4. Sarana & Prasarana
-  5. Manajemen
-  6. Budaya & Iklim Sekolah
-- **Riwayat Kunjungan:** Log detail IP address, browser/device, dan waktu akses.
-- **Feedback Manager:** Moderasi ulasan dan kritik saran masuk.
-- **Export Data:** Unduh laporan dalam format **Excel (CSV)** dan **PDF**.
-- **User Management:** Kelola hak akses (Super Admin, Operator, User).
+- Node.js `>= 18`
+- Yarn `3.6.0` (`corepack enable`)
+- PHP `>= 8.0` (untuk fitur API di `public/api/`)
 
 ---
 
-## Struktur Direktori
+## Instalasi
 
-```tree
-├── public/                 # Static assets & Backend API
-│   ├── api/               # PHP Endpoints (Auth, Stats, Content, etc.)
-│   ├── images/            # Image assets
-│   ├── videos/            # Video assets
-│   └── database.db        # SQLite Database (Auto-generated)
-├── scripts/               # Build scripts
-│   └── jsonGenerator.js   # Content JSON generator for Search
-├── src/
-│   ├── config/            # Site configuration (Menu, Theme, SEO)
-│   ├── content/           # MDX Collections (Blog, Pages, Sections)
-│   ├── layouts/           # Layouts & Components
-│   │   ├── helpers/       # React Widgets (AdminDashboard, SurveyWizard)
-│   │   ├── partials/      # Header, Footer, Sidebar
-│   │   └── shortcodes/    # MDX widgets (Video, Youtube, Tabs)
-│   ├── pages/             # Astro Routes
-│   └── styles/            # Global CSS
-└── deploy.sh              # Auto Deployment Script
+```bash
+corepack enable
+yarn install
 ```
 
 ---
 
-## Instalasi & Setup
+## Penggunaan
 
-### Prasyarat
+```bash
+# Development server (auto-generate JSON + hot reload)
+yarn dev
 
-1.  **Node.js** (v18+) & **Yarn**.
-2.  **PHP** (v8.0+) dengan ekstensi `sqlite3` dan `mbstring` aktif.
-3.  **Web Server** (Apache/Nginx) atau PHP built-in server untuk menjalankan API backend.
+# Build produksi
+yarn build
 
-### Langkah-Langkah
+# Preview hasil build
+yarn preview
 
-1.  **Clone Repository**
+# Type checking
+yarn check
 
-    ```bash
-    git clone https://github.com/zulfikriyahya/mtsn1pandeglang.git
-    cd mtsn1pandeglang
-    ```
-
-2.  **Install Dependencies Frontend**
-
-    ```bash
-    yarn install
-    ```
-
-3.  **Konfigurasi Environment**
-    Buat file `.env` di root project:
-
-    ```env
-    PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-    ADMIN_EMAIL=email-super-admin@gmail.com
-    ```
-
-4.  **Generate Data Awal**
-
-    ```bash
-    yarn generate-json
-    ```
-
-5.  **Jalankan Development Server**
-    - **Terminal 1 (Frontend Astro):**
-      ```bash
-      yarn dev
-      ```
-    - **Terminal 2 (Backend PHP - opsional jika dev lokal):**
-      ```bash
-      cd public
-      php -S localhost:8000
-      ```
-
-    _Catatan: Untuk fitur dashboard berfungsi penuh di lokal, pastikan proxy di konfigurasi Astro mengarah ke server PHP, atau jalankan di lingkungan seperti XAMPP/Laragon._
+# Format kode
+yarn format
+```
 
 ---
 
-## 🛠 Perintah Tersedia
+## Struktur Utama
 
-| Perintah             | Deskripsi                                          |
-| :------------------- | :------------------------------------------------- |
-| `yarn dev`           | Menjalankan server pengembangan Astro.             |
-| `yarn build`         | Membuild aset statis ke folder `dist/`.            |
-| `yarn preview`       | Meninjau hasil build produksi.                     |
-| `yarn generate-json` | Membuat index pencarian JSON dari konten Markdown. |
-| `yarn format`        | Merapikan kode menggunakan Prettier.               |
+```
+src/
+├── content/        # Konten MDX (blog, pages, authors)
+├── layouts/        # Layout Astro + komponen React (.tsx)
+├── pages/          # Routing berbasis file Astro
+├── styles/         # CSS modular (base, components, utilities)
+└── config/         # Konfigurasi site (menu, theme, social)
 
----
+public/
+└── api/            # Backend PHP (auth, CRUD, PDF, pengaduan, survei)
 
-## Deployment (Production)
-
-Karena menggunakan **Hybrid Stack (Static HTML + PHP API)**, disarankan menggunakan **VPS** (Virtual Private Server) atau **Shared Hosting** (cPanel/AAPanel).
-
-### Menggunakan Script Auto-Deploy (VPS)
-
-Proyek ini dilengkapi script `deploy.sh` untuk otomatisasi di server Linux (Ubuntu/Debian).
-
-1.  Upload kode ke server `/var/www/mtsn1pandeglang.sch.id`.
-2.  Set permission file eksekusi:
-    ```bash
-    chmod +x deploy.sh
-    chmod +x rebuild.sh
-    ```
-3.  Pastikan user web server (`www-data`) memiliki akses tulis ke folder `public/` dan file `database.db`.
-    ```bash
-    chown -R www-data:www-data /var/www/mtsn1pandeglang.sch.id
-    chmod 775 -R /var/www/mtsn1pandeglang.sch.id/public
-    ```
+scripts/
+├── jsonGenerator.js    # Pre-build: generate JSON dari konten
+└── removeDarkmode.js   # Utility: hapus dark mode
+```
 
 ---
 
-## Keamanan
+## Fitur
 
-- **Google OAuth 2.0:** Autentikasi admin menggunakan akun Google, mencegah brute-force password.
-- **Role Based Access Control (RBAC):** Pemisahan hak akses antara Super Admin (Full), Operator (Edit), dan User (View).
-- **SQLite Wal Mode:** Menjamin integritas data transaksi database.
-- **Sanitasi Input:** Semua input form dan upload file divalidasi di sisi server (PHP).
-
----
-
-## Kontribusi
-
-Proyek ini dikembangkan dan dikelola oleh **Tim Pusdatin MTsN 1 Pandeglang**.
-
-### Developer Utama
-
-**Yahya Zulfikri**
-
-- **Role:** Lead Developer & System Architect
-- **GitHub:** [@zulfikriyahya](https://github.com/zulfikriyahya)
-- **Email:** dev@mtsn1pandeglang.sch.id
+- **Blog & Artikel** — konten berbasis MDX dengan kategori dan tag
+- **Pengaduan Online** — form pengaduan dengan dashboard admin
+- **Survei Kepuasan** — wizard multi-step dengan visualisasi chart
+- **Admin Dashboard** — manajemen konten dengan export PDF (FPDF)
+- **PWA** — installable, offline-ready
+- **SEO** — sitemap otomatis, Open Graph, structured data
+- **Pencarian** — modal pencarian client-side
 
 ---
 
 ## Lisensi
 
-Copyright © 2022-2026 **Madrasah Tsanawiyah Negeri 1 Pandeglang**.
-All Rights Reserved.
-
----
-
-_Built with ❤️ for Education._
+[MIT](./LICENSE) © [Yahya Zulfikri](https://github.com/zulfikriyahya)
