@@ -19,7 +19,7 @@
   "dependencies": {
     "@astrojs/check": "0.9.6",
     "@astrojs/mdx": "4.3.13",
-    "@astrojs/node": "^9.5.1",
+    "@astrojs/node": "^10.0.3",
     "@astrojs/react": "4.4.2",
     "@astrojs/sitemap": "3.7.0",
     "@digi4care/astro-google-tagmanager": "^1.6.0",
